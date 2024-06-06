@@ -1,4 +1,5 @@
 // start with $ node 1.server
+// this server primarily acts as an interface to interact with the gacha character database
 // https://learn.microsoft.com/en-us/windows/wsl/networking
 // if you want to run this in WSL, follow these steps:
 // 1. Add an inbound rule in Windows Firewall allowing all TCP connections on port 27017
@@ -10,14 +11,14 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const { connectToDb, getDb } = require('./database');
+const { connectToDb, getDb } = require('./utilities/database');
 const fs = require('fs');
 
 const server = express();
 server.use(express.json());
 
 const port = 2500;
-const tokenFile = 'token.txt';
+const configFile = './config.json';
 //for extracting pixels from image
 const getPixels = require("get-pixels")
 const imageWidth = 328;
@@ -42,168 +43,6 @@ connectToDb((error) => {
 
 server.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
-})
-
-//in practice you probably won't be using this
-server.get("/Interactions/:attack/:defense/", (req, res) => {
-    if (isNaN(req.params.attack) || isNaN(req.params.defense)) {
-        res.status(400).send({
-            message: "attack and defense stats must be numbers"
-        });
-        return;
-    }
-    database.collection('Interactions')
-        .findOne({
-            attack: parseFloat(req.params.attack),
-            defense: parseFloat(req.params.defense),
-        })
-        .then(doc => {
-            if (doc) {
-                res.status(200).send(doc);
-                return;
-            }
-            res.status(404).send({
-                message: "Document not found"
-            });
-        })
-})
-
-server.post('/Interactions/updateDb', (req, res) => {
-    if (!req.body.attack || !req.body.defense || !req.body.damage) {
-        res.status(400).send({
-            message: "Request body requires attack, defense, and damage properties"
-        });
-        return;
-    }
-    if (isNaN(req.body.attack) || isNaN(req.body.defense) || isNaN(req.body.damage)) {
-        res.status(400).send({
-            message: "Request body attack, defense, and damage properties must be numbers"
-        });
-        return;
-    }
-    database.collection('Interactions')
-        .findOne({
-            attack: req.body.attack,
-            defense: req.body.defense,
-        })
-        .then(doc => {
-            if (doc) {
-                //update existing doc
-                database.collection('Interactions')
-                    .updateOne(
-                        {
-                            attack: req.body.attack,
-                            defense: req.body.defense
-                        }, 
-                        {
-                            $inc: {
-                                totalDamage: req.body.damage,
-                                numEntries: 1
-                            },
-                            $set: {
-                                meanDamage: (doc.totalDamage + req.body.damage) / (doc.numEntries + 1)
-                            }
-                        }
-                    );
-                res.status(200).send({
-                    message: "Updated document"
-                });
-                return;
-            }
-            // else create new doc
-            database.collection('Interactions')
-                .insertOne({
-                    attack: req.body.attack,
-                    defense: req.body.defense,
-                    meanDamage: req.body.damage,
-                    totalDamage: req.body.damage,
-                    numEntries: 1
-                })
-            res.status(201).send({
-                message: "Created document"
-            });
-        });
-})
-
-//in practice you probably won't be using this
-server.get("/CriticalInteractions/:attack/:defense/", (req, res) => {
-    if (isNaN(req.params.attack) || isNaN(req.params.defense)) {
-        res.status(400).send({
-            message: "attack and defense stats must be numbers"
-        });
-        return;
-    }
-    database.collection('CriticalInteractions')
-        .findOne({
-            attack: parseFloat(req.params.attack),
-            defense: parseFloat(req.params.defense),
-        })
-        .then(doc => {
-            if (doc) {
-                res.status(200).send(doc);
-                return;
-            }
-            res.status(404).send({
-                message: "Document not found"
-            });
-        })
-})
-
-server.post('/CriticalInteractions/updateDb', (req, res) => {
-    if (!req.body.attack || !req.body.defense || !req.body.damage) {
-        res.status(400).send({
-            message: "Request body requires attack, defense, and damage properties"
-        });
-        return;
-    }
-    if (isNaN(req.body.attack) || isNaN(req.body.defense) || isNaN(req.body.damage)) {
-        res.status(400).send({
-            message: "Request body attack, defense, and damage properties must be numbers"
-        });
-        return;
-    }
-    database.collection('CriticalInteractions')
-        .findOne({
-            attack: req.body.attack,
-            defense: req.body.defense,
-        })
-        .then(doc => {
-            if (doc) {
-                //update existing doc
-                database.collection('CriticalInteractions')
-                    .updateOne(
-                        {
-                            attack: req.body.attack,
-                            defense: req.body.defense
-                        }, 
-                        {
-                            $inc: {
-                                totalDamage: req.body.damage,
-                                numEntries: 1
-                            },
-                            $set: {
-                                meanDamage: (doc.totalDamage + req.body.damage) / (doc.numEntries + 1)
-                            }
-                        }
-                    );
-                res.status(200).send({
-                    message: "Updated document"
-                });
-                return;
-            }
-            // else create new doc
-            database.collection('CriticalInteractions')
-                .insertOne({
-                    attack: req.body.attack,
-                    defense: req.body.defense,
-                    meanDamage: req.body.damage,
-                    totalDamage: req.body.damage,
-                    numEntries: 1
-                })
-            res.status(201).send({
-                message: "Created document"
-            });
-        });
 })
 
 //when making a request to this endpoint, replace all spaces
@@ -407,61 +246,6 @@ server.post('/UserCollections/updateDb', (req, res) => {
                 message: "Added character to user collection"
             });
         });
-})
-
-//returns all battle logs
-server.get("/BattleLogs", (req, res) => {
-    var result = [];
-    database.collection('BattleLogs')
-        .find()
-        .forEach(doc => result.push(doc))
-        .then(() => {
-            res.status(200).send(result)
-        });
-})
-
-//returns the logs of all battles that the specified user battled in
-server.get("/BattleLogs/:userId", (req, res) => {
-    var result = [];
-    database.collection('BattleLogs')
-        .find({players: req.params.userId})
-        .forEach(doc => result.push(doc))
-        .then(() => {
-            res.status(200).send(result)
-        });
-})
-//example usage:
-/*
-let battleStr = "";
-fetch('http://127.0.0.1:2500/BattleLogs/635172347606728746')
-    .then(res => res.json())
-    .then(battles => {
-        for (battle of battles) {
-            battleStr += battle.data + "\n"
-        }
-    })
-    .then(() => console.log(battleStr));
-*/
-
-//adds battle log to database
-server.post("/BattleLogs/updateDb", (req, res) => {
-    if (!req.body.players || !req.body.type || !req.body.time || !req.body.data) {
-        res.status(400).send({
-            message: "Request body must have players, type, time, and data properties"
-        });
-        return;
-    }
-    database.collection('BattleLogs')
-        .insertOne({
-            players: req.body.players,
-            type: req.body.type,
-            time: req.body.time,
-            data: req.body.data
-        });
-    res.status(201).send({
-        message: "Added battle log to database"
-    });
-    return;
 })
 
 //returns the image data of all characters in the database
@@ -734,7 +518,9 @@ function getNumStars(slotName, image) {
 }
 
 server.get("/getToken", (req, res) => {
-    let token = fs.readFileSync(tokenFile, 'utf-8');
+    let config = fs.readFileSync(configFile, 'utf-8');
+    let configJSON = JSON.parse(config);
+    let token = configJSON.token;
     if (!token) {
         res.status(503).send({
             message: "error retrieving token from server"

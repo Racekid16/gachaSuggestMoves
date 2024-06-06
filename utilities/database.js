@@ -4,7 +4,9 @@ const fs = require('fs');
 let dbConnection;
 // 127.0.0.1 if you're running on windows, 
 // the output of $ ip route show | grep -i default | awk '{ print $3}' if you're running on WSL
-const ipAddress = fs.readFileSync('./ipAddress.txt', 'utf8');
+const config = fs.readFileSync('config.json', 'utf-8');
+const configJSON = JSON.parse(config);
+const ipAddress = configJSON.ipAddress;
 
 module.exports = {
     connectToDb: async (callback) => {
