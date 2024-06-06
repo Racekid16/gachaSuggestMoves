@@ -1,0 +1,3 @@
+# Gacha Suggest Moves
+The goal of this project is to create a program that will view battles in real-time and make suggestions for what move to make based on the stats of the characters in each party.
+I will not consider some of the more niche special mechanics/moves such as True Kikyo Kushida's Charm/Unmask, False Ayanokoji's From the Shadows, Manabe Shiho's Slap/Humiliate, Drowsy Ichinose Honami's Slumber, etc., except possibly if the character is widely used.
