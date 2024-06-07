@@ -2,7 +2,7 @@
 
 import { createBattle, createCampaignBattle, deleteBattle } from "./battleManager.mjs";
 import { setPlayerParty } from "./setPlayerParty.mjs";
-import { suggestMoves } from "./suggestMoves.mjs";
+import { parseTurn } from "./parseTurn.mjs";
 import config from '../config.json' assert { type: 'json' };
 
 export function handleWsData(battleObj, responseJSON) {
@@ -52,5 +52,5 @@ async function processBattleEmbed(battleObj, battleEmbed) {
         deleteBattle(battleObj, p1name, p2name, turnResults);
         return;
     }
-    suggestMoves(battleObj, p1name, p2name, battleEmbed);
+    parseTurn(battleObj, p1name, p2name, battleEmbed);
 }

@@ -119,15 +119,15 @@ async function addPlayerToBattle(battleObj, battleKey, playerName, playerNumber,
 
 // check whether the actual resolves of characters in a player's party match what was calculated
 function verifyPlayerResolves(battleObj, battleKey, playerName, playerNumber, battleEmbed) {
-    let healthRegex = / (\*__(.+)__\*\*\*|\*(.+)\*) - \*\*(\d+)\*\*:heart:/;
+    let resolveRegex = / (\*__(.+)__\*\*\*|\*(.+)\*) - \*\*(\d+)\*\*:heart:/g;
 
     for (let i = 0; i < 3; i++) {
-        let healthMatch = healthRegex.exec(battleEmbed.fields[playerNumber - 1].value);
+        let resolveMatch = resolveRegex.exec(battleEmbed.fields[playerNumber - 1].value);
         let charName = "";
-        if (typeof healthMatch[2] !== 'undefined') {
-            charName = healthMatch[2];
-        } else {    //typeof healthMatch[3] !== 'undefined'
-            charName = healthMatch[3];
+        if (typeof resolveMatch[2] !== 'undefined') {
+            charName = resolveMatch[2];
+        } else {    //typeof resolveMatch[3] !== 'undefined'
+            charName = resolveMatch[3];
         }
 
         //DEBUG
@@ -137,7 +137,7 @@ function verifyPlayerResolves(battleObj, battleKey, playerName, playerNumber, ba
             console.log(battleObj[battleKey][playerName]);
         }
 
-        let charResolve = parseInt(healthMatch[4]);
+        let charResolve = parseInt(resolveMatch[4]);
         if (battleObj[battleKey][playerName].chars[charName].resolve != charResolve) {
             console.log(`${charName}'s resolve was calculated to be ${battleObj[battleKey][playerName].chars[charName].resolve} but it was actually ${charResolve}\n`);
         }
