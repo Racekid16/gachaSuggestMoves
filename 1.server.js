@@ -135,11 +135,11 @@ server.post('/CharacterData/updateDb', (req, res) => {
         })
 })
 
-server.get('/UserCollections/:userId', (req, res) => {
+server.get('/UserCollections/:userID', (req, res) => {
     //check if there is a document with this userid
     database.collection('UserCollections').
         findOne({
-            userId: req.params.userId
+            userID: req.params.userID
         })
         .then(doc => {
             if (!doc) {
@@ -156,14 +156,14 @@ server.post('/UserCollections/updateDb', (req, res) => {
     //check if there is a document with this userid
     database.collection('UserCollections').
         findOne({
-            userId: req.body.userId
+            userID: req.body.userID
         })
         .then(doc => {
             //if there isn't, create one
             if (!doc) {
                 database.collection('UserCollections')
                     .insertOne({
-                        userId: req.body.userId,
+                        userID: req.body.userID,
                         characters: [{
                             name: req.body.name,
                             rarity: req.body.rarity,
@@ -191,7 +191,7 @@ server.post('/UserCollections/updateDb', (req, res) => {
                 //if so, update that character
                 database.collection('UserCollections')
                     .updateOne({
-                        userId: req.body.userId,
+                        userID: req.body.userID,
                         "characters.name": req.body.name
                     }, 
                     {
@@ -220,7 +220,7 @@ server.post('/UserCollections/updateDb', (req, res) => {
             //else push the character to the characters array
             database.collection('UserCollections')
                 .updateOne({
-                    userId: req.body.userId
+                    userID: req.body.userID
                 }, 
                 {
                     $push: {

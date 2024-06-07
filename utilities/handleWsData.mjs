@@ -1,6 +1,6 @@
 // handle data received from the websocket. 
 
-import { createBattle, deleteBattle } from "./battleManager.mjs";
+import { createBattle, createCampaignBattle, deleteBattle } from "./battleManager.mjs";
 import { setPlayerParty } from "./setPlayerParty.mjs";
 import { suggestMoves } from "./suggestMoves.mjs";
 import config from '../config.json' assert { type: 'json' };
@@ -11,14 +11,27 @@ export function handleWsData(battleObj, responseJSON) {
     && responseJSON.d.embeds.length != 0 && responseJSON.d.embeds[0].title.substring(0, 6) == "BATTLE" 
     && responseJSON.d.embeds[0].fields.length == 3) {
         processBattleEmbed(battleObj, responseJSON.d.embeds[0]);
-    
-    // create a new battle that has just started/
-    } else if (responseJSON.t == 'MESSAGE_UPDATE' && responseJSON.d.author?.id == config.botID && responseJSON.d.embeds.length > 0
+    }
+
+    // set the party of a player whose party was just requested by the script (see battleManager.mjs's createBattle function)
+    else if (responseJSON.t == 'MESSAGE_UPDATE' && responseJSON.d.author?.id == config.botID && responseJSON.d.embeds.length > 0
     && responseJSON.d.channel_id == config.privateThread && /.+'s Party/.test(responseJSON.d.embeds[0]?.author?.name)) {
         let playerName = /(.+)'s Party/.exec(responseJSON.d.embeds[0]?.author.name)[1];
-        let imageURL = responseJSON.d.embeds[0].image.proxy_url;
-        let modifiedURL = imageURL + 'format=png&width=328&height=254';
-        setPlayerParty(battleObj, playerName, modifiedURL);
+        let imageURL = responseJSON.d.embeds[0].image.proxy_url + 'format=png&width=328&height=254';
+        setPlayerParty(battleObj, playerName, imageURL);
+    }
+
+    // create an entry in battleObj representing a campaign battle
+    else if (responseJSON.t == 'MESSAGE_UPDATE' && responseJSON.d.author?.id == config.botID && responseJSON.d.embeds.length > 0
+    && /Campaign Stage \d+/.test(responseJSON.d.embeds[0]?.author?.name) && responseJSON.d.embeds[0].image?.proxy_url) {
+        let playerName = responseJSON.d.interaction_metadata.user.global_name;
+        let playerID = responseJSON.d.interaction_metadata.user.id;
+        let botPartyImageURL = responseJSON.d.embeds[0].image.proxy_url + 'format=png&width=328&height=254';
+        let battleKey = playerName + "_vs._Chairman Sakayanagi"
+        if (typeof battleObj[battleKey] !== 'undefined') {
+            deleteBattle(battleObj, playerName, 'Chairman Sakayanagi', null);
+        }
+        createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL);
     }
 }
 
@@ -28,11 +41,6 @@ async function processBattleEmbed(battleObj, battleEmbed) {
     let battleKey = p1name + "_vs._" + p2name;
     let turn = parseInt(battleEmbed.fields[2].name.substring(battleEmbed.fields[2].name.indexOf('__Turn ') + 7, battleEmbed.fields[2].name.length - 2));
     if (typeof battleObj[battleKey] === 'undefined' && turn == 1) {
-        if (battleKey.includes('Chairman Sakayanagi')) {
-            console.log(`${p1name} vs. ${p2name} is not being logged because Chairman Sakayanagi is one of the players\n`);
-            return;
-        }
-        console.log(`${p1name} vs. ${p2name} started`);
         createBattle(battleObj, p1name, p2name, battleEmbed);
         return;
     } 
@@ -40,7 +48,8 @@ async function processBattleEmbed(battleObj, battleEmbed) {
         return;
     }
     if (battleEmbed.fields[2].name == 'WINNER:') {
-        deleteBattle(battleObj, p1name, p2name);
+        let turnResults = battleEmbed.fields[2].value;
+        deleteBattle(battleObj, p1name, p2name, turnResults);
         return;
     }
     suggestMoves(battleObj, p1name, p2name, battleEmbed);

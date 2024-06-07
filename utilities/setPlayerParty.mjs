@@ -126,7 +126,8 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
         }
     }
 
-    console.log(battleObj[battleKey][playerName].chars);
+    //if you want to double-check that the characters' stats were calculated correctly
+    //console.log(battleObj[battleKey][playerName].chars);
     battleObj[battleKey][playerName].initialStats = structuredClone(battleObj[battleKey][playerName].chars);
     battleObj[battleKey][playerName].valid = true;
 }
