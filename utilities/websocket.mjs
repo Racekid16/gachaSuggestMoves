@@ -15,7 +15,13 @@ const options = {
 
 export function startWsConnection(battleObj) {
     //make sure server is running
-    fetch("http://127.0.0.1:2500");
+    try {
+        fetch("http://127.0.0.1:2500");
+    } catch (err) {
+        console.log("Unable to connect to the server.");
+        console.log("Did you run $ node 1.server.js before running the driver?");
+        throw err;
+    }
     let socket = new ReconnectingWebSocket('wss://gateway.discord.gg/?v=9&encoding=json', [], options);
     let seqNum;
     let interval;

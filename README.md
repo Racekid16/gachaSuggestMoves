@@ -7,6 +7,5 @@ config.json should look like this:
 {
     "token": "your Discord authorization token here",
     "ipAddress": "127.0.0.1 if you're using windows, something else if you're using WSL",
-    "botID": "1101145170466062416",
     "privateThread": "the id of the private thread you request parties in"
 }

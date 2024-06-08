@@ -1,0 +1,47 @@
+{
+    "botID": "1101145170466062416",
+    "moveInfo": {
+        "Academic": {
+            "name": "Academic",
+            "attackStat": "mental",
+            "basePower": 1
+        },
+        "Scheming": {
+            "name": "Scheming",
+            "attackStat": "mental",
+            "basePower": 1
+        },
+        "Fighting": {
+            "name": "Fighting",
+            "attackStat": "physical",
+            "basePower": 1
+        },
+        "Athleticism": {
+            "name": "Athleticism",
+            "attackStat": "physical",
+            "basePower": 1
+        },
+        "Influence": {
+            "name": "Influence",
+            "attackStat": "social",
+            "basePower": 1
+        },
+        "Empathy": {
+            "name": "Empathy",
+            "attackStat": "social",
+            "basePower": 1
+        }
+    },
+    "personalityWeaknesses": {
+        "Apathetic": [],
+        "Cold": ["Scheming", "Empathy"],
+        "Bold": ["Academic", "Fighting"],
+        "Savant": ["Athleticism", "Influence"],
+        "Cunning": ["Influence", "Empathy"],
+        "Benevolent": ["Scheming", "Fighting"],
+        "Timid": ["Athleticism", "Empathy"],
+        "Explosive": ["Academic", "Scheming"],
+        "Reserved": ["Athleticism", "Fighting"],
+        "Selfish": ["Academic", "Influence"]
+    }
+}

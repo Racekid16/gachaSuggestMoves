@@ -2,19 +2,20 @@
 
 import { createBattle, createCampaignBattle, deleteBattle } from "./battleManager.mjs";
 import { setPlayerParty } from "./setPlayerParty.mjs";
-import { parseTurn } from "./parseTurn.mjs";
+import { parseTurnResults } from "./parseTurnResults.mjs";
 import config from '../config.json' assert { type: 'json' };
+import consts from '../consts.json' assert { type: 'json' };
 
 export function handleWsData(battleObj, responseJSON) {
     // update an ongoing battle
-    if ((responseJSON.t == 'MESSAGE_CREATE' || responseJSON.t == 'MESSAGE_UPDATE') && responseJSON.d.author?.id == config.botID 
+    if ((responseJSON.t == 'MESSAGE_CREATE' || responseJSON.t == 'MESSAGE_UPDATE') && responseJSON.d.author?.id == consts.botID 
     && responseJSON.d.embeds.length != 0 && responseJSON.d.embeds[0].title.substring(0, 6) == "BATTLE" 
     && responseJSON.d.embeds[0].fields.length == 3) {
         processBattleEmbed(battleObj, responseJSON.d.embeds[0]);
     }
 
     // set the party of a player whose party was just requested by the script (see battleManager.mjs's createBattle function)
-    else if (responseJSON.t == 'MESSAGE_UPDATE' && responseJSON.d.author?.id == config.botID && responseJSON.d.embeds.length > 0
+    else if (responseJSON.t == 'MESSAGE_UPDATE' && responseJSON.d.author?.id == consts.botID && responseJSON.d.embeds.length > 0
     && responseJSON.d.channel_id == config.privateThread && /.+'s Party/.test(responseJSON.d.embeds[0]?.author?.name)) {
         let playerName = /(.+)'s Party/.exec(responseJSON.d.embeds[0]?.author.name)[1];
         let imageURL = responseJSON.d.embeds[0].image.proxy_url + 'format=png&width=328&height=254';
@@ -22,7 +23,7 @@ export function handleWsData(battleObj, responseJSON) {
     }
 
     // create an entry in battleObj representing a campaign battle
-    else if (responseJSON.t == 'MESSAGE_UPDATE' && responseJSON.d.author?.id == config.botID && responseJSON.d.embeds.length > 0
+    else if (responseJSON.t == 'MESSAGE_UPDATE' && responseJSON.d.author?.id == consts.botID && responseJSON.d.embeds.length > 0
     && /Campaign Stage \d+/.test(responseJSON.d.embeds[0]?.author?.name) && responseJSON.d.embeds[0].image?.proxy_url) {
         let playerName = responseJSON.d.interaction_metadata.user.global_name;
         let playerID = responseJSON.d.interaction_metadata.user.id;
@@ -52,5 +53,5 @@ async function processBattleEmbed(battleObj, battleEmbed) {
         deleteBattle(battleObj, p1name, p2name, turnResults);
         return;
     }
-    parseTurn(battleObj, p1name, p2name, battleEmbed);
+    parseTurnResults(battleObj, p1name, p2name, battleEmbed);
 }

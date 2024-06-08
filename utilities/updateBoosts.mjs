@@ -66,6 +66,8 @@ export function addBoost(battleObj, battleKey, playerName, charName, boost, turn
             let bossOrdersBuff = 0.5;
             thisChar.mental = Math.round(thisChar.mental + (thisCharInitial.mental * bossOrdersBuff));
             break;
+        default:
+            break;
     }
 }
 
@@ -113,6 +115,8 @@ export function checkBoostsExpired(battleObj, battleKey, playerName, turn) {
                         console.log(`${charKey}'s Blazing Form buff expired! Physical weakened by ${blazingFormBuff}%.`);
                         break;
                     case 'Lead By Example':
+                        break;
+                    default:
                         break;
                 }
                 thisChar.boosts.splice(i, 1);

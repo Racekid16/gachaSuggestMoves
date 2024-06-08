@@ -1,12 +1,15 @@
 import { addBoost, checkBoostsExpired } from "./updateBoosts.mjs";
 import { suggestMove } from "./suggestMove.mjs";
 
-export function parseTurn(battleObj, p1name, p2name, battleEmbed) {
+// decrypt the turn results to determine if non-resolve affecting moves were used,
+// then update the stats accordingly by calling the functions from updateBoosts
+export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
     let battleKey = p1name + "_vs._" + p2name;
     let turn = parseInt(battleEmbed.fields[2].name.substring(battleEmbed.fields[2].name.indexOf('__Turn ') + 7, battleEmbed.fields[2].name.length - 2));
     let turnResults = battleEmbed.fields[2].value;
-    //TODO: comment this
-    console.log(`Turn ${turn} of ${battleKey}:\n${turnResults}\n`);
+
+    //TODO: remove this
+    console.log(`Turn ${turn} of ${p1name} vs. ${p2name}:\n${turnResults}\n`);
 
     //determine player resolves
     let p1Resolves = getTeamResolves(1, battleEmbed);
@@ -17,18 +20,32 @@ export function parseTurn(battleObj, p1name, p2name, battleEmbed) {
     let p2char = getPlayerCharacter(battleObj, battleKey, p2name, 2, battleEmbed);
 
     if (p1char == p2char) {
-        parseTurnSameChar(battleObj, p1name, p2name, p1char, turnResults, p1Resolves, p2Resolves);      
-    }
-    else {
-        parseTurnDifferentChars(battleObj, p1name, p2name, p1char, p2char, turnResults, p1Resolves, p2Resolves);
+        parseMoveSameChar(battleObj, p1name, p2name, p1char, turnResults, p1Resolves, p2Resolves);      
+    } else {
+        parseMoveDifferentChars(battleObj, p1name, p2name, p1char, p2char, turnResults);
+        parseMoveDifferentChars(battleObj, p2name, p1name, p2char, p1char, turnResults);
     }
 
     checkBoostsExpired(battleObj, battleKey, p1name, turn);
     checkBoostsExpired(battleObj, battleKey, p2name, turn);
     updateResolves(battleObj, battleKey, p1name, p1Resolves);
     updateResolves(battleObj, battleKey, p2name, p2Resolves);
-    suggestMove(battleObj, battleKey, p1name, p2name);
-    suggestMove(battleObj, battleKey, p2name, p1name);
+
+    let p1currentChar = battleObj[battleKey][p1name].currentChar;
+    let p2currentChar = battleObj[battleKey][p2name].currentChar;
+    if (p1currentChar !== null && p2currentChar !== null) {
+        let p1Initiative = suggestMove(battleObj, battleKey, p1name, p2name, p1currentChar, p2currentChar, turn);
+        let p2Initiative = suggestMove(battleObj, battleKey, p2name, p1name, p2currentChar, p1currentChar, turn);
+        if (p1Initiative > p2Initiative) {
+            console.log(`${p1name}'s ${p1currentChar} will move first (${p1Initiative} > ${p2Initiative})`);
+        } else if (p2Initiative > p1Initiative) {
+            console.log(`${p2name}'s ${p2currentChar} will move first (${p2Initiative} > ${p1Initiative})`);
+        } else {    //p1Initiative == p2Initiative
+            console.log(`Both characters have the same initiative (${p1Initiative} == ${p2Initiative})`);
+        }
+        console.log("");
+    }
+    
 }
 
 // determine what character the player is using (or used if they died)
@@ -49,6 +66,7 @@ function getPlayerCharacter(battleObj, battleKey, playerName, playerNumber, batt
     return charName;
 }
 
+// create an object containing key-value pairs of characters and their new resolves
 function getTeamResolves(playerNumber, battleEmbed) {
     let resolveRegex = / (\*__(.+)__\*\*\*|\*(.+)\*) - \*\*(\d+)\*\*:heart:/g;
     let deadRegex = / \*(.+)\* :x:/g;
@@ -80,22 +98,17 @@ function getTeamResolves(playerNumber, battleEmbed) {
     return returnObj;
 }
 
-function parseTurnSameChar(battleObj, p1name, p2name, p1char, p2char, turnResults, p1Resolves, p2Resolves) {
+// determine whether the characters used a move that affects non-resolve stats, 
+// where both players used the same character
+function parseMoveSameChar(battleObj, p1name, p2name, charName, turnResults, p1Resolves, p2Resolves) {
     //consider: what if one person uses a non-damaging move while the other uses a damaging move?
     //what if both use a non-damaging move?
 }
 
-function parseTurnDifferentChars(battleObj, p1name, p2name, p1char, p2char, turnResults, p1Resolves, p2Resolves) {
-    let players = [p1name, p2name];
-    let chars = [p1char, p2char];
-
-    for (let i = 0; i < chars.length; i++) {
-        let attacker = players[i];
-        let defender = players[(i + 1) % 2];
-        let attackChar = chars[i];
-        let defenseChar = chars[(i + 1) % 2];
-
-    }
+// determine whether the characters used a move that affects non-resolve stats, 
+// where both players used a different character
+function parseMoveDifferentChars(battleObj, attacker, defender, attackChar, defenseChar, turnResults) {
+    
 }
 
 function updateResolves(battleObj, battleKey, playerName, playerResolves) {

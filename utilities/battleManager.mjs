@@ -1,6 +1,7 @@
 // Create and delete battles from the battleObj.
-import config from '../config.json' assert { type: 'json' };
 import { setPlayerParty } from './setPlayerParty.mjs';
+import config from '../config.json' assert { type: 'json' };
+import consts from '../consts.json' assert { type: 'json' };
 const delay = async (ms = 1000) =>  new Promise(resolve => setTimeout(resolve, ms));
 
 export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
@@ -37,7 +38,7 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
 
     battleObj[battleKey]['Chairman Sakayanagi'] = {};
     battleObj[battleKey]['Chairman Sakayanagi'].chars = {};
-    battleObj[battleKey]['Chairman Sakayanagi'].id = config.botID;
+    battleObj[battleKey]['Chairman Sakayanagi'].id = consts.botID;
     setPlayerParty(battleObj, 'Chairman Sakayanagi', botPartyImageURL);
 
     let myPromise = addPlayerToBattle(battleObj, battleKey, playerName, 1, null, playerID);
@@ -116,6 +117,8 @@ async function addPlayerToBattle(battleObj, battleKey, playerName, playerNumber,
     return 0;
 }
 
+// verify that all characters in both player's parties are ones the script is prepared to deal with,
+// and if not, delete the battle
 async function verifyBattleValidity(battleObj, p1name, p2name) { 
     let battleKey = p1name + "_vs._" + p2name;
 
