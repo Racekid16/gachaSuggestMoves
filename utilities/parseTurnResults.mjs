@@ -1,5 +1,5 @@
-import { addBoost, checkBoostsExpired } from "./updateBoosts.mjs";
-import { suggestMove } from "./suggestMove.mjs";
+import { addBoost, removeExpiredBoosts } from "./updateBoosts.mjs";
+import { suggestMoves } from "./suggestMove.mjs";
 
 // decrypt the turn results to determine if non-resolve affecting moves were used,
 // then update the stats accordingly by calling the functions from updateBoosts
@@ -8,41 +8,33 @@ export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
     let turn = parseInt(battleEmbed.fields[2].name.substring(battleEmbed.fields[2].name.indexOf('__Turn ') + 7, battleEmbed.fields[2].name.length - 2));
     let turnResults = battleEmbed.fields[2].value;
 
-    //TODO: remove this
+    //remove the .replace part if you're testing
     console.log(`Turn ${turn} of ${p1name} vs. ${p2name}:\n${turnResults}\n`);
 
     //determine player resolves
-    let p1Resolves = getTeamResolves(1, battleEmbed);
-    let p2Resolves = getTeamResolves(2, battleEmbed);
+    let p1resolves = getTeamResolves(1, battleEmbed);
+    let p2resolves = getTeamResolves(2, battleEmbed);
 
     //determine what characters each player used
     let p1char = getPlayerCharacter(battleObj, battleKey, p1name, 1, battleEmbed);
     let p2char = getPlayerCharacter(battleObj, battleKey, p2name, 2, battleEmbed);
 
     if (p1char == p2char) {
-        parseMoveSameChar(battleObj, p1name, p2name, p1char, turnResults, p1Resolves, p2Resolves);      
+        parseMoveSameChar(battleObj, p1name, p2name, p1char, turnResults, p1resolves, p2resolves);      
     } else {
-        parseMoveDifferentChars(battleObj, p1name, p2name, p1char, p2char, turnResults);
-        parseMoveDifferentChars(battleObj, p2name, p1name, p2char, p1char, turnResults);
+        parseMoveDifferentChars(battleObj, battleKey, p1name, p2name, p1char, p2char, turnResults, turn);
+        parseMoveDifferentChars(battleObj, battleKey, p2name, p1name, p2char, p1char, turnResults, turn);
     }
 
-    checkBoostsExpired(battleObj, battleKey, p1name, turn);
-    checkBoostsExpired(battleObj, battleKey, p2name, turn);
-    updateResolves(battleObj, battleKey, p1name, p1Resolves);
-    updateResolves(battleObj, battleKey, p2name, p2Resolves);
+    removeExpiredBoosts(battleObj, battleKey, p1name, turn);
+    removeExpiredBoosts(battleObj, battleKey, p2name, turn);
+    updateResolves(battleObj, battleKey, p1name, p1resolves);
+    updateResolves(battleObj, battleKey, p2name, p2resolves);
 
     let p1currentChar = battleObj[battleKey][p1name].currentChar;
     let p2currentChar = battleObj[battleKey][p2name].currentChar;
     if (p1currentChar !== null && p2currentChar !== null) {
-        let p1Initiative = suggestMove(battleObj, battleKey, p1name, p2name, p1currentChar, p2currentChar, turn);
-        let p2Initiative = suggestMove(battleObj, battleKey, p2name, p1name, p2currentChar, p1currentChar, turn);
-        if (p1Initiative > p2Initiative) {
-            console.log(`${p1name}'s ${p1currentChar} will move first (${p1Initiative} > ${p2Initiative})`);
-        } else if (p2Initiative > p1Initiative) {
-            console.log(`${p2name}'s ${p2currentChar} will move first (${p2Initiative} > ${p1Initiative})`);
-        } else {    //p1Initiative == p2Initiative
-            console.log(`Both characters have the same initiative (${p1Initiative} == ${p2Initiative})`);
-        }
+        suggestMoves(battleObj, p1name, p2name, p1currentChar, p2currentChar, turn);
         console.log("");
     }
     
@@ -100,15 +92,33 @@ function getTeamResolves(playerNumber, battleEmbed) {
 
 // determine whether the characters used a move that affects non-resolve stats, 
 // where both players used the same character
-function parseMoveSameChar(battleObj, p1name, p2name, charName, turnResults, p1Resolves, p2Resolves) {
+function parseMoveSameChar(battleObj, p1name, p2name, charName, turnResults, p1resolves, p2resolves) {
     //consider: what if one person uses a non-damaging move while the other uses a damaging move?
     //what if both use a non-damaging move?
 }
 
 // determine whether the characters used a move that affects non-resolve stats, 
 // where both players used a different character
-function parseMoveDifferentChars(battleObj, attacker, defender, attackChar, defenseChar, turnResults) {
-    
+function parseMoveDifferentChars(battleObj, battleKey, attacker, defender, attackChar, defenseChar, turnResults, turn) {
+    if (turnResults.includes(`**${attackChar}** used **Hate**!\n**${defenseChar}**'s **Ability** was weakened!`)) {
+        addBoost(battleObj, battleKey, defender, defenseChar, "Hate", turn);
+    }
+    if (turnResults.includes(`**${attackChar}** used **Unity**!`)
+          && turnResults.includes(`**${attackChar}**'s **Ability** was boosted!`)) {
+        for (let charKey in battleObj[battleKey][attacker].chars) {
+            let charResolve = battleObj[battleKey][attacker].chars[charKey].resolve;
+            if (charResolve > 0) {
+                //TODO: remove this
+                console.log(`Unity boost added!`);
+                addBoost(battleObj, battleKey, attacker, charKey, "Unity", turn);        
+            }
+        }
+    }
+    if (turnResults.includes(`**${attackChar}** used **Study**!\n**${attackChar}**'s **Mental** was greatly boosted!`)) {
+        //TODO: remove this
+        console.log(`Study boost added!`);
+        addBoost(battleObj, battleKey, attacker, attackChar, "Study", turn);
+    }
 }
 
 function updateResolves(battleObj, battleKey, playerName, playerResolves) {

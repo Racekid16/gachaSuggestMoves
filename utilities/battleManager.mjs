@@ -2,6 +2,7 @@
 import { setPlayerParty } from './setPlayerParty.mjs';
 import config from '../config.json' assert { type: 'json' };
 import consts from '../consts.json' assert { type: 'json' };
+import { parseTurnResults } from './parseTurnResults.mjs';
 const delay = async (ms = 1000) =>  new Promise(resolve => setTimeout(resolve, ms));
 
 export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
@@ -15,7 +16,7 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
     let [result1, result2] = await Promise.all([promise1, promise2]);
     if (result1 == -1 || result2 == -1) {
         deleteBattle(battleObj, p1name, p2name, null);
-        console.log(`${battleKey.replace('_', ' ')} deleted; failed to request a player's party\n`);
+        console.log(`${battleKey.replace(/_/g, ' ')} deleted; failed to request a player's party\n`);
         return;
     }
 
@@ -28,7 +29,7 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
     verifyPlayerResolves(battleObj, battleKey, p1name, 1, battleEmbed);
     verifyPlayerResolves(battleObj, battleKey, p2name, 2, battleEmbed);
 
-    console.log("");
+    parseTurnResults(battleObj, p1name, p2name, battleEmbed);
 }
 
 export async function createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL) {
@@ -36,18 +37,18 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
     let battleKey = playerName + "_vs._Chairman Sakayanagi";
     battleObj[battleKey] = {};
 
-    battleObj[battleKey]['Chairman Sakayanagi'] = {};
-    battleObj[battleKey]['Chairman Sakayanagi'].chars = {};
-    battleObj[battleKey]['Chairman Sakayanagi'].id = consts.botID;
-    setPlayerParty(battleObj, 'Chairman Sakayanagi', botPartyImageURL);
-
     let myPromise = addPlayerToBattle(battleObj, battleKey, playerName, 1, null, playerID);
     let myResult = await myPromise;
     if (myResult == -1) { 
         deleteBattle(battleObj, playerName, 'Chairman Sakayanagi', null);
-        console.log(`${battleKey.replace('_', ' ')} deleted; failed to request ${playerName}'s party\n`);
+        console.log(`${battleKey.replace(/_/g, ' ')} deleted; failed to request ${playerName}'s party\n`);
         return;
     }
+
+    battleObj[battleKey]['Chairman Sakayanagi'] = {};
+    battleObj[battleKey]['Chairman Sakayanagi'].chars = {};
+    battleObj[battleKey]['Chairman Sakayanagi'].id = consts.botID;
+    setPlayerParty(battleObj, 'Chairman Sakayanagi', botPartyImageURL);
 
     let validPromise = verifyBattleValidity(battleObj, playerName, 'Chairman Sakayanagi');
     let promiseResult = await validPromise;
@@ -109,8 +110,6 @@ async function addPlayerToBattle(battleObj, battleKey, playerName, playerNumber,
     });
     if (response1.status != 204) {
         console.log(`Status ${response1.status}: ${response1.statusText}`);
-        console.log(`${battleKey.replace('_', ' ')} deleted; failed to request ${playerName}'s party\n`);
-        deleteBattle(battleObj, p1name, p2name, null);
         return -1;
     }
 

@@ -71,7 +71,7 @@ export function addBoost(battleObj, battleKey, playerName, charName, boost, turn
     }
 }
 
-export function checkBoostsExpired(battleObj, battleKey, playerName, turn) {
+export function removeExpiredBoosts(battleObj, battleKey, playerName, turn) {
     for (let charKey in battleObj[battleKey][playerName].chars) {
         let thisChar = battleObj[battleKey][playerName].chars[charKey];
         let thisCharInitial = battleObj[battleKey][playerName].initialStats[charKey];
@@ -84,35 +84,36 @@ export function checkBoostsExpired(battleObj, battleKey, playerName, turn) {
                     case 'Hate':
                         let hateDebuff = -0.35;
                         buffCharAbility(thisChar, thisCharInitial, hateDebuff * -1);
-                        console.log(`${charKey}'s Hate debuff expired! Ability increased by ${hateDebuff}%.`);
+                        console.log(`${charKey}'s Hate debuff expired! Ability increased by ${hateDebuff * 100}%.`);
                         break;
                     case 'Unity':
                         let unityBuff = 0.35;
                         buffCharAbility(thisChar, thisCharInitial, unityBuff * -1);
-                        console.log(`${charKey}'s Unity buff expired! Ability weakened by ${unityBuff}%.`);
+                        console.log(`${charKey}'s Unity buff expired! Ability weakened by ${unityBuff * 100}%.`);
                         break;
                     case 'Study':
                         let initiativeBuff = 1;
                         let mentalBuff = 1.5;
                         thisChar.initiative = Math.round(thisChar.initiative + (thisCharInitial.initiative * initiativeBuff * -1));
                         thisChar.mental     = Math.round(thisChar.mental     + (thisCharInitial.mental     * mentalBuff     * -1));
-                        console.log(`${charKey}'s Study buff expired! Initiative weakened by ${initiativeBuff}% and Mental weakened by ${mentalBuff}%`);
+                        console.log(`${charKey}'s Study buff expired! Initiative weakened by ${initiativeBuff * 100}% `
+                                  + `and Mental weakened by ${mentalBuff * 100}%`);
                         break;
                     case 'Dominate':
                         let dominateDebuff = -0.75;
                         buffCharAbility(thisChar, thisCharInitial, dominateDebuff * -1);
-                        console.log(`${charKey}'s Dominate debuff expired! Ability increased by ${dominateDebuff}%.`);
+                        console.log(`${charKey}'s Dominate debuff expired! Ability increased by ${dominateDebuff * 100}%.`);
                         break;
                     case 'Humiliate':
                         //TODO
                         let humiliateDebuff = 0.25;
                         let highestAttackStat = "";
-                        console.log(`${charKey}'s Humiliate debuff expired! ${highestAttackStat} increased by ${humiliateDebuff}%.`);
+                        console.log(`${charKey}'s Humiliate debuff expired! ${highestAttackStat} increased by ${humiliateDebuff * 100}%.`);
                         break;
                     case 'Blazing Form':
                         let blazingFormBuff = 0.2;
                         thisChar.physical = Math.round(thisChar.physical + (thisCharInitial.physical * blazingFormBuff * -1));
-                        console.log(`${charKey}'s Blazing Form buff expired! Physical weakened by ${blazingFormBuff}%.`);
+                        console.log(`${charKey}'s Blazing Form buff expired! Physical weakened by ${blazingFormBuff * 100}%.`);
                         break;
                     case 'Lead By Example':
                         break;

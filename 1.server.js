@@ -48,7 +48,7 @@ server.get("/", (req, res) => {
 //when making a request to this endpoint, replace all spaces
 //in a character's name with underscores
 server.get('/CharacterData/:name/:numStars', (req, res) => {
-    let name = req.params.name.replace('_', " ");
+    let name = req.params.name.replace(/_/g, " ");
     let numStars = parseInt(req.params.numStars);
     database.collection('CharacterData')
         .findOne({
@@ -58,7 +58,7 @@ server.get('/CharacterData/:name/:numStars', (req, res) => {
         .then(doc => {
             if (!doc) {
                 res.status(404).send({
-                    message: "That character isn't in the database"
+                    message: `${name} with ${numStars} stars isn't in the database`
                 });
                 return;
             }

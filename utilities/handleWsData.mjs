@@ -45,10 +45,10 @@ async function processBattleEmbed(battleObj, battleEmbed) {
         createBattle(battleObj, p1name, p2name, battleEmbed);
         return;
     } 
-    if (typeof battleObj[battleKey] === 'undefined') {
+    else if (typeof battleObj[battleKey] === 'undefined') {
         return;
     }
-    if (battleEmbed.fields[2].name == 'WINNER:') {
+    else if (battleEmbed.fields[2].name == 'WINNER:') {
         let turnResults = battleEmbed.fields[2].value;
         deleteBattle(battleObj, p1name, p2name, turnResults);
         return;
