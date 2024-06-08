@@ -14,36 +14,50 @@ export function parseTurn(battleObj, p1name, p2name, battleEmbed) {
     let turn = parseInt(battleEmbed.fields[2].name.substring(battleEmbed.fields[2].name.indexOf('__Turn ') + 7, battleEmbed.fields[2].name.length - 2));
     let turnResults = battleEmbed.fields[2].value;
     //TODO: comment this
-    console.log(`Turn ${turn} of ${battleKey}:\n${turnResults.replaceAll(/\*/g, '')}\n`);
+    console.log(`Turn ${turn} of ${battleKey}:\n${turnResults}\n`);
 
-    //determine what characters each player used
-    let currentCharRegex = /__(.+)__/;
-    let p1char = currentCharRegex.exec(battleEmbed.fields[0].value)?.[1];
-    let p2char = currentCharRegex.exec(battleEmbed.fields[1].value)?.[1];
-
+    //determine player resolves
     let p1Resolves = getTeamResolves(1, battleEmbed);
     let p2Resolves = getTeamResolves(2, battleEmbed);
-    //TODO: remove this
-    console.log('p1Resolves:', p1Resolves);
-    console.log('p2Resolves:', p2Resolves);
 
-    //determine the new resolves 
-    if (typeof p1char === 'undefined' || typeof p2char === 'undefined') {
-        parseTurnDefeatedChar();
-        return;
-    }
-    else if (excludedChars.includes(p1char) || excludedChars.includes(p2char)) {
+    //determine what characters each player used
+    let p1char = getPlayerCharacter(battleObj, battleKey, p1name, 1, battleEmbed);
+    let p2char = getPlayerCharacter(battleObj, battleKey, p2name, 2, battleEmbed);
+    
+    if (excludedChars.includes(p1char) || excludedChars.includes(p2char)) {
         return;
     }
     else if (p1char == p2char) {
-        parseTurnSameChar();      
+        parseTurnSameChar(battleObj, p1name, p2name, p1char, turnResults, p1Resolves, p2Resolves);      
     }
     else {
-        parseTurnDifferentChars();
+        parseTurnDifferentChars(battleObj, p1name, p2name, p1char, p2char, turnResults, p1Resolves, p2Resolves);
     }
+
     checkBoostsExpired(battleObj, battleKey, p1name, turn);
     checkBoostsExpired(battleObj, battleKey, p2name, turn);
-    suggestMove();
+    updateResolves(battleObj, battleKey, p1name, p1Resolves);
+    updateResolves(battleObj, battleKey, p2name, p2Resolves);
+    suggestMove(battleObj, battleKey, p1name, p2name);
+    suggestMove(battleObj, battleKey, p2name, p1name);
+}
+
+// determine what character the player is using (or used if they died)
+// and set the player's currentChar property
+function getPlayerCharacter(battleObj, battleKey, playerName, playerNumber, battleEmbed) {
+    //determine what characters each player used
+    let currentCharRegex = /__(.+)__/;
+    let charName = currentCharRegex.exec(battleEmbed.fields[playerNumber - 1].value)?.[1];
+
+    // if the player's character was defeated, set their char equal to their previous turn's char
+    if (typeof charName === 'undefined') {
+        charName = battleObj[battleKey][playerName].currentChar;
+        battleObj[battleKey][playerName].currentChar = null;
+    } else {
+        battleObj[battleKey][playerName].currentChar = charName;
+    }
+
+    return charName;
 }
 
 function getTeamResolves(playerNumber, battleEmbed) {
@@ -77,15 +91,26 @@ function getTeamResolves(playerNumber, battleEmbed) {
     return returnObj;
 }
 
-function parseTurnDefeatedChar() {
-
-}
-
-function parseTurnSameChar() {
+function parseTurnSameChar(battleObj, p1name, p2name, p1char, p2char, turnResults, p1Resolves, p2Resolves) {
     //consider: what if one person uses a non-damaging move while the other uses a damaging move?
     //what if both use a non-damaging move?
 }
 
-function parseTurnDifferentChars() {
+function parseTurnDifferentChars(battleObj, p1name, p2name, p1char, p2char, turnResults, p1Resolves, p2Resolves) {
+    let players = [p1name, p2name];
+    let chars = [p1char, p2char];
 
+    for (let i = 0; i < chars.length; i++) {
+        let attacker = players[i];
+        let defender = players[(i + 1) % 2];
+        let attackChar = chars[i];
+        let defenseChar = chars[(i + 1) % 2];
+
+    }
+}
+
+function updateResolves(battleObj, battleKey, playerName, playerResolves) {
+    for (let charKey in playerResolves) {
+        battleObj[battleKey][playerName].chars[charKey].resolve = playerResolves[charKey];
+    }
 }

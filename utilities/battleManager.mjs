@@ -118,6 +118,7 @@ async function addPlayerToBattle(battleObj, battleKey, playerName, playerNumber,
 }
 
 // check whether the actual resolves of characters in a player's party match what was calculated
+// also set the currentChar property
 function verifyPlayerResolves(battleObj, battleKey, playerName, playerNumber, battleEmbed) {
     let resolveRegex = / (\*__(.+)__\*\*\*|\*(.+)\*) - \*\*(\d+)\*\*:heart:/g;
 
@@ -145,4 +146,9 @@ function verifyPlayerResolves(battleObj, battleKey, playerName, playerNumber, ba
         battleObj[battleKey][playerName].chars[charName].maxResolve = charResolve;
         battleObj[battleKey][playerName].chars[charName].resolve = charResolve;
     }
+
+    let currentCharRegex = / \*__(.+)__\*\*\* - \*\*\d+\*\*:heart:/;
+    let currentCharMatch = currentCharRegex.exec(battleEmbed.fields[playerNumber - 1].value);
+    let currentChar = currentCharMatch[1];
+    battleObj[battleKey][playerName].currentChar = currentChar;
 }
