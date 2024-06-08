@@ -1,6 +1,14 @@
 // Given an image of the user's party, parse it for the characters they're using,
 // calculate the stats of those characters, and update the battleObj accordingly.
 
+let excludedChars = [
+    "Perfect Kōenji Rokusuke",
+    "Serious Kōenji Rokusuke",
+    "True Kushida Kikyō",
+    "Unmasked Kushida Kikyō",
+    "Pawn"
+];
+
 export async function setPlayerParty(battleObj, playerName, imageURL) {
     let battleKey = "";
     for (let key in battleObj) {
@@ -128,6 +136,15 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
 
     //if you want to double-check that the characters' stats were calculated correctly
     //console.log(battleObj[battleKey][playerName].chars);
+
+    for (let charKey in battleObj[battleKey][playerName].chars) {
+        if (excludedChars.includes(charKey)) {
+            battleObj[battleKey][playerName].valid = false;
+            battleObj[battleKey][playerName].reason = `${playerName} is using ${charKey}`;
+            return;
+        }
+    }
+
     battleObj[battleKey][playerName].initialStats = structuredClone(battleObj[battleKey][playerName].chars);
     battleObj[battleKey][playerName].valid = true;
 }

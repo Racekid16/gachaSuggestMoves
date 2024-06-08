@@ -40,7 +40,7 @@ async function processBattleEmbed(battleObj, battleEmbed) {
     let p2name = battleEmbed.fields[1].name;
     let battleKey = p1name + "_vs._" + p2name;
     let turn = parseInt(battleEmbed.fields[2].name.substring(battleEmbed.fields[2].name.indexOf('__Turn ') + 7, battleEmbed.fields[2].name.length - 2));
-    if (typeof battleObj[battleKey] === 'undefined' && turn == 1) {
+    if (typeof battleObj[battleKey] === 'undefined' && turn == 1 && p2name != 'Chairman Sakayanagi') {
         createBattle(battleObj, p1name, p2name, battleEmbed);
         return;
     } 

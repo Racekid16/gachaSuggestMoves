@@ -18,20 +18,11 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
         return;
     }
 
-    while (typeof battleObj[battleKey][p1name].valid === 'undefined' || typeof battleObj[battleKey][p2name].valid === 'undefined') {
-        await delay(1);
-    }
-    if (!battleObj[battleKey][p1name].valid || !battleObj[battleKey][p2name].valid) {
-        if (!battleObj[battleKey][p1name].valid) {
-            console.log(`${battleKey} was deleted because ${battleObj[battleKey][p1name].reason}\n`);
-        } else {
-            console.log(`${battleKey} was deleted because ${battleObj[battleKey][p2name].reason}\n`);
-        }
-        delete battleObj[battleKey];
+    let validPromise = verifyBattleValidity(battleObj, p1name, p2name);
+    let promiseResult = await validPromise;
+    if (promiseResult == -1) {
         return;
     }
-    delete battleObj[battleKey][p1name].valid;
-    delete battleObj[battleKey][p2name].valid;
 
     verifyPlayerResolves(battleObj, battleKey, p1name, 1, battleEmbed);
     verifyPlayerResolves(battleObj, battleKey, p2name, 2, battleEmbed);
@@ -56,6 +47,14 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
         console.log(`${battleKey.replace('_', ' ')} deleted; failed to request ${playerName}'s party\n`);
         return;
     }
+
+    let validPromise = verifyBattleValidity(battleObj, playerName, 'Chairman Sakayanagi');
+    let promiseResult = await validPromise;
+    if (promiseResult == -1) {
+        return;
+    }
+
+    console.log("");
 }
 
 export function deleteBattle(battleObj, p1name, p2name, turnResults) {
@@ -110,10 +109,32 @@ async function addPlayerToBattle(battleObj, battleKey, playerName, playerNumber,
     if (response1.status != 204) {
         console.log(`Status ${response1.status}: ${response1.statusText}`);
         console.log(`${battleKey.replace('_', ' ')} deleted; failed to request ${playerName}'s party\n`);
-        delete battleObj[battleKey];
+        deleteBattle(battleObj, p1name, p2name, null);
         return -1;
     }
 
+    return 0;
+}
+
+async function verifyBattleValidity(battleObj, p1name, p2name) { 
+    let battleKey = p1name + "_vs._" + p2name;
+
+    while (typeof battleObj[battleKey][p1name].valid === 'undefined' || typeof battleObj[battleKey][p2name].valid === 'undefined') {
+        await delay(1);
+    }
+
+    if (!battleObj[battleKey][p1name].valid || !battleObj[battleKey][p2name].valid) {
+        if (!battleObj[battleKey][p1name].valid) {
+            console.log(`${battleKey} was deleted because ${battleObj[battleKey][p1name].reason}\n`);
+        } else {
+            console.log(`${battleKey} was deleted because ${battleObj[battleKey][p2name].reason}\n`);
+        }
+        deleteBattle(battleObj, p1name, p2name, null);
+        return -1;
+    }
+
+    delete battleObj[battleKey][p1name].valid;
+    delete battleObj[battleKey][p2name].valid;
     return 0;
 }
 

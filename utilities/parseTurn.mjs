@@ -1,14 +1,6 @@
 import { addBoost, checkBoostsExpired } from "./updateBoosts.mjs";
 import { suggestMove } from "./suggestMove.mjs";
 
-let excludedChars = [
-    "Perfect Kōenji Rokusuke",
-    "Serious Kōenji Rokusuke",
-    "True Kushida Kikyō",
-    "Unmasked Kushida Kikyō",
-    "Pawn"
-];
-
 export function parseTurn(battleObj, p1name, p2name, battleEmbed) {
     let battleKey = p1name + "_vs._" + p2name;
     let turn = parseInt(battleEmbed.fields[2].name.substring(battleEmbed.fields[2].name.indexOf('__Turn ') + 7, battleEmbed.fields[2].name.length - 2));
@@ -23,11 +15,8 @@ export function parseTurn(battleObj, p1name, p2name, battleEmbed) {
     //determine what characters each player used
     let p1char = getPlayerCharacter(battleObj, battleKey, p1name, 1, battleEmbed);
     let p2char = getPlayerCharacter(battleObj, battleKey, p2name, 2, battleEmbed);
-    
-    if (excludedChars.includes(p1char) || excludedChars.includes(p2char)) {
-        return;
-    }
-    else if (p1char == p2char) {
+
+    if (p1char == p2char) {
         parseTurnSameChar(battleObj, p1name, p2name, p1char, turnResults, p1Resolves, p2Resolves);      
     }
     else {
