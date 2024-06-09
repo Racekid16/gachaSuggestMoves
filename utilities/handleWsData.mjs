@@ -1,6 +1,6 @@
 // handle data received from the websocket. 
 
-import { createBattle, createCampaignBattle, deleteBattle } from "./battleManager.mjs";
+import { createBattle, createCampaignBattle, deleteBattle, verifyPlayerResolves } from "./battleManager.mjs";
 import { setPlayerParty } from "./setPlayerParty.mjs";
 import { parseTurnResults } from "./parseTurnResults.mjs";
 import config from '../config.json' assert { type: 'json' };
@@ -28,11 +28,12 @@ export function handleWsData(battleObj, responseJSON) {
         let playerName = responseJSON.d.interaction_metadata.user.global_name;
         let playerID = responseJSON.d.interaction_metadata.user.id;
         let botPartyImageURL = responseJSON.d.embeds[0].image.proxy_url + 'format=png&width=328&height=254';
+        let stage = /Campaign Stage (\d+)/.exec(responseJSON.d.embeds[0].author.name)[1];
         let battleKey = playerName + "_vs._Chairman Sakayanagi"
         if (typeof battleObj[battleKey] !== 'undefined') {
             deleteBattle(battleObj, playerName, 'Chairman Sakayanagi', null);
         }
-        createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL);
+        createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL, stage);
     }
 }
 
@@ -52,6 +53,10 @@ async function processBattleEmbed(battleObj, battleEmbed) {
         let turnResults = battleEmbed.fields[2].value;
         deleteBattle(battleObj, p1name, p2name, turnResults);
         return;
+    }
+    if (typeof battleObj[battleKey] !== 'undefined' && turn == 1 && battleObj[battleKey][p2name].id == consts.botID) {
+        verifyPlayerResolves(battleObj, battleKey, p1name, 1, battleEmbed);
+        verifyPlayerResolves(battleObj, battleKey, p2name, 2, battleEmbed);
     }
     parseTurnResults(battleObj, p1name, p2name, battleEmbed);
 }

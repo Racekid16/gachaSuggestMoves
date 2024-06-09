@@ -1,35 +1,42 @@
 {
+    "port": 2500,
     "botID": "1101145170466062416",
     "moveInfo": {
         "Academic": {
-            "name": "Academic",
+            "damageType": "Academic",
             "attackStat": "mental",
-            "basePower": 1
+            "basePower": 1,
+            "isAttack": true
         },
         "Scheming": {
-            "name": "Scheming",
+            "damageType": "Scheming",
             "attackStat": "mental",
-            "basePower": 1
+            "basePower": 1,
+            "isAttack": true
         },
         "Fighting": {
-            "name": "Fighting",
+            "damageType": "Fighting",
             "attackStat": "physical",
-            "basePower": 1
+            "basePower": 1,
+            "isAttack": true
         },
         "Athleticism": {
-            "name": "Athleticism",
+            "damageType": "Athleticism",
             "attackStat": "physical",
-            "basePower": 1
+            "basePower": 1,
+            "isAttack": true
         },
         "Influence": {
-            "name": "Influence",
+            "damageType": "Influence",
             "attackStat": "social",
-            "basePower": 1
+            "basePower": 1,
+            "isAttack": true
         },
         "Empathy": {
-            "name": "Empathy",
+            "damageType": "Empathy",
             "attackStat": "social",
-            "basePower": 1
+            "basePower": 1,
+            "isAttack": true
         }
     },
     "personalityWeaknesses": {
@@ -43,5 +50,6 @@
         "Explosive": ["Academic", "Scheming"],
         "Reserved": ["Athleticism", "Fighting"],
         "Selfish": ["Academic", "Influence"]
-    }
+    },
+    "transformChars": ["Perfect Kōenji Rokusuke", "True Kushida Kikyō", "Unmasked Kushida Kikyō"]
 }

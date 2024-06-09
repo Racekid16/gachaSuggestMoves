@@ -1,12 +1,16 @@
 // Given an image of the user's party, parse it for the characters they're using,
 // calculate the stats of those characters, and update the battleObj accordingly.
+import { printParty } from './prettyPrint.mjs';
+import consts from '../consts.json' assert { type: 'json' };
 
 let excludedChars = [
     "Perfect Kōenji Rokusuke",
     "Serious Kōenji Rokusuke",
+    /*
     "True Kushida Kikyō",
     "Unmasked Kushida Kikyō",
     "Pawn"
+    */
 ];
 
 export async function setPlayerParty(battleObj, playerName, imageURL) {
@@ -30,9 +34,6 @@ export async function setPlayerParty(battleObj, playerName, imageURL) {
         })
     });
     let partyJSON = await party.json();
-    console.log(`${playerName}'s party:
-Active: ${partyJSON[0]?.name} ${"⭐".repeat(partyJSON[0]?.numStars)}, ${partyJSON[1]?.name} ${"⭐".repeat(partyJSON[1]?.numStars)}, ${partyJSON[2]?.name} ${"⭐".repeat(partyJSON[2]?.numStars)}
-Bench:  ${partyJSON[3]?.name} ${"⭐".repeat(partyJSON[3]?.numStars)}, ${partyJSON[4]?.name} ${"⭐".repeat(partyJSON[4]?.numStars)}, ${partyJSON[5]?.name} ${"⭐".repeat(partyJSON[5]?.numStars)}`);
     for (let i = 0; i < partyJSON.length; i++) {
         let char = partyJSON[i];
         if (char?.name == "empty") {
@@ -62,8 +63,12 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
         }
     }
 
-    battleObj[battleKey][playerName].baseStats = structuredClone(battleObj[battleKey][playerName].chars);
-    let baseStats = battleObj[battleKey][playerName].baseStats;
+    let baseStats = structuredClone(battleObj[battleKey][playerName].chars);
+
+    let hasStrength = false;
+    if (battleObj[battleKey][playerName].id != consts.botID) {
+        hasStrength = true;
+    }
 
     for (let charKey in battleObj[battleKey][playerName].chars) {
         let thisChar = battleObj[battleKey][playerName].chars[charKey];
@@ -109,23 +114,29 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
 
         // code was written to see if the player is in a faction that has strength level 3,
         // but since all factions now have strength level 3, and network processes are slow,
-        // I skipped actually checking and instead just automatically add 10% to all character stats
-        thisCharBoosts.resolve    += 0.1;
-        thisCharBoosts.mental     += 0.1;
-        thisCharBoosts.physical   += 0.1;
-        thisCharBoosts.social     += 0.1;
-        thisCharBoosts.initiative += 0.1;
+        // I skipped actually checking and instead just automatically add 10% to all character stats,
+        // unless you're going against the Chairman Sakayanagi bot
+        if (hasStrength) {
+            thisCharBoosts.resolve    += 0.1;
+            thisCharBoosts.mental     += 0.1;
+            thisCharBoosts.physical   += 0.1;
+            thisCharBoosts.social     += 0.1;
+            thisCharBoosts.initiative += 0.1;
+        }
 
         for (let statKey in thisCharBoosts) {
             thisChar[statKey] = Math.round(thisChar[statKey] + baseStats[charKey][statKey] * thisCharBoosts[statKey])
         }
     }
  
+    printParty(playerName, partyJSON, battleObj[battleKey][playerName].chars, hasStrength);
+
     for (let charKey in battleObj[battleKey][playerName].chars) {
         let thisChar = battleObj[battleKey][playerName].chars[charKey];
         if (thisChar.active) {
             //boosts will keep track of things like unity, hate, and study. 
-            thisChar.boosts = [];
+            thisChar.buffs = [];
+            thisChar.debuffs = [];
             delete thisChar._id;
             delete thisChar.name;
             delete thisChar.active;

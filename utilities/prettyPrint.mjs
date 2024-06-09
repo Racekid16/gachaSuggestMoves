@@ -1,0 +1,142 @@
+export function printParty(playerName, partyJSON, charStats, hasStrength) {
+    let printStrength = hasStrength ? '(Strength 3: +10% to stats)' : '';
+    console.log(`${playerName}'s party ${printStrength}\nActive:`);    
+
+    let [active0name, active1name, active2name] = [partyJSON[0].name, partyJSON[1].name, partyJSON[2].name];
+    let activeChars = [charStats[active0name], charStats[active1name], charStats[active2name]];
+
+    let activeNameLength = getMaxLength(activeChars, 'name');
+    let initiativeLength = getMaxLength(activeChars, 'initiative');
+    let mentalLength = getMaxLength(activeChars, 'mental');
+    let physicalLength = getMaxLength(activeChars, 'physical');
+    let socialLength = getMaxLength(activeChars, 'social');
+
+    for (let char of activeChars) {
+        console.log(`${char.numStars}⭐ ${char.name}${" ".repeat(activeNameLength - char.name.length)} `
+                  + `🏃‍ ${char.initiative}${" ".repeat(initiativeLength - char.initiative.toString().length)} `
+                  + `🧠 ${char.mental}${" ".repeat(mentalLength - char.mental.toString().length)} `
+                  + `💪 ${char.physical}${" ".repeat(physicalLength - char.physical.toString().length)} `
+                  + `🗣️  ${char.social}${" ".repeat(socialLength - char.social.toString().length)} `
+                  + `❤️  ${char.resolve}`);
+    }
+
+    console.log("Bench:")
+
+    let [bench0name, bench1name, bench2name ] = [partyJSON[3].name, partyJSON[4].name, partyJSON[5].name];
+    let benchChars = [charStats[bench0name], charStats[bench1name], charStats[bench2name]];
+
+    let benchNameLength = getMaxLength(benchChars, 'name');
+    let benchHasAbilityBoost = benchChars.reduce((hasAbility, char) => {
+        return hasAbility || char.supportCategory == 'Ability';
+    }, false);
+    let supportCategoryLength = benchHasAbilityBoost ? 10 : 1;
+    let supportBonusLength = getMaxLength(benchChars, 'supportBonus');
+    
+    for (let char of benchChars) {
+        let supportCategorySymbol;
+        switch (char.supportCategory) {
+            case 'Ability': supportCategorySymbol = "🏃 🧠 💪 🗣️  "; break;
+            case 'Initiative': supportCategorySymbol = "🏃 "; break;
+            case 'Mental': supportCategorySymbol = "🧠 "; break;
+            case 'Physical': supportCategorySymbol = "💪 "; break;
+            case 'Social': supportCategorySymbol = "🗣️  "; break;
+            case 'Resolve': supportCategorySymbol = "❤️  "; break;
+            default: console.log(`Unrecognized support category ${char.supportCategory}`); break;
+        }
+
+        let alliedActiveChars = []
+        for (let activeChar of activeChars) {
+            alliedActiveChars.push(" ".repeat(activeChar.name.length));
+        };
+        for (let i = 0; i < activeChars.length; i++) {
+            for (let ally of char.allies) {
+                if (activeChars[i].tags.includes(ally)) {
+                    alliedActiveChars[i] = activeChars[i].name;
+                }
+            }
+        }
+        
+        console.log(`${char.numStars}⭐ ${char.name}${" ".repeat(benchNameLength - char.name.length)} `
+                  + `${" ".repeat(char.supportCategory == 'Ability' ? 0 : supportCategoryLength - 1)}`
+                  + `${supportCategorySymbol}`
+                  + `${" ".repeat(supportBonusLength - char.supportBonus.toString().length)}`
+                  + `+${char.supportBonus}% `
+                  + `| ${alliedActiveChars[0]} | ${alliedActiveChars[1]} | ${alliedActiveChars[2]} |`);
+    }
+
+    console.log("");
+}
+
+export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p1move, p2move, 
+                             p1damage, p2damage, p1critical, p2critical) {
+    let battleKey = p1name + "_vs._" + p2name;
+
+    let playerNameLength = p1name.length > p2name.length ? p1name.length : p2name.length;
+    let charNameLength = p1char.length > p2char.length ? p1char.length : p2char.length;
+    let p1initiative = battleObj[battleKey][p1name].chars[p1char].initiative;
+    let p2initiative = battleObj[battleKey][p2name].chars[p2char].initiative;
+    let initiativeLength = p1initiative.toString().length > p2initiative.toString().length ?
+                           p1initiative.toString().length : p2initiative.toString().length;
+    let p1mental = battleObj[battleKey][p1name].chars[p1char].mental.toString();
+    let p2mental = battleObj[battleKey][p2name].chars[p2char].mental.toString();
+    let mentalLength = p1mental.length > p2mental.length ? p1mental.length : p2mental.length;
+    let p1physical = battleObj[battleKey][p1name].chars[p1char].physical.toString();
+    let p2physical = battleObj[battleKey][p2name].chars[p2char].physical.toString();
+    let physicalLength = p1physical.length > p2physical.length ? p1physical.length : p2physical.length;
+    let p1social = battleObj[battleKey][p1name].chars[p1char].social.toString();
+    let p2social = battleObj[battleKey][p2name].chars[p2char].social.toString();
+    let socialLength = p1social.length > p2social.length ? p1social.length : p2social.length;
+    let p1resolve = battleObj[battleKey][p1name].chars[p1char].resolve;
+    let p2resolve = battleObj[battleKey][p2name].chars[p2char].resolve;
+    let resolveLength = p1resolve.toString().length > p2resolve.toString().length ? 
+                        p1resolve.toString().length : p2resolve.toString().length;
+    let moveNameLength = p1move.length > p2move.length ? p1move.length: p2move.length;
+    let p1lowerBound = Math.round(p1damage * 0.75).toString();
+    let p1upperBound = Math.round(p1damage * 1.25).toString();
+    let p2lowerBound = Math.round(p2damage * 0.75).toString();
+    let p2upperBound = Math.round(p2damage * 1.25).toString();
+    let lowerBoundLength = p1lowerBound.length > p2lowerBound.length ? p1lowerBound.length : p2lowerBound.length;
+    let upperBoundLength = p1upperBound.length > p2upperBound.length ? p1upperBound.length : p2upperBound.length;
+    
+    let p1printCritical = p1critical ? 'CRITICAL' : '        ';
+    let p2printCritical = p2critical ? 'CRITICAL' : '        ';
+    let p1printFatal = p1lowerBound > p2resolve ? 'FATAL' : '';
+    let p2printFatal = p2lowerBound > p1resolve ? 'FATAL' : '';
+
+    let p1Output = `${p1name} ${" ".repeat(playerNameLength - p1name.length)}` 
+                  + `[${p1char}${" ".repeat(charNameLength - p1char.length)} `
+                  + `🏃 ${p1initiative}${" ".repeat(initiativeLength - p1initiative.toString().length)} `
+                  + `🧠 ${p1mental}${" ".repeat(mentalLength - p1mental.length)} `
+                  + `💪 ${p1physical}${" ".repeat(physicalLength - p1physical.length)} `
+                  + `🗣️  ${p1social}${" ".repeat(socialLength - p1social.length)} `
+                  + `❤️  ${p1resolve}${" ".repeat(resolveLength - p1resolve.toString().length)}]: `
+                  + `${p1move} ${" ".repeat(moveNameLength - p1move.length)}`
+                  + `(${p1lowerBound} ${" ".repeat(lowerBoundLength - p1lowerBound.toString().length)}- `
+                  + `${p1upperBound}${" ".repeat(upperBoundLength - p1upperBound.toString().length)}) `
+                  + `${p1printCritical} ${p1printFatal}`
+    let p2Output = `${p2name} ${" ".repeat(playerNameLength - p2name.length)}`
+                  + `[${p2char}${" ".repeat(charNameLength - p2char.length)} `
+                  + `🏃‍ ${p2initiative}${" ".repeat(initiativeLength - p2initiative.toString().length)} `
+                  + `🧠 ${p2mental}${" ".repeat(mentalLength - p2mental.length)} `
+                  + `💪 ${p2physical}${" ".repeat(physicalLength - p2physical.length)} `
+                  + `🗣️  ${p2social}${" ".repeat(socialLength - p2social.length)} `
+                  + `❤️  ${p2resolve}${" ".repeat(resolveLength - p2resolve.toString().length)}]: `
+                  + `${p2move} ${" ".repeat(moveNameLength - p2move.length)}`
+                  + `(${p2lowerBound} ${" ".repeat(lowerBoundLength - p2lowerBound.toString().length)}- `
+                  + `${p2upperBound}${" ".repeat(upperBoundLength - p2upperBound.toString().length)}) `
+                  + `${p2printCritical} ${p2printFatal}`
+    
+    if (p1initiative >= p2initiative) {
+        console.log(p1Output);
+        console.log(p2Output);
+    } else {    //p1initiative < p2initiative
+        console.log(p2Output);
+        console.log(p1Output);
+    }
+}
+
+function getMaxLength(chars, property) {
+    return chars.reduce((maxLength, char) => {
+        return Math.max(maxLength, char[property].toString().length);
+    }, 0);
+}

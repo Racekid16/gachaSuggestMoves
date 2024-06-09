@@ -16,7 +16,7 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
     let [result1, result2] = await Promise.all([promise1, promise2]);
     if (result1 == -1 || result2 == -1) {
         deleteBattle(battleObj, p1name, p2name, null);
-        console.log(`${battleKey.replace(/_/g, ' ')} deleted; failed to request a player's party\n`);
+        console.log(`${p1name} vs. ${p2name} was deleted; failed to request a player's party\n`);
         return;
     }
 
@@ -32,8 +32,8 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
     parseTurnResults(battleObj, p1name, p2name, battleEmbed);
 }
 
-export async function createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL) {
-    console.log(`${playerName} vs. Chairman Sakayanagi started`);
+export async function createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL, stage) {
+    console.log(`${playerName} vs. Chairman Sakayanagi (Campaign Stage ${stage}) started`);
     let battleKey = playerName + "_vs._Chairman Sakayanagi";
     battleObj[battleKey] = {};
 
@@ -41,13 +41,14 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
     let myResult = await myPromise;
     if (myResult == -1) { 
         deleteBattle(battleObj, playerName, 'Chairman Sakayanagi', null);
-        console.log(`${battleKey.replace(/_/g, ' ')} deleted; failed to request ${playerName}'s party\n`);
+        console.log(`${playerName} vs. Chairman Sakayanagi was deleted; failed to request ${playerName}'s party\n`);
         return;
     }
 
     battleObj[battleKey]['Chairman Sakayanagi'] = {};
     battleObj[battleKey]['Chairman Sakayanagi'].chars = {};
     battleObj[battleKey]['Chairman Sakayanagi'].id = consts.botID;
+    battleObj[battleKey]['Chairman Sakayanagi'].previousTaggedInChar = null;
     setPlayerParty(battleObj, 'Chairman Sakayanagi', botPartyImageURL);
 
     let validPromise = verifyBattleValidity(battleObj, playerName, 'Chairman Sakayanagi');
@@ -55,8 +56,6 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
     if (promiseResult == -1) {
         return;
     }
-
-    console.log("");
 }
 
 export function deleteBattle(battleObj, p1name, p2name, turnResults) {
@@ -84,65 +83,8 @@ export function deleteBattle(battleObj, p1name, p2name, turnResults) {
     delete battleObj[battleKey];
 }
 
-// add an object representing a player to their battle, and request the player's party
-async function addPlayerToBattle(battleObj, battleKey, playerName, playerNumber, turnResults, playerID) {
-    battleObj[battleKey][playerName] = {};
-    battleObj[battleKey][playerName].chars = {};
-
-    if (turnResults !== null) {
-        if (playerNumber == 1) {
-            battleObj[battleKey][playerName].id = turnResults.substring(turnResults.indexOf('**<@') + 4, turnResults.indexOf('>**'));
-        } else {
-            battleObj[battleKey][playerName].id = turnResults.substring(turnResults.indexOf('\n**<@') + 5, turnResults.lastIndexOf('>**'));
-        }
-    } else {
-        battleObj[battleKey][playerName].id = playerID;
-    }
-
-    let payload = `{"type":2,"application_id":"1101145170466062416","guild_id":"870355988887265301","channel_id":${config.privateThread},"session_id":"5da606d879de77e2287e7d26d2ddb04d","data":{"version":"1109844232824426714","id":"1109844232665059379","guild_id":"870355988887265301","name":"party","type":1,"options":[{"type":6,"name":"member","value":${battleObj[battleKey][playerName].id}}],"application_command":{"id":"1109844232665059379","application_id":"1101145170466062416","version":"1109844232824426714","default_member_permissions":null,"type":1,"nsfw":false,"name":"party","description":"View/Edit your active party!","guild_id":"870355988887265301","options":[{"type":6,"name":"member","description":"…"}]},"attachments":[]}}`;
-    let response1 = await fetch('https://discord.com/api/v9/interactions', {
-        method: 'POST',
-        headers: {
-            authorization: config.token,
-            "Content-Type": "application/json"
-        }, 
-        body: payload
-    });
-    if (response1.status != 204) {
-        console.log(`Status ${response1.status}: ${response1.statusText}`);
-        return -1;
-    }
-
-    return 0;
-}
-
-// verify that all characters in both player's parties are ones the script is prepared to deal with,
-// and if not, delete the battle
-async function verifyBattleValidity(battleObj, p1name, p2name) { 
-    let battleKey = p1name + "_vs._" + p2name;
-
-    while (typeof battleObj[battleKey][p1name].valid === 'undefined' || typeof battleObj[battleKey][p2name].valid === 'undefined') {
-        await delay(1);
-    }
-
-    if (!battleObj[battleKey][p1name].valid || !battleObj[battleKey][p2name].valid) {
-        if (!battleObj[battleKey][p1name].valid) {
-            console.log(`${battleKey} was deleted because ${battleObj[battleKey][p1name].reason}\n`);
-        } else {
-            console.log(`${battleKey} was deleted because ${battleObj[battleKey][p2name].reason}\n`);
-        }
-        deleteBattle(battleObj, p1name, p2name, null);
-        return -1;
-    }
-
-    delete battleObj[battleKey][p1name].valid;
-    delete battleObj[battleKey][p2name].valid;
-    return 0;
-}
-
 // check whether the actual resolves of characters in a player's party match what was calculated
-// also set the currentChar property
-function verifyPlayerResolves(battleObj, battleKey, playerName, playerNumber, battleEmbed) {
+export function verifyPlayerResolves(battleObj, battleKey, playerName, playerNumber, battleEmbed) {
     let resolveRegex = / (\*__(.+)__\*\*\*|\*(.+)\*) - \*\*(\d+)\*\*:heart:/g;
 
     for (let i = 0; i < 3; i++) {
@@ -169,9 +111,77 @@ function verifyPlayerResolves(battleObj, battleKey, playerName, playerNumber, ba
         battleObj[battleKey][playerName].chars[charName].maxResolve = charResolve;
         battleObj[battleKey][playerName].chars[charName].resolve = charResolve;
     }
+}
 
-    let currentCharRegex = / \*__(.+)__\*\*\* - \*\*\d+\*\*:heart:/;
-    let currentCharMatch = currentCharRegex.exec(battleEmbed.fields[playerNumber - 1].value);
-    let currentChar = currentCharMatch[1];
-    battleObj[battleKey][playerName].currentChar = currentChar;
+// add an object representing a player to their battle, and request the player's party
+async function addPlayerToBattle(battleObj, battleKey, playerName, playerNumber, turnResults, playerID) {
+    battleObj[battleKey][playerName] = {};
+    battleObj[battleKey][playerName].chars = {};
+    battleObj[battleKey][playerName].previousTaggedInChar = null;
+
+    if (turnResults !== null) {
+        if (playerNumber == 1) {
+            battleObj[battleKey][playerName].id = turnResults.substring(turnResults.indexOf('**<@') + 4, turnResults.indexOf('>**'));
+        } else {
+            battleObj[battleKey][playerName].id = turnResults.substring(turnResults.indexOf('\n**<@') + 5, turnResults.lastIndexOf('>**'));
+        }
+    } else {
+        battleObj[battleKey][playerName].id = playerID;
+    }
+
+    let payload = `{"type":2,"application_id":"1101145170466062416","guild_id":"870355988887265301","channel_id":${config.privateThread},"session_id":"5da606d879de77e2287e7d26d2ddb04d","data":{"version":"1109844232824426714","id":"1109844232665059379","guild_id":"870355988887265301","name":"party","type":1,"options":[{"type":6,"name":"member","value":${battleObj[battleKey][playerName].id}}],"application_command":{"id":"1109844232665059379","application_id":"1101145170466062416","version":"1109844232824426714","default_member_permissions":null,"type":1,"nsfw":false,"name":"party","description":"View/Edit your active party!","guild_id":"870355988887265301","options":[{"type":6,"name":"member","description":"…"}]},"attachments":[]}}`;
+    let response = await fetchWithRetry('https://discord.com/api/v9/interactions', {
+        method: 'POST',
+        headers: {
+            authorization: config.token,
+            "Content-Type": "application/json"
+        }, 
+        body: payload
+    });
+    if (response.status != 204) {
+        console.log(`Status ${response.status}: ${response.statusText}`);
+        return -1;
+    }
+
+    return 0;
+}
+
+// if it fails to request someone's party, retry the specified number of times with the specified wait timein between.
+async function fetchWithRetry(url, options, retries = 1, waitTime = 2000) {
+    let response;
+    for (let attempt = 0; attempt <= retries; attempt++) {
+        response = await fetch(url, options);
+        if (response.status === 204) {
+            return response;
+        }
+        if (attempt < retries) {
+            console.log(`Attempt ${attempt + 1} failed with status ${response.status}: ${response.statusText}. Retrying in ${delay / 1000} seconds...`);
+            await waitTime(delay);
+        }
+    }
+    return response;
+}
+
+// verify that all characters in both player's parties are ones the script is prepared to deal with,
+// and if not, delete the battle
+async function verifyBattleValidity(battleObj, p1name, p2name) { 
+    let battleKey = p1name + "_vs._" + p2name;
+
+    while (typeof battleObj[battleKey][p1name].valid === 'undefined' || typeof battleObj[battleKey][p2name].valid === 'undefined') {
+        await delay(1);
+    }
+
+    if (!battleObj[battleKey][p1name].valid || !battleObj[battleKey][p2name].valid) {
+        if (!battleObj[battleKey][p1name].valid) {
+            console.log(`${p1name} vs. ${p2name} was deleted because ${battleObj[battleKey][p1name].reason}\n`);
+        } else {
+            console.log(`${p1name} vs. ${p2name} was deleted because ${battleObj[battleKey][p2name].reason}\n`);
+        }
+        deleteBattle(battleObj, p1name, p2name, null);
+        return -1;
+    }
+
+    delete battleObj[battleKey][p1name].valid;
+    delete battleObj[battleKey][p2name].valid;
+    return 0;
 }
