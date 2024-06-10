@@ -9,6 +9,10 @@ export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
     let turn = parseInt(battleEmbed.fields[2].name.substring(battleEmbed.fields[2].name.indexOf('__Turn ') + 7, battleEmbed.fields[2].name.length - 2));
     let turnResults = battleEmbed.fields[2].value;
 
+    //TODO: remove this
+    console.log(`${p1name}'s previous tagged-in character was ${battleObj[battleKey][p1name].previousTaggedInChar}`);
+    console.log(`${p2name}'s previous tagged-in character was ${battleObj[battleKey][p2name].previousTaggedInChar}`);
+
     //remove the .replace part if you're testing
     console.log(`Turn ${turn} of ${p1name} vs. ${p2name}:\n${turnResults}`);
 
@@ -34,8 +38,13 @@ export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
 
     let p1taggedInChar = battleObj[battleKey][p1name].taggedInChar;
     let p2taggedInChar = battleObj[battleKey][p2name].taggedInChar;
+
+    //TODO: remove this
+    console.log(`${p1name}'s current tagged-in char is ${p1taggedInChar}`);
+    console.log(`${p2name}'s current tagged-in char is ${p2taggedInChar}`);
+
+    console.log("");
     if (p1taggedInChar !== null && p2taggedInChar !== null) {
-        console.log("");
         suggestMoves(battleObj, p1name, p2name, p1taggedInChar, p2taggedInChar, turn);
         console.log("");
     }
@@ -49,7 +58,7 @@ export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
 // and set the player's taggedInChar property
 function getPlayerCharacter(battleObj, battleKey, playerName, playerNumber, battleEmbed) {
     if (consts.transformChars.includes(battleObj[battleKey][playerName].previousTaggedInChar)) {
-        // TODO
+        //TODO
     }    
 
     let taggedInCharRegex = /__(.+)__/;
@@ -124,15 +133,31 @@ function parseMoveDifferentChars(battleObj, battleKey, attacker, defender, attac
         addBoostToAliveTeammates(battleObj, battleKey, attacker, "Boss Orders", turn);
     }
 
+    if (turnResults.includes(`**${attackChar}** used **Charm**!\n**${defenseChar}**'s **Social** was weakened!`)) {
+        addBoost(battleObj, battleKey, defender, defenseChar, "Charm", turn);
+    }
+
     if (turnResults.includes(`**${attackChar}** used **Hate**!\n**${defenseChar}**'s **Ability** was weakened!`)) {
         addBoost(battleObj, battleKey, defender, defenseChar, "Hate", turn);
     }
 
-    //TODO
-    // Humiliate
+    if (turnResults.includes(`**${attackChar}** used **Humiliate**!`)) {
+        addBoost(battleObj, battleKey, defender, defenseChar, "Humiliate", turn);
+    }
 
-    //TODO
-    // Introversion
+    if (turnResults.includes(`**${attackChar}** is preparing **Introversion**...`)) {
+        let [lowestResolveTeammateName, lowestResolveTeammate] = 
+            Object.entries(battleObj[battleKey][attacker].chars).reduce((minEntry, currentEntry) => {
+                return currentEntry[1].resolve < minEntry[1].resolve ? currentEntry : minEntry;
+            });
+        for (let buff of lowestResolveTeammate.buffs) {
+            addBoost(battleObj, battleKey, attacker, attackChar, buff.name, turn);
+        }
+
+        if (turnResults.includes(`**${attackChar}** countered with **Introversion**!`)) {
+            addBoost(battleObj, battleKey, attacker, attackChar, "Introversion", turn);
+        }
+    }
 
     if (turnResults.includes(`**${attackChar}** used **Kings Command**!\n**${attackChar}** summoned a **Pawn**!`)) {
         addBoost(battleObj, battleKey, attacker, attackChar, "Kings Command", turn);
@@ -147,7 +172,7 @@ function parseMoveDifferentChars(battleObj, battleKey, attacker, defender, attac
         addBoost(battleObj, battleKey, attacker, attackChar, "Study", turn);
     }
 
-    //TODO: account for the other attribute of perfect existence here-
+    //TODO: account for the other attribute of perfect existence here (the revive mechanic + statboost)-
     //or maybe do it in the transformChar function instead
     if (turnResults.includes(`**<@${attackerID}>** tagged in **${attackChar}**!`) 
      && battleObj[battleKey][attacker].chars[attackChar].moves.includes("The Perfect Existence")) {
@@ -157,6 +182,11 @@ function parseMoveDifferentChars(battleObj, battleKey, attacker, defender, attac
     if (turnResults.includes(`**${attackChar}** used **Unity**!`)
      && turnResults.includes(`**${attackChar}**'s **Ability** was boosted!`)) {
         addBoostToAliveTeammates(battleObj, battleKey, attacker, "Unity", turn);
+    }
+
+    if (turnResults.includes(`**${attackChar}**'s **Initiative** was boosted!`)
+     && battleObj[battleKey][attacker].chars[attackChar].moves.includes("Zenith Pace")) {
+        addBoost(battleObj, battleKey, attacker, attackChar, "Zenith Pace", turn);
     }
     
 }

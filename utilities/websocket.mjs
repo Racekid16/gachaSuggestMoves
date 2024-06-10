@@ -4,6 +4,7 @@ import ReconnectingWebSocket from 'reconnecting-websocket';
 import WS from 'ws';
 import { handleWsData } from './handleWsData.mjs';
 import config from '../config.json' assert { type: 'json' };
+import consts from '../consts.json' assert { type: 'json' };
 
 const delay = async (ms = 1000) =>  new Promise(resolve => setTimeout(resolve, ms));
 
@@ -15,7 +16,7 @@ const options = {
 
 export function startWsConnection(battleObj) {
     //make sure server is running
-    fetch("http://127.0.0.1:2500");
+    fetch(`http://127.0.0.1:${consts.port}`);
     
     let socket = new ReconnectingWebSocket('wss://gateway.discord.gg/?v=9&encoding=json', [], options);
     let seqNum;

@@ -1,3 +1,5 @@
+// pretty-print people's parties and suggested moves.
+
 export function printParty(playerName, partyJSON, charStats, hasStrength) {
     let printStrength = hasStrength ? '(Strength 3: +10% to stats)' : '';
     console.log(`${playerName}'s party ${printStrength}\nActive:`);    

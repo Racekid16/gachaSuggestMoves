@@ -1,40 +1,46 @@
 {
-    "port": 2500,
+    "port": 2700,
     "botID": "1101145170466062416",
     "moveInfo": {
         "Academic": {
             "damageType": "Academic",
             "attackStat": "mental",
+            "defenseStat": "mental",
             "basePower": 1,
             "isAttack": true
         },
         "Scheming": {
             "damageType": "Scheming",
             "attackStat": "mental",
+            "defenseStat": "mental",
             "basePower": 1,
             "isAttack": true
         },
         "Fighting": {
             "damageType": "Fighting",
             "attackStat": "physical",
+            "defenseStat": "physical",
             "basePower": 1,
             "isAttack": true
         },
         "Athleticism": {
             "damageType": "Athleticism",
             "attackStat": "physical",
+            "defenseStat": "physical",
             "basePower": 1,
             "isAttack": true
         },
         "Influence": {
             "damageType": "Influence",
             "attackStat": "social",
+            "defenseStat": "social",
             "basePower": 1,
             "isAttack": true
         },
         "Empathy": {
             "damageType": "Empathy",
             "attackStat": "social",
+            "defenseStat": "social",
             "basePower": 1,
             "isAttack": true
         }

@@ -1,18 +1,24 @@
 // Check if a buff or debuff has expired, and update stats accordingly.
 
 export function addBoost(battleObj, battleKey, playerName, charName, boost, turn) {
+    //TODO: remove this
+    console.log(`${boost} added to ${playerName}'s ${charName}!`);
+
     // I arrange these alphabetically
     switch(boost) {
 
         case 'Arrogance':
         case 'Blazing Form':
         case 'Boss Orders':
+        case 'Introversion':
         case 'Lead By Example':
         case 'Study':
         case 'Unity':
+        case 'Zenith Pace':
             addBuff(battleObj, battleKey, playerName, charName, boost, turn);
             break;
         
+        case 'Charm':
         case 'Dominate':
         case 'Hate':
         case 'Humiliate':
@@ -47,7 +53,7 @@ export function removeExpiredBoosts(battleObj, battleKey, playerName, turn) {
 
 function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
     let thisChar = battleObj[battleKey][playerName].chars[charName];
-    let thisCharInitial = battleObj[battleKey][playerName].initialStats[charName];
+    let thisCharInitial = battleObj[battleKey][playerName].initialCharStats[charName];
 
     switch (buff) {
 
@@ -76,6 +82,15 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 name: buff,
                 endTurn: Infinity
             }); 
+            break;
+
+        case 'Introversion':
+            let introversionBuff = 0.6;
+            thisChar.mental = Math.round(thisChar.mental + (thisCharInitial.mental * introversionBuff));
+            battleObj[battleKey][playerName].chars[charName].buffs.push({
+                name: buff,
+                endTurn: Infinity
+            });                       
             break;
 
         case 'Lead By Example':
@@ -112,6 +127,14 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             }); 
             break;
 
+        case 'Zenith Pace':
+            let zenithPaceBuff = 0.25;
+            thisChar.initiative = Math.round(thisChar.initiative + (thisCharInitial.initiative * zenithPaceBuff));
+            battleObj[battleKey][playerName].chars[charName].buffs.push({
+                name: buff,
+                endTurn: Infinity
+            })
+
         default:
             break;
     }
@@ -119,10 +142,9 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
 
 function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
     let thisChar = battleObj[battleKey][playerName].chars[charName];
-    let thisCharInitial = battleObj[battleKey][playerName].initialStats[charName];
+    let thisCharInitial = battleObj[battleKey][playerName].initialCharStats[charName];
 
     //this isn't an elegant way to code in Lead By Example, but I'm too lazy to improve this
-    //TODO: incorporate Humiliate into this
     if (battleObj[battleKey][playerName].chars[charName].moves.includes('Lead By Example')
      && ['Dominate', 'Hate', 'Kings Command'].includes(debuff)) {
         console.log(`${debuff} debuff negated as it would lower ${charName}'s physical`);
@@ -130,6 +152,15 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
     }
 
     switch (debuff) {
+
+        case 'Charm':
+            let charmDebuff = -0.33;
+            thisChar.social = Math.round(thisChar.social + (thisCharInitial.social * charmDebuff));
+            battleObj[battleKey][playerName].chars[charName].debuffs.push({
+                name: debuff,
+                endTurn: turn + 4
+            })
+            break;
 
         case 'Dominate':
             let dominateDebuff = -0.75;
@@ -150,11 +181,27 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
             break;
 
         case 'Humiliate':
-            //TODO
             let humiliateDebuff = -0.25;
-            let highestAttackStat = "";
+            let attackStats = ['mental', 'physical', 'social'];
+            let highestAttackStat = '';
+            let highestAttackStatVal = -1;
+            for (let attackStat of attackStats) {
+                if (thisChar[attackStat] > highestAttackStatVal) {
+                    highestAttackStat = attackStat;
+                    highestAttackStatVal = thisChar[attackStat];
+                }
+            }
+
+            if (battleObj[battleKey][playerName].chars[charName].moves.includes('Lead By Example')
+             && highestAttackStat == 'physical') {
+                console.log(`${debuff} debuff negated as it would lower ${charName}'s physical`);
+                return;
+            }
+
+            thisChar[highestAttackStat] = Math.round(thisChar[highestAttackStat] + (thisCharInitial[highestAttackStat] * humiliateDebuff));
             battleObj[battleKey][playerName].chars[charName].debuffs.push({
                 name: debuff,
+                highestAttackStat: highestAttackStat,
                 endTurn: turn + 2
             }); 
             break;
@@ -182,7 +229,7 @@ function buffCharAbility(char, charInitial, buffAmount) {
 }
 
 function createPawn(battleObj, battleKey, playerName, creatorCharName) {
-    let creatorInitialStats = battleObj[battleKey][playerName].initialStats[creatorCharName];
+    let creatorInitialStats = battleObj[battleKey][playerName].initialCharStats[creatorCharName];
     let inheritAmount = 0.75;
 
     battleObj[battleKey][playerName].chars.Pawn = {
@@ -194,15 +241,15 @@ function createPawn(battleObj, battleKey, playerName, creatorCharName) {
         initiative: Math.round(creatorInitialStats.initiative * inheritAmount),
         mental: Math.round(creatorInitialStats.mental * inheritAmount),
         physical: Math.round(creatorInitialStats.physical * inheritAmount),
-        social: Math.round(creatorInitialStats * inheritAmount),
-        resolve: Math.round(creatorInitialStats * inheritAmount),
-        maxResolve: Math.round(creatorInitialStats * inheritAmount)
-    }
+        social: Math.round(creatorInitialStats.social * inheritAmount),
+        resolve: Math.round(creatorInitialStats.resolve * inheritAmount)
+    };
+    battleObj[battleKey][playerName].initialCharStats.Pawn = structuredClone(battleObj[battleKey][playerName].chars.Pawn);
 }
 
 function removeExpiredBuffs(battleObj, battleKey, playerName, charName, turn) {
     let thisChar = battleObj[battleKey][playerName].chars[charName];
-    let thisCharInitial = battleObj[battleKey][playerName].initialStats[charName];
+    let thisCharInitial = battleObj[battleKey][playerName].initialCharStats[charName];
     if (thisChar.resolve == 0) {
         return;
     }
@@ -249,7 +296,7 @@ function removeExpiredBuffs(battleObj, battleKey, playerName, charName, turn) {
 
 function removeExpiredDebuffs(battleObj, battleKey, playerName, charName, turn) {
     let thisChar = battleObj[battleKey][playerName].chars[charName];
-    let thisCharInitial = battleObj[battleKey][playerName].initialStats[charName];
+    let thisCharInitial = battleObj[battleKey][playerName].initialCharStats[charName];
     if (thisChar.resolve == 0) {
         return;
     }
@@ -257,6 +304,12 @@ function removeExpiredDebuffs(battleObj, battleKey, playerName, charName, turn) 
     for (let i = 0; i < thisChar.debuffs.length; i++) {
         if (thisChar.debuffs[i].endTurn == turn) {
             switch (thisChar.debuffs[i].name) {
+
+                case 'Charm':
+                    let charmDebuff = -0.33;
+                    thisChar.social = Math.round(thisChar.social + (thisCharInitial.social * charmDebuff * -1));
+                    console.log(`${charName}'s Charm debuff expired! Social increased by ${charmDebuff * 100}%`);
+                    break;
 
                 case 'Dominate':
                     let dominateDebuff = -0.75;
@@ -271,9 +324,9 @@ function removeExpiredDebuffs(battleObj, battleKey, playerName, charName, turn) 
                     break;
 
                 case 'Humiliate':
-                    //TODO
                     let humiliateDebuff = -0.25;
-                    let highestAttackStat = "";
+                    let highestAttackStat = thisChar.debuffs[i].highestAttackStat;
+                    thisChar[highestAttackStat] = Math.round(thisChar[highestAttackStat] + (thisCharInitial[highestAttackStat] * humiliateDebuff * -1));
                     console.log(`${charName}'s Humiliate debuff expired! ${highestAttackStat} increased by ${humiliateDebuff * -100}%.`);
                     break;
                 

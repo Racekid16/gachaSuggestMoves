@@ -1,6 +1,6 @@
 // given stats for characters, suggest moves for both players
-import consts from '../consts.json' assert { type: 'json' };
 import { printSuggestedMoves } from './prettyPrint.mjs';
+import consts from '../consts.json' assert { type: 'json' };
 
 export function suggestMoves(battleObj, p1name, p2name, p1char, p2char, turn) {
     let battleKey = p1name + "_vs._" + p2name;
@@ -52,8 +52,14 @@ function calculateMoveDamage(battleObj, battleKey, attacker, defender, attackCha
     }
     let attackStat = tempMoveObj.attackStat;
 
+    tempMoveObj = structuredClone(moveObj);
+    while (typeof tempMoveObj.defenseStat === 'undefined') {
+        tempMoveObj = structuredClone(consts.moveInfo[tempMoveObj.damageType]);
+    }
+    let defenseStat = tempMoveObj.defenseStat;
+
     let attackerAttackStat = battleObj[battleKey][attacker].chars[attackChar][attackStat];
-    let defenderAttackStat = battleObj[battleKey][defender].chars[defenseChar][attackStat];
+    let defenderDefenseStat = battleObj[battleKey][defender].chars[defenseChar][defenseStat];
     let defenderPersonality = battleObj[battleKey][defender].chars[defenseChar].personality;
 
     let isCritical = false;
@@ -63,9 +69,9 @@ function calculateMoveDamage(battleObj, battleKey, attacker, defender, attackCha
 
     let damage;
     if (!isCritical) {
-        damage = Math.round(36 * attackerAttackStat / defenderAttackStat) * moveObj.basePower;
+        damage = Math.round(36 * attackerAttackStat / defenderDefenseStat) * moveObj.basePower;
     } else {
-        damage = Math.round(36 * attackerAttackStat / defenderAttackStat) * moveObj.basePower * 1.4;
+        damage = Math.round(36 * attackerAttackStat / defenderDefenseStat) * moveObj.basePower * 1.4;
     }
 
     return [damage, isCritical];

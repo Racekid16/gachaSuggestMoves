@@ -24,7 +24,7 @@ export async function setPlayerParty(battleObj, playerName, imageURL) {
     if (battleKey == "") {
         return;
     }
-    let party = await fetch(`http://127.0.0.1:2500/ImageData/parseParty`, {
+    let party = await fetch(`http://127.0.0.1:${consts.port}/ImageData/parseParty`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -39,7 +39,7 @@ export async function setPlayerParty(battleObj, playerName, imageURL) {
         if (char?.name == "empty") {
             //console.log(`There is no character in slot ${i + 1} of ${playerName}'s party.`);
         } else if (char !== null) {
-            let charStats = await fetch(`http://127.0.0.1:2500/CharacterData/${char.name.replace(' ', '_')}/${char.numStars}`);
+            let charStats = await fetch(`http://127.0.0.1:${consts.port}/CharacterData/${char.name.replace(' ', '_')}/${char.numStars}`);
             if (charStats.status == 404) {
                 battleObj[battleKey][playerName].valid = false;
                 battleObj[battleKey][playerName].reason = 
@@ -156,6 +156,6 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
         }
     }
 
-    battleObj[battleKey][playerName].initialStats = structuredClone(battleObj[battleKey][playerName].chars);
+    battleObj[battleKey][playerName].initialCharStats = structuredClone(battleObj[battleKey][playerName].chars);
     battleObj[battleKey][playerName].valid = true;
 }

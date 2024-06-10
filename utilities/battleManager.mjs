@@ -108,8 +108,8 @@ export function verifyPlayerResolves(battleObj, battleKey, playerName, playerNum
             console.log(`${charName}'s resolve was calculated to be ${battleObj[battleKey][playerName].chars[charName].resolve} but it was actually ${charResolve}\n`);
         }
 
-        battleObj[battleKey][playerName].chars[charName].maxResolve = charResolve;
         battleObj[battleKey][playerName].chars[charName].resolve = charResolve;
+        battleObj[battleKey][playerName].initialCharStats[charName].resolve = charResolve;
     }
 }
 
