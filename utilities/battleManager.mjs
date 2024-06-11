@@ -1,8 +1,8 @@
 // Create and delete battles from the battleObj.
 import { setPlayerParty } from './setPlayerParty.mjs';
+import { parseTurnResults } from './parseTurnResults.mjs';
 import config from '../config.json' assert { type: 'json' };
 import consts from '../consts.json' assert { type: 'json' };
-import { parseTurnResults } from './parseTurnResults.mjs';
 const delay = async (ms = 1000) =>  new Promise(resolve => setTimeout(resolve, ms));
 
 export async function createBattle(battleObj, p1name, p2name, battleEmbed) {

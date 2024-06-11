@@ -13,6 +13,7 @@ export function addBoost(battleObj, battleKey, playerName, charName, boost, turn
         case 'Introversion':
         case 'Lead By Example':
         case 'Study':
+        case 'The Perfect Existence':
         case 'Unity':
         case 'Zenith Pace':
             addBuff(battleObj, battleKey, playerName, charName, boost, turn);
@@ -115,6 +116,17 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 endTurn: turn + 1
+            }); 
+            break;
+        
+        case 'The Perfect Existence':
+            let thePerfectExistenceBuff = 0.5;
+            buffCharAbility(thisChar, thisCharInitial, thePerfectExistenceBuff);
+            thisChar.moves.splice(thisChar.moves.indexOf("The Perfect Existence"), 1);
+            thisChar.moves.splice(thisCharInitial.moves.indexOf("The Perfect Existence"), 1);
+            battleObj[battleKey][playerName].chars[charName].buffs.push({
+                name: buff,
+                endTurn: Infinity
             }); 
             break;
 
@@ -238,6 +250,9 @@ function createPawn(battleObj, battleKey, playerName, creatorCharName) {
         tags: ["Persona"],
         buffs: [],
         debuffs: [],
+        positiveStatuses: [],
+        negativeStatuses: [],
+        priority: 0,
         initiative: Math.round(creatorInitialStats.initiative * inheritAmount),
         mental: Math.round(creatorInitialStats.mental * inheritAmount),
         physical: Math.round(creatorInitialStats.physical * inheritAmount),

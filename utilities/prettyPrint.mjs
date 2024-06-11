@@ -93,10 +93,11 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
     let resolveLength = p1resolve.toString().length > p2resolve.toString().length ? 
                         p1resolve.toString().length : p2resolve.toString().length;
     let moveNameLength = p1move.length > p2move.length ? p1move.length: p2move.length;
-    let p1lowerBound = Math.round(p1damage * 0.75).toString();
-    let p1upperBound = Math.round(p1damage * 1.25).toString();
-    let p2lowerBound = Math.round(p2damage * 0.75).toString();
-    let p2upperBound = Math.round(p2damage * 1.25).toString();
+    let maxVariance = 0.2;
+    let p1lowerBound = Math.round(p1damage * (1 - maxVariance)).toString();
+    let p1upperBound = Math.round(p1damage * (1 + maxVariance)).toString();
+    let p2lowerBound = Math.round(p2damage * (1 - maxVariance)).toString();
+    let p2upperBound = Math.round(p2damage * (1 + maxVariance)).toString();
     let lowerBoundLength = p1lowerBound.length > p2lowerBound.length ? p1lowerBound.length : p2lowerBound.length;
     let upperBoundLength = p1upperBound.length > p2upperBound.length ? p1upperBound.length : p2upperBound.length;
     

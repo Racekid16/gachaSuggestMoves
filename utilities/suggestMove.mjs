@@ -41,7 +41,7 @@ function calculateMoveDamage(battleObj, battleKey, attacker, defender, attackCha
         //console.log(`${move} is not in consts.json`);
         return [-1, false];
     }
-    if (!moveObj.isAttack) {
+    if (typeof moveObj.damageType === 'undefined') {
         //console.log(`${move} is not an Attack type move.`);
         return [-1, false];
     }
@@ -69,9 +69,9 @@ function calculateMoveDamage(battleObj, battleKey, attacker, defender, attackCha
 
     let damage;
     if (!isCritical) {
-        damage = Math.round(36 * attackerAttackStat / defenderDefenseStat) * moveObj.basePower;
+        damage = Math.round(40 * attackerAttackStat / defenderDefenseStat) * moveObj.basePower;
     } else {
-        damage = Math.round(36 * attackerAttackStat / defenderDefenseStat) * moveObj.basePower * 1.4;
+        damage = Math.round(40 * attackerAttackStat / defenderDefenseStat) * moveObj.basePower * 1.3;
     }
 
     return [damage, isCritical];

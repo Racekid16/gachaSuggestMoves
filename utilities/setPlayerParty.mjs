@@ -137,6 +137,9 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
             //boosts will keep track of things like unity, hate, and study. 
             thisChar.buffs = [];
             thisChar.debuffs = [];
+            thisChar.positiveStatuses = [];
+            thisChar.negativeStatuses = [];
+            thisChar.priority = 0;
             delete thisChar._id;
             delete thisChar.name;
             delete thisChar.active;

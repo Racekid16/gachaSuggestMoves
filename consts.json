@@ -6,43 +6,37 @@
             "damageType": "Academic",
             "attackStat": "mental",
             "defenseStat": "mental",
-            "basePower": 1,
-            "isAttack": true
+            "basePower": 1
         },
         "Scheming": {
             "damageType": "Scheming",
             "attackStat": "mental",
             "defenseStat": "mental",
-            "basePower": 1,
-            "isAttack": true
+            "basePower": 1
         },
         "Fighting": {
             "damageType": "Fighting",
             "attackStat": "physical",
             "defenseStat": "physical",
-            "basePower": 1,
-            "isAttack": true
+            "basePower": 1
         },
         "Athleticism": {
             "damageType": "Athleticism",
             "attackStat": "physical",
             "defenseStat": "physical",
-            "basePower": 1,
-            "isAttack": true
+            "basePower": 1
         },
         "Influence": {
             "damageType": "Influence",
             "attackStat": "social",
             "defenseStat": "social",
-            "basePower": 1,
-            "isAttack": true
+            "basePower": 1
         },
         "Empathy": {
             "damageType": "Empathy",
             "attackStat": "social",
             "defenseStat": "social",
-            "basePower": 1,
-            "isAttack": true
+            "basePower": 1
         }
     },
     "personalityWeaknesses": {
