@@ -18,11 +18,11 @@ export function printParty(battleObj, battleKey, playerName, partyJSON, hasStren
 
     for (let char of activeChars) {
         battleObj[battleKey].log(`${char.numStars}⭐ ${char.name}${" ".repeat(activeNameLength - char.name.length)} `
-                  + `🏃‍ ${char.initiative}${" ".repeat(initiativeLength - char.initiative.toString().length)} `
-                  + `🧠 ${char.mental}${" ".repeat(mentalLength - char.mental.toString().length)} `
-                  + `💪 ${char.physical}${" ".repeat(physicalLength - char.physical.toString().length)} `
-                  + `🗣️ ${char.social}${" ".repeat(socialLength - char.social.toString().length)} `
-                  + `❤️ ${char.resolve}`);
+                  + `🏃‍${char.initiative}${" ".repeat(initiativeLength - char.initiative.toString().length)} `
+                  + `🧠${char.mental}${" ".repeat(mentalLength - char.mental.toString().length)} `
+                  + `💪${char.physical}${" ".repeat(physicalLength - char.physical.toString().length)} `
+                  + `🗣️${char.social}${" ".repeat(socialLength - char.social.toString().length)} `
+                  + `❤️${char.resolve}`);
     }
 
     battleObj[battleKey].log("Bench:")
@@ -34,18 +34,18 @@ export function printParty(battleObj, battleKey, playerName, partyJSON, hasStren
     let benchHasAbilityBoost = benchChars.reduce((hasAbility, char) => {
         return hasAbility || char.supportCategory == 'Ability';
     }, false);
-    let supportCategoryLength = benchHasAbilityBoost ? 7 : 1;
+    let supportCategoryLength = benchHasAbilityBoost ? 9 : 1;
     let supportBonusLength = getMaxLength(benchChars, 'supportBonus');
     
     for (let char of benchChars) {
         let supportCategorySymbol;
         switch (char.supportCategory) {
             case 'Ability': supportCategorySymbol = "🏃🧠💪🗣️"; break;
-            case 'Initiative': supportCategorySymbol = "🏃 "; break;
-            case 'Mental': supportCategorySymbol = "🧠 "; break;
-            case 'Physical': supportCategorySymbol = "💪 "; break;
-            case 'Social': supportCategorySymbol = "🗣️ "; break;
-            case 'Resolve': supportCategorySymbol = "❤️ "; break;
+            case 'Initiative': supportCategorySymbol = "🏃"; break;
+            case 'Mental': supportCategorySymbol = "🧠"; break;
+            case 'Physical': supportCategorySymbol = "💪"; break;
+            case 'Social': supportCategorySymbol = "🗣️"; break;
+            case 'Resolve': supportCategorySymbol = "❤️"; break;
             default: console.log(`Unrecognized support category ${char.supportCategory}`); break;
         }
 

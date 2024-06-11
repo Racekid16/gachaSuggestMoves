@@ -18,6 +18,6 @@ Once you have all that set up, you can run this program with:
 $ node 1.server.js
 $ node 2.driver.mjs
 
-Whenever a battle occurs in a channel you have permission to view, recommendations will be printed to the terminal as so:
+Whenever a battle occurs in a channel you have permission to view, recommendations will be printed to the corresponding file in the currentBattles directory, looking something like this:
 
 ![Image of terminal](terminalPicture.png)

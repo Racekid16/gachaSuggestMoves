@@ -57,5 +57,6 @@
         "Reserved": ["Athleticism", "Fighting"],
         "Selfish": ["Academic", "Influence"]
     },
-    "transformChars": ["Perfect Kōenji Rokusuke", "True Kushida Kikyō", "Unmasked Kushida Kikyō"]
+    "transformChars": ["Perfect Kōenji Rokusuke", "True Kushida Kikyō", "Unmasked Kushida Kikyō"],
+    "excludedChars": []
 }

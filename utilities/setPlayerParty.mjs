@@ -3,16 +3,6 @@
 import { printParty } from './prettyPrint.mjs';
 import consts from '../consts.json' assert { type: 'json' };
 
-let excludedChars = [
-    "Perfect Kōenji Rokusuke",
-    "Serious Kōenji Rokusuke",
-    /*
-    "True Kushida Kikyō",
-    "Unmasked Kushida Kikyō",
-    "Pawn"
-    */
-];
-
 export async function setPlayerParty(battleObj, playerName, imageURL) {
     let battleKey = "";
     for (let key in battleObj) {
@@ -151,7 +141,7 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
     //console.log(battleObj[battleKey][playerName].chars);
 
     for (let charKey in battleObj[battleKey][playerName].chars) {
-        if (excludedChars.includes(charKey)) {
+        if (consts.excludedChars.includes(charKey)) {
             battleObj[battleKey][playerName].valid = false;
             battleObj[battleKey][playerName].reason = `${playerName} is using ${charKey}`;
             return;

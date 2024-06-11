@@ -62,6 +62,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             buffCharAbility(thisChar, thisCharInitial, arroganceBuff);
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
+                startTurn: turn,
                 endTurn: turn + 2
             });
             break;
@@ -71,6 +72,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             thisChar.physical = Math.round(thisChar.physical + (thisCharInitial.physical * blazingFormBuff));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
+                startTurn: turn,
                 endTurn: turn + 5
             }); 
             break;
@@ -80,6 +82,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             thisChar.mental = Math.round(thisChar.mental + (thisCharInitial.mental * bossOrdersBuff));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
+                startTurn: turn,
                 endTurn: Infinity
             }); 
             break;
@@ -89,6 +92,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             thisChar.mental = Math.round(thisChar.mental + (thisCharInitial.mental * introversionBuff));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
+                startTurn: turn,
                 endTurn: Infinity
             });                       
             break;
@@ -98,11 +102,13 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             thisChar.physical = Math.round(thisChar.physical + (thisCharInitial.physical * leadByExampleBuff));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
+                startTurn: turn,
                 endTurn: turn + 1
             }); 
             thisChar.physical = Math.round(thisChar.physical + (thisCharInitial.physical * leadByExampleBuff));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
+                startTurn: turn,
                 endTurn: turn + 2
             }); 
             break;
@@ -114,6 +120,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             thisChar.mental     = Math.round(thisChar.mental     + (thisCharInitial.mental     * mentalBuff    ));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
+                startTurn: turn,
                 endTurn: turn + 1
             }); 
             break;
@@ -125,6 +132,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             thisChar.moves.splice(thisCharInitial.moves.indexOf("The Perfect Existence"), 1);
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
+                startTurn: turn,
                 endTurn: Infinity
             }); 
             break;
@@ -134,6 +142,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             buffCharAbility(thisChar, thisCharInitial, unityBuff);
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
+                startTurn: turn,
                 endTurn: turn + 5
             }); 
             break;
@@ -143,6 +152,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             thisChar.initiative = Math.round(thisChar.initiative + (thisCharInitial.initiative * zenithPaceBuff));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
+                startTurn: turn,
                 endTurn: Infinity
             })
 
@@ -169,6 +179,7 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
             thisChar.social = Math.round(thisChar.social + (thisCharInitial.social * charmDebuff));
             battleObj[battleKey][playerName].chars[charName].debuffs.push({
                 name: debuff,
+                startTurn: turn,
                 endTurn: turn + 4
             })
             break;
@@ -178,6 +189,7 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
             buffCharAbility(thisChar, thisCharInitial, dominateDebuff);
             battleObj[battleKey][playerName].chars[charName].debuffs.push({
                 name: debuff,
+                startTurn: turn,
                 endTurn: turn + 5
             }); 
             break;
@@ -187,6 +199,7 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
             buffCharAbility(thisChar, thisCharInitial, hateDebuff);
             battleObj[battleKey][playerName].chars[charName].debuffs.push({
                 name: debuff,
+                startTurn: turn,
                 endTurn: turn + 4
             }); 
             break;
@@ -213,6 +226,7 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
             battleObj[battleKey][playerName].chars[charName].debuffs.push({
                 name: debuff,
                 highestAttackStat: highestAttackStat,
+                startTurn: turn,
                 endTurn: turn + 2
             }); 
             break;
@@ -223,6 +237,7 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
             createPawn(battleObj, battleKey, playerName, charName);
             battleObj[battleKey][playerName].chars[charName].debuffs.push({
                 name: debuff,
+                startTurn: turn,
                 endTurn: Infinity
             }); 
             break;
@@ -271,6 +286,12 @@ function removeExpiredBuffs(battleObj, battleKey, playerName, charName, turn) {
     for (let i = 0; i < thisChar.buffs.length; i++) {
         if (thisChar.buffs[i].endTurn == turn) {
             switch (thisChar.buffs[i].name) {
+
+                case 'Arrogance':
+                    let arroganceBuff = 0.4;
+                    buffCharAbility(thisChar, thisCharInitial, arroganceBuff * -1);
+                    battleObj[battleKey].log(`${charName}'s Arrogance buff expired! Ability weakened by ${arroganceBuff * 100}%.`);
+                    break;
 
                 case 'Blazing Form':
                     let blazingFormBuff = 0.2;

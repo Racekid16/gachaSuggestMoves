@@ -17,18 +17,18 @@ export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
     battleObj[battleKey].log(`Turn ${turn} of ${p1name} vs. ${p2name}:\n${turnResults}`);
 
     //determine player resolves
-    let p1resolves = getTeamResolves(1, battleEmbed);
-    let p2resolves = getTeamResolves(2, battleEmbed);
+    let p1resolvesAfterTurn = getTeamResolves(1, battleEmbed);
+    let p2resolvesAfterTurn = getTeamResolves(2, battleEmbed);
 
     //determine what characters each player used this turn
     let p1char = getPreviousTurnChar(battleObj, battleKey, p1name, turnResults);
     let p2char = getPreviousTurnChar(battleObj, battleKey, p2name, turnResults);
 
    if (p1char == p2char) {
-        parseMoveSameChar(battleObj, p1name, p2name, p1char, turnResults, p1resolves, p2resolves);      
+        parseMoveSameChar(battleObj, p1name, p2name, p1char, turnResults, p1resolvesAfterTurn, p2resolvesAfterTurn);      
     } else {
-        parseMoveDifferentChars(battleObj, battleKey, p1name, p2name, p1char, p2char, turnResults, turn, p1resolves);
-        parseMoveDifferentChars(battleObj, battleKey, p2name, p1name, p2char, p1char, turnResults, turn, p2resolves);
+        parseMoveDifferentChars(battleObj, battleKey, p1name, p2name, p1char, p2char, turnResults, turn, p1resolvesAfterTurn);
+        parseMoveDifferentChars(battleObj, battleKey, p2name, p1name, p2char, p1char, turnResults, turn, p2resolvesAfterTurn);
     }
 
     let p1taggedInChar = getCurrentChar(1, battleEmbed);
@@ -41,8 +41,8 @@ export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
     applyTransformation(battleObj, battleKey, p1name, p1taggedInChar);
     applyTransformation(battleObj, battleKey, p2name, p2taggedInChar);
 
-    updateResolves(battleObj, battleKey, p1name, p1resolves);
-    updateResolves(battleObj, battleKey, p2name, p2resolves);
+    updateResolves(battleObj, battleKey, p1name, p1resolvesAfterTurn);
+    updateResolves(battleObj, battleKey, p2name, p2resolvesAfterTurn);
     removeExpiredBoosts(battleObj, battleKey, p1name, turn);
     removeExpiredBoosts(battleObj, battleKey, p2name, turn);
 
@@ -66,6 +66,9 @@ function getPreviousTurnChar(battleObj, battleKey, playerName, turnResults) {
 
     if (taggedInMatch !== null) {
         charName = taggedInMatch[1];
+        if (battleObj[battleKey][playerName].chars[charName].moves.includes("The Perfect Existence")) {
+            battleObj[battleKey][playerName].chars[charName].debuffs = [];
+        }
     } else {
         charName = battleObj[battleKey][playerName].previousTaggedInChar;
     }
@@ -156,15 +159,17 @@ function parseMoveDifferentChars(battleObj, battleKey, attacker, defender, attac
     if (turnResults.includes(`**${attackChar}** is preparing **Introversion**...`)) {
         let [lowestResolveTeammateName, lowestResolveTeammate] = 
             Object.entries(battleObj[battleKey][attacker].chars).reduce((minEntry, currentEntry) => {
-                return (currentEntry[1].resolve < minEntry[1].resolve && currentEntry[1].resolve > 0) ? currentEntry : minEntry;
-            });
+                return (currentEntry[0] != attackChar && currentEntry[1].resolve > 0 && currentEntry[1].resolve < minEntry[1].resolve) ? currentEntry : minEntry;
+            }, ["Empty", { resolve: Infinity }]);
 
-        if (attackerResolves[lowestResolveTeammateName] != 0) {
-            console.log(`Program expected ${attacker}'s ${lowestResolveTeammateName} in ${battleKey} to die, but they didn't.`);
-        }
+        if (lowestResolveTeammateName != "Empty") {
+            if (attackerResolves[lowestResolveTeammateName] != 0) {
+                console.log(`Program expected ${attacker}'s ${lowestResolveTeammateName} in ${battleKey} to die, but they didn't.`);
+            }
 
-        for (let buff of lowestResolveTeammate.buffs) {
-            addBoost(battleObj, battleKey, attacker, attackChar, buff.name, turn);
+            for (let buff of lowestResolveTeammate.buffs) {
+                addBoost(battleObj, battleKey, attacker, attackChar, buff.name, buff.startTurn);
+            }
         }
 
         if (turnResults.includes(`**${attackChar}** countered with **Introversion**!`)) {
@@ -185,13 +190,8 @@ function parseMoveDifferentChars(battleObj, battleKey, attacker, defender, attac
         addBoost(battleObj, battleKey, attacker, attackChar, "Study", turn);
     }
 
-    if (turnResults.includes(`**<@${attackerID}>** tagged in **${attackChar}**!`) 
-     && battleObj[battleKey][attacker].chars[attackChar].moves.includes("The Perfect Existence")) {
-        battleObj[battleKey][playerName].char[charName].debuffs = [];
-    }
-
     if (turnResults.includes(`On the brink of defeat, **${attackChar}** hung on!`)
-     && battleObj[battleKey][attacker].chars[attackChar].moves.includess("The Perfect Existence")) {
+     && battleObj[battleKey][attacker].chars[attackChar].moves.includes("The Perfect Existence")) {
         addBoost(battleObj, battleKey, attacker, attackChar, "The Perfect Existence", turn);
     }
 
