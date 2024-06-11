@@ -10,19 +10,19 @@ export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
     let turnResults = battleEmbed.fields[2].value;
 
     //TODO: remove this
-    //console.log(`${p1name}'s previous tagged-in character was ${battleObj[battleKey][p1name].previousTaggedInChar}`);
-    //console.log(`${p2name}'s previous tagged-in character was ${battleObj[battleKey][p2name].previousTaggedInChar}`);
+    battleObj[battleKey].log(`${p1name}'s previous tagged-in character was ${battleObj[battleKey][p1name].previousTaggedInChar}`);
+    battleObj[battleKey].log(`${p2name}'s previous tagged-in character was ${battleObj[battleKey][p2name].previousTaggedInChar}`);
 
     //remove the .replace part if you're testing
-    console.log(`Turn ${turn} of ${p1name} vs. ${p2name}:\n${turnResults}`);
+    battleObj[battleKey].log(`Turn ${turn} of ${p1name} vs. ${p2name}:\n${turnResults}`);
 
     //determine player resolves
     let p1resolves = getTeamResolves(1, battleEmbed);
     let p2resolves = getTeamResolves(2, battleEmbed);
 
     //determine what characters each player used this turn
-    let p1char = battleObj[battleKey][p1name].previousTaggedInChar;
-    let p2char = battleObj[battleKey][p2name].previousTaggedInChar;
+    let p1char = getPreviousTurnChar(battleObj, battleKey, p1name, turnResults);
+    let p2char = getPreviousTurnChar(battleObj, battleKey, p2name, turnResults);
 
    if (p1char == p2char) {
         parseMoveSameChar(battleObj, p1name, p2name, p1char, turnResults, p1resolves, p2resolves);      
@@ -31,12 +31,12 @@ export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
         parseMoveDifferentChars(battleObj, battleKey, p2name, p1name, p2char, p1char, turnResults, turn, p2resolves);
     }
 
-    let p1taggedInChar = getPlayerCharacter(1, battleEmbed);
-    let p2taggedInChar = getPlayerCharacter(2, battleEmbed);
+    let p1taggedInChar = getCurrentChar(1, battleEmbed);
+    let p2taggedInChar = getCurrentChar(2, battleEmbed);
 
     //TODO: remove this
-    //console.log(`${p1name}'s current tagged-in char is ${p1taggedInChar}`);
-    //console.log(`${p2name}'s current tagged-in char is ${p2taggedInChar}`);
+    battleObj[battleKey].log(`${p1name}'s current tagged-in char is ${p1taggedInChar}`);
+    battleObj[battleKey].log(`${p2name}'s current tagged-in char is ${p2taggedInChar}`);
 
     applyTransformation(battleObj, battleKey, p1name, p1taggedInChar);
     applyTransformation(battleObj, battleKey, p2name, p2taggedInChar);
@@ -46,62 +46,31 @@ export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
     removeExpiredBoosts(battleObj, battleKey, p1name, turn);
     removeExpiredBoosts(battleObj, battleKey, p2name, turn);
 
-    console.log("");
+    battleObj[battleKey].log("");
     if (p1taggedInChar !== null && p2taggedInChar !== null) {
         suggestMoves(battleObj, p1name, p2name, p1taggedInChar, p2taggedInChar, turn);
-        console.log("");
+        battleObj[battleKey].log("");
     }
 
     battleObj[battleKey][p1name].previousTaggedInChar = p1taggedInChar;
     battleObj[battleKey][p2name].previousTaggedInChar = p2taggedInChar;
 }
 
-// determine what character the player is used for this turn
-// and set the player's taggedInChar property
-function getPlayerCharacter(playerNumber, battleEmbed) {
-    let taggedInCharRegex = /__(.+)__/;
-    let charName = taggedInCharRegex.exec(battleEmbed.fields[playerNumber - 1].value)?.[1];
+// get the name of the character that will be used to determine attack and defense char for this turn
+function getPreviousTurnChar(battleObj, battleKey, playerName, turnResults) {
+    let charName;
+    let playerID = battleObj[battleKey][playerName].id;
+    let taggedInStr = `\\*\\*<@${playerID}>\\**\\** tagged in \\*\\*(.+)\\*\\*!`;
+    let taggedInRegex = new RegExp(taggedInStr);
+    let taggedInMatch = taggedInRegex.exec(turnResults);
 
-    if (typeof charName === 'undefined') {
-        return null;
-    } 
-    return charName;
-}
-
-// charName is the current tagged-in char after the turn that was just parsed
-// and the one you'll transform into, if applicable
-function applyTransformation(battleObj, battleKey, playerName, charName) {
-    if (charName !== null && typeof battleObj[battleKey][playerName].chars[charName] === 'undefined'
-     && consts.transformChars.includes(battleObj[battleKey][playerName].previousTaggedInChar)) {
-        switch (charName) {
-
-            case "Serious Kōenji Rokusuke":
-                battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars["Perfect Kōenji Rokusuke"]);
-                battleObj[battleKey][playerName].initialCharStats[charName] = structuredClone(battleObj[battleKey][playerName].initialCharStats["Perfect Kōenji Rokusuke"]);
-                //note: Serious Koenji's moves are updated when The Perfect Existence buff is added
-                delete battleObj[battleKey][playerName].chars["Perfect Kōenji Rokusuke"];
-                delete battleObj[battleKey][playerName].initialCharStats["Perfect Kōenji Rokusuke"];
-                break;
-
-            case "True Kushida Kikyō":
-                battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars["Unmasked Kushida Kikyō"]);
-                battleObj[battleKey][playerName].chars[charName].moves = ["Scheming", "Fighting", "Shatter", "Mask"];
-                battleObj[battleKey][playerName].initialCharStats[charName] = structuredClone(battleObj[battleKey][playerName].initialCharStats["Unmasked Kushida Kikyō"]);
-                battleObj[battleKey][playerName].initialCharStats[charName].moves = ["Scheming", "Fighting", "Shatter", "Mask"];
-                delete battleObj[battleKey][playerName].chars["Unmasked Kushida Kikyō"];
-                delete battleObj[battleKey][playerName].initialCharStats["Unmasked Kushida Kikyō"];
-                break;
-
-            case "Unmasked Kushida Kikyō":
-                battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars["True Kushida Kikyō"]);
-                battleObj[battleKey][playerName].chars[charName].moves = ["Academic", "Empathy", "Charm", "Unmask"];
-                battleObj[battleKey][playerName].initialCharStats[charName] = structuredClone(battleObj[battleKey][playerName].initialCharStats["True Kushida Kikyō"]);
-                battleObj[battleKey][playerName].initialCharStats[charName].moves = ["Academic", "Empathy", "Charm", "Unmask"];
-                delete battleObj[battleKey][playerName].chars["True Kushida Kikyō"];
-                delete battleObj[battleKey][playerName].initialCharStats["True Kushida Kikyō"];
-                break;
-        }
+    if (taggedInMatch !== null) {
+        charName = taggedInMatch[1];
+    } else {
+        charName = battleObj[battleKey][playerName].previousTaggedInChar;
     }
+    return charName;
+    
 }
 
 // create an object containing key-value pairs of characters and their new resolves
@@ -191,7 +160,7 @@ function parseMoveDifferentChars(battleObj, battleKey, attacker, defender, attac
             });
 
         if (attackerResolves[lowestResolveTeammateName] != 0) {
-            console.log(`This program expected ${lowestResolveTeammateName} to die, but they didn't.`);
+            console.log(`Program expected ${attacker}'s ${lowestResolveTeammateName} in ${battleKey} to die, but they didn't.`);
         }
 
         for (let buff of lowestResolveTeammate.buffs) {
@@ -240,6 +209,54 @@ function parseMoveDifferentChars(battleObj, battleKey, attacker, defender, attac
         addBoost(battleObj, battleKey, attacker, attackChar, "Zenith Pace", turn);
     }
     
+}
+
+// determine what character the player is used for this turn
+// and set the player's taggedInChar property
+function getCurrentChar(playerNumber, battleEmbed) {
+    let taggedInCharRegex = /__(.+)__/;
+    let charName = taggedInCharRegex.exec(battleEmbed.fields[playerNumber - 1].value)?.[1];
+
+    if (typeof charName === 'undefined') {
+        return null;
+    } 
+    return charName;
+}
+
+// charName is the current tagged-in char after the turn that was just parsed
+// and the one you'll transform into, if applicable
+function applyTransformation(battleObj, battleKey, playerName, charName) {
+    if (charName !== null && typeof battleObj[battleKey][playerName].chars[charName] === 'undefined'
+     && consts.transformChars.includes(battleObj[battleKey][playerName].previousTaggedInChar)) {
+        switch (charName) {
+
+            case "Serious Kōenji Rokusuke":
+                battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars["Perfect Kōenji Rokusuke"]);
+                battleObj[battleKey][playerName].initialCharStats[charName] = structuredClone(battleObj[battleKey][playerName].initialCharStats["Perfect Kōenji Rokusuke"]);
+                //note: Serious Koenji's moves are updated when The Perfect Existence buff is added
+                delete battleObj[battleKey][playerName].chars["Perfect Kōenji Rokusuke"];
+                delete battleObj[battleKey][playerName].initialCharStats["Perfect Kōenji Rokusuke"];
+                break;
+
+            case "True Kushida Kikyō":
+                battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars["Unmasked Kushida Kikyō"]);
+                battleObj[battleKey][playerName].chars[charName].moves = ["Scheming", "Fighting", "Shatter", "Mask"];
+                battleObj[battleKey][playerName].initialCharStats[charName] = structuredClone(battleObj[battleKey][playerName].initialCharStats["Unmasked Kushida Kikyō"]);
+                battleObj[battleKey][playerName].initialCharStats[charName].moves = ["Scheming", "Fighting", "Shatter", "Mask"];
+                delete battleObj[battleKey][playerName].chars["Unmasked Kushida Kikyō"];
+                delete battleObj[battleKey][playerName].initialCharStats["Unmasked Kushida Kikyō"];
+                break;
+
+            case "Unmasked Kushida Kikyō":
+                battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars["True Kushida Kikyō"]);
+                battleObj[battleKey][playerName].chars[charName].moves = ["Academic", "Empathy", "Charm", "Unmask"];
+                battleObj[battleKey][playerName].initialCharStats[charName] = structuredClone(battleObj[battleKey][playerName].initialCharStats["True Kushida Kikyō"]);
+                battleObj[battleKey][playerName].initialCharStats[charName].moves = ["Academic", "Empathy", "Charm", "Unmask"];
+                delete battleObj[battleKey][playerName].chars["True Kushida Kikyō"];
+                delete battleObj[battleKey][playerName].initialCharStats["True Kushida Kikyō"];
+                break;
+        }
+    }
 }
 
 function updateResolves(battleObj, battleKey, playerName, playerResolves) {

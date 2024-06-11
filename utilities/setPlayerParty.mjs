@@ -129,7 +129,7 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
         }
     }
  
-    printParty(playerName, partyJSON, battleObj[battleKey][playerName].chars, hasStrength);
+    printParty(battleObj, battleKey, playerName, partyJSON, hasStrength);
 
     for (let charKey in battleObj[battleKey][playerName].chars) {
         let thisChar = battleObj[battleKey][playerName].chars[charKey];
@@ -139,7 +139,6 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
             thisChar.debuffs = [];
             thisChar.positiveStatuses = [];
             thisChar.negativeStatuses = [];
-            thisChar.priority = 0;
             delete thisChar._id;
             delete thisChar.name;
             delete thisChar.active;

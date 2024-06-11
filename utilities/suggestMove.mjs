@@ -1,11 +1,11 @@
 // given stats for characters, suggest moves for both players
-import { printSuggestedMoves } from './prettyPrint.mjs';
+import { printSuggestedMoves, getBaseMoveObj } from './prettyPrint.mjs';
 import consts from '../consts.json' assert { type: 'json' };
 
 export function suggestMoves(battleObj, p1name, p2name, p1char, p2char, turn) {
     let battleKey = p1name + "_vs._" + p2name;
 
-    console.log(`For turn ${turn+1}:`);
+    battleObj[battleKey].log(`For turn ${turn+1}:`);
     let [p1suggestedMove, p1predictedDamage, p1critical] = determineSuggestedMove(battleObj, battleKey, p1name, p2name, p1char, p2char);
     let [p2suggestedMove, p2predictedDamage, p2critical] = determineSuggestedMove(battleObj, battleKey, p2name, p1name, p2char, p1char);
 
@@ -46,17 +46,9 @@ function calculateMoveDamage(battleObj, battleKey, attacker, defender, attackCha
         return [-1, false];
     }
 
-    let tempMoveObj = structuredClone(moveObj);
-    while (typeof tempMoveObj.attackStat === 'undefined') {
-        tempMoveObj = structuredClone(consts.moveInfo[tempMoveObj.damageType]);
-    }
-    let attackStat = tempMoveObj.attackStat;
-
-    tempMoveObj = structuredClone(moveObj);
-    while (typeof tempMoveObj.defenseStat === 'undefined') {
-        tempMoveObj = structuredClone(consts.moveInfo[tempMoveObj.damageType]);
-    }
-    let defenseStat = tempMoveObj.defenseStat;
+    let baseMoveObj = getBaseMoveObj(moveObj);
+    let attackStat = typeof moveObj.attackStat === 'undefined' ? baseMoveObj.attackStat : moveObj.attackStat;
+    let defenseStat = typeof moveObj.defenseStat === 'undefined' ? baseMoveObj.defenseStat : moveObj.defenseStat;
 
     let attackerAttackStat = battleObj[battleKey][attacker].chars[attackChar][attackStat];
     let defenderDefenseStat = battleObj[battleKey][defender].chars[defenseChar][defenseStat];
@@ -68,6 +60,7 @@ function calculateMoveDamage(battleObj, battleKey, attacker, defender, attackCha
     }
 
     let damage;
+    //this is a guess for how much damage will be dealt, since I don't know the exact damage formula
     if (!isCritical) {
         damage = Math.round(40 * attackerAttackStat / defenderDefenseStat) * moveObj.basePower;
     } else {

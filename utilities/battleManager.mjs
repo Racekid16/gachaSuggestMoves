@@ -1,4 +1,5 @@
 // Create and delete battles from the battleObj.
+import fs from 'fs';
 import { setPlayerParty } from './setPlayerParty.mjs';
 import { parseTurnResults } from './parseTurnResults.mjs';
 import config from '../config.json' assert { type: 'json' };
@@ -6,17 +7,28 @@ import consts from '../consts.json' assert { type: 'json' };
 const delay = async (ms = 1000) =>  new Promise(resolve => setTimeout(resolve, ms));
 
 export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
-    console.log(`${p1name} vs. ${p2name} started`);
     let battleKey = p1name + "_vs._" + p2name;
     let turnResults = battleEmbed.fields[2].value;
     battleObj[battleKey] = {};
+    battleObj[battleKey].time = new Date().toLocaleString();
+    battleObj[battleKey].data = "";
+    
+    //create a new file for this battle
+    fs.writeFile(`currentBattles/${battleKey}.txt`, '', (err) => {if (err) { throw err; }});
+    battleObj[battleKey].log = function (str) {
+        this.data += str + "\n";
+        fs.appendFileSync(`currentBattles/${battleKey}.txt`, str + "\n", (err) => {if (err) { throw err; }});
+    }
+
+    console.log(`${p1name} vs. ${p2name} started`);
+    battleObj[battleKey].log(`${p1name} vs. ${p2name} started at ${battleObj[battleKey].time}\n`);
 
     let promise1 = addPlayerToBattle(battleObj, battleKey, p1name, 1, turnResults, null);
     let promise2 = addPlayerToBattle(battleObj, battleKey, p2name, 2, turnResults, null);
     let [result1, result2] = await Promise.all([promise1, promise2]);
     if (result1 == -1 || result2 == -1) {
         deleteBattle(battleObj, p1name, p2name, null);
-        console.log(`${p1name} vs. ${p2name} was deleted; failed to request a player's party\n`);
+        console.log(`${p1name} vs. ${p2name} was deleted; failed to request a player's party`);
         return;
     }
 
@@ -33,15 +45,27 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
 }
 
 export async function createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL, stage) {
-    console.log(`${playerName} vs. Chairman Sakayanagi (Campaign Stage ${stage}) started`);
+    
     let battleKey = playerName + "_vs._Chairman Sakayanagi";
     battleObj[battleKey] = {};
+    battleObj[battleKey].time = new Date().toLocaleString();
+    battleObj[battleKey].data = "";
+
+    //create a new file for this battle
+    fs.writeFile(`currentBattles/${battleKey}.txt`, '', (err) => {if (err) { throw err; }});
+    battleObj[battleKey].log = function (str) {
+        this.data += str + "\n";
+        fs.appendFileSync(`currentBattles/${battleKey}.txt`, str + "\n", (err) => {if (err) { throw err; }});
+    }
+    
+    console.log(`${playerName} vs. Chairman Sakayanagi (Campaign Stage ${stage}) started`);
+    battleObj[battleKey].log(`${playerName} vs. Chairman Sakayanagi (Campaign Stage ${stage}) started at ${battleObj[battleKey].time}\n`);
 
     let myPromise = addPlayerToBattle(battleObj, battleKey, playerName, 1, null, playerID);
     let myResult = await myPromise;
     if (myResult == -1) { 
         deleteBattle(battleObj, playerName, 'Chairman Sakayanagi', null);
-        console.log(`${playerName} vs. Chairman Sakayanagi was deleted; failed to request ${playerName}'s party\n`);
+        console.log(`${playerName} vs. Chairman Sakayanagi was deleted; failed to request ${playerName}'s party`);
         return;
     }
 
@@ -74,12 +98,27 @@ export function deleteBattle(battleObj, p1name, p2name, turnResults) {
             loser = p1name;
         }
         if (!turnResults.includes("forfeit by inactivity")) {
-            console.log(`${winner} won against ${loser}\n`)
+            console.log(`${winner} won against ${loser}`);
+            battleObj[battleKey].log(`${winner} won against ${loser}`);
         } else {
-            console.log(`${winner} won against ${loser} (forfeit by inactivity)\n`);
+            console.log(`${winner} won against ${loser} (forfeit by inactivity)`);
+            battleObj[battleKey].log(`${winner} won against ${loser} (forfeit by inactivity)`);
         }
+        
+        fetch(`http://127.0.0.1:${consts.port}/BattleLogs/updateDb`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                players: [battleObj[battleKey][p1name].id, battleObj[battleKey][p2name].id],
+                time: battleObj[battleKey].time,
+                data: battleObj[battleKey].data
+            })
+        });
     }
 
+    fs.unlink(`currentBattles/${battleKey}.txt`, (err) => {if (err) { throw err; }});
     delete battleObj[battleKey];
 }
 
@@ -105,7 +144,7 @@ export function verifyPlayerResolves(battleObj, battleKey, playerName, playerNum
 
         let charResolve = parseInt(resolveMatch[4]);
         if (battleObj[battleKey][playerName].chars[charName].resolve != charResolve) {
-            console.log(`${charName}'s resolve was calculated to be ${battleObj[battleKey][playerName].chars[charName].resolve} but it was actually ${charResolve}\n`);
+            console.log(`The resolve of ${playerName}'s ${charName} in ${battleKey} was calculated to be ${battleObj[battleKey][playerName].chars[charName].resolve} but it was actually ${charResolve}`);
         }
 
         battleObj[battleKey][playerName].chars[charName].resolve = charResolve;
@@ -173,9 +212,9 @@ async function verifyBattleValidity(battleObj, p1name, p2name) {
 
     if (!battleObj[battleKey][p1name].valid || !battleObj[battleKey][p2name].valid) {
         if (!battleObj[battleKey][p1name].valid) {
-            console.log(`${p1name} vs. ${p2name} was deleted because ${battleObj[battleKey][p1name].reason}\n`);
+            console.log(`${p1name} vs. ${p2name} was deleted because ${battleObj[battleKey][p1name].reason}`);
         } else {
-            console.log(`${p1name} vs. ${p2name} was deleted because ${battleObj[battleKey][p2name].reason}\n`);
+            console.log(`${p1name} vs. ${p2name} was deleted because ${battleObj[battleKey][p2name].reason}`);
         }
         deleteBattle(battleObj, p1name, p2name, null);
         return -1;

@@ -531,3 +531,57 @@ server.get("/getToken", (req, res) => {
     }
     res.status(200).send({token: token});
 });
+
+//returns all battle logs
+server.get("/BattleLogs", (req, res) => {
+    var result = [];
+    database.collection('BattleLogs')
+        .find()
+        .forEach(doc => result.push(doc))
+        .then(() => {
+            res.status(200).send(result)
+        });
+})
+
+//returns the logs of all battles that the specified user battled in
+server.get("/BattleLogs/:userId", (req, res) => {
+    var result = [];
+    database.collection('BattleLogs')
+        .find({players: req.params.userId})
+        .forEach(doc => result.push(doc))
+        .then(() => {
+            res.status(200).send(result)
+        });
+})
+//example usage:
+/*
+let battleStr = "";
+fetch('http://127.0.0.1:2500/BattleLogs/635172347606728746')
+    .then(res => res.json())
+    .then(battles => {
+        for (battle of battles) {
+            battleStr += battle.data + "\n"
+        }
+    })
+    .then(() => console.log(battleStr));
+*/
+
+//adds battle log to database
+server.post("/BattleLogs/updateDb", (req, res) => {
+    if (!req.body.players || !req.body.time || !req.body.data) {
+        res.status(400).send({
+            message: "Request body must have players, time, and data properties"
+        });
+        return;
+    }
+    database.collection('BattleLogs')
+        .insertOne({
+            players: req.body.players,
+            time: req.body.time,
+            data: req.body.data
+        });
+    res.status(201).send({
+        message: "Added battle log to database"
+    });
+    return;
+})

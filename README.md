@@ -1,7 +1,7 @@
 # Gacha Suggest Moves
 The goal of this project is to create a program that will view battles in real-time and make suggestions for what move to make based on the stats of the characters in each party.
 
-The first thing you'll need to do is make Download MongoDB on Windows (I haven't tried downloading MongoDB on other Operating Systems) and make a MongoDB database. Call it "BattleData" and create collections "CharacterData", "ImageData", and "UserCollections" within it, like below (Note: you do not need the "BattleLogs", "Interactions", or "CriticalInteractions" collections):
+The first thing you'll need to do is make Download MongoDB on Windows (I haven't tried downloading MongoDB on other Operating Systems) and make a MongoDB database. Call it "BattleData" and create collections "CharacterData", "ImageData", "UserCollections", and "BattleLogs" within it, like below (Note: you do not need the "Interactions" or "CriticalInteractions" collections):
 
 ![Image of database](databasePicture.png)
 
