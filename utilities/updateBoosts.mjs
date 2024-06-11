@@ -2,7 +2,7 @@
 
 export function addBoost(battleObj, battleKey, playerName, charName, boost, turn) {
     //TODO: remove this
-    console.log(`${boost} added to ${playerName}'s ${charName}!`);
+    //console.log(`${boost} added to ${playerName}'s ${charName}!`);
 
     // I arrange these alphabetically
     switch(boost) {

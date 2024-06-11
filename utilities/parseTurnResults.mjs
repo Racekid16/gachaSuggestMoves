@@ -10,8 +10,8 @@ export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
     let turnResults = battleEmbed.fields[2].value;
 
     //TODO: remove this
-    console.log(`${p1name}'s previous tagged-in character was ${battleObj[battleKey][p1name].previousTaggedInChar}`);
-    console.log(`${p2name}'s previous tagged-in character was ${battleObj[battleKey][p2name].previousTaggedInChar}`);
+    //console.log(`${p1name}'s previous tagged-in character was ${battleObj[battleKey][p1name].previousTaggedInChar}`);
+    //console.log(`${p2name}'s previous tagged-in character was ${battleObj[battleKey][p2name].previousTaggedInChar}`);
 
     //remove the .replace part if you're testing
     console.log(`Turn ${turn} of ${p1name} vs. ${p2name}:\n${turnResults}`);
@@ -35,8 +35,8 @@ export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
     let p2taggedInChar = getPlayerCharacter(2, battleEmbed);
 
     //TODO: remove this
-    console.log(`${p1name}'s current tagged-in char is ${p1taggedInChar}`);
-    console.log(`${p2name}'s current tagged-in char is ${p2taggedInChar}`);
+    //console.log(`${p1name}'s current tagged-in char is ${p1taggedInChar}`);
+    //console.log(`${p2name}'s current tagged-in char is ${p2taggedInChar}`);
 
     applyTransformation(battleObj, battleKey, p1name, p1taggedInChar);
     applyTransformation(battleObj, battleKey, p2name, p2taggedInChar);
@@ -216,8 +216,6 @@ function parseMoveDifferentChars(battleObj, battleKey, attacker, defender, attac
         addBoost(battleObj, battleKey, attacker, attackChar, "Study", turn);
     }
 
-    //TODO: account for the other attribute of perfect existence here (the revive mechanic + statboost)-
-    //or maybe do it in the transformChar function instead
     if (turnResults.includes(`**<@${attackerID}>** tagged in **${attackChar}**!`) 
      && battleObj[battleKey][attacker].chars[attackChar].moves.includes("The Perfect Existence")) {
         battleObj[battleKey][playerName].char[charName].debuffs = [];

@@ -36,7 +36,7 @@ connectToDb((error) => {
         //start server
         let consts = fs.readFileSync(constsFile, 'utf-8');
         let constsJSON = JSON.parse(consts);
-        let port = constsJSON.port;
+        const port = constsJSON.port;
         server.listen(port, '127.0.0.1', () => {
             console.log(`Listening on port ${port}`);
         });

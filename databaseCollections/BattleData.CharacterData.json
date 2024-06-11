@@ -1,0 +1,9668 @@
+[{
+  "_id": {
+    "$oid": "64ac2abd00a95a2d23891528"
+  },
+  "name": "Kushida Kikyō",
+  "rarity": "Shining",
+  "numStars": 1,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy",
+    "Inspire"
+  ],
+  "resolve": 78,
+  "mental": 50,
+  "physical": 50,
+  "social": 80,
+  "initiative": 45,
+  "supportCategory": "Social",
+  "supportBonus": 24,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2abe00a95a2d23891529"
+  },
+  "name": "Ryūen Kakeru",
+  "rarity": "Shining",
+  "numStars": 1,
+  "personality": "Cunning",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Influence",
+    "Grit"
+  ],
+  "resolve": 88,
+  "mental": 65,
+  "physical": 64,
+  "social": 20,
+  "initiative": 76,
+  "supportCategory": "Resolve",
+  "supportBonus": 8,
+  "allies": [
+    "Fighter"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2ac000a95a2d2389152a"
+  },
+  "name": "Kōenji Rokusuke",
+  "rarity": "Shining",
+  "numStars": 1,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting",
+    "Impulse"
+  ],
+  "resolve": 80,
+  "mental": 75,
+  "physical": 75,
+  "social": 30,
+  "initiative": 37,
+  "supportCategory": "Ability",
+  "supportBonus": 8,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Politician",
+    "Scholar",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2ac100a95a2d2389152b"
+  },
+  "name": "Nagumo Miyabi",
+  "rarity": "Shining",
+  "numStars": 1,
+  "personality": "Bold",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Influence",
+    "Dominate"
+  ],
+  "resolve": 82,
+  "mental": 66,
+  "physical": 68,
+  "social": 80,
+  "initiative": 69,
+  "supportCategory": "Social",
+  "supportBonus": 24,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Boy",
+    "Scholar",
+    "Student Council"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2ac400a95a2d2389152d"
+  },
+  "name": "Hirata Yōsuke",
+  "rarity": "Glowing",
+  "numStars": 1,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 73,
+  "mental": 56,
+  "physical": 54,
+  "social": 68,
+  "initiative": 56,
+  "supportCategory": "Social",
+  "supportBonus": 26,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2ac500a95a2d2389152e"
+  },
+  "name": "Shiina Hiyori",
+  "rarity": "Glowing",
+  "numStars": 1,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Unity",
+    "Inspire"
+  ],
+  "resolve": 70,
+  "mental": 64,
+  "physical": 19,
+  "social": 50,
+  "initiative": 15,
+  "supportCategory": "Mental",
+  "supportBonus": 26,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Girl",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2ac600a95a2d2389152f"
+  },
+  "name": "Kaneda Satoru",
+  "rarity": "Glowing",
+  "numStars": 1,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 72,
+  "mental": 49,
+  "physical": 14,
+  "social": 50,
+  "initiative": 34,
+  "supportCategory": "Social",
+  "supportBonus": 22,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2ac700a95a2d23891530"
+  },
+  "name": "Wang Meiyu",
+  "rarity": "Glowing",
+  "numStars": 1,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Study"
+  ],
+  "resolve": 77,
+  "mental": 62,
+  "physical": 33,
+  "social": 47,
+  "initiative": 37,
+  "supportCategory": "Mental",
+  "supportBonus": 24,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2ac800a95a2d23891531"
+  },
+  "name": "Tsukishiro Tokinari",
+  "rarity": "Glowing",
+  "numStars": 1,
+  "personality": "Bold",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Influence"
+  ],
+  "resolve": 77,
+  "mental": 46,
+  "physical": 77,
+  "social": 41,
+  "initiative": 64,
+  "supportCategory": "Physical",
+  "supportBonus": 22,
+  "allies": [
+    "White Room"
+  ],
+  "tags": [
+    "Boy",
+    "Teacher",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2aca00a95a2d23891532"
+  },
+  "name": "Sakura Airi",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Timid",
+  "moves": [
+    "Academic",
+    "Influence"
+  ],
+  "resolve": 63,
+  "mental": 18,
+  "physical": 12,
+  "social": 8,
+  "initiative": 10,
+  "supportCategory": "Physical",
+  "supportBonus": 26,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2acb00a95a2d23891533"
+  },
+  "name": "Ike Kanji",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Bold",
+  "moves": [
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 68,
+  "mental": 24,
+  "physical": 31,
+  "social": 24,
+  "initiative": 50,
+  "supportCategory": "Social",
+  "supportBonus": 16,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2acc00a95a2d23891534"
+  },
+  "name": "Yamauchi Haruki",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Athleticism"
+  ],
+  "resolve": 67,
+  "mental": 21,
+  "physical": 25,
+  "social": 16,
+  "initiative": 38,
+  "supportCategory": "Physical",
+  "supportBonus": 18,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2acd00a95a2d23891535"
+  },
+  "name": "Miyake Akito",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 73,
+  "mental": 37,
+  "physical": 43,
+  "social": 44,
+  "initiative": 36,
+  "supportCategory": "Social",
+  "supportBonus": 20,
+  "allies": [
+    "Fighter"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2ace00a95a2d23891536"
+  },
+  "name": "Yukimura Keisei",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Study"
+  ],
+  "resolve": 72,
+  "mental": 66,
+  "physical": 18,
+  "social": 37,
+  "initiative": 44,
+  "supportCategory": "Mental",
+  "supportBonus": 22,
+  "allies": [
+    "Scholar"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2acf00a95a2d23891537"
+  },
+  "name": "Ibuki Mio",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Explosive",
+  "moves": [
+    "Athleticism",
+    "Fighting",
+    "Impulse"
+  ],
+  "resolve": 73,
+  "mental": 34,
+  "physical": 52,
+  "social": 18,
+  "initiative": 35,
+  "supportCategory": "Physical",
+  "supportBonus": 20,
+  "allies": [
+    "Fighter"
+  ],
+  "tags": [
+    "Class C",
+    "Girl",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2ad000a95a2d23891538"
+  },
+  "name": "Satō Maya",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Benevolent",
+  "moves": [
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 70,
+  "mental": 20,
+  "physical": 19,
+  "social": 37,
+  "initiative": 46,
+  "supportCategory": "Social",
+  "supportBonus": 16,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2ad100a95a2d23891539"
+  },
+  "name": "Shinohara Satsuki",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Explosive",
+  "moves": [
+    "Athleticism",
+    "Influence"
+  ],
+  "resolve": 66,
+  "mental": 25,
+  "physical": 24,
+  "social": 39,
+  "initiative": 36,
+  "supportCategory": "Social",
+  "supportBonus": 16,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2ad300a95a2d2389153a"
+  },
+  "name": "Sotomura Hideo",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Cold",
+  "moves": [
+    "Academic",
+    "Scheming"
+  ],
+  "resolve": 68,
+  "mental": 47,
+  "physical": 17,
+  "social": 18,
+  "initiative": 32,
+  "supportCategory": "Mental",
+  "supportBonus": 18,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2ad400a95a2d2389153b"
+  },
+  "name": "Shiranami Chihiro",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Timid",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Empathy"
+  ],
+  "resolve": 69,
+  "mental": 36,
+  "physical": 35,
+  "social": 24,
+  "initiative": 48,
+  "supportCategory": "Physical",
+  "supportBonus": 24,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2ad500a95a2d2389153c"
+  },
+  "name": "Himeno Yuki",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Cunning",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 73,
+  "mental": 44,
+  "physical": 31,
+  "social": 21,
+  "initiative": 47,
+  "supportCategory": "Mental",
+  "supportBonus": 20,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class B",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2ad600a95a2d2389153d"
+  },
+  "name": "Sakagami Kazuma",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Cunning",
+  "moves": [
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 68,
+  "mental": 50,
+  "physical": 22,
+  "social": 27,
+  "initiative": 50,
+  "supportCategory": "Mental",
+  "supportBonus": 24,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Boy",
+    "Teacher",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2ad700a95a2d2389153e"
+  },
+  "name": "Mashima Tomonari",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Bold",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Influence"
+  ],
+  "resolve": 65,
+  "mental": 26,
+  "physical": 50,
+  "social": 37,
+  "initiative": 47,
+  "supportCategory": "Physical",
+  "supportBonus": 24,
+  "allies": [
+    "Class A"
+  ],
+  "tags": [
+    "Boy",
+    "Teacher"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2ad800a95a2d2389153f"
+  },
+  "name": "Totsuka Yahiko",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Explosive",
+  "moves": [
+    "Academic",
+    "Influence"
+  ],
+  "resolve": 70,
+  "mental": 23,
+  "physical": 26,
+  "social": 29,
+  "initiative": 26,
+  "supportCategory": "Social",
+  "supportBonus": 16,
+  "allies": [
+    "Class A"
+  ],
+  "tags": [
+    "Class A",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2ada00a95a2d23891540"
+  },
+  "name": "Kamuro Masumi",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Cold",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 74,
+  "mental": 47,
+  "physical": 51,
+  "social": 36,
+  "initiative": 58,
+  "supportCategory": "Physical",
+  "supportBonus": 20,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class A",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2ada00a95a2d23891541"
+  },
+  "name": "Hashimoto Masayoshi",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Selfish",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 72,
+  "mental": 50,
+  "physical": 53,
+  "social": 51,
+  "initiative": 60,
+  "supportCategory": "Social",
+  "supportBonus": 22,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class A",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2adb00a95a2d23891542"
+  },
+  "name": "Kitō Hayato",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Bold",
+  "moves": [
+    "Athleticism",
+    "Fighting",
+    "Influence"
+  ],
+  "resolve": 71,
+  "mental": 35,
+  "physical": 60,
+  "social": 38,
+  "initiative": 42,
+  "supportCategory": "Physical",
+  "supportBonus": 20,
+  "allies": [
+    "Class A"
+  ],
+  "tags": [
+    "Class A",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2add00a95a2d23891543"
+  },
+  "name": "Yamamura Miki",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Study"
+  ],
+  "resolve": 68,
+  "mental": 57,
+  "physical": 34,
+  "social": 24,
+  "initiative": 29,
+  "supportCategory": "Mental",
+  "supportBonus": 20,
+  "allies": [
+    "Scholar"
+  ],
+  "tags": [
+    "Class A",
+    "Girl",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2ade00a95a2d23891544"
+  },
+  "name": "Tachibana Akane",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Explosive",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 74,
+  "mental": 45,
+  "physical": 36,
+  "social": 48,
+  "initiative": 55,
+  "supportCategory": "Resolve",
+  "supportBonus": 8,
+  "allies": [
+    "Student Council"
+  ],
+  "tags": [
+    "Senpai",
+    "Girl",
+    "Student Council"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2adf00a95a2d23891545"
+  },
+  "name": "Shibata Sō",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Reserved",
+  "moves": [
+    "Athleticism",
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 71,
+  "mental": 34,
+  "physical": 55,
+  "social": 40,
+  "initiative": 45,
+  "supportCategory": "Physical",
+  "supportBonus": 22,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2ae000a95a2d23891546"
+  },
+  "name": "Ishizaki Daichi",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Timid",
+  "moves": [
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 76,
+  "mental": 17,
+  "physical": 45,
+  "social": 29,
+  "initiative": 49,
+  "supportCategory": "Physical",
+  "supportBonus": 24,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac2ae100a95a2d23891547"
+  },
+  "name": "Tsubaki Sakurako",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Cold",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Impulse"
+  ],
+  "resolve": 73,
+  "mental": 60,
+  "physical": 28,
+  "social": 27,
+  "initiative": 65,
+  "supportCategory": "Mental",
+  "supportBonus": 24,
+  "allies": [
+    "Kōhai"
+  ],
+  "tags": [
+    "Kōhai",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3402f28b66d516dd846d"
+  },
+  "name": "Horikita Suzune",
+  "rarity": "Shining",
+  "numStars": 2,
+  "personality": "Cold",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Study"
+  ],
+  "resolve": 93,
+  "mental": 71,
+  "physical": 64,
+  "social": 25,
+  "initiative": 73,
+  "supportCategory": "Mental",
+  "supportBonus": 24,
+  "allies": [
+    "Scholar"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Fighter",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac340ff28b66d516dd8478"
+  },
+  "name": "Chabashira Sae",
+  "rarity": "Glowing",
+  "numStars": 1,
+  "personality": "Cunning",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Hate"
+  ],
+  "resolve": 75,
+  "mental": 42,
+  "physical": 34,
+  "social": 31,
+  "initiative": 55,
+  "supportCategory": "Mental",
+  "supportBonus": 26,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Girl",
+    "Teacher"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3411f28b66d516dd847a"
+  },
+  "name": "Kanzaki Ryuji",
+  "rarity": "Glowing",
+  "numStars": 1,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 73,
+  "mental": 51,
+  "physical": 47,
+  "social": 49,
+  "initiative": 51,
+  "supportCategory": "Mental",
+  "supportBonus": 24,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Boy",
+    "Politician"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3416f28b66d516dd847d"
+  },
+  "name": "Wang Meiyu",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Study"
+  ],
+  "resolve": 89,
+  "mental": 68,
+  "physical": 39,
+  "social": 53,
+  "initiative": 43,
+  "supportCategory": "Mental",
+  "supportBonus": 24,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3418f28b66d516dd847f"
+  },
+  "name": "Katsuragi Kōhei",
+  "rarity": "Glowing",
+  "numStars": 1,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 83,
+  "mental": 64,
+  "physical": 37,
+  "social": 47,
+  "initiative": 63,
+  "supportCategory": "Social",
+  "supportBonus": 24,
+  "allies": [
+    "Class A"
+  ],
+  "tags": [
+    "Class A",
+    "Boy",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3419f28b66d516dd8481"
+  },
+  "name": "Sakayanagi Narumori",
+  "rarity": "Glowing",
+  "numStars": 1,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 84,
+  "mental": 42,
+  "physical": 25,
+  "social": 47,
+  "initiative": 61,
+  "supportCategory": "Ability",
+  "supportBonus": 10,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Boy",
+    "Politician",
+    "Teacher"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac341af28b66d516dd8483"
+  },
+  "name": "Asahina Nazuna",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 70,
+  "mental": 36,
+  "physical": 31,
+  "social": 53,
+  "initiative": 54,
+  "supportCategory": "Social",
+  "supportBonus": 26,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3420f28b66d516dd848e"
+  },
+  "name": "Hasebe Haruka",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Selfish",
+  "moves": [
+    "Scheming",
+    "Empathy"
+  ],
+  "resolve": 81,
+  "mental": 42,
+  "physical": 34,
+  "social": 39,
+  "initiative": 37,
+  "supportCategory": "Social",
+  "supportBonus": 20,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3422f28b66d516dd8494"
+  },
+  "name": "Yukimura Keisei",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Study"
+  ],
+  "resolve": 84,
+  "mental": 72,
+  "physical": 24,
+  "social": 43,
+  "initiative": 50,
+  "supportCategory": "Mental",
+  "supportBonus": 22,
+  "allies": [
+    "Scholar"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3423f28b66d516dd8497"
+  },
+  "name": "Ibuki Mio",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Explosive",
+  "moves": [
+    "Athleticism",
+    "Fighting",
+    "Impulse"
+  ],
+  "resolve": 87,
+  "mental": 41,
+  "physical": 59,
+  "social": 25,
+  "initiative": 42,
+  "supportCategory": "Physical",
+  "supportBonus": 20,
+  "allies": [
+    "Fighter"
+  ],
+  "tags": [
+    "Class C",
+    "Girl",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3424f28b66d516dd849b"
+  },
+  "name": "Satō Maya",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Benevolent",
+  "moves": [
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 80,
+  "mental": 25,
+  "physical": 24,
+  "social": 42,
+  "initiative": 51,
+  "supportCategory": "Social",
+  "supportBonus": 16,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3427f28b66d516dd84a1"
+  },
+  "name": "Amikura Mako",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Empathy"
+  ],
+  "resolve": 65,
+  "mental": 41,
+  "physical": 38,
+  "social": 47,
+  "initiative": 38,
+  "supportCategory": "Physical",
+  "supportBonus": 22,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac342af28b66d516dd84a7"
+  },
+  "name": "Sakagami Kazuma",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Cunning",
+  "moves": [
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 78,
+  "mental": 55,
+  "physical": 27,
+  "social": 32,
+  "initiative": 55,
+  "supportCategory": "Mental",
+  "supportBonus": 24,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Boy",
+    "Teacher",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac342df28b66d516dd84ae"
+  },
+  "name": "Hashimoto Masayoshi",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Selfish",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 84,
+  "mental": 56,
+  "physical": 59,
+  "social": 57,
+  "initiative": 66,
+  "supportCategory": "Social",
+  "supportBonus": 22,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class A",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3435f28b66d516dd84b4"
+  },
+  "name": "Sakayanagi Arisu",
+  "rarity": "Shining",
+  "numStars": 2,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence",
+    "Kings Command"
+  ],
+  "resolve": 95,
+  "mental": 77,
+  "physical": 12,
+  "social": 65,
+  "initiative": 68,
+  "supportCategory": "Mental",
+  "supportBonus": 26,
+  "allies": [
+    "Class A"
+  ],
+  "tags": [
+    "Class A",
+    "Girl",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac343bf28b66d516dd84b5"
+  },
+  "name": "Sudō Ken",
+  "rarity": "Glowing",
+  "numStars": 1,
+  "personality": "Explosive",
+  "moves": [
+    "Athleticism",
+    "Fighting"
+  ],
+  "resolve": 78,
+  "mental": 21,
+  "physical": 73,
+  "social": 16,
+  "initiative": 30,
+  "supportCategory": "Physical",
+  "supportBonus": 24,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3644f28b66d516dd84b6"
+  },
+  "name": "Ayanokōji Kiyotaka",
+  "rarity": "Shining",
+  "numStars": 2,
+  "personality": "Apathetic",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Empathy",
+    "Kings Command"
+  ],
+  "resolve": 108,
+  "mental": 89,
+  "physical": 93,
+  "social": 89,
+  "initiative": 27,
+  "supportCategory": "Mental",
+  "supportBonus": 24,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "White Room",
+    "Fighter",
+    "Scholar",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3645f28b66d516dd84b8"
+  },
+  "name": "Ichinose Honami",
+  "rarity": "Shining",
+  "numStars": 1,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy",
+    "Unity"
+  ],
+  "resolve": 74,
+  "mental": 64,
+  "physical": 40,
+  "social": 80,
+  "initiative": 68,
+  "supportCategory": "Social",
+  "supportBonus": 26,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Girl",
+    "Student Council",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3646f28b66d516dd84b9"
+  },
+  "name": "Ryūen Kakeru",
+  "rarity": "Shining",
+  "numStars": 2,
+  "personality": "Cunning",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Influence",
+    "Grit"
+  ],
+  "resolve": 106,
+  "mental": 74,
+  "physical": 73,
+  "social": 29,
+  "initiative": 85,
+  "supportCategory": "Resolve",
+  "supportBonus": 8,
+  "allies": [
+    "Fighter"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3647f28b66d516dd84ba"
+  },
+  "name": "Nagumo Miyabi",
+  "rarity": "Shining",
+  "numStars": 2,
+  "personality": "Bold",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Influence",
+    "Dominate"
+  ],
+  "resolve": 98,
+  "mental": 74,
+  "physical": 76,
+  "social": 88,
+  "initiative": 77,
+  "supportCategory": "Social",
+  "supportBonus": 24,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Boy",
+    "Scholar",
+    "Student Council"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac364af28b66d516dd84bb"
+  },
+  "name": "Hirata Yōsuke",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 87,
+  "mental": 63,
+  "physical": 61,
+  "social": 75,
+  "initiative": 63,
+  "supportCategory": "Social",
+  "supportBonus": 26,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac364bf28b66d516dd84bc"
+  },
+  "name": "Sudō Ken",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Explosive",
+  "moves": [
+    "Athleticism",
+    "Fighting"
+  ],
+  "resolve": 114,
+  "mental": 39,
+  "physical": 91,
+  "social": 34,
+  "initiative": 48,
+  "supportCategory": "Physical",
+  "supportBonus": 24,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3650f28b66d516dd84bd"
+  },
+  "name": "Yamada Albert",
+  "rarity": "Glowing",
+  "numStars": 1,
+  "personality": "Benevolent",
+  "moves": [
+    "Athleticism",
+    "Fighting",
+    "Empathy",
+    "Inspire"
+  ],
+  "resolve": 71,
+  "mental": 42,
+  "physical": 75,
+  "social": 33,
+  "initiative": 29,
+  "supportCategory": "Physical",
+  "supportBonus": 22,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3651f28b66d516dd84be"
+  },
+  "name": "Shiina Hiyori",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Unity",
+    "Inspire"
+  ],
+  "resolve": 86,
+  "mental": 72,
+  "physical": 27,
+  "social": 58,
+  "initiative": 23,
+  "supportCategory": "Mental",
+  "supportBonus": 26,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Girl",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3652f28b66d516dd84bf"
+  },
+  "name": "Hōsen Kazuomi",
+  "rarity": "Glowing",
+  "numStars": 1,
+  "personality": "Explosive",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Fighting",
+    "Grit"
+  ],
+  "resolve": 85,
+  "mental": 55,
+  "physical": 77,
+  "social": 3,
+  "initiative": 62,
+  "supportCategory": "Mental",
+  "supportBonus": 22,
+  "allies": [
+    "Fighter"
+  ],
+  "tags": [
+    "Kōhai",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3653f28b66d516dd84c0"
+  },
+  "name": "Ishigami Kyō",
+  "rarity": "Glowing",
+  "numStars": 1,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence",
+    "Kings Command"
+  ],
+  "resolve": 79,
+  "mental": 75,
+  "physical": 23,
+  "social": 49,
+  "initiative": 65,
+  "supportCategory": "Mental",
+  "supportBonus": 26,
+  "allies": [
+    "Politician"
+  ],
+  "tags": [
+    "Kōhai",
+    "Boy",
+    "Scholar",
+    "Politician"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3656f28b66d516dd84c1"
+  },
+  "name": "Ayanokōji Atsuomi",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Cold",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Dominate"
+  ],
+  "resolve": 110,
+  "mental": 71,
+  "physical": 33,
+  "social": 48,
+  "initiative": 71,
+  "supportCategory": "Resolve",
+  "supportBonus": 10,
+  "allies": [
+    "White Room"
+  ],
+  "tags": [
+    "Boy",
+    "Politician"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3658f28b66d516dd84c2"
+  },
+  "name": "Sakura Airi",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Timid",
+  "moves": [
+    "Academic",
+    "Influence"
+  ],
+  "resolve": 79,
+  "mental": 26,
+  "physical": 20,
+  "social": 16,
+  "initiative": 18,
+  "supportCategory": "Physical",
+  "supportBonus": 26,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3671f28b66d516dd84c3"
+  },
+  "name": "Yamauchi Haruki",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Athleticism"
+  ],
+  "resolve": 73,
+  "mental": 24,
+  "physical": 28,
+  "social": 19,
+  "initiative": 41,
+  "supportCategory": "Physical",
+  "supportBonus": 18,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3672f28b66d516dd84c4"
+  },
+  "name": "Hasebe Haruka",
+  "rarity": "Common",
+  "numStars": 1,
+  "personality": "Selfish",
+  "moves": [
+    "Scheming",
+    "Empathy"
+  ],
+  "resolve": 69,
+  "mental": 36,
+  "physical": 28,
+  "social": 33,
+  "initiative": 31,
+  "supportCategory": "Social",
+  "supportBonus": 20,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3674f28b66d516dd84c5"
+  },
+  "name": "Yukimura Keisei",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Study"
+  ],
+  "resolve": 96,
+  "mental": 78,
+  "physical": 30,
+  "social": 49,
+  "initiative": 56,
+  "supportCategory": "Mental",
+  "supportBonus": 22,
+  "allies": [
+    "Scholar"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3678f28b66d516dd84c6"
+  },
+  "name": "Sotomura Hideo",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Cold",
+  "moves": [
+    "Academic",
+    "Scheming"
+  ],
+  "resolve": 80,
+  "mental": 53,
+  "physical": 23,
+  "social": 24,
+  "initiative": 38,
+  "supportCategory": "Mental",
+  "supportBonus": 18,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3680f28b66d516dd84c7"
+  },
+  "name": "Kamuro Masumi",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Cold",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 86,
+  "mental": 53,
+  "physical": 57,
+  "social": 42,
+  "initiative": 64,
+  "supportCategory": "Physical",
+  "supportBonus": 20,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class A",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3683f28b66d516dd84c8"
+  },
+  "name": "Kitō Hayato",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Bold",
+  "moves": [
+    "Athleticism",
+    "Fighting",
+    "Influence"
+  ],
+  "resolve": 83,
+  "mental": 41,
+  "physical": 66,
+  "social": 44,
+  "initiative": 48,
+  "supportCategory": "Physical",
+  "supportBonus": 20,
+  "allies": [
+    "Class A"
+  ],
+  "tags": [
+    "Class A",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3685f28b66d516dd84c9"
+  },
+  "name": "Tachibana Akane",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Explosive",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 86,
+  "mental": 51,
+  "physical": 42,
+  "social": 54,
+  "initiative": 61,
+  "supportCategory": "Resolve",
+  "supportBonus": 8,
+  "allies": [
+    "Student Council"
+  ],
+  "tags": [
+    "Senpai",
+    "Girl",
+    "Student Council"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3687f28b66d516dd84ca"
+  },
+  "name": "Shibata Sō",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Reserved",
+  "moves": [
+    "Athleticism",
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 85,
+  "mental": 41,
+  "physical": 62,
+  "social": 47,
+  "initiative": 52,
+  "supportCategory": "Physical",
+  "supportBonus": 22,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3689f28b66d516dd84cb"
+  },
+  "name": "Tsubaki Sakurako",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Cold",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Impulse"
+  ],
+  "resolve": 87,
+  "mental": 67,
+  "physical": 35,
+  "social": 34,
+  "initiative": 72,
+  "supportCategory": "Mental",
+  "supportBonus": 24,
+  "allies": [
+    "Kōhai"
+  ],
+  "tags": [
+    "Kōhai",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac368cf28b66d516dd84cc"
+  },
+  "name": "Shiro",
+  "rarity": "Special",
+  "numStars": 5,
+  "personality": "Cold",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 159,
+  "mental": 107,
+  "physical": 114,
+  "social": 92,
+  "initiative": 101,
+  "supportCategory": "Physical",
+  "supportBonus": 42,
+  "allies": [
+    "White Room"
+  ],
+  "tags": [
+    "Boy",
+    "White Room",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac36aef28b66d516dd84ce"
+  },
+  "name": "Shiro",
+  "rarity": "Special",
+  "numStars": 2,
+  "personality": "Cold",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 81,
+  "mental": 68,
+  "physical": 75,
+  "social": 53,
+  "initiative": 62,
+  "supportCategory": "Physical",
+  "supportBonus": 28,
+  "allies": [
+    "White Room"
+  ],
+  "tags": [
+    "Boy",
+    "White Room",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac36b4f28b66d516dd84d0"
+  },
+  "name": "Horikita Suzune",
+  "rarity": "Shining",
+  "numStars": 1,
+  "personality": "Cold",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Study"
+  ],
+  "resolve": 75,
+  "mental": 62,
+  "physical": 55,
+  "social": 16,
+  "initiative": 64,
+  "supportCategory": "Mental",
+  "supportBonus": 24,
+  "allies": [
+    "Scholar"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Fighter",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac36b7f28b66d516dd84d2"
+  },
+  "name": "Karuizawa Kei",
+  "rarity": "Glowing",
+  "numStars": 1,
+  "personality": "Bold",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Hate"
+  ],
+  "resolve": 86,
+  "mental": 45,
+  "physical": 30,
+  "social": 63,
+  "initiative": 66,
+  "supportCategory": "Resolve",
+  "supportBonus": 10,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac36bcf28b66d516dd84d3"
+  },
+  "name": "Hoshinomiya Chie",
+  "rarity": "Glowing",
+  "numStars": 1,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Empathy"
+  ],
+  "resolve": 71,
+  "mental": 32,
+  "physical": 39,
+  "social": 59,
+  "initiative": 42,
+  "supportCategory": "Social",
+  "supportBonus": 26,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Girl",
+    "Teacher"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac36bff28b66d516dd84d4"
+  },
+  "name": "Nanase Tsubasa",
+  "rarity": "Glowing",
+  "numStars": 1,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting"
+  ],
+  "resolve": 82,
+  "mental": 55,
+  "physical": 58,
+  "social": 35,
+  "initiative": 58,
+  "supportCategory": "Physical",
+  "supportBonus": 24,
+  "allies": [
+    "Kōhai"
+  ],
+  "tags": [
+    "Kōhai",
+    "Girl",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac36c2f28b66d516dd84d6"
+  },
+  "name": "Utomiya Riku",
+  "rarity": "Glowing",
+  "numStars": 1,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting"
+  ],
+  "resolve": 80,
+  "mental": 52,
+  "physical": 63,
+  "social": 27,
+  "initiative": 42,
+  "supportCategory": "Physical",
+  "supportBonus": 26,
+  "allies": [
+    "Kōhai"
+  ],
+  "tags": [
+    "Kōhai",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac36caf28b66d516dd84d7"
+  },
+  "name": "Miyake Akito",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 87,
+  "mental": 44,
+  "physical": 50,
+  "social": 51,
+  "initiative": 43,
+  "supportCategory": "Social",
+  "supportBonus": 20,
+  "allies": [
+    "Fighter"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac36e0f28b66d516dd84d8"
+  },
+  "name": "Ishizaki Daichi",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Timid",
+  "moves": [
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 90,
+  "mental": 24,
+  "physical": 52,
+  "social": 36,
+  "initiative": 56,
+  "supportCategory": "Physical",
+  "supportBonus": 24,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac370bf28b66d516dd84da"
+  },
+  "name": "Sakayanagi Arisu",
+  "rarity": "Shining",
+  "numStars": 3,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence",
+    "Kings Command"
+  ],
+  "resolve": 109,
+  "mental": 84,
+  "physical": 19,
+  "social": 72,
+  "initiative": 75,
+  "supportCategory": "Mental",
+  "supportBonus": 26,
+  "allies": [
+    "Class A"
+  ],
+  "tags": [
+    "Class A",
+    "Girl",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac370cf28b66d516dd84db"
+  },
+  "name": "Kiryūin Fūka",
+  "rarity": "Shining",
+  "numStars": 1,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting",
+    "Impulse"
+  ],
+  "resolve": 77,
+  "mental": 75,
+  "physical": 75,
+  "social": 41,
+  "initiative": 40,
+  "supportCategory": "Mental",
+  "supportBonus": 20,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Girl",
+    "Fighter",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac370ff28b66d516dd84dd"
+  },
+  "name": "Sudō Ken",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Explosive",
+  "moves": [
+    "Athleticism",
+    "Fighting"
+  ],
+  "resolve": 96,
+  "mental": 30,
+  "physical": 82,
+  "social": 25,
+  "initiative": 39,
+  "supportCategory": "Physical",
+  "supportBonus": 24,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3711f28b66d516dd84de"
+  },
+  "name": "Yamada Albert",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Benevolent",
+  "moves": [
+    "Athleticism",
+    "Fighting",
+    "Empathy",
+    "Inspire"
+  ],
+  "resolve": 85,
+  "mental": 49,
+  "physical": 82,
+  "social": 40,
+  "initiative": 36,
+  "supportCategory": "Physical",
+  "supportBonus": 22,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3713f28b66d516dd84df"
+  },
+  "name": "Nanase Tsubasa",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting"
+  ],
+  "resolve": 98,
+  "mental": 63,
+  "physical": 66,
+  "social": 43,
+  "initiative": 66,
+  "supportCategory": "Physical",
+  "supportBonus": 24,
+  "allies": [
+    "Kōhai"
+  ],
+  "tags": [
+    "Kōhai",
+    "Girl",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3717f28b66d516dd84e1"
+  },
+  "name": "Katsuragi Kōhei",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 97,
+  "mental": 71,
+  "physical": 44,
+  "social": 54,
+  "initiative": 70,
+  "supportCategory": "Social",
+  "supportBonus": 24,
+  "allies": [
+    "Class A"
+  ],
+  "tags": [
+    "Class A",
+    "Boy",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3719f28b66d516dd84e2"
+  },
+  "name": "Tsukishiro Tokinari",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Bold",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Influence"
+  ],
+  "resolve": 93,
+  "mental": 54,
+  "physical": 85,
+  "social": 49,
+  "initiative": 72,
+  "supportCategory": "Physical",
+  "supportBonus": 22,
+  "allies": [
+    "White Room"
+  ],
+  "tags": [
+    "Boy",
+    "Teacher",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac371df28b66d516dd84e3"
+  },
+  "name": "Ike Kanji",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Bold",
+  "moves": [
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 76,
+  "mental": 28,
+  "physical": 35,
+  "social": 28,
+  "initiative": 54,
+  "supportCategory": "Social",
+  "supportBonus": 16,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac372af28b66d516dd84e4"
+  },
+  "name": "Sakagami Kazuma",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Cunning",
+  "moves": [
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 88,
+  "mental": 60,
+  "physical": 32,
+  "social": 37,
+  "initiative": 60,
+  "supportCategory": "Mental",
+  "supportBonus": 24,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Boy",
+    "Teacher",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac372df28b66d516dd84e5"
+  },
+  "name": "Totsuka Yahiko",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Explosive",
+  "moves": [
+    "Academic",
+    "Influence"
+  ],
+  "resolve": 78,
+  "mental": 27,
+  "physical": 30,
+  "social": 33,
+  "initiative": 30,
+  "supportCategory": "Social",
+  "supportBonus": 16,
+  "allies": [
+    "Class A"
+  ],
+  "tags": [
+    "Class A",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac373af28b66d516dd84e6"
+  },
+  "name": "Ayanokōji Kiyotaka",
+  "rarity": "Shining",
+  "numStars": 1,
+  "personality": "Apathetic",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Empathy",
+    "Kings Command"
+  ],
+  "resolve": 90,
+  "mental": 80,
+  "physical": 84,
+  "social": 80,
+  "initiative": 18,
+  "supportCategory": "Mental",
+  "supportBonus": 24,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "White Room",
+    "Fighter",
+    "Scholar",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac373ff28b66d516dd84e8"
+  },
+  "name": "Kōenji Rokusuke",
+  "rarity": "Shining",
+  "numStars": 3,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting",
+    "Impulse"
+  ],
+  "resolve": 112,
+  "mental": 91,
+  "physical": 91,
+  "social": 46,
+  "initiative": 53,
+  "supportCategory": "Ability",
+  "supportBonus": 8,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Politician",
+    "Scholar",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3750f28b66d516dd84e9"
+  },
+  "name": "Ayanokōji Atsuomi",
+  "rarity": "Glowing",
+  "numStars": 1,
+  "personality": "Cold",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Dominate"
+  ],
+  "resolve": 100,
+  "mental": 66,
+  "physical": 28,
+  "social": 43,
+  "initiative": 66,
+  "supportCategory": "Resolve",
+  "supportBonus": 10,
+  "allies": [
+    "White Room"
+  ],
+  "tags": [
+    "Boy",
+    "Politician"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3752f28b66d516dd84ea"
+  },
+  "name": "Asahina Nazuna",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 82,
+  "mental": 42,
+  "physical": 37,
+  "social": 59,
+  "initiative": 60,
+  "supportCategory": "Social",
+  "supportBonus": 26,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac375cf28b66d516dd84eb"
+  },
+  "name": "Shinohara Satsuki",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Explosive",
+  "moves": [
+    "Athleticism",
+    "Influence"
+  ],
+  "resolve": 76,
+  "mental": 30,
+  "physical": 29,
+  "social": 44,
+  "initiative": 41,
+  "supportCategory": "Social",
+  "supportBonus": 16,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3761f28b66d516dd84ec"
+  },
+  "name": "Himeno Yuki",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Cunning",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 87,
+  "mental": 51,
+  "physical": 38,
+  "social": 28,
+  "initiative": 54,
+  "supportCategory": "Mental",
+  "supportBonus": 20,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class B",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3768f28b66d516dd84ed"
+  },
+  "name": "Yamamura Miki",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Study"
+  ],
+  "resolve": 80,
+  "mental": 63,
+  "physical": 40,
+  "social": 30,
+  "initiative": 35,
+  "supportCategory": "Mental",
+  "supportBonus": 20,
+  "allies": [
+    "Scholar"
+  ],
+  "tags": [
+    "Class A",
+    "Girl",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3774f28b66d516dd84f0"
+  },
+  "name": "Sakayanagi Arisu",
+  "rarity": "Shining",
+  "numStars": 1,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence",
+    "Kings Command"
+  ],
+  "resolve": 81,
+  "mental": 70,
+  "physical": 5,
+  "social": 58,
+  "initiative": 61,
+  "supportCategory": "Mental",
+  "supportBonus": 26,
+  "allies": [
+    "Class A"
+  ],
+  "tags": [
+    "Class A",
+    "Girl",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3778f28b66d516dd84f1"
+  },
+  "name": "Kōenji Rokusuke",
+  "rarity": "Shining",
+  "numStars": 2,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting",
+    "Impulse"
+  ],
+  "resolve": 96,
+  "mental": 83,
+  "physical": 83,
+  "social": 38,
+  "initiative": 45,
+  "supportCategory": "Ability",
+  "supportBonus": 8,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Politician",
+    "Scholar",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3779f28b66d516dd84f2"
+  },
+  "name": "Kiryūin Fūka",
+  "rarity": "Shining",
+  "numStars": 2,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting",
+    "Impulse"
+  ],
+  "resolve": 91,
+  "mental": 82,
+  "physical": 82,
+  "social": 48,
+  "initiative": 47,
+  "supportCategory": "Mental",
+  "supportBonus": 20,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Girl",
+    "Fighter",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3782f28b66d516dd84f4"
+  },
+  "name": "Kaneda Satoru",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 84,
+  "mental": 55,
+  "physical": 20,
+  "social": 56,
+  "initiative": 40,
+  "supportCategory": "Social",
+  "supportBonus": 22,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3784f28b66d516dd84f5"
+  },
+  "name": "Utomiya Riku",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting"
+  ],
+  "resolve": 92,
+  "mental": 58,
+  "physical": 69,
+  "social": 33,
+  "initiative": 48,
+  "supportCategory": "Physical",
+  "supportBonus": 26,
+  "allies": [
+    "Kōhai"
+  ],
+  "tags": [
+    "Kōhai",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3794f28b66d516dd84f6"
+  },
+  "name": "Amikura Mako",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Empathy"
+  ],
+  "resolve": 77,
+  "mental": 47,
+  "physical": 44,
+  "social": 53,
+  "initiative": 44,
+  "supportCategory": "Physical",
+  "supportBonus": 22,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3795f28b66d516dd84f7"
+  },
+  "name": "Shiranami Chihiro",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Timid",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Empathy"
+  ],
+  "resolve": 83,
+  "mental": 43,
+  "physical": 42,
+  "social": 31,
+  "initiative": 55,
+  "supportCategory": "Physical",
+  "supportBonus": 24,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3798f28b66d516dd84f8"
+  },
+  "name": "Mashima Tomonari",
+  "rarity": "Common",
+  "numStars": 2,
+  "personality": "Bold",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Influence"
+  ],
+  "resolve": 75,
+  "mental": 31,
+  "physical": 55,
+  "social": 42,
+  "initiative": 52,
+  "supportCategory": "Physical",
+  "supportBonus": 24,
+  "allies": [
+    "Class A"
+  ],
+  "tags": [
+    "Boy",
+    "Teacher"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3811f28b66d516dd84fc"
+  },
+  "name": "Hōsen Kazuomi",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Explosive",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Fighting",
+    "Grit"
+  ],
+  "resolve": 101,
+  "mental": 63,
+  "physical": 85,
+  "social": 11,
+  "initiative": 70,
+  "supportCategory": "Mental",
+  "supportBonus": 22,
+  "allies": [
+    "Fighter"
+  ],
+  "tags": [
+    "Kōhai",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3814f28b66d516dd84fd"
+  },
+  "name": "Sakayanagi Narumori",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 94,
+  "mental": 47,
+  "physical": 30,
+  "social": 52,
+  "initiative": 66,
+  "supportCategory": "Ability",
+  "supportBonus": 10,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Boy",
+    "Politician",
+    "Teacher"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3839f28b66d516dd84ff"
+  },
+  "name": "Kushida Kikyō",
+  "rarity": "Shining",
+  "numStars": 2,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy",
+    "Inspire"
+  ],
+  "resolve": 92,
+  "mental": 57,
+  "physical": 57,
+  "social": 87,
+  "initiative": 52,
+  "supportCategory": "Social",
+  "supportBonus": 24,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac383df28b66d516dd8500"
+  },
+  "name": "Karuizawa Kei",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Bold",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Hate"
+  ],
+  "resolve": 100,
+  "mental": 52,
+  "physical": 37,
+  "social": 70,
+  "initiative": 73,
+  "supportCategory": "Resolve",
+  "supportBonus": 10,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3840f28b66d516dd8501"
+  },
+  "name": "Chabashira Sae",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Cunning",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Hate"
+  ],
+  "resolve": 89,
+  "mental": 49,
+  "physical": 41,
+  "social": 38,
+  "initiative": 62,
+  "supportCategory": "Mental",
+  "supportBonus": 26,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Girl",
+    "Teacher"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3879f28b66d516dd8504"
+  },
+  "name": "Kanzaki Ryuji",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 87,
+  "mental": 58,
+  "physical": 54,
+  "social": 56,
+  "initiative": 58,
+  "supportCategory": "Mental",
+  "supportBonus": 24,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Boy",
+    "Politician"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3885f28b66d516dd8505"
+  },
+  "name": "Ike Kanji",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Bold",
+  "moves": [
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 84,
+  "mental": 32,
+  "physical": 39,
+  "social": 32,
+  "initiative": 58,
+  "supportCategory": "Social",
+  "supportBonus": 16,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3892f28b66d516dd8506"
+  },
+  "name": "Himeno Yuki",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Cunning",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 101,
+  "mental": 58,
+  "physical": 45,
+  "social": 35,
+  "initiative": 61,
+  "supportCategory": "Mental",
+  "supportBonus": 20,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class B",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac38dcf28b66d516dd8507"
+  },
+  "name": "Tachibana Akane",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Explosive",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 98,
+  "mental": 57,
+  "physical": 48,
+  "social": 60,
+  "initiative": 67,
+  "supportCategory": "Resolve",
+  "supportBonus": 8,
+  "allies": [
+    "Student Council"
+  ],
+  "tags": [
+    "Senpai",
+    "Girl",
+    "Student Council"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac38f1f28b66d516dd850a"
+  },
+  "name": "Hoshinomiya Chie",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Empathy"
+  ],
+  "resolve": 85,
+  "mental": 39,
+  "physical": 46,
+  "social": 66,
+  "initiative": 49,
+  "supportCategory": "Social",
+  "supportBonus": 26,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Girl",
+    "Teacher"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3924f28b66d516dd850c"
+  },
+  "name": "Ichinose Honami",
+  "rarity": "Shining",
+  "numStars": 2,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy",
+    "Unity"
+  ],
+  "resolve": 90,
+  "mental": 72,
+  "physical": 48,
+  "social": 88,
+  "initiative": 76,
+  "supportCategory": "Social",
+  "supportBonus": 26,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Girl",
+    "Student Council",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3944f28b66d516dd850e"
+  },
+  "name": "Satō Maya",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Benevolent",
+  "moves": [
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 90,
+  "mental": 30,
+  "physical": 29,
+  "social": 47,
+  "initiative": 56,
+  "supportCategory": "Social",
+  "supportBonus": 16,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3949f28b66d516dd850f"
+  },
+  "name": "Amikura Mako",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Empathy"
+  ],
+  "resolve": 89,
+  "mental": 53,
+  "physical": 50,
+  "social": 59,
+  "initiative": 50,
+  "supportCategory": "Physical",
+  "supportBonus": 22,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3a3ef28b66d516dd8515"
+  },
+  "name": "Ishigami Kyō",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence",
+    "Kings Command"
+  ],
+  "resolve": 95,
+  "mental": 83,
+  "physical": 31,
+  "social": 57,
+  "initiative": 73,
+  "supportCategory": "Mental",
+  "supportBonus": 26,
+  "allies": [
+    "Politician"
+  ],
+  "tags": [
+    "Kōhai",
+    "Boy",
+    "Scholar",
+    "Politician"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3a4ff28b66d516dd8516"
+  },
+  "name": "Sotomura Hideo",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Cold",
+  "moves": [
+    "Academic",
+    "Scheming"
+  ],
+  "resolve": 92,
+  "mental": 59,
+  "physical": 29,
+  "social": 30,
+  "initiative": 44,
+  "supportCategory": "Mental",
+  "supportBonus": 18,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3a9df28b66d516dd8518"
+  },
+  "name": "Ayanokōji Kiyotaka",
+  "rarity": "Shining",
+  "numStars": 3,
+  "personality": "Apathetic",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Empathy",
+    "Kings Command"
+  ],
+  "resolve": 126,
+  "mental": 98,
+  "physical": 102,
+  "social": 98,
+  "initiative": 36,
+  "supportCategory": "Mental",
+  "supportBonus": 24,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "White Room",
+    "Fighter",
+    "Scholar",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3aa3f28b66d516dd851a"
+  },
+  "name": "Ryūen Kakeru",
+  "rarity": "Shining",
+  "numStars": 3,
+  "personality": "Cunning",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Influence",
+    "Grit"
+  ],
+  "resolve": 124,
+  "mental": 83,
+  "physical": 82,
+  "social": 38,
+  "initiative": 94,
+  "supportCategory": "Resolve",
+  "supportBonus": 8,
+  "allies": [
+    "Fighter"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3aa7f28b66d516dd851b"
+  },
+  "name": "Nagumo Miyabi",
+  "rarity": "Shining",
+  "numStars": 4,
+  "personality": "Bold",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Influence",
+    "Dominate"
+  ],
+  "resolve": 130,
+  "mental": 90,
+  "physical": 92,
+  "social": 104,
+  "initiative": 93,
+  "supportCategory": "Social",
+  "supportBonus": 36,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Boy",
+    "Scholar",
+    "Student Council"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3aacf28b66d516dd851c"
+  },
+  "name": "Chabashira Sae",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Cunning",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Hate"
+  ],
+  "resolve": 103,
+  "mental": 56,
+  "physical": 48,
+  "social": 45,
+  "initiative": 69,
+  "supportCategory": "Mental",
+  "supportBonus": 26,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Girl",
+    "Teacher"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3ab0f28b66d516dd851d"
+  },
+  "name": "Shiina Hiyori",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Unity",
+    "Inspire"
+  ],
+  "resolve": 102,
+  "mental": 80,
+  "physical": 35,
+  "social": 66,
+  "initiative": 31,
+  "supportCategory": "Mental",
+  "supportBonus": 26,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Girl",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3abdf28b66d516dd851e"
+  },
+  "name": "Asahina Nazuna",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 94,
+  "mental": 48,
+  "physical": 43,
+  "social": 65,
+  "initiative": 66,
+  "supportCategory": "Social",
+  "supportBonus": 26,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3abff28b66d516dd851f"
+  },
+  "name": "Sakura Airi",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Timid",
+  "moves": [
+    "Academic",
+    "Influence"
+  ],
+  "resolve": 95,
+  "mental": 34,
+  "physical": 28,
+  "social": 24,
+  "initiative": 26,
+  "supportCategory": "Physical",
+  "supportBonus": 26,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3ac0f28b66d516dd8520"
+  },
+  "name": "Ike Kanji",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Bold",
+  "moves": [
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 92,
+  "mental": 36,
+  "physical": 43,
+  "social": 36,
+  "initiative": 62,
+  "supportCategory": "Social",
+  "supportBonus": 24,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3ac3f28b66d516dd8521"
+  },
+  "name": "Hasebe Haruka",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Selfish",
+  "moves": [
+    "Scheming",
+    "Empathy"
+  ],
+  "resolve": 93,
+  "mental": 48,
+  "physical": 40,
+  "social": 45,
+  "initiative": 43,
+  "supportCategory": "Social",
+  "supportBonus": 20,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3ac4f28b66d516dd8522"
+  },
+  "name": "Miyake Akito",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 101,
+  "mental": 51,
+  "physical": 57,
+  "social": 58,
+  "initiative": 50,
+  "supportCategory": "Social",
+  "supportBonus": 20,
+  "allies": [
+    "Fighter"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3ac9f28b66d516dd8523"
+  },
+  "name": "Shinohara Satsuki",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Explosive",
+  "moves": [
+    "Athleticism",
+    "Influence"
+  ],
+  "resolve": 86,
+  "mental": 35,
+  "physical": 34,
+  "social": 49,
+  "initiative": 46,
+  "supportCategory": "Social",
+  "supportBonus": 16,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3acbf28b66d516dd8524"
+  },
+  "name": "Amikura Mako",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Empathy"
+  ],
+  "resolve": 113,
+  "mental": 65,
+  "physical": 62,
+  "social": 71,
+  "initiative": 62,
+  "supportCategory": "Physical",
+  "supportBonus": 33,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3acdf28b66d516dd8525"
+  },
+  "name": "Himeno Yuki",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Cunning",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 115,
+  "mental": 65,
+  "physical": 52,
+  "social": 42,
+  "initiative": 68,
+  "supportCategory": "Mental",
+  "supportBonus": 30,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class B",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3ad2f28b66d516dd8526"
+  },
+  "name": "Kamuro Masumi",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Cold",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 98,
+  "mental": 59,
+  "physical": 63,
+  "social": 48,
+  "initiative": 70,
+  "supportCategory": "Physical",
+  "supportBonus": 20,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class A",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3ad3f28b66d516dd8527"
+  },
+  "name": "Hashimoto Masayoshi",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Selfish",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 108,
+  "mental": 68,
+  "physical": 71,
+  "social": 69,
+  "initiative": 78,
+  "supportCategory": "Social",
+  "supportBonus": 33,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class A",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3ad6f28b66d516dd8528"
+  },
+  "name": "Yamamura Miki",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Study"
+  ],
+  "resolve": 92,
+  "mental": 69,
+  "physical": 46,
+  "social": 36,
+  "initiative": 41,
+  "supportCategory": "Mental",
+  "supportBonus": 20,
+  "allies": [
+    "Scholar"
+  ],
+  "tags": [
+    "Class A",
+    "Girl",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3adbf28b66d516dd8529"
+  },
+  "name": "Tsubaki Sakurako",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Cold",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Impulse"
+  ],
+  "resolve": 101,
+  "mental": 74,
+  "physical": 42,
+  "social": 41,
+  "initiative": 79,
+  "supportCategory": "Mental",
+  "supportBonus": 24,
+  "allies": [
+    "Kōhai"
+  ],
+  "tags": [
+    "Kōhai",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3ae6f28b66d516dd852b"
+  },
+  "name": "Kushida Kikyō",
+  "rarity": "Shining",
+  "numStars": 4,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy",
+    "Inspire"
+  ],
+  "resolve": 120,
+  "mental": 71,
+  "physical": 71,
+  "social": 101,
+  "initiative": 66,
+  "supportCategory": "Social",
+  "supportBonus": 36,
+  "allies": [
+    "Class D",
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3b12f28b66d516dd852c"
+  },
+  "name": "Hashimoto Masayoshi",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Selfish",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 96,
+  "mental": 62,
+  "physical": 65,
+  "social": 63,
+  "initiative": 72,
+  "supportCategory": "Social",
+  "supportBonus": 22,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class A",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3c25f28b66d516dd8536"
+  },
+  "name": "Yamauchi Haruki",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Athleticism"
+  ],
+  "resolve": 79,
+  "mental": 27,
+  "physical": 31,
+  "social": 22,
+  "initiative": 44,
+  "supportCategory": "Physical",
+  "supportBonus": 18,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3ca4f28b66d516dd853a"
+  },
+  "name": "Shibata Sō",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Reserved",
+  "moves": [
+    "Athleticism",
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 99,
+  "mental": 48,
+  "physical": 69,
+  "social": 54,
+  "initiative": 59,
+  "supportCategory": "Physical",
+  "supportBonus": 22,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3cc9f28b66d516dd853d"
+  },
+  "name": "Asahina Nazuna",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 106,
+  "mental": 54,
+  "physical": 49,
+  "social": 71,
+  "initiative": 72,
+  "supportCategory": "Social",
+  "supportBonus": 39,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3e2cf28b66d516dd8546"
+  },
+  "name": "Kushida Kikyō",
+  "rarity": "Shining",
+  "numStars": 3,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy",
+    "Inspire"
+  ],
+  "resolve": 106,
+  "mental": 64,
+  "physical": 64,
+  "social": 94,
+  "initiative": 59,
+  "supportCategory": "Social",
+  "supportBonus": 24,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3e4bf28b66d516dd8547"
+  },
+  "name": "Shiranami Chihiro",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Timid",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Empathy"
+  ],
+  "resolve": 97,
+  "mental": 50,
+  "physical": 49,
+  "social": 38,
+  "initiative": 62,
+  "supportCategory": "Physical",
+  "supportBonus": 24,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3e4ef28b66d516dd8548"
+  },
+  "name": "Mashima Tomonari",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Bold",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Influence"
+  ],
+  "resolve": 85,
+  "mental": 36,
+  "physical": 60,
+  "social": 47,
+  "initiative": 57,
+  "supportCategory": "Physical",
+  "supportBonus": 24,
+  "allies": [
+    "Class A"
+  ],
+  "tags": [
+    "Boy",
+    "Teacher"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3e4ff28b66d516dd8549"
+  },
+  "name": "Totsuka Yahiko",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Explosive",
+  "moves": [
+    "Academic",
+    "Influence"
+  ],
+  "resolve": 86,
+  "mental": 31,
+  "physical": 34,
+  "social": 37,
+  "initiative": 34,
+  "supportCategory": "Social",
+  "supportBonus": 16,
+  "allies": [
+    "Class A"
+  ],
+  "tags": [
+    "Class A",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3e9bf28b66d516dd854c"
+  },
+  "name": "Karuizawa Kei",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Bold",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Hate"
+  ],
+  "resolve": 114,
+  "mental": 59,
+  "physical": 44,
+  "social": 77,
+  "initiative": 80,
+  "supportCategory": "Resolve",
+  "supportBonus": 10,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac3e9cf28b66d516dd854d"
+  },
+  "name": "Hirata Yōsuke",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 101,
+  "mental": 70,
+  "physical": 68,
+  "social": 82,
+  "initiative": 70,
+  "supportCategory": "Social",
+  "supportBonus": 26,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac410ef28b66d516dd8550"
+  },
+  "name": "Horikita Suzune",
+  "rarity": "Shining",
+  "numStars": 3,
+  "personality": "Cold",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Study"
+  ],
+  "resolve": 111,
+  "mental": 80,
+  "physical": 73,
+  "social": 34,
+  "initiative": 82,
+  "supportCategory": "Mental",
+  "supportBonus": 24,
+  "allies": [
+    "Scholar"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Fighter",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac416af28b66d516dd8553"
+  },
+  "name": "Ibuki Mio",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Explosive",
+  "moves": [
+    "Athleticism",
+    "Fighting",
+    "Impulse"
+  ],
+  "resolve": 101,
+  "mental": 48,
+  "physical": 66,
+  "social": 32,
+  "initiative": 49,
+  "supportCategory": "Physical",
+  "supportBonus": 20,
+  "allies": [
+    "Fighter"
+  ],
+  "tags": [
+    "Class C",
+    "Girl",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ac416cf28b66d516dd8554"
+  },
+  "name": "Satō Maya",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Benevolent",
+  "moves": [
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 100,
+  "mental": 35,
+  "physical": 34,
+  "social": 52,
+  "initiative": 61,
+  "supportCategory": "Social",
+  "supportBonus": 24,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b0789cf7a47f06cc92337e"
+  },
+  "name": "Ayanokōji Kiyotaka",
+  "rarity": "Shining",
+  "numStars": 5,
+  "personality": "Apathetic",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Empathy",
+    "Kings Command"
+  ],
+  "resolve": 162,
+  "mental": 116,
+  "physical": 120,
+  "social": 116,
+  "initiative": 54,
+  "supportCategory": "Mental",
+  "supportBonus": 36,
+  "allies": [
+    "Class D",
+    "Politician"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "White Room",
+    "Fighter",
+    "Scholar",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b0789df7a47f06cc923380"
+  },
+  "name": "Horikita Suzune",
+  "rarity": "Shining",
+  "numStars": 5,
+  "personality": "Cold",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Study"
+  ],
+  "resolve": 147,
+  "mental": 98,
+  "physical": 91,
+  "social": 52,
+  "initiative": 100,
+  "supportCategory": "Mental",
+  "supportBonus": 36,
+  "allies": [
+    "Scholar",
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Fighter",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b0789ef7a47f06cc923381"
+  },
+  "name": "Ichinose Honami",
+  "rarity": "Shining",
+  "numStars": 5,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy",
+    "Unity"
+  ],
+  "resolve": 138,
+  "mental": 96,
+  "physical": 72,
+  "social": 112,
+  "initiative": 100,
+  "supportCategory": "Social",
+  "supportBonus": 39,
+  "allies": [
+    "Class B",
+    "Student Council"
+  ],
+  "tags": [
+    "Class B",
+    "Girl",
+    "Student Council",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b0789ff7a47f06cc923382"
+  },
+  "name": "Sakayanagi Arisu",
+  "rarity": "Shining",
+  "numStars": 5,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence",
+    "Kings Command"
+  ],
+  "resolve": 137,
+  "mental": 98,
+  "physical": 33,
+  "social": 86,
+  "initiative": 89,
+  "supportCategory": "Mental",
+  "supportBonus": 39,
+  "allies": [
+    "Class A",
+    "White Room"
+  ],
+  "tags": [
+    "Class A",
+    "Girl",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078a0f7a47f06cc923383"
+  },
+  "name": "Kushida Kikyō",
+  "rarity": "Shining",
+  "numStars": 5,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy",
+    "Inspire"
+  ],
+  "resolve": 134,
+  "mental": 78,
+  "physical": 78,
+  "social": 108,
+  "initiative": 73,
+  "supportCategory": "Social",
+  "supportBonus": 36,
+  "allies": [
+    "Class D",
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078a1f7a47f06cc923384"
+  },
+  "name": "Ryūen Kakeru",
+  "rarity": "Shining",
+  "numStars": 5,
+  "personality": "Cunning",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Influence",
+    "Grit"
+  ],
+  "resolve": 160,
+  "mental": 101,
+  "physical": 100,
+  "social": 56,
+  "initiative": 112,
+  "supportCategory": "Resolve",
+  "supportBonus": 12,
+  "allies": [
+    "Fighter",
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078a4f7a47f06cc923386"
+  },
+  "name": "Kōenji Rokusuke",
+  "rarity": "Shining",
+  "numStars": 5,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting",
+    "Impulse"
+  ],
+  "resolve": 144,
+  "mental": 107,
+  "physical": 107,
+  "social": 62,
+  "initiative": 69,
+  "supportCategory": "Ability",
+  "supportBonus": 12,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Politician",
+    "Scholar",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078a5f7a47f06cc923387"
+  },
+  "name": "Kiryūin Fūka",
+  "rarity": "Shining",
+  "numStars": 5,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting",
+    "Impulse"
+  ],
+  "resolve": 133,
+  "mental": 103,
+  "physical": 103,
+  "social": 69,
+  "initiative": 68,
+  "supportCategory": "Mental",
+  "supportBonus": 30,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Girl",
+    "Fighter",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078a7f7a47f06cc923388"
+  },
+  "name": "Nagumo Miyabi",
+  "rarity": "Shining",
+  "numStars": 5,
+  "personality": "Bold",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Influence",
+    "Dominate"
+  ],
+  "resolve": 146,
+  "mental": 98,
+  "physical": 100,
+  "social": 112,
+  "initiative": 101,
+  "supportCategory": "Social",
+  "supportBonus": 36,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Boy",
+    "Scholar",
+    "Student Council"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078abf7a47f06cc92338b"
+  },
+  "name": "Karuizawa Kei",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Bold",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Hate"
+  ],
+  "resolve": 142,
+  "mental": 73,
+  "physical": 58,
+  "social": 91,
+  "initiative": 94,
+  "supportCategory": "Resolve",
+  "supportBonus": 15,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078acf7a47f06cc92338c"
+  },
+  "name": "Hirata Yōsuke",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 129,
+  "mental": 84,
+  "physical": 82,
+  "social": 96,
+  "initiative": 84,
+  "supportCategory": "Social",
+  "supportBonus": 39,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078adf7a47f06cc92338d"
+  },
+  "name": "Sudō Ken",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Explosive",
+  "moves": [
+    "Athleticism",
+    "Fighting"
+  ],
+  "resolve": 150,
+  "mental": 57,
+  "physical": 109,
+  "social": 52,
+  "initiative": 66,
+  "supportCategory": "Physical",
+  "supportBonus": 36,
+  "allies": [
+    "Class D",
+    "Fighter"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078aff7a47f06cc92338e"
+  },
+  "name": "Chabashira Sae",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Cunning",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Hate"
+  ],
+  "resolve": 131,
+  "mental": 70,
+  "physical": 62,
+  "social": 59,
+  "initiative": 83,
+  "supportCategory": "Mental",
+  "supportBonus": 39,
+  "allies": [
+    "Class D",
+    "Teacher"
+  ],
+  "tags": [
+    "Girl",
+    "Teacher"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078b0f7a47f06cc92338f"
+  },
+  "name": "Kanzaki Ryuji",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 129,
+  "mental": 79,
+  "physical": 75,
+  "social": 77,
+  "initiative": 79,
+  "supportCategory": "Mental",
+  "supportBonus": 36,
+  "allies": [
+    "Class B",
+    "Politician"
+  ],
+  "tags": [
+    "Class B",
+    "Boy",
+    "Politician"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078b1f7a47f06cc923390"
+  },
+  "name": "Hoshinomiya Chie",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Empathy"
+  ],
+  "resolve": 127,
+  "mental": 60,
+  "physical": 67,
+  "social": 87,
+  "initiative": 70,
+  "supportCategory": "Social",
+  "supportBonus": 39,
+  "allies": [
+    "Class B",
+    "Teacher"
+  ],
+  "tags": [
+    "Girl",
+    "Teacher"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078b2f7a47f06cc923391"
+  },
+  "name": "Yamada Albert",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Benevolent",
+  "moves": [
+    "Athleticism",
+    "Fighting",
+    "Empathy",
+    "Inspire"
+  ],
+  "resolve": 127,
+  "mental": 70,
+  "physical": 103,
+  "social": 61,
+  "initiative": 57,
+  "supportCategory": "Physical",
+  "supportBonus": 33,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078b3f7a47f06cc923392"
+  },
+  "name": "Shiina Hiyori",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Unity",
+    "Inspire"
+  ],
+  "resolve": 134,
+  "mental": 96,
+  "physical": 51,
+  "social": 82,
+  "initiative": 47,
+  "supportCategory": "Mental",
+  "supportBonus": 39,
+  "allies": [
+    "Class C",
+    "Scholar"
+  ],
+  "tags": [
+    "Class C",
+    "Girl",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078b4f7a47f06cc923393"
+  },
+  "name": "Hōsen Kazuomi",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Explosive",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Fighting",
+    "Grit"
+  ],
+  "resolve": 149,
+  "mental": 87,
+  "physical": 109,
+  "social": 35,
+  "initiative": 94,
+  "supportCategory": "Mental",
+  "supportBonus": 33,
+  "allies": [
+    "Fighter"
+  ],
+  "tags": [
+    "Kōhai",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078b6f7a47f06cc923394"
+  },
+  "name": "Nanase Tsubasa",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting"
+  ],
+  "resolve": 146,
+  "mental": 87,
+  "physical": 90,
+  "social": 67,
+  "initiative": 90,
+  "supportCategory": "Physical",
+  "supportBonus": 36,
+  "allies": [
+    "Kōhai"
+  ],
+  "tags": [
+    "Kōhai",
+    "Girl",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078b8f7a47f06cc923396"
+  },
+  "name": "Kaneda Satoru",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 120,
+  "mental": 73,
+  "physical": 38,
+  "social": 74,
+  "initiative": 58,
+  "supportCategory": "Social",
+  "supportBonus": 33,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078b9f7a47f06cc923397"
+  },
+  "name": "Wang Meiyu",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Study"
+  ],
+  "resolve": 125,
+  "mental": 86,
+  "physical": 57,
+  "social": 71,
+  "initiative": 61,
+  "supportCategory": "Mental",
+  "supportBonus": 36,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078baf7a47f06cc923398"
+  },
+  "name": "Utomiya Riku",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting"
+  ],
+  "resolve": 128,
+  "mental": 76,
+  "physical": 87,
+  "social": 51,
+  "initiative": 66,
+  "supportCategory": "Physical",
+  "supportBonus": 39,
+  "allies": [
+    "Kōhai",
+    "Fighter"
+  ],
+  "tags": [
+    "Kōhai",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078bdf7a47f06cc923399"
+  },
+  "name": "Ishigami Kyō",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence",
+    "Kings Command"
+  ],
+  "resolve": 143,
+  "mental": 107,
+  "physical": 55,
+  "social": 81,
+  "initiative": 97,
+  "supportCategory": "Mental",
+  "supportBonus": 39,
+  "allies": [
+    "Politician",
+    "Kōhai"
+  ],
+  "tags": [
+    "Kōhai",
+    "Boy",
+    "Scholar",
+    "Politician"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078bef7a47f06cc92339a"
+  },
+  "name": "Katsuragi Kōhei",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 139,
+  "mental": 92,
+  "physical": 65,
+  "social": 75,
+  "initiative": 91,
+  "supportCategory": "Social",
+  "supportBonus": 36,
+  "allies": [
+    "Class A"
+  ],
+  "tags": [
+    "Class A",
+    "Boy",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078bff7a47f06cc92339b"
+  },
+  "name": "Ayanokōji Atsuomi",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Cold",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Dominate"
+  ],
+  "resolve": 140,
+  "mental": 86,
+  "physical": 48,
+  "social": 63,
+  "initiative": 86,
+  "supportCategory": "Resolve",
+  "supportBonus": 15,
+  "allies": [
+    "White Room"
+  ],
+  "tags": [
+    "Boy",
+    "Politician"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078c0f7a47f06cc92339c"
+  },
+  "name": "Sakayanagi Narumori",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 124,
+  "mental": 62,
+  "physical": 45,
+  "social": 67,
+  "initiative": 81,
+  "supportCategory": "Ability",
+  "supportBonus": 15,
+  "allies": [
+    "Senpai",
+    "Kōhai"
+  ],
+  "tags": [
+    "Boy",
+    "Politician",
+    "Teacher"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078c2f7a47f06cc92339d"
+  },
+  "name": "Tsukishiro Tokinari",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Bold",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Influence"
+  ],
+  "resolve": 141,
+  "mental": 78,
+  "physical": 109,
+  "social": 73,
+  "initiative": 96,
+  "supportCategory": "Physical",
+  "supportBonus": 33,
+  "allies": [
+    "White Room",
+    "Teacher"
+  ],
+  "tags": [
+    "Boy",
+    "Teacher",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078c3f7a47f06cc92339e"
+  },
+  "name": "Asahina Nazuna",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 118,
+  "mental": 60,
+  "physical": 55,
+  "social": 77,
+  "initiative": 78,
+  "supportCategory": "Social",
+  "supportBonus": 39,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078c4f7a47f06cc92339f"
+  },
+  "name": "Sakura Airi",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Timid",
+  "moves": [
+    "Academic",
+    "Influence"
+  ],
+  "resolve": 127,
+  "mental": 50,
+  "physical": 44,
+  "social": 40,
+  "initiative": 42,
+  "supportCategory": "Physical",
+  "supportBonus": 39,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078c5f7a47f06cc9233a0"
+  },
+  "name": "Ike Kanji",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Bold",
+  "moves": [
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 100,
+  "mental": 40,
+  "physical": 47,
+  "social": 40,
+  "initiative": 66,
+  "supportCategory": "Social",
+  "supportBonus": 24,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078c9f7a47f06cc9233a1"
+  },
+  "name": "Hasebe Haruka",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Selfish",
+  "moves": [
+    "Scheming",
+    "Empathy"
+  ],
+  "resolve": 117,
+  "mental": 60,
+  "physical": 52,
+  "social": 57,
+  "initiative": 55,
+  "supportCategory": "Social",
+  "supportBonus": 30,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078caf7a47f06cc9233a2"
+  },
+  "name": "Miyake Akito",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 129,
+  "mental": 65,
+  "physical": 71,
+  "social": 72,
+  "initiative": 64,
+  "supportCategory": "Social",
+  "supportBonus": 30,
+  "allies": [
+    "Fighter",
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078cbf7a47f06cc9233a3"
+  },
+  "name": "Yukimura Keisei",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Study"
+  ],
+  "resolve": 120,
+  "mental": 90,
+  "physical": 42,
+  "social": 61,
+  "initiative": 68,
+  "supportCategory": "Mental",
+  "supportBonus": 33,
+  "allies": [
+    "Scholar",
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078ccf7a47f06cc9233a4"
+  },
+  "name": "Ibuki Mio",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Explosive",
+  "moves": [
+    "Athleticism",
+    "Fighting",
+    "Impulse"
+  ],
+  "resolve": 129,
+  "mental": 62,
+  "physical": 80,
+  "social": 46,
+  "initiative": 63,
+  "supportCategory": "Physical",
+  "supportBonus": 30,
+  "allies": [
+    "Fighter"
+  ],
+  "tags": [
+    "Class C",
+    "Girl",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078cdf7a47f06cc9233a5"
+  },
+  "name": "Satō Maya",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Benevolent",
+  "moves": [
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 110,
+  "mental": 40,
+  "physical": 39,
+  "social": 57,
+  "initiative": 66,
+  "supportCategory": "Social",
+  "supportBonus": 24,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078d0f7a47f06cc9233a6"
+  },
+  "name": "Shinohara Satsuki",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Explosive",
+  "moves": [
+    "Athleticism",
+    "Influence"
+  ],
+  "resolve": 106,
+  "mental": 45,
+  "physical": 44,
+  "social": 59,
+  "initiative": 56,
+  "supportCategory": "Social",
+  "supportBonus": 24,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078d1f7a47f06cc9233a7"
+  },
+  "name": "Sotomura Hideo",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Cold",
+  "moves": [
+    "Academic",
+    "Scheming"
+  ],
+  "resolve": 116,
+  "mental": 71,
+  "physical": 41,
+  "social": 42,
+  "initiative": 56,
+  "supportCategory": "Mental",
+  "supportBonus": 27,
+  "allies": [
+    "Boy",
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078d4f7a47f06cc9233a8"
+  },
+  "name": "Shiranami Chihiro",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Timid",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Empathy"
+  ],
+  "resolve": 125,
+  "mental": 64,
+  "physical": 63,
+  "social": 52,
+  "initiative": 76,
+  "supportCategory": "Physical",
+  "supportBonus": 36,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078d5f7a47f06cc9233a9"
+  },
+  "name": "Himeno Yuki",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Cunning",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 129,
+  "mental": 72,
+  "physical": 59,
+  "social": 49,
+  "initiative": 75,
+  "supportCategory": "Mental",
+  "supportBonus": 30,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class B",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078d6f7a47f06cc9233aa"
+  },
+  "name": "Sakagami Kazuma",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Cunning",
+  "moves": [
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 108,
+  "mental": 70,
+  "physical": 42,
+  "social": 47,
+  "initiative": 70,
+  "supportCategory": "Mental",
+  "supportBonus": 36,
+  "allies": [
+    "Class C",
+    "Teacher"
+  ],
+  "tags": [
+    "Boy",
+    "Teacher",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078d7f7a47f06cc9233ab"
+  },
+  "name": "Mashima Tomonari",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Bold",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Influence"
+  ],
+  "resolve": 105,
+  "mental": 46,
+  "physical": 70,
+  "social": 57,
+  "initiative": 67,
+  "supportCategory": "Physical",
+  "supportBonus": 36,
+  "allies": [
+    "Class A",
+    "Teacher"
+  ],
+  "tags": [
+    "Boy",
+    "Teacher"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078d8f7a47f06cc9233ac"
+  },
+  "name": "Totsuka Yahiko",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Explosive",
+  "moves": [
+    "Academic",
+    "Influence"
+  ],
+  "resolve": 102,
+  "mental": 39,
+  "physical": 42,
+  "social": 45,
+  "initiative": 42,
+  "supportCategory": "Social",
+  "supportBonus": 24,
+  "allies": [
+    "Class A"
+  ],
+  "tags": [
+    "Class A",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078daf7a47f06cc9233ad"
+  },
+  "name": "Kamuro Masumi",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Cold",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 122,
+  "mental": 71,
+  "physical": 75,
+  "social": 60,
+  "initiative": 82,
+  "supportCategory": "Physical",
+  "supportBonus": 30,
+  "allies": [
+    "Girl",
+    "Class A"
+  ],
+  "tags": [
+    "Class A",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078dcf7a47f06cc9233ae"
+  },
+  "name": "Hashimoto Masayoshi",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Selfish",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 120,
+  "mental": 74,
+  "physical": 77,
+  "social": 75,
+  "initiative": 84,
+  "supportCategory": "Social",
+  "supportBonus": 33,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class A",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078dcf7a47f06cc9233af"
+  },
+  "name": "Kitō Hayato",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Bold",
+  "moves": [
+    "Athleticism",
+    "Fighting",
+    "Influence"
+  ],
+  "resolve": 119,
+  "mental": 59,
+  "physical": 84,
+  "social": 62,
+  "initiative": 66,
+  "supportCategory": "Physical",
+  "supportBonus": 30,
+  "allies": [
+    "Class A"
+  ],
+  "tags": [
+    "Class A",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078ddf7a47f06cc9233b0"
+  },
+  "name": "Yamamura Miki",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Study"
+  ],
+  "resolve": 116,
+  "mental": 81,
+  "physical": 58,
+  "social": 48,
+  "initiative": 53,
+  "supportCategory": "Mental",
+  "supportBonus": 30,
+  "allies": [
+    "Scholar"
+  ],
+  "tags": [
+    "Class A",
+    "Girl",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078e0f7a47f06cc9233b1"
+  },
+  "name": "Tachibana Akane",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Explosive",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 122,
+  "mental": 69,
+  "physical": 60,
+  "social": 72,
+  "initiative": 79,
+  "supportCategory": "Resolve",
+  "supportBonus": 12,
+  "allies": [
+    "Student Council",
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Girl",
+    "Student Council"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078e1f7a47f06cc9233b2"
+  },
+  "name": "Shibata Sō",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Reserved",
+  "moves": [
+    "Athleticism",
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 127,
+  "mental": 62,
+  "physical": 83,
+  "social": 68,
+  "initiative": 73,
+  "supportCategory": "Physical",
+  "supportBonus": 33,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078e2f7a47f06cc9233b3"
+  },
+  "name": "Ishizaki Daichi",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Timid",
+  "moves": [
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 132,
+  "mental": 45,
+  "physical": 73,
+  "social": 57,
+  "initiative": 77,
+  "supportCategory": "Physical",
+  "supportBonus": 36,
+  "allies": [
+    "Class C",
+    "Boy"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b078e4f7a47f06cc9233b4"
+  },
+  "name": "Tsubaki Sakurako",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Cold",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Impulse"
+  ],
+  "resolve": 129,
+  "mental": 88,
+  "physical": 56,
+  "social": 55,
+  "initiative": 93,
+  "supportCategory": "Mental",
+  "supportBonus": 36,
+  "allies": [
+    "Kōhai"
+  ],
+  "tags": [
+    "Kōhai",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b089aef7a47f06cc9233b8"
+  },
+  "name": "Ichinose Honami",
+  "rarity": "Shining",
+  "numStars": 3,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy",
+    "Unity"
+  ],
+  "resolve": 106,
+  "mental": 80,
+  "physical": 56,
+  "social": 96,
+  "initiative": 84,
+  "supportCategory": "Social",
+  "supportBonus": 26,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Girl",
+    "Student Council",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b2cb477294911ae0b3ae05"
+  },
+  "name": "Perfect Kōenji Rokusuke",
+  "rarity": "Special",
+  "numStars": 5,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Arrogance",
+    "The Perfect Existence"
+  ],
+  "resolve": 141,
+  "mental": 105,
+  "physical": 105,
+  "social": 105,
+  "initiative": 69,
+  "supportCategory": "Initiative",
+  "supportBonus": 21,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Politician",
+    "Scholar",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b525c3306f41e8b6513039"
+  },
+  "name": "Ichinose Honami",
+  "rarity": "Shining",
+  "numStars": 4,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy",
+    "Unity"
+  ],
+  "resolve": 122,
+  "mental": 88,
+  "physical": 64,
+  "social": 104,
+  "initiative": 92,
+  "supportCategory": "Social",
+  "supportBonus": 39,
+  "allies": [
+    "Class B",
+    "Student Council"
+  ],
+  "tags": [
+    "Class B",
+    "Girl",
+    "Student Council",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b6ee31216d7b5ff499b02a"
+  },
+  "name": "Ryūen Kakeru",
+  "rarity": "Shining",
+  "numStars": 4,
+  "personality": "Cunning",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Influence",
+    "Grit"
+  ],
+  "resolve": 142,
+  "mental": 92,
+  "physical": 91,
+  "social": 47,
+  "initiative": 103,
+  "supportCategory": "Resolve",
+  "supportBonus": 12,
+  "allies": [
+    "Fighter",
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b6ee47216d7b5ff499b02c"
+  },
+  "name": "Wang Meiyu",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Study"
+  ],
+  "resolve": 101,
+  "mental": 74,
+  "physical": 45,
+  "social": 59,
+  "initiative": 49,
+  "supportCategory": "Mental",
+  "supportBonus": 24,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b6ee4c216d7b5ff499b02d"
+  },
+  "name": "Sakayanagi Narumori",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 104,
+  "mental": 52,
+  "physical": 35,
+  "social": 57,
+  "initiative": 71,
+  "supportCategory": "Ability",
+  "supportBonus": 10,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Boy",
+    "Politician",
+    "Teacher"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b6ee51216d7b5ff499b02e"
+  },
+  "name": "Sakura Airi",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Timid",
+  "moves": [
+    "Academic",
+    "Influence"
+  ],
+  "resolve": 111,
+  "mental": 42,
+  "physical": 36,
+  "social": 32,
+  "initiative": 34,
+  "supportCategory": "Physical",
+  "supportBonus": 39,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b6ee55216d7b5ff499b02f"
+  },
+  "name": "Miyake Akito",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 115,
+  "mental": 58,
+  "physical": 64,
+  "social": 65,
+  "initiative": 57,
+  "supportCategory": "Social",
+  "supportBonus": 30,
+  "allies": [
+    "Fighter",
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b6ee58216d7b5ff499b030"
+  },
+  "name": "Yukimura Keisei",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Study"
+  ],
+  "resolve": 108,
+  "mental": 84,
+  "physical": 36,
+  "social": 55,
+  "initiative": 62,
+  "supportCategory": "Mental",
+  "supportBonus": 33,
+  "allies": [
+    "Scholar",
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b6ee5b216d7b5ff499b031"
+  },
+  "name": "Shinohara Satsuki",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Explosive",
+  "moves": [
+    "Athleticism",
+    "Influence"
+  ],
+  "resolve": 96,
+  "mental": 40,
+  "physical": 39,
+  "social": 54,
+  "initiative": 51,
+  "supportCategory": "Social",
+  "supportBonus": 24,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b6ee5d216d7b5ff499b032"
+  },
+  "name": "Sotomura Hideo",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Cold",
+  "moves": [
+    "Academic",
+    "Scheming"
+  ],
+  "resolve": 104,
+  "mental": 65,
+  "physical": 35,
+  "social": 36,
+  "initiative": 50,
+  "supportCategory": "Mental",
+  "supportBonus": 27,
+  "allies": [
+    "Boy",
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b6ee63216d7b5ff499b033"
+  },
+  "name": "Mashima Tomonari",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Bold",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Influence"
+  ],
+  "resolve": 95,
+  "mental": 41,
+  "physical": 65,
+  "social": 52,
+  "initiative": 62,
+  "supportCategory": "Physical",
+  "supportBonus": 36,
+  "allies": [
+    "Class A",
+    "Teacher"
+  ],
+  "tags": [
+    "Boy",
+    "Teacher"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b6ee64216d7b5ff499b034"
+  },
+  "name": "Totsuka Yahiko",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Explosive",
+  "moves": [
+    "Academic",
+    "Influence"
+  ],
+  "resolve": 94,
+  "mental": 35,
+  "physical": 38,
+  "social": 41,
+  "initiative": 38,
+  "supportCategory": "Social",
+  "supportBonus": 24,
+  "allies": [
+    "Class A"
+  ],
+  "tags": [
+    "Class A",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b6ee68216d7b5ff499b035"
+  },
+  "name": "Kitō Hayato",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Bold",
+  "moves": [
+    "Athleticism",
+    "Fighting",
+    "Influence"
+  ],
+  "resolve": 95,
+  "mental": 47,
+  "physical": 72,
+  "social": 50,
+  "initiative": 54,
+  "supportCategory": "Physical",
+  "supportBonus": 20,
+  "allies": [
+    "Class A"
+  ],
+  "tags": [
+    "Class A",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b6ee69216d7b5ff499b036"
+  },
+  "name": "Yamamura Miki",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Study"
+  ],
+  "resolve": 104,
+  "mental": 75,
+  "physical": 52,
+  "social": 42,
+  "initiative": 47,
+  "supportCategory": "Mental",
+  "supportBonus": 30,
+  "allies": [
+    "Scholar"
+  ],
+  "tags": [
+    "Class A",
+    "Girl",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b6ee6e216d7b5ff499b037"
+  },
+  "name": "Ishizaki Daichi",
+  "rarity": "Common",
+  "numStars": 3,
+  "personality": "Timid",
+  "moves": [
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 104,
+  "mental": 31,
+  "physical": 59,
+  "social": 43,
+  "initiative": 63,
+  "supportCategory": "Physical",
+  "supportBonus": 24,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b6ee76216d7b5ff499b038"
+  },
+  "name": "Tsubaki Sakurako",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Cold",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Impulse"
+  ],
+  "resolve": 115,
+  "mental": 81,
+  "physical": 49,
+  "social": 48,
+  "initiative": 86,
+  "supportCategory": "Mental",
+  "supportBonus": 36,
+  "allies": [
+    "Kōhai"
+  ],
+  "tags": [
+    "Kōhai",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b6ef09216d7b5ff499b039"
+  },
+  "name": "Ayanokōji Kiyotaka",
+  "rarity": "Shining",
+  "numStars": 4,
+  "personality": "Apathetic",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Empathy",
+    "Kings Command"
+  ],
+  "resolve": 144,
+  "mental": 107,
+  "physical": 111,
+  "social": 107,
+  "initiative": 45,
+  "supportCategory": "Mental",
+  "supportBonus": 36,
+  "allies": [
+    "Class D",
+    "Politician"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "White Room",
+    "Fighter",
+    "Scholar",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b84b34f8054bf01aeb6622"
+  },
+  "name": "Horikita Suzune",
+  "rarity": "Shining",
+  "numStars": 4,
+  "personality": "Cold",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Study"
+  ],
+  "resolve": 129,
+  "mental": 89,
+  "physical": 82,
+  "social": 43,
+  "initiative": 91,
+  "supportCategory": "Mental",
+  "supportBonus": 36,
+  "allies": [
+    "Scholar",
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Fighter",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b84b48f8054bf01aeb6623"
+  },
+  "name": "Hoshinomiya Chie",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Empathy"
+  ],
+  "resolve": 99,
+  "mental": 46,
+  "physical": 53,
+  "social": 73,
+  "initiative": 56,
+  "supportCategory": "Social",
+  "supportBonus": 26,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Girl",
+    "Teacher"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b84b4af8054bf01aeb6624"
+  },
+  "name": "Shiina Hiyori",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Unity",
+    "Inspire"
+  ],
+  "resolve": 118,
+  "mental": 88,
+  "physical": 43,
+  "social": 74,
+  "initiative": 39,
+  "supportCategory": "Mental",
+  "supportBonus": 39,
+  "allies": [
+    "Class C",
+    "Scholar"
+  ],
+  "tags": [
+    "Class C",
+    "Girl",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b84b4df8054bf01aeb6625"
+  },
+  "name": "Nanase Tsubasa",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting"
+  ],
+  "resolve": 114,
+  "mental": 71,
+  "physical": 74,
+  "social": 51,
+  "initiative": 74,
+  "supportCategory": "Physical",
+  "supportBonus": 24,
+  "allies": [
+    "Kōhai"
+  ],
+  "tags": [
+    "Kōhai",
+    "Girl",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b84b57f8054bf01aeb6626"
+  },
+  "name": "Ayanokōji Atsuomi",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Cold",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Dominate"
+  ],
+  "resolve": 120,
+  "mental": 76,
+  "physical": 38,
+  "social": 53,
+  "initiative": 76,
+  "supportCategory": "Resolve",
+  "supportBonus": 10,
+  "allies": [
+    "White Room"
+  ],
+  "tags": [
+    "Boy",
+    "Politician"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b84b73f8054bf01aeb6627"
+  },
+  "name": "Kamuro Masumi",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Cold",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 110,
+  "mental": 65,
+  "physical": 69,
+  "social": 54,
+  "initiative": 76,
+  "supportCategory": "Physical",
+  "supportBonus": 30,
+  "allies": [
+    "Girl",
+    "Class A"
+  ],
+  "tags": [
+    "Class A",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b84b7bf8054bf01aeb6628"
+  },
+  "name": "Ishizaki Daichi",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Timid",
+  "moves": [
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 118,
+  "mental": 38,
+  "physical": 66,
+  "social": 50,
+  "initiative": 70,
+  "supportCategory": "Physical",
+  "supportBonus": 36,
+  "allies": [
+    "Class C",
+    "Boy"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b9764ef8054bf01aeb6640"
+  },
+  "name": "Kiryūin Fūka",
+  "rarity": "Shining",
+  "numStars": 4,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting",
+    "Impulse"
+  ],
+  "resolve": 119,
+  "mental": 96,
+  "physical": 96,
+  "social": 62,
+  "initiative": 61,
+  "supportCategory": "Mental",
+  "supportBonus": 30,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Girl",
+    "Fighter",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64b97b66f8054bf01aeb6641"
+  },
+  "name": "Shiranami Chihiro",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Timid",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Empathy"
+  ],
+  "resolve": 111,
+  "mental": 57,
+  "physical": 56,
+  "social": 45,
+  "initiative": 69,
+  "supportCategory": "Physical",
+  "supportBonus": 36,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ba0204f8054bf01aeb6647"
+  },
+  "name": "Yamauchi Haruki",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Athleticism"
+  ],
+  "resolve": 85,
+  "mental": 30,
+  "physical": 34,
+  "social": 25,
+  "initiative": 47,
+  "supportCategory": "Physical",
+  "supportBonus": 27,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ba020af8054bf01aeb6648"
+  },
+  "name": "Ibuki Mio",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Explosive",
+  "moves": [
+    "Athleticism",
+    "Fighting",
+    "Impulse"
+  ],
+  "resolve": 115,
+  "mental": 55,
+  "physical": 73,
+  "social": 39,
+  "initiative": 56,
+  "supportCategory": "Physical",
+  "supportBonus": 30,
+  "allies": [
+    "Fighter"
+  ],
+  "tags": [
+    "Class C",
+    "Girl",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ba0212f8054bf01aeb6649"
+  },
+  "name": "Sakagami Kazuma",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Cunning",
+  "moves": [
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 98,
+  "mental": 65,
+  "physical": 37,
+  "social": 42,
+  "initiative": 65,
+  "supportCategory": "Mental",
+  "supportBonus": 36,
+  "allies": [
+    "Class C",
+    "Teacher"
+  ],
+  "tags": [
+    "Boy",
+    "Teacher",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64bb35eff3d884c6ecd8fbf1"
+  },
+  "name": "Kiryūin Fūka",
+  "rarity": "Shining",
+  "numStars": 3,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting",
+    "Impulse"
+  ],
+  "resolve": 105,
+  "mental": 89,
+  "physical": 89,
+  "social": 55,
+  "initiative": 54,
+  "supportCategory": "Mental",
+  "supportBonus": 20,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Girl",
+    "Fighter",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64bdb8eb051de052c3616256"
+  },
+  "name": "Perfect Kōenji Rokusuke",
+  "rarity": "Special",
+  "numStars": 1,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Arrogance",
+    "The Perfect Existence"
+  ],
+  "resolve": 69,
+  "mental": 69,
+  "physical": 69,
+  "social": 69,
+  "initiative": 33,
+  "supportCategory": "Initiative",
+  "supportBonus": 14,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Politician",
+    "Scholar",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64beb6d173663021f538f145"
+  },
+  "name": "Karuizawa Kei",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Bold",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Hate"
+  ],
+  "resolve": 128,
+  "mental": 66,
+  "physical": 51,
+  "social": 84,
+  "initiative": 87,
+  "supportCategory": "Resolve",
+  "supportBonus": 15,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64beb6d473663021f538f146"
+  },
+  "name": "Sudō Ken",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Explosive",
+  "moves": [
+    "Athleticism",
+    "Fighting"
+  ],
+  "resolve": 132,
+  "mental": 48,
+  "physical": 100,
+  "social": 43,
+  "initiative": 57,
+  "supportCategory": "Physical",
+  "supportBonus": 36,
+  "allies": [
+    "Class D",
+    "Fighter"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64beb6f973663021f538f147"
+  },
+  "name": "Kitō Hayato",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Bold",
+  "moves": [
+    "Athleticism",
+    "Fighting",
+    "Influence"
+  ],
+  "resolve": 107,
+  "mental": 53,
+  "physical": 78,
+  "social": 56,
+  "initiative": 60,
+  "supportCategory": "Physical",
+  "supportBonus": 30,
+  "allies": [
+    "Class A"
+  ],
+  "tags": [
+    "Class A",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64beb6fc73663021f538f148"
+  },
+  "name": "Tachibana Akane",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Explosive",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 110,
+  "mental": 63,
+  "physical": 54,
+  "social": 66,
+  "initiative": 73,
+  "supportCategory": "Resolve",
+  "supportBonus": 12,
+  "allies": [
+    "Student Council",
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Girl",
+    "Student Council"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64c9392f73663021f538f1d8"
+  },
+  "name": "Nagumo Miyabi",
+  "rarity": "Shining",
+  "numStars": 3,
+  "personality": "Bold",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Influence",
+    "Dominate"
+  ],
+  "resolve": 114,
+  "mental": 82,
+  "physical": 84,
+  "social": 96,
+  "initiative": 85,
+  "supportCategory": "Social",
+  "supportBonus": 24,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Boy",
+    "Scholar",
+    "Student Council"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64c93cc673663021f538f1db"
+  },
+  "name": "Shizuku",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Bold",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Impulse",
+    "Inspire"
+  ],
+  "resolve": 85,
+  "mental": 41,
+  "physical": 46,
+  "social": 77,
+  "initiative": 52,
+  "supportCategory": "Social",
+  "supportBonus": 26,
+  "allies": [
+    "Persona"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64c93cd673663021f538f1dc"
+  },
+  "name": "Amikura Mako",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Empathy"
+  ],
+  "resolve": 101,
+  "mental": 59,
+  "physical": 56,
+  "social": 65,
+  "initiative": 56,
+  "supportCategory": "Physical",
+  "supportBonus": 33,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64c93ce473663021f538f1dd"
+  },
+  "name": "Shibata Sō",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Reserved",
+  "moves": [
+    "Athleticism",
+    "Fighting",
+    "Empathy"
+  ],
+  "resolve": 113,
+  "mental": 55,
+  "physical": 76,
+  "social": 61,
+  "initiative": 66,
+  "supportCategory": "Physical",
+  "supportBonus": 33,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ca5e5973663021f538f205"
+  },
+  "name": "Delinquent Ishizaki Daichi",
+  "rarity": "Shining",
+  "numStars": 3,
+  "personality": "Explosive",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Provoke",
+    "Boss Orders"
+  ],
+  "resolve": 117,
+  "mental": 63,
+  "physical": 79,
+  "social": 54,
+  "initiative": 76,
+  "supportCategory": "Mental",
+  "supportBonus": 26,
+  "allies": [
+    "Fighter"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ca5e6173663021f538f206"
+  },
+  "name": "Shizuku",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Bold",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Impulse",
+    "Inspire"
+  ],
+  "resolve": 101,
+  "mental": 49,
+  "physical": 54,
+  "social": 85,
+  "initiative": 60,
+  "supportCategory": "Social",
+  "supportBonus": 26,
+  "allies": [
+    "Persona"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ca5ea873663021f538f208"
+  },
+  "name": "Delinquent Ishizaki Daichi",
+  "rarity": "Shining",
+  "numStars": 1,
+  "personality": "Explosive",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Provoke",
+    "Boss Orders"
+  ],
+  "resolve": 81,
+  "mental": 45,
+  "physical": 61,
+  "social": 36,
+  "initiative": 58,
+  "supportCategory": "Mental",
+  "supportBonus": 26,
+  "allies": [
+    "Fighter"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ca5f1f73663021f538f209"
+  },
+  "name": "Delinquent Ishizaki Daichi",
+  "rarity": "Shining",
+  "numStars": 5,
+  "personality": "Explosive",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Provoke",
+    "Boss Orders"
+  ],
+  "resolve": 153,
+  "mental": 81,
+  "physical": 97,
+  "social": 72,
+  "initiative": 94,
+  "supportCategory": "Mental",
+  "supportBonus": 39,
+  "allies": [
+    "Fighter",
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ca5fd073663021f538f20b"
+  },
+  "name": "Delinquent Ishizaki Daichi",
+  "rarity": "Shining",
+  "numStars": 2,
+  "personality": "Explosive",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Provoke",
+    "Boss Orders"
+  ],
+  "resolve": 99,
+  "mental": 54,
+  "physical": 70,
+  "social": 45,
+  "initiative": 67,
+  "supportCategory": "Mental",
+  "supportBonus": 26,
+  "allies": [
+    "Fighter"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ca5fd673663021f538f20c"
+  },
+  "name": "Kanzaki Ryuji",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 101,
+  "mental": 65,
+  "physical": 61,
+  "social": 63,
+  "initiative": 65,
+  "supportCategory": "Mental",
+  "supportBonus": 24,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Boy",
+    "Politician"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ca5fe673663021f538f20d"
+  },
+  "name": "Shizuku",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Bold",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Impulse",
+    "Inspire"
+  ],
+  "resolve": 117,
+  "mental": 57,
+  "physical": 62,
+  "social": 93,
+  "initiative": 68,
+  "supportCategory": "Social",
+  "supportBonus": 39,
+  "allies": [
+    "Persona",
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ca604873663021f538f20e"
+  },
+  "name": "Shizuku",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Bold",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Impulse",
+    "Inspire"
+  ],
+  "resolve": 133,
+  "mental": 65,
+  "physical": 70,
+  "social": 101,
+  "initiative": 76,
+  "supportCategory": "Social",
+  "supportBonus": 39,
+  "allies": [
+    "Persona",
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ccf853374809b3782d645c"
+  },
+  "name": "Delinquent Ishizaki Daichi",
+  "rarity": "Shining",
+  "numStars": 4,
+  "personality": "Explosive",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Provoke",
+    "Boss Orders"
+  ],
+  "resolve": 135,
+  "mental": 72,
+  "physical": 88,
+  "social": 63,
+  "initiative": 85,
+  "supportCategory": "Mental",
+  "supportBonus": 39,
+  "allies": [
+    "Fighter",
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64cd34dc374809b3782d64c9"
+  },
+  "name": "Hasebe Haruka",
+  "rarity": "Common",
+  "numStars": 4,
+  "personality": "Selfish",
+  "moves": [
+    "Scheming",
+    "Empathy"
+  ],
+  "resolve": 105,
+  "mental": 54,
+  "physical": 46,
+  "social": 51,
+  "initiative": 49,
+  "supportCategory": "Social",
+  "supportBonus": 30,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64dd1965636a48b1e1c8e7f8"
+  },
+  "name": "Wang Meiyu",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Study"
+  ],
+  "resolve": 113,
+  "mental": 80,
+  "physical": 51,
+  "social": 65,
+  "initiative": 55,
+  "supportCategory": "Mental",
+  "supportBonus": 36,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ddf8cc636a48b1e1c8e867"
+  },
+  "name": "Sakayanagi Arisu",
+  "rarity": "Shining",
+  "numStars": 4,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence",
+    "Kings Command"
+  ],
+  "resolve": 123,
+  "mental": 91,
+  "physical": 26,
+  "social": 79,
+  "initiative": 82,
+  "supportCategory": "Mental",
+  "supportBonus": 39,
+  "allies": [
+    "Class A",
+    "White Room"
+  ],
+  "tags": [
+    "Class A",
+    "Girl",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ddf8dd636a48b1e1c8e868"
+  },
+  "name": "Kanzaki Ryuji",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 115,
+  "mental": 72,
+  "physical": 68,
+  "social": 70,
+  "initiative": 72,
+  "supportCategory": "Mental",
+  "supportBonus": 36,
+  "allies": [
+    "Class B",
+    "Politician"
+  ],
+  "tags": [
+    "Class B",
+    "Boy",
+    "Politician"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ddf8e5636a48b1e1c8e869"
+  },
+  "name": "Kaneda Satoru",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 96,
+  "mental": 61,
+  "physical": 26,
+  "social": 62,
+  "initiative": 46,
+  "supportCategory": "Social",
+  "supportBonus": 22,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ddf8e7636a48b1e1c8e86a"
+  },
+  "name": "Utomiya Riku",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting"
+  ],
+  "resolve": 104,
+  "mental": 64,
+  "physical": 75,
+  "social": 39,
+  "initiative": 54,
+  "supportCategory": "Physical",
+  "supportBonus": 26,
+  "allies": [
+    "Kōhai"
+  ],
+  "tags": [
+    "Kōhai",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ddf8ee636a48b1e1c8e86b"
+  },
+  "name": "Shizuku",
+  "rarity": "Glowing",
+  "numStars": 1,
+  "personality": "Bold",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Impulse",
+    "Inspire"
+  ],
+  "resolve": 69,
+  "mental": 33,
+  "physical": 38,
+  "social": 69,
+  "initiative": 44,
+  "supportCategory": "Social",
+  "supportBonus": 26,
+  "allies": [
+    "Persona"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64ddf8f4636a48b1e1c8e86c"
+  },
+  "name": "Yamauchi Haruki",
+  "rarity": "Common",
+  "numStars": 5,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Athleticism"
+  ],
+  "resolve": 91,
+  "mental": 33,
+  "physical": 37,
+  "social": 28,
+  "initiative": 50,
+  "supportCategory": "Physical",
+  "supportBonus": 27,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64de22a9636a48b1e1c8e8b4"
+  },
+  "name": "Hirata Yōsuke",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 115,
+  "mental": 77,
+  "physical": 75,
+  "social": 89,
+  "initiative": 77,
+  "supportCategory": "Social",
+  "supportBonus": 39,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64de22ab636a48b1e1c8e8b5"
+  },
+  "name": "Chabashira Sae",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Cunning",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Hate"
+  ],
+  "resolve": 117,
+  "mental": 63,
+  "physical": 55,
+  "social": 52,
+  "initiative": 76,
+  "supportCategory": "Mental",
+  "supportBonus": 39,
+  "allies": [
+    "Class D",
+    "Teacher"
+  ],
+  "tags": [
+    "Girl",
+    "Teacher"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64de22ad636a48b1e1c8e8b6"
+  },
+  "name": "Hoshinomiya Chie",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Empathy"
+  ],
+  "resolve": 113,
+  "mental": 53,
+  "physical": 60,
+  "social": 80,
+  "initiative": 63,
+  "supportCategory": "Social",
+  "supportBonus": 39,
+  "allies": [
+    "Class B",
+    "Teacher"
+  ],
+  "tags": [
+    "Girl",
+    "Teacher"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64de22af636a48b1e1c8e8b7"
+  },
+  "name": "Yamada Albert",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Benevolent",
+  "moves": [
+    "Athleticism",
+    "Fighting",
+    "Empathy",
+    "Inspire"
+  ],
+  "resolve": 99,
+  "mental": 56,
+  "physical": 89,
+  "social": 47,
+  "initiative": 43,
+  "supportCategory": "Physical",
+  "supportBonus": 22,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64de22b1636a48b1e1c8e8b8"
+  },
+  "name": "Hōsen Kazuomi",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Explosive",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Fighting",
+    "Grit"
+  ],
+  "resolve": 117,
+  "mental": 71,
+  "physical": 93,
+  "social": 19,
+  "initiative": 78,
+  "supportCategory": "Mental",
+  "supportBonus": 22,
+  "allies": [
+    "Fighter"
+  ],
+  "tags": [
+    "Kōhai",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64de22b8636a48b1e1c8e8b9"
+  },
+  "name": "Ishigami Kyō",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence",
+    "Kings Command"
+  ],
+  "resolve": 111,
+  "mental": 91,
+  "physical": 39,
+  "social": 65,
+  "initiative": 81,
+  "supportCategory": "Mental",
+  "supportBonus": 26,
+  "allies": [
+    "Politician"
+  ],
+  "tags": [
+    "Kōhai",
+    "Boy",
+    "Scholar",
+    "Politician"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64de22ba636a48b1e1c8e8ba"
+  },
+  "name": "Katsuragi Kōhei",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 125,
+  "mental": 85,
+  "physical": 58,
+  "social": 68,
+  "initiative": 84,
+  "supportCategory": "Social",
+  "supportBonus": 36,
+  "allies": [
+    "Class A"
+  ],
+  "tags": [
+    "Class A",
+    "Boy",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64de22bb636a48b1e1c8e8bb"
+  },
+  "name": "Ayanokōji Atsuomi",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Cold",
+  "moves": [
+    "Scheming",
+    "Influence",
+    "Dominate"
+  ],
+  "resolve": 130,
+  "mental": 81,
+  "physical": 43,
+  "social": 58,
+  "initiative": 81,
+  "supportCategory": "Resolve",
+  "supportBonus": 15,
+  "allies": [
+    "White Room"
+  ],
+  "tags": [
+    "Boy",
+    "Politician"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64de2dc4636a48b1e1c8e8c6"
+  },
+  "name": "Katsuragi Kōhei",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 111,
+  "mental": 78,
+  "physical": 51,
+  "social": 61,
+  "initiative": 77,
+  "supportCategory": "Social",
+  "supportBonus": 24,
+  "allies": [
+    "Class A"
+  ],
+  "tags": [
+    "Class A",
+    "Boy",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "64df6dd7636a48b1e1c8e95b"
+  },
+  "name": "Kōenji Rokusuke",
+  "rarity": "Shining",
+  "numStars": 4,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting",
+    "Impulse"
+  ],
+  "resolve": 128,
+  "mental": 99,
+  "physical": 99,
+  "social": 54,
+  "initiative": 61,
+  "supportCategory": "Ability",
+  "supportBonus": 12,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Politician",
+    "Scholar",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6595a11ff3b4a7051e9e54cb"
+  },
+  "name": "Yamada Albert",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Benevolent",
+  "moves": [
+    "Athleticism",
+    "Fighting",
+    "Empathy",
+    "Inspire"
+  ],
+  "resolve": 113,
+  "mental": 63,
+  "physical": 96,
+  "social": 54,
+  "initiative": 50,
+  "supportCategory": "Physical",
+  "supportBonus": 33,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6595a123f3b4a7051e9e54cc"
+  },
+  "name": "Nanase Tsubasa",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting"
+  ],
+  "resolve": 130,
+  "mental": 79,
+  "physical": 82,
+  "social": 59,
+  "initiative": 82,
+  "supportCategory": "Physical",
+  "supportBonus": 36,
+  "allies": [
+    "Kōhai"
+  ],
+  "tags": [
+    "Kōhai",
+    "Girl",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6595a130f3b4a7051e9e54cd"
+  },
+  "name": "Tsukishiro Tokinari",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Bold",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Influence"
+  ],
+  "resolve": 125,
+  "mental": 70,
+  "physical": 101,
+  "social": 65,
+  "initiative": 88,
+  "supportCategory": "Physical",
+  "supportBonus": 33,
+  "allies": [
+    "White Room",
+    "Teacher"
+  ],
+  "tags": [
+    "Boy",
+    "Teacher",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66609787156dbcb588417a09"
+  },
+  "name": "Horikita Manabu",
+  "rarity": "Shining",
+  "numStars": 1,
+  "personality": "Cold",
+  "moves": [
+    "Academic",
+    "Fighting",
+    "Influence",
+    "Kabedon"
+  ],
+  "resolve": 83,
+  "mental": 70,
+  "physical": 70,
+  "social": 70,
+  "initiative": 66,
+  "supportCategory": "Mental",
+  "supportBonus": 22,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Boy",
+    "Scholar",
+    "Fighter",
+    "Student Council"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6660978b156dbcb588417a0a"
+  },
+  "name": "Amasawa Ichika",
+  "rarity": "Shining",
+  "numStars": 5,
+  "personality": "Cunning",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Fighting",
+    "Grit"
+  ],
+  "resolve": 152,
+  "mental": 108,
+  "physical": 112,
+  "social": 65,
+  "initiative": 91,
+  "supportCategory": "Physical",
+  "supportBonus": 36,
+  "allies": [
+    "White Room"
+  ],
+  "tags": [
+    "Kōhai",
+    "Girl",
+    "White Room",
+    "Fighter",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6660978c156dbcb588417a0b"
+  },
+  "name": "Yagami Takuya",
+  "rarity": "Shining",
+  "numStars": 4,
+  "personality": "Cold",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Influence",
+    "Hate"
+  ],
+  "resolve": 131,
+  "mental": 99,
+  "physical": 99,
+  "social": 99,
+  "initiative": 80,
+  "supportCategory": "Social",
+  "supportBonus": 24,
+  "allies": [
+    "Kōhai",
+    "White Room"
+  ],
+  "tags": [
+    "Kōhai",
+    "Boy",
+    "White Room",
+    "Fighter",
+    "Scholar",
+    "Student Council",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6660978f156dbcb588417a0c"
+  },
+  "name": "Manabe Shiho",
+  "rarity": "Shining",
+  "numStars": 3,
+  "personality": "Explosive",
+  "moves": [
+    "Fighting",
+    "Influence",
+    "Slap",
+    "Humiliate"
+  ],
+  "resolve": 110,
+  "mental": 54,
+  "physical": 65,
+  "social": 61,
+  "initiative": 73,
+  "supportCategory": "Ability",
+  "supportBonus": 10,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6660979a156dbcb588417a0d"
+  },
+  "name": "Matsushita Chiaki",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 90,
+  "mental": 67,
+  "physical": 56,
+  "social": 54,
+  "initiative": 29,
+  "supportCategory": "Mental",
+  "supportBonus": 22,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Scholar",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666097a4156dbcb588417a0e"
+  },
+  "name": "Tsukishiro Tokinari",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Bold",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Influence"
+  ],
+  "resolve": 109,
+  "mental": 62,
+  "physical": 93,
+  "social": 57,
+  "initiative": 80,
+  "supportCategory": "Physical",
+  "supportBonus": 22,
+  "allies": [
+    "White Room"
+  ],
+  "tags": [
+    "Boy",
+    "Teacher",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666097c5156dbcb588417a0f"
+  },
+  "name": "Shiba Katsunori",
+  "rarity": "Special",
+  "numStars": 3,
+  "personality": "Cunning",
+  "moves": [
+    "Scheming",
+    "Athleticism",
+    "Fighting",
+    "Influence"
+  ],
+  "resolve": 120,
+  "mental": 70,
+  "physical": 97,
+  "social": 78,
+  "initiative": 60,
+  "supportCategory": "Ability",
+  "supportBonus": 10,
+  "allies": [
+    "Teacher"
+  ],
+  "tags": [
+    "Boy",
+    "Teacher",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666097cf156dbcb588417a10"
+  },
+  "name": "Horikita Manabu",
+  "rarity": "Shining",
+  "numStars": 5,
+  "personality": "Cold",
+  "moves": [
+    "Academic",
+    "Fighting",
+    "Influence",
+    "Kabedon"
+  ],
+  "resolve": 147,
+  "mental": 102,
+  "physical": 102,
+  "social": 102,
+  "initiative": 98,
+  "supportCategory": "Mental",
+  "supportBonus": 33,
+  "allies": [
+    "Senpai",
+    "Student Council"
+  ],
+  "tags": [
+    "Senpai",
+    "Boy",
+    "Scholar",
+    "Fighter",
+    "Student Council"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666097d3156dbcb588417a11"
+  },
+  "name": "Amasawa Ichika",
+  "rarity": "Shining",
+  "numStars": 4,
+  "personality": "Cunning",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Fighting",
+    "Grit"
+  ],
+  "resolve": 136,
+  "mental": 100,
+  "physical": 104,
+  "social": 57,
+  "initiative": 83,
+  "supportCategory": "Physical",
+  "supportBonus": 36,
+  "allies": [
+    "White Room"
+  ],
+  "tags": [
+    "Kōhai",
+    "Girl",
+    "White Room",
+    "Fighter",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666097d4156dbcb588417a12"
+  },
+  "name": "Yagami Takuya",
+  "rarity": "Shining",
+  "numStars": 3,
+  "personality": "Cold",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Influence",
+    "Hate"
+  ],
+  "resolve": 117,
+  "mental": 92,
+  "physical": 92,
+  "social": 92,
+  "initiative": 73,
+  "supportCategory": "Social",
+  "supportBonus": 16,
+  "allies": [
+    "Kōhai"
+  ],
+  "tags": [
+    "Kōhai",
+    "Boy",
+    "White Room",
+    "Fighter",
+    "Scholar",
+    "Student Council",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666097d5156dbcb588417a13"
+  },
+  "name": "True Kushida Kikyō",
+  "rarity": "Shining",
+  "numStars": 5,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Charm",
+    "Unmask"
+  ],
+  "resolve": 152,
+  "mental": 90,
+  "physical": 80,
+  "social": 116,
+  "initiative": 89,
+  "supportCategory": "Resolve",
+  "supportBonus": 15,
+  "allies": [
+    "Persona",
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666097d7156dbcb588417a14"
+  },
+  "name": "Captain Sudō Ken",
+  "rarity": "Shining",
+  "numStars": 5,
+  "personality": "Explosive",
+  "moves": [
+    "Influence",
+    "Inspire",
+    "Blazing Form",
+    "Lead By Example"
+  ],
+  "resolve": 148,
+  "mental": 77,
+  "physical": 114,
+  "social": 89,
+  "initiative": 94,
+  "supportCategory": "Physical",
+  "supportBonus": 42,
+  "allies": [
+    "Class D",
+    "Class A"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666097e4156dbcb588417a15"
+  },
+  "name": "Matsushita Chiaki",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 144,
+  "mental": 94,
+  "physical": 83,
+  "social": 81,
+  "initiative": 56,
+  "supportCategory": "Mental",
+  "supportBonus": 33,
+  "allies": [
+    "Girl",
+    "Persona"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Scholar",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666097e4156dbcb588417a16"
+  },
+  "name": "Kaneda Satoru",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 108,
+  "mental": 67,
+  "physical": 32,
+  "social": 68,
+  "initiative": 52,
+  "supportCategory": "Social",
+  "supportBonus": 33,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666097e6156dbcb588417a17"
+  },
+  "name": "Utomiya Riku",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Fighting"
+  ],
+  "resolve": 116,
+  "mental": 70,
+  "physical": 81,
+  "social": 45,
+  "initiative": 60,
+  "supportCategory": "Physical",
+  "supportBonus": 39,
+  "allies": [
+    "Kōhai",
+    "Fighter"
+  ],
+  "tags": [
+    "Kōhai",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666097ed156dbcb588417a18"
+  },
+  "name": "False Ayanokōji Kiyotaka",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Apathetic",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Empathy",
+    "From The Shadows"
+  ],
+  "resolve": 86,
+  "mental": 53,
+  "physical": 53,
+  "social": 53,
+  "initiative": 38,
+  "supportCategory": "Social",
+  "supportBonus": 26,
+  "allies": [
+    "Persona"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "White Room",
+    "Fighter",
+    "Scholar",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666097ef156dbcb588417a19"
+  },
+  "name": "Captain Horikita Manabu",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Blazing Form",
+    "Zenith Pace"
+  ],
+  "resolve": 128,
+  "mental": 90,
+  "physical": 105,
+  "social": 92,
+  "initiative": 72,
+  "supportCategory": "Physical",
+  "supportBonus": 42,
+  "allies": [
+    "Senpai",
+    "Kōhai"
+  ],
+  "tags": [
+    "Senpai",
+    "Boy",
+    "Scholar",
+    "Fighter",
+    "Student Council"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6660980c156dbcb588417a1a"
+  },
+  "name": "Shiba Katsunori",
+  "rarity": "Special",
+  "numStars": 5,
+  "personality": "Cunning",
+  "moves": [
+    "Scheming",
+    "Athleticism",
+    "Fighting",
+    "Influence"
+  ],
+  "resolve": 156,
+  "mental": 88,
+  "physical": 115,
+  "social": 96,
+  "initiative": 78,
+  "supportCategory": "Ability",
+  "supportBonus": 15,
+  "allies": [
+    "Teacher",
+    "White Room"
+  ],
+  "tags": [
+    "Boy",
+    "Teacher",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66609816156dbcb588417a1b"
+  },
+  "name": "Yagami Takuya",
+  "rarity": "Shining",
+  "numStars": 2,
+  "personality": "Cold",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Influence",
+    "Hate"
+  ],
+  "resolve": 103,
+  "mental": 85,
+  "physical": 85,
+  "social": 85,
+  "initiative": 66,
+  "supportCategory": "Social",
+  "supportBonus": 16,
+  "allies": [
+    "Kōhai"
+  ],
+  "tags": [
+    "Kōhai",
+    "Boy",
+    "White Room",
+    "Fighter",
+    "Scholar",
+    "Student Council",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6660982d156dbcb588417a1c"
+  },
+  "name": "Undercover Ibuki Mio",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Reserved",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Grit",
+    "Provoke"
+  ],
+  "resolve": 90,
+  "mental": 56,
+  "physical": 65,
+  "social": 49,
+  "initiative": 63,
+  "supportCategory": "Physical",
+  "supportBonus": 26,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Girl",
+    "Fighter",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66609872156dbcb588417a1d"
+  },
+  "name": "Hōsen Kazuomi",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Explosive",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Fighting",
+    "Grit"
+  ],
+  "resolve": 133,
+  "mental": 79,
+  "physical": 101,
+  "social": 27,
+  "initiative": 86,
+  "supportCategory": "Mental",
+  "supportBonus": 33,
+  "allies": [
+    "Fighter"
+  ],
+  "tags": [
+    "Kōhai",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6660987b156dbcb588417a1e"
+  },
+  "name": "Ishigami Kyō",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence",
+    "Kings Command"
+  ],
+  "resolve": 127,
+  "mental": 99,
+  "physical": 47,
+  "social": 73,
+  "initiative": 89,
+  "supportCategory": "Mental",
+  "supportBonus": 39,
+  "allies": [
+    "Politician",
+    "Kōhai"
+  ],
+  "tags": [
+    "Kōhai",
+    "Boy",
+    "Scholar",
+    "Politician"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6660987f156dbcb588417a1f"
+  },
+  "name": "False Ayanokōji Kiyotaka",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Apathetic",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Empathy",
+    "From The Shadows"
+  ],
+  "resolve": 102,
+  "mental": 61,
+  "physical": 61,
+  "social": 61,
+  "initiative": 46,
+  "supportCategory": "Social",
+  "supportBonus": 26,
+  "allies": [
+    "Persona"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "White Room",
+    "Fighter",
+    "Scholar",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66609881156dbcb588417a20"
+  },
+  "name": "Undercover Ibuki Mio",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Reserved",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Grit",
+    "Provoke"
+  ],
+  "resolve": 106,
+  "mental": 64,
+  "physical": 73,
+  "social": 57,
+  "initiative": 71,
+  "supportCategory": "Physical",
+  "supportBonus": 26,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Girl",
+    "Fighter",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666098bd156dbcb588417a21"
+  },
+  "name": "True Kushida Kikyō",
+  "rarity": "Shining",
+  "numStars": 3,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Charm",
+    "Unmask"
+  ],
+  "resolve": 116,
+  "mental": 72,
+  "physical": 62,
+  "social": 98,
+  "initiative": 71,
+  "supportCategory": "Resolve",
+  "supportBonus": 10,
+  "allies": [
+    "Persona"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666098bf156dbcb588417a22"
+  },
+  "name": "Student Chabashira Sae",
+  "rarity": "Shining",
+  "numStars": 5,
+  "personality": "Cold",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Study",
+    "Introversion"
+  ],
+  "resolve": 142,
+  "mental": 101,
+  "physical": 75,
+  "social": 90,
+  "initiative": 81,
+  "supportCategory": "Mental",
+  "supportBonus": 42,
+  "allies": [
+    "Class D",
+    "Senpai"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Senpai"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666098c0156dbcb588417a23"
+  },
+  "name": "Manabe Shiho",
+  "rarity": "Shining",
+  "numStars": 2,
+  "personality": "Explosive",
+  "moves": [
+    "Fighting",
+    "Influence",
+    "Slap",
+    "Humiliate"
+  ],
+  "resolve": 94,
+  "mental": 46,
+  "physical": 57,
+  "social": 53,
+  "initiative": 65,
+  "supportCategory": "Ability",
+  "supportBonus": 10,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666098d8156dbcb588417a24"
+  },
+  "name": "Sakayanagi Narumori",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy"
+  ],
+  "resolve": 114,
+  "mental": 57,
+  "physical": 40,
+  "social": 62,
+  "initiative": 76,
+  "supportCategory": "Ability",
+  "supportBonus": 15,
+  "allies": [
+    "Senpai",
+    "Kōhai"
+  ],
+  "tags": [
+    "Boy",
+    "Politician",
+    "Teacher"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66609904156dbcb588417a25"
+  },
+  "name": "Shiba Katsunori",
+  "rarity": "Special",
+  "numStars": 4,
+  "personality": "Cunning",
+  "moves": [
+    "Scheming",
+    "Athleticism",
+    "Fighting",
+    "Influence"
+  ],
+  "resolve": 138,
+  "mental": 79,
+  "physical": 106,
+  "social": 87,
+  "initiative": 69,
+  "supportCategory": "Ability",
+  "supportBonus": 15,
+  "allies": [
+    "Teacher",
+    "White Room"
+  ],
+  "tags": [
+    "Boy",
+    "Teacher",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6660991a156dbcb588417a26"
+  },
+  "name": "Manabe Shiho",
+  "rarity": "Shining",
+  "numStars": 5,
+  "personality": "Explosive",
+  "moves": [
+    "Fighting",
+    "Influence",
+    "Slap",
+    "Humiliate"
+  ],
+  "resolve": 142,
+  "mental": 70,
+  "physical": 81,
+  "social": 77,
+  "initiative": 89,
+  "supportCategory": "Ability",
+  "supportBonus": 15,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66609935156dbcb588417a27"
+  },
+  "name": "Undercover Ibuki Mio",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Reserved",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Grit",
+    "Provoke"
+  ],
+  "resolve": 138,
+  "mental": 80,
+  "physical": 89,
+  "social": 73,
+  "initiative": 87,
+  "supportCategory": "Physical",
+  "supportBonus": 39,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Girl",
+    "Fighter",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66609936156dbcb588417a28"
+  },
+  "name": "Drowsy Ichinose Honami",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy",
+    "Slumber"
+  ],
+  "resolve": 138,
+  "mental": 90,
+  "physical": 69,
+  "social": 105,
+  "initiative": 94,
+  "supportCategory": "Initiative",
+  "supportBonus": 15,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Girl",
+    "Student Council",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6660996d156dbcb588417a29"
+  },
+  "name": "Yagami Takuya",
+  "rarity": "Shining",
+  "numStars": 5,
+  "personality": "Cold",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Influence",
+    "Hate"
+  ],
+  "resolve": 145,
+  "mental": 106,
+  "physical": 106,
+  "social": 106,
+  "initiative": 87,
+  "supportCategory": "Social",
+  "supportBonus": 24,
+  "allies": [
+    "Kōhai",
+    "White Room"
+  ],
+  "tags": [
+    "Kōhai",
+    "Boy",
+    "White Room",
+    "Fighter",
+    "Scholar",
+    "Student Council",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6660996f156dbcb588417a2a"
+  },
+  "name": "True Kushida Kikyō",
+  "rarity": "Shining",
+  "numStars": 4,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Charm",
+    "Unmask"
+  ],
+  "resolve": 134,
+  "mental": 81,
+  "physical": 71,
+  "social": 107,
+  "initiative": 80,
+  "supportCategory": "Resolve",
+  "supportBonus": 15,
+  "allies": [
+    "Persona",
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66609970156dbcb588417a2b"
+  },
+  "name": "Captain Sudō Ken",
+  "rarity": "Shining",
+  "numStars": 2,
+  "personality": "Explosive",
+  "moves": [
+    "Influence",
+    "Inspire",
+    "Blazing Form",
+    "Lead By Example"
+  ],
+  "resolve": 94,
+  "mental": 50,
+  "physical": 87,
+  "social": 62,
+  "initiative": 67,
+  "supportCategory": "Physical",
+  "supportBonus": 28,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6660998c156dbcb588417a2c"
+  },
+  "name": "False Ayanokōji Kiyotaka",
+  "rarity": "Glowing",
+  "numStars": 1,
+  "personality": "Apathetic",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Empathy",
+    "From The Shadows"
+  ],
+  "resolve": 70,
+  "mental": 45,
+  "physical": 45,
+  "social": 45,
+  "initiative": 30,
+  "supportCategory": "Social",
+  "supportBonus": 26,
+  "allies": [
+    "Persona"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "White Room",
+    "Fighter",
+    "Scholar",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666099bd156dbcb588417a2d"
+  },
+  "name": "Horikita Manabu",
+  "rarity": "Shining",
+  "numStars": 2,
+  "personality": "Cold",
+  "moves": [
+    "Academic",
+    "Fighting",
+    "Influence",
+    "Kabedon"
+  ],
+  "resolve": 99,
+  "mental": 78,
+  "physical": 78,
+  "social": 78,
+  "initiative": 74,
+  "supportCategory": "Mental",
+  "supportBonus": 22,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Boy",
+    "Scholar",
+    "Fighter",
+    "Student Council"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666099c1156dbcb588417a2e"
+  },
+  "name": "Amasawa Ichika",
+  "rarity": "Shining",
+  "numStars": 2,
+  "personality": "Cunning",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Fighting",
+    "Grit"
+  ],
+  "resolve": 104,
+  "mental": 84,
+  "physical": 88,
+  "social": 41,
+  "initiative": 67,
+  "supportCategory": "Physical",
+  "supportBonus": 24,
+  "allies": [
+    "White Room"
+  ],
+  "tags": [
+    "Kōhai",
+    "Girl",
+    "White Room",
+    "Fighter",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666099c4156dbcb588417a2f"
+  },
+  "name": "Student Chabashira Sae",
+  "rarity": "Shining",
+  "numStars": 2,
+  "personality": "Cold",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Study",
+    "Introversion"
+  ],
+  "resolve": 94,
+  "mental": 77,
+  "physical": 51,
+  "social": 66,
+  "initiative": 57,
+  "supportCategory": "Mental",
+  "supportBonus": 28,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Senpai"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666099c5156dbcb588417a30"
+  },
+  "name": "Captain Sudō Ken",
+  "rarity": "Shining",
+  "numStars": 3,
+  "personality": "Explosive",
+  "moves": [
+    "Influence",
+    "Inspire",
+    "Blazing Form",
+    "Lead By Example"
+  ],
+  "resolve": 112,
+  "mental": 59,
+  "physical": 96,
+  "social": 71,
+  "initiative": 76,
+  "supportCategory": "Physical",
+  "supportBonus": 28,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666099e0156dbcb588417a31"
+  },
+  "name": "False Ayanokōji Kiyotaka",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Apathetic",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Empathy",
+    "From The Shadows"
+  ],
+  "resolve": 118,
+  "mental": 69,
+  "physical": 69,
+  "social": 69,
+  "initiative": 54,
+  "supportCategory": "Social",
+  "supportBonus": 39,
+  "allies": [
+    "Persona"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "White Room",
+    "Fighter",
+    "Scholar",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "666099e4156dbcb588417a32"
+  },
+  "name": "Captain Horikita Manabu",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Blazing Form",
+    "Zenith Pace"
+  ],
+  "resolve": 100,
+  "mental": 76,
+  "physical": 91,
+  "social": 78,
+  "initiative": 58,
+  "supportCategory": "Physical",
+  "supportBonus": 28,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Boy",
+    "Scholar",
+    "Fighter",
+    "Student Council"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66609b18156dbcb588417a33"
+  },
+  "name": "Perfect Kōenji Rokusuke",
+  "rarity": "Special",
+  "numStars": 3,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Arrogance",
+    "The Perfect Existence"
+  ],
+  "resolve": 105,
+  "mental": 87,
+  "physical": 87,
+  "social": 87,
+  "initiative": 51,
+  "supportCategory": "Initiative",
+  "supportBonus": 14,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Politician",
+    "Scholar",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66609b2b156dbcb588417a34"
+  },
+  "name": "Horikita Manabu",
+  "rarity": "Shining",
+  "numStars": 3,
+  "personality": "Cold",
+  "moves": [
+    "Academic",
+    "Fighting",
+    "Influence",
+    "Kabedon"
+  ],
+  "resolve": 115,
+  "mental": 86,
+  "physical": 86,
+  "social": 86,
+  "initiative": 82,
+  "supportCategory": "Mental",
+  "supportBonus": 22,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Boy",
+    "Scholar",
+    "Fighter",
+    "Student Council"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66609b51156dbcb588417a35"
+  },
+  "name": "Drowsy Ichinose Honami",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy",
+    "Slumber"
+  ],
+  "resolve": 90,
+  "mental": 66,
+  "physical": 45,
+  "social": 81,
+  "initiative": 70,
+  "supportCategory": "Initiative",
+  "supportBonus": 10,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Girl",
+    "Student Council",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66609bd8156dbcb588417a36"
+  },
+  "name": "True Kushida Kikyō",
+  "rarity": "Shining",
+  "numStars": 2,
+  "personality": "Benevolent",
+  "moves": [
+    "Academic",
+    "Empathy",
+    "Charm",
+    "Unmask"
+  ],
+  "resolve": 98,
+  "mental": 63,
+  "physical": 53,
+  "social": 89,
+  "initiative": 62,
+  "supportCategory": "Resolve",
+  "supportBonus": 10,
+  "allies": [
+    "Persona"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66609c4b156dbcb588417a37"
+  },
+  "name": "Matsushita Chiaki",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 126,
+  "mental": 85,
+  "physical": 74,
+  "social": 72,
+  "initiative": 47,
+  "supportCategory": "Mental",
+  "supportBonus": 33,
+  "allies": [
+    "Girl",
+    "Persona"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Scholar",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66609d72156dbcb588417a38"
+  },
+  "name": "Shiba Katsunori",
+  "rarity": "Special",
+  "numStars": 2,
+  "personality": "Cunning",
+  "moves": [
+    "Scheming",
+    "Athleticism",
+    "Fighting",
+    "Influence"
+  ],
+  "resolve": 102,
+  "mental": 61,
+  "physical": 88,
+  "social": 69,
+  "initiative": 51,
+  "supportCategory": "Ability",
+  "supportBonus": 10,
+  "allies": [
+    "Teacher"
+  ],
+  "tags": [
+    "Boy",
+    "Teacher",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66609da9156dbcb588417a39"
+  },
+  "name": "Drowsy Ichinose Honami",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy",
+    "Slumber"
+  ],
+  "resolve": 106,
+  "mental": 74,
+  "physical": 53,
+  "social": 89,
+  "initiative": 78,
+  "supportCategory": "Initiative",
+  "supportBonus": 10,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Girl",
+    "Student Council",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66609df4156dbcb588417a3a"
+  },
+  "name": "Matsushita Chiaki",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Influence"
+  ],
+  "resolve": 108,
+  "mental": 76,
+  "physical": 65,
+  "social": 63,
+  "initiative": 38,
+  "supportCategory": "Mental",
+  "supportBonus": 22,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Scholar",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66609f4c156dbcb588417a3e"
+  },
+  "name": "Captain Sudō Ken",
+  "rarity": "Shining",
+  "numStars": 4,
+  "personality": "Explosive",
+  "moves": [
+    "Influence",
+    "Inspire",
+    "Blazing Form",
+    "Lead By Example"
+  ],
+  "resolve": 130,
+  "mental": 68,
+  "physical": 105,
+  "social": 80,
+  "initiative": 85,
+  "supportCategory": "Physical",
+  "supportBonus": 42,
+  "allies": [
+    "Class D",
+    "Class A"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66609f68156dbcb588417a3f"
+  },
+  "name": "Captain Horikita Manabu",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Blazing Form",
+    "Zenith Pace"
+  ],
+  "resolve": 114,
+  "mental": 83,
+  "physical": 98,
+  "social": 85,
+  "initiative": 65,
+  "supportCategory": "Physical",
+  "supportBonus": 42,
+  "allies": [
+    "Senpai",
+    "Kōhai"
+  ],
+  "tags": [
+    "Senpai",
+    "Boy",
+    "Scholar",
+    "Fighter",
+    "Student Council"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6660a050156dbcb588417a42"
+  },
+  "name": "Manabe Shiho",
+  "rarity": "Shining",
+  "numStars": 4,
+  "personality": "Explosive",
+  "moves": [
+    "Fighting",
+    "Influence",
+    "Slap",
+    "Humiliate"
+  ],
+  "resolve": 126,
+  "mental": 62,
+  "physical": 73,
+  "social": 69,
+  "initiative": 81,
+  "supportCategory": "Ability",
+  "supportBonus": 15,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Girl"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6660a077156dbcb588417a43"
+  },
+  "name": "Captain Horikita Manabu",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Blazing Form",
+    "Zenith Pace"
+  ],
+  "resolve": 86,
+  "mental": 69,
+  "physical": 84,
+  "social": 71,
+  "initiative": 51,
+  "supportCategory": "Physical",
+  "supportBonus": 28,
+  "allies": [
+    "Senpai"
+  ],
+  "tags": [
+    "Senpai",
+    "Boy",
+    "Scholar",
+    "Fighter",
+    "Student Council"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6660a134156dbcb588417a44"
+  },
+  "name": "False Ayanokōji Kiyotaka",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Apathetic",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Empathy",
+    "From The Shadows"
+  ],
+  "resolve": 134,
+  "mental": 77,
+  "physical": 77,
+  "social": 77,
+  "initiative": 62,
+  "supportCategory": "Social",
+  "supportBonus": 39,
+  "allies": [
+    "Persona"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "White Room",
+    "Fighter",
+    "Scholar",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6660bd40156dbcb588417a4a"
+  },
+  "name": "Amasawa Ichika",
+  "rarity": "Shining",
+  "numStars": 3,
+  "personality": "Cunning",
+  "moves": [
+    "Academic",
+    "Scheming",
+    "Fighting",
+    "Grit"
+  ],
+  "resolve": 120,
+  "mental": 92,
+  "physical": 96,
+  "social": 49,
+  "initiative": 75,
+  "supportCategory": "Physical",
+  "supportBonus": 24,
+  "allies": [
+    "White Room"
+  ],
+  "tags": [
+    "Kōhai",
+    "Girl",
+    "White Room",
+    "Fighter",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6660bd60156dbcb588417a4b"
+  },
+  "name": "Undercover Ibuki Mio",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Reserved",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Grit",
+    "Provoke"
+  ],
+  "resolve": 122,
+  "mental": 72,
+  "physical": 81,
+  "social": 65,
+  "initiative": 79,
+  "supportCategory": "Physical",
+  "supportBonus": 39,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Girl",
+    "Fighter",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6660bd61156dbcb588417a4c"
+  },
+  "name": "Drowsy Ichinose Honami",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Reserved",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Empathy",
+    "Slumber"
+  ],
+  "resolve": 122,
+  "mental": 82,
+  "physical": 61,
+  "social": 97,
+  "initiative": 86,
+  "supportCategory": "Initiative",
+  "supportBonus": 15,
+  "allies": [
+    "Class B"
+  ],
+  "tags": [
+    "Class B",
+    "Girl",
+    "Student Council",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6664b7a061c9aacaf80418d4"
+  },
+  "name": "Horikita Manabu",
+  "rarity": "Shining",
+  "numStars": 4,
+  "personality": "Cold",
+  "moves": [
+    "Academic",
+    "Fighting",
+    "Influence",
+    "Kabedon"
+  ],
+  "resolve": 131,
+  "mental": 94,
+  "physical": 94,
+  "social": 94,
+  "initiative": 90,
+  "supportCategory": "Mental",
+  "supportBonus": 33,
+  "allies": [
+    "Senpai",
+    "Student Council"
+  ],
+  "tags": [
+    "Senpai",
+    "Boy",
+    "Scholar",
+    "Fighter",
+    "Student Council"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6667817758ad7c5578b23e0c"
+  },
+  "name": "Student Chabashira Sae",
+  "rarity": "Shining",
+  "numStars": 4,
+  "personality": "Cold",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Study",
+    "Introversion"
+  ],
+  "resolve": 126,
+  "mental": 93,
+  "physical": 67,
+  "social": 82,
+  "initiative": 73,
+  "supportCategory": "Mental",
+  "supportBonus": 42,
+  "allies": [
+    "Class D",
+    "Senpai"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Senpai"
+  ]
+}]
