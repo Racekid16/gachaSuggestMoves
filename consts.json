@@ -58,5 +58,6 @@
         "Selfish": ["Academic", "Influence"]
     },
     "transformChars": ["Perfect Kōenji Rokusuke", "True Kushida Kikyō", "Unmasked Kushida Kikyō"],
-    "excludedChars": []
+    "excludedChars": [],
+    "excludedCampaignLevels": ["25", "27", "28", "30"]
 }

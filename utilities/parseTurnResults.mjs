@@ -3,8 +3,8 @@ import { addStatus, removeExpiredStatuses } from "./updateStatuses.mjs";
 import { suggestMoves } from "./suggestMove.mjs";
 import consts from '../consts.json' assert { type: 'json' };
 
-// decrypt the turn results to determine if non-resolve affecting moves were used,
-// then update the stats accordingly by calling the functions from updateBoosts
+// decrypt the turn results to determine if moves that affect stats or statuses were used,
+// then update the stats and statuses accordingly
 export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
     let battleKey = p1name + "_vs._" + p2name;
     let turn = parseInt(battleEmbed.fields[2].name.substring(battleEmbed.fields[2].name.indexOf('__Turn ') + 7, battleEmbed.fields[2].name.length - 2));
@@ -62,18 +62,17 @@ export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
 function getPreviousTurnChar(battleObj, battleKey, playerName, turnResults) {
     let charName;
     let playerID = battleObj[battleKey][playerName].id;
-    let taggedInStr = `\\*\\*<@${playerID}>\\**\\** tagged in \\*\\*(.+)\\*\\*!`;
-    let taggedInRegex = new RegExp(taggedInStr);
+    let taggedInRegex = /^(\*\*<@(\d+)>\*\* tagged in \*\*(.+)\*\*!\n)?(\*\*<@(\d+)>\*\* tagged in \*\*(.+)\*\*!)?/;
     let taggedInMatch = taggedInRegex.exec(turnResults);
 
-    if (taggedInMatch !== null) {
-        charName = taggedInMatch[1];
-        if (battleObj[battleKey][playerName].chars[charName].moves.includes("The Perfect Existence")) {
-            battleObj[battleKey][playerName].chars[charName].debuffs = [];
-        }
+    if (taggedInMatch[2] == playerID) {
+        charName = taggedInMatch[3];
+    } else if (taggedInMatch[5] == playerID) {
+        charName = taggedInMatch[6];
     } else {
         charName = battleObj[battleKey][playerName].previousTaggedInChar;
     }
+
     return charName;
     
 }
@@ -145,6 +144,24 @@ function parseMoveDifferentChars(battleObj, battleKey, attacker, defender, attac
         battleObj[battleKey][attacker].chars[attackChar].secrets.add(defenseChar);
     }
 
+    if (turnResults.includes(`**${attackChar}** used **Dominate**!`)) {
+        addBoost(battleObj, battleKey, attacker, attackChar, "Dominate", turn);
+    }
+
+    if (turnResults.includes(`**${attackChar}** used **From The Shadows**!`)) {
+        addStatus(battleObj, battleKey, defender, defenseChar, "Trapped", turn, 3);
+        
+        let fromTheShadowsStr = `\\*\\*${attackChar}\\*\\* used \\*\\*From The Shadows\\*\\*!\\n\\*\\*.+\\*\\* is \\*\\*Trapped\\*\\* for 3 turns!\\n\\*\\*<@${attackerID}>\\*\\* tagged in \\*\\*(.+)\\*\\*!`;
+        let fromTheShadowsRegex = new RegExp(fromTheShadowsStr);
+        let fromTheShadowsMatch = fromTheShadowsRegex.exec(turnResults);
+
+        if (fromTheShadowsMatch !== null) {
+            let taggedInChar = fromTheShadowsMatch[1];
+            addStatus(battleObj, battleKey, attacker, taggedInChar, "Pacified", turn, 1);
+            addStatus(battleObj, battleKey, attacker, taggedInChar, "Invulnerable", turn, 1);
+        }
+    }
+
     if (turnResults.includes(`**${attackChar}** used **Hate**!`)) {
         let defenderHasHateDebuff = hasBoost(battleObj, battleKey, defender, defenseChar, "Hate");
         if (!defenderHasHateDebuff) {
@@ -154,13 +171,13 @@ function parseMoveDifferentChars(battleObj, battleKey, attacker, defender, attac
 
     if (turnResults.includes(`**${attackChar}** used **Humiliate**!`)) {
         addBoost(battleObj, battleKey, defender, defenseChar, "Humiliate", turn);
-        let statusStr = `\\*\\*${attackChar}\\*\\* used \\*\\*Humiliate\\*\\*!\\n\\*\\*.+\\*\\*'s \\*\\*.+\\*\\* was weakened!\\n\\*\\*.+\\*\\* is \\*\\*(.+)\\*\\* for (.+) turns!`;
+        let statusStr = `\\*\\*${attackChar}\\*\\* used \\*\\*Humiliate\\*\\*!\\n(\\*\\*.+\\*\\*'s \\*\\*.+\\*\\* was weakened!\\n)?\\*\\*.+\\*\\* is \\*\\*(.+)\\*\\* for (\\d+) turns?!`;
         let statusRegex = new RegExp(statusStr);
         let statusMatch = statusRegex.exec(turnResults);
 
-        if (statusMatch === null) {
-            let status = statusMatch[1];
-            let numTurns = parseInt(statusMatch[2]);
+        if (statusMatch !== null) {
+            let status = statusMatch[2];
+            let numTurns = parseInt(statusMatch[3]);
             addStatus(battleObj, battleKey, defender, defenseChar, status, turn, numTurns);
         } else {
             console.log(`No new status for ${defenseChar} was found in turn ${turn} of ${battleKey}`);
@@ -188,6 +205,15 @@ function parseMoveDifferentChars(battleObj, battleKey, attacker, defender, attac
         }
     }
 
+    if (turnResults.includes(`**${attackChar}** is preparing **Kabedon**...`)) {
+        battleObj[battleKey][attacker].chars[attackChar].canUseKabedon = false;
+        if (turnResults.includes(`**${attackChar}** countered with **Kabedon**!`)) {
+            addStatus(battleObj, battleKey, defender, defenseChar, "Stunned", turn, 1);
+        } else if (turnResults.includes(`**${attackChar}'s** counter failed!`)) {
+            addStatus(battleObj, battleKey, attacker, attackChar, "Stunned", turn, 1);
+        }
+    }
+
     if (turnResults.includes(`**${attackChar}** used **Kings Command**!\n**${attackChar}** summoned a **Pawn**!`)) {
         addBoost(battleObj, battleKey, attacker, attackChar, "Kings Command", turn);
     }
@@ -198,9 +224,38 @@ function parseMoveDifferentChars(battleObj, battleKey, attacker, defender, attac
         addBoost(battleObj, battleKey, attacker, attackChar, "2-turn Lead By Example", turn);
     }
 
+    if (turnResults.includes(`**${attackChar}** used **Provoke**!`)) {
+        addStatus(battleObj, battleKey, defender, defenseChar, "Taunted", turn, 3);
+    }
+    
+    if (turnResults.includes(`**${attackChar}** used **Slap**!`)) {
+        addStatus(battleObj, battleKey, defender, defenseChar, "Wounded", turn, 3);
+    }
+
+    if (turnResults.includes(`**${attackChar}** used **Slumber**!`)) {
+        addStatus(battleObj, battleKey, defender, defenseChar, "Pacified", turn, 1);
+        addStatus(battleObj, battleKey, attacker, attackChar, "Resting", turn, 2);
+    }
+
     if (turnResults.includes(`**${attackChar}** used **Study**!`)) {
         addBoost(battleObj, battleKey, attacker, attackChar, "Study Initiative", turn);
         addBoost(battleObj, battleKey, attacker, attackChar, "Study Mental", turn);
+    }
+
+    // handle both The Perfect Existence and Kabedon tagging in here
+    let taggedInStr = `\\*\\*<@${attackerID}>\\**\\** tagged in \\*\\*(.+)\\*\\*!`;
+    let taggedInRegex = new RegExp(taggedInStr);
+    let taggedInMatch = taggedInRegex.exec(turnResults);
+    if (taggedInMatch !== null) {
+        let taggedInChar = taggedInMatch[1];
+        if (battleObj[battleKey][attacker].chars[taggedInChar].moves.includes("Kabedon")) {
+            battleObj[battleKey][attacker].chars[taggedInChar].canUseKabedon = true;
+        }
+        if (battleObj[battleKey][attacker].chars[taggedInChar].moves.includes("The Perfect Existence")) {
+            for (let debuff of battleObj[battleKey][attacker].chars[taggedInChar].debuffs) {
+                debuff.endTurn = turn;
+            }
+        }
     }
 
     if (turnResults.includes(`On the brink of defeat, **${attackChar}** hung on!`)

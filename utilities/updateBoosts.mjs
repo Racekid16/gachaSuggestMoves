@@ -121,25 +121,26 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             break;
 
         case '1-turn Lead By Example':
-            let leadByExampleBuff = 0.25;
-            thisChar.physical = round(thisChar.physical + (thisCharInitial.physical * leadByExampleBuff));
+            let leadByExampleBuff1 = 0.25;
+            thisChar.physical = round(thisChar.physical + (thisCharInitial.physical * leadByExampleBuff1));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
                 endTurn: turn + 1,
                 stat: "physical",
-                amount: leadByExampleBuff
+                amount: leadByExampleBuff1
             }); 
             break;
         
         case '2-turn Lead By Example':
-            thisChar.physical = round(thisChar.physical + (thisCharInitial.physical * leadByExampleBuff));
+            let leadByExampleBuff2 = 0.25;
+            thisChar.physical = round(thisChar.physical + (thisCharInitial.physical * leadByExampleBuff2));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
                 endTurn: turn + 2,
                 stat: "physical",
-                amount: leadByExampleBuff
+                amount: leadByExampleBuff2
             }); 
             break;
         
@@ -348,7 +349,7 @@ function removeExpiredBuffs(battleObj, battleKey, playerName, charName, turn) {
             } else {
                 thisChar[thisBuff.stat] = round(thisChar[thisBuff.stat] + (thisCharInitial[thisBuff.stat] * thisBuff.amount * -1));
             }
-            battleObj[battleKey].log(`${charName}'s ${thisBuff.name} buff expired! ${thisBuff.stat} decreased by ${thisBuff.amount}%`);
+            battleObj[battleKey].log(`${charName}'s ${thisBuff.name} buff expired! ${thisBuff.stat} decreased by ${thisBuff.amount * 100}%`);
             thisChar.buffs.splice(i, 1);
             i--;
         }
@@ -371,7 +372,7 @@ function removeExpiredDebuffs(battleObj, battleKey, playerName, charName, turn) 
             } else {
                 thisChar[thisDebuff.stat] = round(thisChar[thisDebuff.stat] + (thisCharInitial[thisDebuff.stat] * thisDebuff.amount * -1));
             }
-            battleObj[battleKey].log(`${charName}'s ${thisDebuff.name} debuff expired! ${thisDebuff.stat} increased by ${thisDebuff.amount * -1}%`);
+            battleObj[battleKey].log(`${charName}'s ${thisDebuff.name} debuff expired! ${thisDebuff.stat} increased by ${thisDebuff.amount * -100}%`);
             thisChar.debuffs.splice(i, 1);
             i--;
         }
