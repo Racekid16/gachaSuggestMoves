@@ -1,18 +1,20 @@
-// Check if a buff or debuff has expired, and update stats accordingly.
+// add or remove buffs or debuffs.
 
 export function addBoost(battleObj, battleKey, playerName, charName, boost, turn) {
     //TODO: remove this
     battleObj[battleKey].log(`${boost} added to ${playerName}'s ${charName}!`);
 
     // I arrange these alphabetically
-    switch(boost) {
+    switch (boost) {
 
         case 'Arrogance':
         case 'Blazing Form':
         case 'Boss Orders':
         case 'Introversion':
-        case 'Lead By Example':
-        case 'Study':
+        case '1-turn Lead By Example':
+        case '2-turn Lead By Example':
+        case 'Study Initiative':
+        case 'Study Mental':
         case 'The Perfect Existence':
         case 'Unity':
         case 'Zenith Pace':
@@ -51,6 +53,18 @@ export function removeExpiredBoosts(battleObj, battleKey, playerName, turn) {
     }
 }
 
+export function hasBoost(battleObj, battleKey, playerName, charName, boost) {
+    let hasBuff = battleObj[battleKey][playerName].chars[charName].buffs.reduce((accumulator, currentBuff) => {
+        return accumulator || currentBuff.name == boost;
+    }, false);
+
+    let hasDebuff = battleObj[battleKey][playerName].chars[charName].debuffs.reduce((accumulator, currentDebuff) => {
+        return accumulator || currentDebuff.name == boost;
+    }, false);
+
+    return hasBuff || hasDebuff;
+}
+
 function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
     let thisChar = battleObj[battleKey][playerName].chars[charName];
     let thisCharInitial = battleObj[battleKey][playerName].initialCharStats[charName];
@@ -63,7 +77,9 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: turn + 2
+                endTurn: turn + 2,
+                stat: "ability",
+                amount: arroganceBuff
             });
             break;
         
@@ -73,7 +89,9 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: turn + 5
+                endTurn: turn + 5,
+                stat: "physical",
+                amount: blazingFormBuff
             }); 
             break;
 
@@ -83,7 +101,9 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: Infinity
+                endTurn: Infinity,
+                stat: "mental",
+                amount: bossOrdersBuff
             }); 
             break;
 
@@ -93,36 +113,56 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: Infinity
+                endTurn: Infinity,
+                stat: "mental",
+                amount: introversionBuff
             });                       
             break;
 
-        case 'Lead By Example':
+        case '1-turn Lead By Example':
             let leadByExampleBuff = 0.25;
             thisChar.physical = Math.round(thisChar.physical + (thisCharInitial.physical * leadByExampleBuff));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: turn + 1
+                endTurn: turn + 1,
+                stat: "physical",
+                amount: leadByExampleBuff
             }); 
+            break;
+        
+        case '2-turn Lead By Example':
             thisChar.physical = Math.round(thisChar.physical + (thisCharInitial.physical * leadByExampleBuff));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: turn + 2
+                endTurn: turn + 2,
+                stat: "physical",
+                amount: leadByExampleBuff
             }); 
             break;
         
-        case 'Study':
-            let initiativeBuff = 1;
-            let mentalBuff = 1.5;
+        case 'Study Initiative':
+            let studyInitiativeBuff = 1;
             thisChar.initiative = Math.round(thisChar.initiative + (thisCharInitial.initiative * initiativeBuff));
-            thisChar.mental     = Math.round(thisChar.mental     + (thisCharInitial.mental     * mentalBuff    ));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: turn + 1
+                endTurn: turn + 1,
+                stat: "initiative",
+                amount: studyInitiativeBuff
             }); 
+            break;
+        
+        case 'Study Mental':
+            let studyMentalBuff = 1.5;
+            battleObj[battleKey][playerName].chars[charName].buffs.push({
+                name: buff,
+                startTurn: turn,
+                endTurn: turn + 1,
+                stat: "mental",
+                amount: studyMentalBuff
+            });
             break;
         
         case 'The Perfect Existence':
@@ -133,7 +173,9 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: Infinity
+                endTurn: Infinity,
+                stat: "ability",
+                amount: thePerfectExistenceBuff
             }); 
             break;
 
@@ -143,7 +185,9 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: turn + 5
+                endTurn: turn + 5,
+                stat: "ability",
+                amount: unityBuff
             }); 
             break;
 
@@ -153,7 +197,9 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: Infinity
+                endTurn: Infinity,
+                stat: "initiative",
+                amount: zenithPaceBuff
             })
 
         default:
@@ -180,7 +226,9 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
             battleObj[battleKey][playerName].chars[charName].debuffs.push({
                 name: debuff,
                 startTurn: turn,
-                endTurn: turn + 4
+                endTurn: turn + 4,
+                stat: "social",
+                amount: charmDebuff
             })
             break;
 
@@ -190,7 +238,9 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
             battleObj[battleKey][playerName].chars[charName].debuffs.push({
                 name: debuff,
                 startTurn: turn,
-                endTurn: turn + 5
+                endTurn: turn + 5,
+                stat: "ability",
+                amount: dominateDebuff
             }); 
             break;
 
@@ -200,7 +250,9 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
             battleObj[battleKey][playerName].chars[charName].debuffs.push({
                 name: debuff,
                 startTurn: turn,
-                endTurn: turn + 4
+                endTurn: turn + 4,
+                stat: "ability",
+                amount: hateDebuff
             }); 
             break;
 
@@ -225,9 +277,10 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
             thisChar[highestAttackStat] = Math.round(thisChar[highestAttackStat] + (thisCharInitial[highestAttackStat] * humiliateDebuff));
             battleObj[battleKey][playerName].chars[charName].debuffs.push({
                 name: debuff,
-                highestAttackStat: highestAttackStat,
                 startTurn: turn,
-                endTurn: turn + 2
+                endTurn: turn + 2,
+                stat: highestAttackStat,
+                amount: humiliateDebuff
             }); 
             break;
 
@@ -238,7 +291,9 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
             battleObj[battleKey][playerName].chars[charName].debuffs.push({
                 name: debuff,
                 startTurn: turn,
-                endTurn: Infinity
+                endTurn: Infinity,
+                stat: "ability",
+                amount: kingsCommandDebuff
             }); 
             break;
 
@@ -284,45 +339,15 @@ function removeExpiredBuffs(battleObj, battleKey, playerName, charName, turn) {
     }
 
     for (let i = 0; i < thisChar.buffs.length; i++) {
-        if (thisChar.buffs[i].endTurn == turn) {
-            switch (thisChar.buffs[i].name) {
+        let thisBuff = thisChar.buffs[i];
 
-                case 'Arrogance':
-                    let arroganceBuff = 0.4;
-                    buffCharAbility(thisChar, thisCharInitial, arroganceBuff * -1);
-                    battleObj[battleKey].log(`${charName}'s Arrogance buff expired! Ability weakened by ${arroganceBuff * 100}%.`);
-                    break;
-
-                case 'Blazing Form':
-                    let blazingFormBuff = 0.2;
-                    thisChar.physical = Math.round(thisChar.physical + (thisCharInitial.physical * blazingFormBuff * -1));
-                    battleObj[battleKey].log(`${charName}'s Blazing Form buff expired! Physical weakened by ${blazingFormBuff * 100}%.`);
-                    break;
-
-                case 'Lead By Example':
-                    let leadByExampleBuff = 0.25;
-                    thisChar.physical = Math.round(thisChar.physical + (thisCharInitial.physical * leadByExampleBuff * -1));
-                    battleObj[battleKey].log(`${charName}'s Lead By Example buff expired! Physical weakened by ${leadByExampleBuff * 100}%.`);
-                    break;
-                
-                case 'Study':
-                    let initiativeBuff = 1;
-                    let mentalBuff = 1.5;
-                    thisChar.initiative = Math.round(thisChar.initiative + (thisCharInitial.initiative * initiativeBuff * -1));
-                    thisChar.mental     = Math.round(thisChar.mental     + (thisCharInitial.mental     * mentalBuff     * -1));
-                    battleObj[battleKey].log(`${charName}'s Study buff expired! Initiative weakened by ${initiativeBuff * 100}% `
-                                + `and Mental weakened by ${mentalBuff * 100}%`);
-                    break;
-                
-                case 'Unity':
-                    let unityBuff = 0.35;
-                    buffCharAbility(thisChar, thisCharInitial, unityBuff * -1);
-                    battleObj[battleKey].log(`${charName}'s Unity buff expired! Ability weakened by ${unityBuff * 100}%.`);
-                    break;
-
-                default:
-                    break;
+        if (thisBuff.endTurn == turn) {
+            if (thisBuff.stat == "ability") {
+                buffCharAbility(thisChar, thisCharInitial, thisBuff.amount * -1);
+            } else {
+                thisChar[thisBuff.stat] = Math.round(thisChar[thisBuff.stat] + (thisCharInitial[thisBuff.stat] * thisBuff.amount * -1));
             }
+            battleObj[battleKey].log(`${charName}'s ${thisBuff.name} buff expired! ${thisBuff.stat} decreased by ${thisBuff.amount}%`);
             thisChar.buffs.splice(i, 1);
             i--;
         }
@@ -337,37 +362,15 @@ function removeExpiredDebuffs(battleObj, battleKey, playerName, charName, turn) 
     }
 
     for (let i = 0; i < thisChar.debuffs.length; i++) {
-        if (thisChar.debuffs[i].endTurn == turn) {
-            switch (thisChar.debuffs[i].name) {
+        let thisDebuff = thisChar.debuffs[i];
 
-                case 'Charm':
-                    let charmDebuff = -0.33;
-                    thisChar.social = Math.round(thisChar.social + (thisCharInitial.social * charmDebuff * -1));
-                    battleObj[battleKey].log(`${charName}'s Charm debuff expired! Social increased by ${charmDebuff * -100}%`);
-                    break;
-
-                case 'Dominate':
-                    let dominateDebuff = -0.75;
-                    buffCharAbility(thisChar, thisCharInitial, dominateDebuff * -1);
-                    battleObj[battleKey].log(`${charName}'s Dominate debuff expired! Ability increased by ${dominateDebuff * -100}%.`);
-                    break;
-                
-                case 'Hate':
-                    let hateDebuff = -0.35;
-                    buffCharAbility(thisChar, thisCharInitial, hateDebuff * -1);
-                    battleObj[battleKey].log(`${charName}'s Hate debuff expired! Ability increased by ${hateDebuff * -100}%.`);
-                    break;
-
-                case 'Humiliate':
-                    let humiliateDebuff = -0.25;
-                    let highestAttackStat = thisChar.debuffs[i].highestAttackStat;
-                    thisChar[highestAttackStat] = Math.round(thisChar[highestAttackStat] + (thisCharInitial[highestAttackStat] * humiliateDebuff * -1));
-                    battleObj[battleKey].log(`${charName}'s Humiliate debuff expired! ${highestAttackStat} increased by ${humiliateDebuff * -100}%.`);
-                    break;
-                
-                default:
-                    break;
+        if (thisDebuff.endTurn == turn) {
+            if (thisDebuff.stat == "ability") {
+                buffCharAbility(thisChar, thisCharInitial, thisDebuff.amount * -1);
+            } else {
+                thisChar[thisDebuff.stat] = Math.round(thisChar[thisDebuff.stat] + (thisCharInitial[thisDebuff.stat] * thisDebuff.amount * -1));
             }
+            battleObj[battleKey].log(`${charName}'s ${thisDebuff.name} debuff expired! ${thisDebuff.stat} increased by ${thisDebuff.amount * -1}%`);
             thisChar.debuffs.splice(i, 1);
             i--;
         }

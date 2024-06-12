@@ -1,4 +1,5 @@
-import { addBoost, addBoostToAliveTeammates, removeExpiredBoosts } from "./updateBoosts.mjs";
+import { addBoost, addBoostToAliveTeammates, removeExpiredBoosts, hasBoost } from "./updateBoosts.mjs";
+import { addStatus, removeExpiredStatuses } from "./updateStatuses.mjs";
 import { suggestMoves } from "./suggestMove.mjs";
 import consts from '../consts.json' assert { type: 'json' };
 
@@ -14,7 +15,7 @@ export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
     battleObj[battleKey].log(`${p2name}'s previous tagged-in character was ${battleObj[battleKey][p2name].previousTaggedInChar}`);
 
     //remove the .replace part if you're testing
-    battleObj[battleKey].log(`Turn ${turn} of ${p1name} vs. ${p2name}:\n${turnResults}`);
+    battleObj[battleKey].log(`Turn ${turn}:\n${turnResults}`);
 
     //determine player resolves
     let p1resolvesAfterTurn = getTeamResolves(1, battleEmbed);
@@ -40,11 +41,12 @@ export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
 
     applyTransformation(battleObj, battleKey, p1name, p1taggedInChar);
     applyTransformation(battleObj, battleKey, p2name, p2taggedInChar);
-
     updateResolves(battleObj, battleKey, p1name, p1resolvesAfterTurn);
     updateResolves(battleObj, battleKey, p2name, p2resolvesAfterTurn);
     removeExpiredBoosts(battleObj, battleKey, p1name, turn);
     removeExpiredBoosts(battleObj, battleKey, p2name, turn);
+    removeExpiredStatuses(battleObj, battleKey, p1name, turn);
+    removeExpiredStatuses(battleObj, battleKey, p2name, turn);
 
     battleObj[battleKey].log("");
     if (p1taggedInChar !== null && p2taggedInChar !== null) {
@@ -144,16 +146,25 @@ function parseMoveDifferentChars(battleObj, battleKey, attacker, defender, attac
     }
 
     if (turnResults.includes(`**${attackChar}** used **Hate**!`)) {
-        let hasHateDebuff = battleObj[battleKey][defender].chars[defenseChar].debuffs.reduce((accumulator, currentDebuff) => {
-            return accumulator || currentDebuff.name == 'Hate';
-        }, false);
-        if (!hasHateDebuff) {
+        let defenderHasHateDebuff = hasBoost(battleObj, battleKey, defender, defenseChar, "Hate");
+        if (!defenderHasHateDebuff) {
             addBoost(battleObj, battleKey, defender, defenseChar, "Hate", turn);
         }
     }
 
     if (turnResults.includes(`**${attackChar}** used **Humiliate**!`)) {
         addBoost(battleObj, battleKey, defender, defenseChar, "Humiliate", turn);
+        let statusStr = `\\*\\*${attackChar}\\*\\* used \\*\\*Humiliate\\*\\*!\\n\\*\\*.+\\*\\*'s \\*\\*.+\\*\\* was weakened!\\n\\*\\*.+\\*\\* is \\*\\*(.+)\\*\\* for (.+) turns!`;
+        let statusRegex = new RegExp(statusStr);
+        let statusMatch = statusRegex.exec(turnResults);
+
+        if (statusMatch === null) {
+            let status = statusMatch[1];
+            let numTurns = parseInt(statusMatch[2]);
+            addStatus(battleObj, battleKey, defender, defenseChar, status, turn, numTurns);
+        } else {
+            console.log(`No new status for ${defenseChar} was found in turn ${turn} of ${battleKey}`);
+        }
     }
 
     if (turnResults.includes(`**${attackChar}** is preparing **Introversion**...`)) {
@@ -183,11 +194,13 @@ function parseMoveDifferentChars(battleObj, battleKey, attacker, defender, attac
 
     if (turnResults.includes(`**<@${attackerID}>** tagged in **${attackChar}**!`) && previousTaggedInChar !== null 
      && battleObj[battleKey][attacker].chars[previousTaggedInChar].moves.includes("Lead By Example")) {
-        addBoost(battleObj, battleKey, attacker, attackChar, "Lead By Example", turn);
+        addBoost(battleObj, battleKey, attacker, attackChar, "1-turn Lead By Example", turn);
+        addBoost(battleObj, battleKey, attacker, attackChar, "2-turn Lead By Example", turn);
     }
 
     if (turnResults.includes(`**${attackChar}** used **Study**!`)) {
-        addBoost(battleObj, battleKey, attacker, attackChar, "Study", turn);
+        addBoost(battleObj, battleKey, attacker, attackChar, "Study Initiative", turn);
+        addBoost(battleObj, battleKey, attacker, attackChar, "Study Mental", turn);
     }
 
     if (turnResults.includes(`On the brink of defeat, **${attackChar}** hung on!`)
@@ -196,10 +209,8 @@ function parseMoveDifferentChars(battleObj, battleKey, attacker, defender, attac
     }
 
     if (turnResults.includes(`**${attackChar}** used **Unity**!`)) {
-        let hasUnityBuff = battleObj[battleKey][attacker].chars[attackChar].buffs.reduce((accumulator, currentBuff) => {
-            return accumulator || currentBuff.name == 'Unity';
-        }, false);
-        if (!hasUnityBuff) {
+        let attackerHasUnityBuff = hasBoost(battleObj, battleKey, attacker, attackChar, "Unity");
+        if (!attackerHasUnityBuff) {
             addBoostToAliveTeammates(battleObj, battleKey, attacker, "Unity", turn);
         }
     }
