@@ -41,21 +41,26 @@ async function processBattleEmbed(battleObj, battleEmbed) {
     let p2name = battleEmbed.fields[1].name;
     let battleKey = p1name + "_vs._" + p2name;
     let turn = parseInt(battleEmbed.fields[2].name.substring(battleEmbed.fields[2].name.indexOf('__Turn ') + 7, battleEmbed.fields[2].name.length - 2));
+    
     if (typeof battleObj[battleKey] === 'undefined' && turn == 1 && p2name != 'Chairman Sakayanagi') {
         createBattle(battleObj, p1name, p2name, battleEmbed);
         return;
     } 
+
     else if (typeof battleObj[battleKey] === 'undefined') {
         return;
     }
+
     else if (battleEmbed.fields[2].name == 'WINNER:') {
         let turnResults = battleEmbed.fields[2].value;
         deleteBattle(battleObj, p1name, p2name, turnResults);
         return;
     }
+
     if (typeof battleObj[battleKey] !== 'undefined' && turn == 1 && battleObj[battleKey][p2name].id == consts.botID) {
         verifyPlayerResolves(battleObj, battleKey, p1name, 1, battleEmbed);
         verifyPlayerResolves(battleObj, battleKey, p2name, 2, battleEmbed);
     }
+    
     parseTurnResults(battleObj, p1name, p2name, battleEmbed);
 }

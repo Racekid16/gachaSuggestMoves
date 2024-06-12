@@ -45,7 +45,6 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
 }
 
 export async function createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL, stage) {
-    
     let battleKey = playerName + "_vs._Chairman Sakayanagi";
     battleObj[battleKey] = {};
     battleObj[battleKey].time = new Date().toLocaleString();

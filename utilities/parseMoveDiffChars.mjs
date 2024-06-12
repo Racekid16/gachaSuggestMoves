@@ -143,11 +143,6 @@ export function parseMoveDifferentChars(battleObj, battleKey, attacker, defender
         }
     }
 
-    if (turnResults.includes(`On the brink of defeat, **${attackChar}** hung on!`)
-     && battleObj[battleKey][attacker].chars[attackChar].moves.includes("The Perfect Existence")) {
-        addBoost(battleObj, battleKey, attacker, attackChar, "The Perfect Existence", turn);
-    }
-
     if (turnResults.includes(`**${attackChar}** used **Unity**!`)) {
         let attackerHasUnityBuff = hasBoost(battleObj, battleKey, attacker, attackChar, "Unity");
         if (!attackerHasUnityBuff) {

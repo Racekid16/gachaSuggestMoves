@@ -170,8 +170,6 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
         case 'The Perfect Existence':
             let thePerfectExistenceBuff = 0.5;
             buffCharAbility(thisChar, thisCharInitial, thePerfectExistenceBuff);
-            thisChar.moves.splice(thisChar.moves.indexOf("The Perfect Existence"), 1);
-            thisChar.moves.splice(thisCharInitial.moves.indexOf("The Perfect Existence"), 1);
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,

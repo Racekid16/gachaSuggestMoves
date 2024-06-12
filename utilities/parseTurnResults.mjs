@@ -1,6 +1,6 @@
 import { parseMoveSameChar } from "./parseMoveSameChar.mjs";
 import { parseMoveDifferentChars } from "./parseMoveDiffChars.mjs";
-import { removeExpiredBoosts } from "./updateBoosts.mjs";
+import { addBoost, removeExpiredBoosts } from "./updateBoosts.mjs";
 import { removeExpiredStatuses } from "./updateStatuses.mjs";
 import { suggestMoves } from "./suggestMove.mjs";
 import consts from '../consts.json' assert { type: 'json' };
@@ -19,8 +19,8 @@ export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
     battleObj[battleKey].log(`Turn ${turn}:\n${turnResults}`);
 
     //determine player resolves
-    let p1resolvesAfterTurn = getTeamResolves(1, battleEmbed);
-    let p2resolvesAfterTurn = getTeamResolves(2, battleEmbed);
+    let p1resolvesAfterTurn = getTeamResolvesAfterTurn(1, battleEmbed);
+    let p2resolvesAfterTurn = getTeamResolvesAfterTurn(2, battleEmbed);
 
     //determine what characters each player used this turn
     let p1char = getPreviousTurnChar(battleObj, battleKey, p1name, turnResults);
@@ -40,8 +40,8 @@ export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
     battleObj[battleKey].log(`${p1name}'s current tagged-in char is ${p1taggedInChar}`);
     battleObj[battleKey].log(`${p2name}'s current tagged-in char is ${p2taggedInChar}`);
 
-    applyTransformation(battleObj, battleKey, p1name, p1taggedInChar);
-    applyTransformation(battleObj, battleKey, p2name, p2taggedInChar);
+    applyTransformation(battleObj, battleKey, p1name, p1taggedInChar, turn);
+    applyTransformation(battleObj, battleKey, p2name, p2taggedInChar, turn);
     updateResolves(battleObj, battleKey, p1name, p1resolvesAfterTurn);
     updateResolves(battleObj, battleKey, p2name, p2resolvesAfterTurn);
     removeExpiredBoosts(battleObj, battleKey, p1name, turn);
@@ -60,7 +60,7 @@ export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
 }
 
 // create an object containing key-value pairs of characters and their new resolves
-function getTeamResolves(playerNumber, battleEmbed) {
+function getTeamResolvesAfterTurn(playerNumber, battleEmbed) {
     let resolveRegex = / (\*__(.+)__\*\*\*|\*(.+)\*) - \*\*(\d+)\*\*:heart:/g;
     let deadRegex = / \*(.+)\* :x:/g;
     let returnObj = {}
@@ -124,15 +124,21 @@ function getCurrentChar(playerNumber, battleEmbed) {
 
 // charName is the current tagged-in char after the turn that was just parsed
 // and the one you'll transform into, if applicable
-function applyTransformation(battleObj, battleKey, playerName, charName) {
+function applyTransformation(battleObj, battleKey, playerName, charName, turn) {
     if (charName !== null && typeof battleObj[battleKey][playerName].chars[charName] === 'undefined'
-     && consts.transformChars.includes(battleObj[battleKey][playerName].previousTaggedInChar)) {
+     && consts.transformChars.includes(charName)) {
         switch (charName) {
 
             case "Serious Kōenji Rokusuke":
                 battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars["Perfect Kōenji Rokusuke"]);
                 battleObj[battleKey][playerName].initialCharStats[charName] = structuredClone(battleObj[battleKey][playerName].initialCharStats["Perfect Kōenji Rokusuke"]);
-                //note: Serious Koenji's moves are updated when The Perfect Existence buff is added
+                addBoost(battleObj, battleKey, playerName, charName, "The Perfect Existence", turn);
+                battleObj[battleKey][playerName].chars[charName].moves.splice(
+                    battleObj[battleKey][playerName].chars[charName].moves.indexOf("The Perfect Existence")
+                , 1);
+                battleObj[battleKey][playerName].initialCharStats[charName].moves.splice(
+                    battleObj[battleKey][playerName].initialCharStats[charName].moves.indexOf("The Perfect Existence")
+                , 1);
                 delete battleObj[battleKey][playerName].chars["Perfect Kōenji Rokusuke"];
                 delete battleObj[battleKey][playerName].initialCharStats["Perfect Kōenji Rokusuke"];
                 break;
