@@ -73,9 +73,10 @@ export function parseMoveDifferentChars(battleObj, battleKey, attacker, defender
         let [lowestResolveTeammateName, lowestResolveTeammate] = 
             Object.entries(battleObj[battleKey][attacker].chars).reduce((minEntry, currentEntry) => {
                 return (currentEntry[0] != attackChar && currentEntry[1].resolve > 0 && currentEntry[1].resolve < minEntry[1].resolve) ? currentEntry : minEntry;
-            }, ["Empty", { resolve: Infinity }]);
+            }, ["empty", { resolve: Infinity }]
+        );
 
-        if (lowestResolveTeammateName != "Empty") {
+        if (lowestResolveTeammateName != "empty") {
             if (attackerResolves[lowestResolveTeammateName] != 0) {
                 console.log(`Program expected ${attacker}'s ${lowestResolveTeammateName} in ${battleKey} to die, but they didn't.`);
             }
