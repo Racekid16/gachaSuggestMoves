@@ -32,6 +32,11 @@ async function getCollection(userId) {
     let interactionRequestUrl = `https://discord.com/api/v9/interactions`;
     let url = window.location.href;
     let channelId = url.slice(url.lastIndexOf("/") + 1, url.length);
+    /*
+    I got this payload by opening the Network tab in developer tools, running the slash command, 
+    selecting the corresponding request (labelled as "interactions"), copying the payload,
+    and removing the nonce property.
+    */
     let payload1 = `{"type":2,"application_id":"1101145170466062416","guild_id":"870355988887265301","channel_id":"${channelId}","session_id":"5dfdd138799858f2983c7dc2c7732a92","data":{"version":"1109844232824426712","id":"1109844232514048068","guild_id":"870355988887265301","name":"collection","type":1,"options":[{"type":6,"name":"member","value":"${userId}"}],"application_command":{"id":"1109844232514048068","application_id":"1101145170466062416","version":"1109844232824426712","default_member_permissions":null,"type":1,"nsfw":false,"name":"collection","description":"View your character collection!","guild_id":"870355988887265301","options":[{"type":6,"name":"member","description":"…"}]},"attachments":[]}}`;
     //making the slash command to request the user's collection
     await fetch(interactionRequestUrl, {

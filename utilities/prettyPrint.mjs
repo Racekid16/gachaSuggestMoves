@@ -1,4 +1,5 @@
 // pretty-print people's parties and suggested moves.
+import { round } from './round.mjs';
 import consts from '../consts.json' assert { type: 'json' };
 
 export function printParty(battleObj, battleKey, playerName, partyJSON, hasStrength) {
@@ -7,8 +8,12 @@ export function printParty(battleObj, battleKey, playerName, partyJSON, hasStren
     let printStrength = hasStrength ? '(Strength 3: +10% to stats)' : '';
     battleObj[battleKey].log(`${playerName}'s party ${printStrength}\nActive:`);    
 
-    let [active0name, active1name, active2name] = [partyJSON[0].name, partyJSON[1].name, partyJSON[2].name];
-    let activeChars = [charStats[active0name], charStats[active1name], charStats[active2name]];
+    let activeChars = [];
+    for (let i = 0; i < 3; i++) {
+        if (partyJSON[i].name != "empty") {
+            activeChars.push(charStats[partyJSON[i].name]);
+        }
+    }
 
     let activeNameLength = getMaxLength(activeChars, 'name');
     let initiativeLength = getMaxLength(activeChars, 'initiative');
@@ -27,8 +32,12 @@ export function printParty(battleObj, battleKey, playerName, partyJSON, hasStren
 
     battleObj[battleKey].log("Bench:")
 
-    let [bench0name, bench1name, bench2name ] = [partyJSON[3].name, partyJSON[4].name, partyJSON[5].name];
-    let benchChars = [charStats[bench0name], charStats[bench1name], charStats[bench2name]];
+    let benchChars = [];
+    for (let i = 3; i < 6; i++) {
+        if (partyJSON[i].name != "empty") {
+            benchChars.push(charStats[partyJSON[i].name]);
+        }
+    }
 
     let benchNameLength = getMaxLength(benchChars, 'name');
     let benchHasAbilityBoost = benchChars.reduce((hasAbility, char) => {
@@ -97,10 +106,10 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
                         p1resolve.toString().length : p2resolve.toString().length;
     let moveNameLength = p1move.length > p2move.length ? p1move.length: p2move.length;
     let maxVariance = 0.2;
-    let p1lowerBound = Math.round(p1damage * (1 - maxVariance)).toString();
-    let p1upperBound = Math.round(p1damage * (1 + maxVariance)).toString();
-    let p2lowerBound = Math.round(p2damage * (1 - maxVariance)).toString();
-    let p2upperBound = Math.round(p2damage * (1 + maxVariance)).toString();
+    let p1lowerBound = round(p1damage * (1 - maxVariance)).toString();
+    let p1upperBound = round(p1damage * (1 + maxVariance)).toString();
+    let p2lowerBound = round(p2damage * (1 - maxVariance)).toString();
+    let p2upperBound = round(p2damage * (1 + maxVariance)).toString();
     let lowerBoundLength = p1lowerBound.length > p2lowerBound.length ? p1lowerBound.length : p2lowerBound.length;
     let upperBoundLength = p1upperBound.length > p2upperBound.length ? p1upperBound.length : p2upperBound.length;
     

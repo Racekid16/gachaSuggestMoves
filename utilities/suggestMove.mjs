@@ -1,5 +1,6 @@
 // given stats for characters, suggest moves for both players
 import { printSuggestedMoves, getBaseMoveObj } from './prettyPrint.mjs';
+import { round } from './round.mjs';
 import consts from '../consts.json' assert { type: 'json' };
 
 export function suggestMoves(battleObj, p1name, p2name, p1char, p2char, turn) {
@@ -62,9 +63,9 @@ function calculateMoveDamage(battleObj, battleKey, attacker, defender, attackCha
     let damage;
     //this is a guess for how much damage will be dealt, since I don't know the exact damage formula
     if (!isCritical) {
-        damage = Math.round(40 * attackerAttackStat / defenderDefenseStat) * moveObj.basePower;
+        damage = round(36 * attackerAttackStat / defenderDefenseStat) * moveObj.basePower;
     } else {
-        damage = Math.round(40 * attackerAttackStat / defenderDefenseStat) * moveObj.basePower * 1.3;
+        damage = round(36 * attackerAttackStat / defenderDefenseStat) * moveObj.basePower * 1.4;
     }
 
     return [damage, isCritical];

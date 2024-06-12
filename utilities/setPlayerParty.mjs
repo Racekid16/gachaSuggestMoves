@@ -1,6 +1,7 @@
 // Given an image of the user's party, parse it for the characters they're using,
 // calculate the stats of those characters, and update the battleObj accordingly.
 import { printParty } from './prettyPrint.mjs';
+import { round } from './round.mjs';
 import consts from '../consts.json' assert { type: 'json' };
 
 export async function setPlayerParty(battleObj, playerName, imageURL) {
@@ -28,7 +29,11 @@ export async function setPlayerParty(battleObj, playerName, imageURL) {
         let char = partyJSON[i];
         if (char?.name == "empty") {
             //console.log(`There is no character in slot ${i + 1} of ${playerName}'s party.`);
-        } else if (char !== null) {
+        } else if (char === null) {
+            battleObj[battleKey][playerName].valid = false;
+            battleObj[battleKey][playerName].reason = `character in slot ${i + 1} of ${playerName}'s party not found in image database.`;
+            return;
+        } else {
             let charStats = await fetch(`http://127.0.0.1:${consts.port}/CharacterData/${char.name.replace(' ', '_')}/${char.numStars}`);
             if (charStats.status == 404) {
                 battleObj[battleKey][playerName].valid = false;
@@ -46,10 +51,6 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
                     battleObj[battleKey][playerName].chars[char.name].active = false;
                 }
             }
-        } else {
-            battleObj[battleKey][playerName].valid = false;
-            battleObj[battleKey][playerName].reason = `character in slot ${i + 1} of ${playerName}'s party not found in image database.`;
-            return;
         }
     }
 
@@ -65,11 +66,11 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
         // I'm changing the way I calculate stats because I believe it is the way Rhymar actually does it
         // hopefully this eliminates the inconsistencies I was observing
         let thisCharBoosts = {
-            resolve: 0,
-            mental: 0,
-            physical: 0,
-            social: 0,
-            initiative: 0
+            resolve: [],
+            mental: [],
+            physical: [],
+            social: [],
+            initiative: []
         }
 
         for (let charKey2 in baseStats) {
@@ -78,12 +79,12 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
             let supportCategory = baseStats[charKey2].supportCategory.toLowerCase();
             if (thisChar.tags.includes(ally)) {
                 if (supportCategory == 'ability') {
-                    thisCharBoosts.initiative += baseStats[charKey2].supportBonus / 100;
-                    thisCharBoosts.mental     += baseStats[charKey2].supportBonus / 100;
-                    thisCharBoosts.physical   += baseStats[charKey2].supportBonus / 100;
-                    thisCharBoosts.social     += baseStats[charKey2].supportBonus / 100;
+                    thisCharBoosts.initiative.push(baseStats[charKey2].supportBonus / 100);
+                    thisCharBoosts.mental.push(baseStats[charKey2].supportBonus / 100);
+                    thisCharBoosts.physical.push(baseStats[charKey2].supportBonus / 100);
+                    thisCharBoosts.social.push(baseStats[charKey2].supportBonus / 100);
                 } else {
-                    thisCharBoosts[supportCategory] += baseStats[charKey2].supportBonus / 100;
+                    thisCharBoosts[supportCategory].push(baseStats[charKey2].supportBonus / 100);
                 }
                 charBoosted = true;
             }
@@ -91,12 +92,12 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
                 ally = baseStats[charKey2].allies[1];
                 if (thisChar.tags.includes(ally)) {
                     if (supportCategory == 'ability') {
-                        thisCharBoosts.initiative += baseStats[charKey2].supportBonus / 100;
-                        thisCharBoosts.mental     += baseStats[charKey2].supportBonus / 100;
-                        thisCharBoosts.physical   += baseStats[charKey2].supportBonus / 100;
-                        thisCharBoosts.social     += baseStats[charKey2].supportBonus / 100;
+                        thisCharBoosts.initiative.push(baseStats[charKey2].supportBonus / 100);
+                        thisCharBoosts.mental.push(baseStats[charKey2].supportBonus / 100);
+                        thisCharBoosts.physical.push(baseStats[charKey2].supportBonus / 100);
+                        thisCharBoosts.social.push(baseStats[charKey2].supportBonus / 100);
                     } else {
-                        thisCharBoosts[supportCategory] += baseStats[charKey2].supportBonus / 100;
+                        thisCharBoosts[supportCategory].push(baseStats[charKey2].supportBonus / 100);
                     }
                 }
             }
@@ -107,15 +108,18 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
         // I skipped actually checking and instead just automatically add 10% to all character stats,
         // unless you're going against the Chairman Sakayanagi bot
         if (hasStrength) {
-            thisCharBoosts.resolve    += 0.1;
-            thisCharBoosts.mental     += 0.1;
-            thisCharBoosts.physical   += 0.1;
-            thisCharBoosts.social     += 0.1;
-            thisCharBoosts.initiative += 0.1;
+            thisCharBoosts.resolve.push(0.1);
+            thisCharBoosts.mental.push(0.1);
+            thisCharBoosts.physical.push(0.1);
+            thisCharBoosts.social.push(0.1);
+            thisCharBoosts.initiative.push(0.1);
         }
 
         for (let statKey in thisCharBoosts) {
-            thisChar[statKey] = Math.round(thisChar[statKey] + baseStats[charKey][statKey] * thisCharBoosts[statKey])
+            for (let buffAmount of thisCharBoosts[statKey]) {
+                thisChar[statKey] += baseStats[charKey][statKey] * buffAmount;
+            }
+            thisChar[statKey] = round(thisChar[statKey]);
         }
     }
  
