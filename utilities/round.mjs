@@ -1,4 +1,4 @@
-// Emulate a round function that matches the behavior of Python's round() function
+// Make a round function that matches the behavior of Python's round() function
 // Because JavaScript's Math.round() slightly differs.
 
 export function round(number) {

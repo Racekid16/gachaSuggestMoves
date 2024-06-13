@@ -1,7 +1,7 @@
 {
     "port": 2700,
     "botID": "1101145170466062416",
-    "transformChars": ["Perfect Kōenji Rokusuke", "True Kushida Kikyō", "Unmasked Kushida Kikyō"],
+    "transformChars": ["Serious Kōenji Rokusuke", "True Kushida Kikyō", "Unmasked Kushida Kikyō"],
     "excludedChars": [],
     "excludedCampaignStages": ["25", "27", "28", "30"],
     "moveInfo": {
@@ -119,13 +119,13 @@
             "type": ["misc"]
         },
         "Introversion": {
-            "type": ["misc"]
+            "type": ["prepare"]
         },
         "Kabedon": {
-            "type": ["status"]
+            "type": ["prepare"]
         },
         "Kings Command": {
-            "type": ["boost", "misc"],
+            "type": ["boost"],
             "target": "self",
             "stat": "ability",
             "amount": -0.25,

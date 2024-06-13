@@ -287,7 +287,6 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
         case 'Kings Command':
             let kingsCommandDebuff = -0.25;
             buffCharAbility(thisChar, thisCharInitial, kingsCommandDebuff);
-            createPawn(battleObj, battleKey, playerName, charName);
             battleObj[battleKey][playerName].chars[charName].debuffs.push({
                 name: debuff,
                 startTurn: turn,
@@ -307,28 +306,6 @@ function buffCharAbility(char, charInitial, buffAmount) {
     char.mental     = round(char.mental     + (charInitial.mental     * buffAmount));
     char.physical   = round(char.physical   + (charInitial.physical   * buffAmount));
     char.social     = round(char.social     + (charInitial.social     * buffAmount));
-}
-
-function createPawn(battleObj, battleKey, playerName, creatorCharName) {
-    let creatorInitialStats = battleObj[battleKey][playerName].initialCharStats[creatorCharName];
-    let inheritAmount = 0.75;
-
-    battleObj[battleKey][playerName].chars.Pawn = {
-        personality: "Timid",
-        moves: ["Scheming", "Athleticism", "Influence"],
-        tags: ["Persona"],
-        buffs: [],
-        debuffs: [],
-        positiveStatuses: [],
-        negativeStatuses: [],
-        priority: 0,
-        initiative: round(creatorInitialStats.initiative * inheritAmount),
-        mental: round(creatorInitialStats.mental * inheritAmount),
-        physical: round(creatorInitialStats.physical * inheritAmount),
-        social: round(creatorInitialStats.social * inheritAmount),
-        resolve: round(creatorInitialStats.resolve * inheritAmount)
-    };
-    battleObj[battleKey][playerName].initialCharStats.Pawn = structuredClone(battleObj[battleKey][playerName].chars.Pawn);
 }
 
 function removeExpiredBuffs(battleObj, battleKey, playerName, charName, turn) {

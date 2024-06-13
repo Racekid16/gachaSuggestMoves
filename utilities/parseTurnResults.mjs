@@ -1,4 +1,4 @@
-import { parseMoveSameChar } from "./parseMoveSameChar.mjs";
+import { parseMoveSameChar, getCurrentChar } from "./parseMoveSameChar.mjs";
 import { parseMoveDifferentChars } from "./parseMoveDiffChars.mjs";
 import { addBoost, removeExpiredBoosts } from "./updateBoosts.mjs";
 import { removeExpiredStatuses } from "./updateStatuses.mjs";
@@ -23,7 +23,7 @@ export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
     battleObj[battleKey].log(`Turn ${turn}:\n${turnResults}`);
 
     if (p1char == p2char) {
-        parseMoveSameChar(battleObj, p1name, p2name, p1char, turnResults, turn, 
+        parseMoveSameChar(battleObj, p1name, p2name, p1char, battleEmbed, turn, 
                           p1resolvesAfterTurn, p2resolvesAfterTurn, p1taggedIn, p2taggedIn);      
     } else {
         parseMoveDifferentChars(battleObj, battleKey, p1name, p2name, p1char, p2char, turnResults, turn, p1resolvesAfterTurn);
@@ -117,18 +117,6 @@ function getPreviousTurnChar(battleObj, battleKey, playerName, turnResults) {
     return [charName, taggedIn];
 }
 
-// determine what character the player is used for this turn
-// and set the player's taggedInChar property
-function getCurrentChar(playerNumber, battleEmbed) {
-    let taggedInCharRegex = /__(.+)__/;
-    let charName = taggedInCharRegex.exec(battleEmbed.fields[playerNumber - 1].value)?.[1];
-
-    if (typeof charName === 'undefined') {
-        return null;
-    } 
-    return charName;
-}
-
 // charName is the current tagged-in char after the turn that was just parsed
 // and the one you'll transform into, if applicable
 function applyTransformation(battleObj, battleKey, playerName, charName, turn) {
@@ -172,7 +160,7 @@ function applyTransformation(battleObj, battleKey, playerName, charName, turn) {
 }
 
 function updateResolves(battleObj, battleKey, playerName, playerResolves) {
-    for (let charKey in playerResolves) {
+    for (let charKey in battleObj[battleKey][playerName].chars) {
         battleObj[battleKey][playerName].chars[charKey].resolve = playerResolves[charKey];
     }
 }
