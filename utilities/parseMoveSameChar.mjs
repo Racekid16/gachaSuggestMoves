@@ -3,9 +3,12 @@
 import { addBoost, addBoostToAliveTeammates, hasBoost } from "./updateBoosts.mjs";
 import { addStatus } from "./updateStatuses.mjs";
 
-export function parseMoveSameChar(battleObj, p1name, p2name, charName, turnResults, turn, p1resolves, p2resolves) {
+export function parseMoveSameChar(battleObj, p1name, p2name, charName, turnResults, turn, 
+                                  p1resolves, p2resolves, p1taggedIn, p2taggedIn) {
     //consider: what if one person uses a non-damaging move while the other uses a damaging move?
     //what if both use a non-damaging move?
+    let battleKey = p1name + "_vs._" + p2name;
+
     let p1previousTaggedInChar = battleObj[battleKey][p1name].previousTaggedInChar;
     let p2previousTaggedInChar = battleObj[battleKey][p2name].previousTaggedInChar;
     let p1ID = battleObj[battleKey][p1name].id;
@@ -13,6 +16,8 @@ export function parseMoveSameChar(battleObj, p1name, p2name, charName, turnResul
 
     if (count(turnResults, `**${charName}** used **Arrogance**!`) == 1) {
         //TODO
+        let playerID = determineWhoUsedMove(battleObj, p1name, p2name, charName, turnResults, turn, 
+                                            p1resolves, p2resolves, p1taggedIn, p2taggedIn, "Arrogance");
     } else if (count(turnResults, `**${charName}** used **Arrogance**!`) == 2) {
         addBoost(battleObj, battleKey, p1name, charName, "Arrogance", turn);
         addBoost(battleObj, battleKey, p2name, charName, "Arrogance", turn);
@@ -104,6 +109,7 @@ export function parseMoveSameChar(battleObj, p1name, p2name, charName, turnResul
     if (count(turnResults, `**${charName}** is preparing **Introversion**...`) == 1) {
         //TODO
     } else if (count(turnResults, `**${charName}** is preparing **Introversion**...`) == 2) {
+        //both counters will fail
         let [lowestResolveTeammateName, lowestResolveTeammate] = 
             Object.entries(battleObj[battleKey][p1name].chars).reduce((minEntry, currentEntry) => {
                 return (currentEntry[0] != charName && currentEntry[1].resolve > 0 && currentEntry[1].resolve < minEntry[1].resolve) ? currentEntry : minEntry;
@@ -136,6 +142,7 @@ export function parseMoveSameChar(battleObj, p1name, p2name, charName, turnResul
     if (count(turnResults, `**${charName}** is preparing **Kabedon**...`) == 1) {
         //TODO
     } else if (count(turnResults, `**${charName}** is preparing **Kabedon**...`) == 2) {
+        //both counters will fail
         battleObj[battleKey][p1name].chars[charName].canUseKabedon = false;
         addStatus(battleObj, battleKey, p1name, charName, "Stunned", turn, 1);
         battleObj[battleKey][p2name].chars[charName].canUseKabedon = false;
@@ -236,7 +243,7 @@ export function parseMoveSameChar(battleObj, p1name, p2name, charName, turnResul
         }
     }
 
-    if (battleObj[battleKey][p1name].chars[charName].moves.includes("Zenith Pace")) {
+    if (battleObj[battleKey][p1name].chars[charName]?.moves.includes("Zenith Pace")) {
         if (count(turnResults, `**${charName}**'s **Initiative** was boosted!`) == 1) {
             //TODO
         } else if (count(turnResults, `**${charName}**'s **Initiative** was boosted!`) == 2) {
@@ -250,4 +257,22 @@ export function parseMoveSameChar(battleObj, p1name, p2name, charName, turnResul
 function count(str, subStr) {
     let parts = str.split(subStr);
     return parts.length - 1;
+}
+
+function determineWhoUsedMove(battleObj, p1name, p2name, charName, turnResults, turn, 
+                              p1resolves, p2resolves, p1taggedIn, p2taggedIn, moveName) {
+    let battleKey = p1name + "_vs._" + p2name;
+    let p1ID = battleObj[battleKey][p1name].id;
+    let p2ID = battleObj[battleKey][p2name].id;
+
+    if (p1taggedIn) {
+        return p2ID;
+    }
+    if (p2taggedIn) {
+        return p1ID;
+    }
+
+    for (let move of battleObj[battleKey][p1name].chars[charName].moves) {
+        
+    }
 }

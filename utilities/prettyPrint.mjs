@@ -120,31 +120,39 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
 
     let p1Output = `${p1name} ${" ".repeat(playerNameLength - p1name.length)}` 
                   + `[${p1char}${" ".repeat(charNameLength - p1char.length)} `
-                  + `🏃 ${p1initiative}${" ".repeat(initiativeLength - p1initiative.toString().length)} `
-                  + `🧠 ${p1mental}${" ".repeat(mentalLength - p1mental.length)} `
-                  + `💪 ${p1physical}${" ".repeat(physicalLength - p1physical.length)} `
-                  + `🗣️ ${p1social}${" ".repeat(socialLength - p1social.length)} `
-                  + `❤️ ${p1resolve}${" ".repeat(resolveLength - p1resolve.toString().length)}]: `
+                  + `🏃${p1initiative}${" ".repeat(initiativeLength - p1initiative.toString().length)} `
+                  + `🧠${p1mental}${" ".repeat(mentalLength - p1mental.length)} `
+                  + `💪${p1physical}${" ".repeat(physicalLength - p1physical.length)} `
+                  + `🗣️${p1social}${" ".repeat(socialLength - p1social.length)} `
+                  + `❤️${p1resolve}${" ".repeat(resolveLength - p1resolve.toString().length)}]: `
                   + `${p1move} ${" ".repeat(moveNameLength - p1move.length)}`
                   + `(${p1lowerBound} ${" ".repeat(lowerBoundLength - p1lowerBound.toString().length)}- `
                   + `${p1upperBound}${" ".repeat(upperBoundLength - p1upperBound.toString().length)}) `
                   + `${p1printCritical} ${p1printFatal}`;
     let p2Output = `${p2name} ${" ".repeat(playerNameLength - p2name.length)}`
                   + `[${p2char}${" ".repeat(charNameLength - p2char.length)} `
-                  + `🏃‍ ${p2initiative}${" ".repeat(initiativeLength - p2initiative.toString().length)} `
-                  + `🧠 ${p2mental}${" ".repeat(mentalLength - p2mental.length)} `
-                  + `💪 ${p2physical}${" ".repeat(physicalLength - p2physical.length)} `
-                  + `🗣️ ${p2social}${" ".repeat(socialLength - p2social.length)} `
-                  + `❤️ ${p2resolve}${" ".repeat(resolveLength - p2resolve.toString().length)}]: `
+                  + `🏃‍${p2initiative}${" ".repeat(initiativeLength - p2initiative.toString().length)} `
+                  + `🧠${p2mental}${" ".repeat(mentalLength - p2mental.length)} `
+                  + `💪${p2physical}${" ".repeat(physicalLength - p2physical.length)} `
+                  + `🗣️${p2social}${" ".repeat(socialLength - p2social.length)} `
+                  + `❤️${p2resolve}${" ".repeat(resolveLength - p2resolve.toString().length)}]: `
                   + `${p2move} ${" ".repeat(moveNameLength - p2move.length)}`
                   + `(${p2lowerBound} ${" ".repeat(lowerBoundLength - p2lowerBound.toString().length)}- `
                   + `${p2upperBound}${" ".repeat(upperBoundLength - p2upperBound.toString().length)}) `
                   + `${p2printCritical} ${p2printFatal}`;
     
     let p1moveObj = consts.moveInfo[p1move];
+    //DEBUG
+    if (typeof p1moveObj === 'undefined') {
+        console.log(`Move ${p1move} suggested for ${p1char} of ${battleKey} not found in moveInfo object.`);
+    }
     let p1baseMoveObj = getBaseMoveObj(p1moveObj);
     let p1priority = typeof p1moveObj.priority === 'undefined' ? p1baseMoveObj.priority : p1moveObj.priority;
     let p2moveObj = consts.moveInfo[p2move];
+    //DEBUG
+    if (typeof p2moveObj === 'undefined') {
+        console.log(`Move ${p2move} suggested for ${p2char} of ${battleKey} not found in moveInfo object.`);
+    }
     let p2baseMoveObj = getBaseMoveObj(p2moveObj);
     let p2priority = typeof p2moveObj.priority === 'undefined' ? p2baseMoveObj.priority : p2moveObj.priority;
     

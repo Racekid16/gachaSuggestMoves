@@ -1,22 +1,69 @@
 {
     "port": 2700,
     "botID": "1101145170466062416",
+    "transformChars": ["Perfect Kōenji Rokusuke", "True Kushida Kikyō", "Unmasked Kushida Kikyō"],
+    "excludedChars": [],
+    "excludedCampaignStages": ["25", "27", "28", "30"],
     "moveInfo": {
         "Academic": {
+            "type": ["attack"],
             "damageType": "Academic",
             "attackStat": "mental",
             "defenseStat": "mental",
             "basePower": 1,
             "priority": 0
         },
+        "Arrogance": {
+            "type": ["boost"],
+            "target": "self",
+            "stat": "ability",
+            "amount": 0.4,
+            "numTurns": 2
+        },
+        "Aspect Of Fire": {
+            "type": ["innate"]
+        },
+        "Aspect Of Metal": {
+            "type": ["innate"]
+        },
         "Athleticism": {
+            "type": ["attack"],
             "damageType": "Athleticism",
             "attackStat": "physical",
             "defenseStat": "physical",
             "basePower": 1,
             "priority": 0
         },
+        "Blazing Form": {
+            "type": ["attack", "boost"],
+            "damageType": "Athleticism",
+            "target": "self",
+            "stat": "physical",
+            "amount": 0.2,
+            "numTurns": 5
+        },
+        "Boss Orders": {
+            "type": ["innate"]
+        },
+        "Charm": {
+            "type": ["boost"],
+            "target": "opponent",
+            "stat": "social",
+            "amount": -0.33,
+            "numTurns": 4 
+        },
+        "Dominate": {
+            "type": ["attack", "boost"],
+            "damageType": "Influence",
+            "basePower": 2,
+            "priority": -3,
+            "target": "self",
+            "stat": "ability",
+            "amount": -0.75,
+            "numTurns": 5
+        },
         "Empathy": {
+            "type": ["attack"],
             "damageType": "Empathy",
             "attackStat": "social",
             "defenseStat": "social",
@@ -24,25 +71,120 @@
             "priority": 0
         },
         "Fighting": {
+            "type": ["attack"],
             "damageType": "Fighting",
             "attackStat": "physical",
             "defenseStat": "physical",
             "basePower": 1,
             "priority": 0
         },
+        "From The Shadows": {
+            "type": ["status"]
+        },
+        "Grit": {
+            "type": ["attack"],
+            "damageType": "Fighting",
+            "basePower": "varies"
+        },
+        "Hate": {
+            "type": ["boost"],
+            "target": "opponent", 
+            "stat": "ability",
+            "amount": -0.35,
+            "numTurns": 4
+        },
+        "Humiliate": {
+            "type": ["boost", "status"],
+            "target": "opponent",
+            "stat": "varies",
+            "amount": -0.25,
+            "numTurns": 2
+        },
+        "Impulse": {
+            "type": ["attack"],
+            "damageType": "varies",
+            "attackStat": "varies",
+            "defenseStat": "varies",
+            "basePower": 1.5
+        },
         "Influence": {
+            "type": ["attack"],
             "damageType": "Influence",
             "attackStat": "social",
             "defenseStat": "social",
             "basePower": 1,
             "priority": 0
         },
+        "Inspire": {
+            "type": ["misc"]
+        },
+        "Introversion": {
+            "type": ["misc"]
+        },
+        "Kabedon": {
+            "type": ["status"]
+        },
+        "Kings Command": {
+            "type": ["boost", "misc"],
+            "target": "self",
+            "stat": "ability",
+            "amount": -0.25,
+            "numTurns": "Infinity"
+        },
+        "Lead By Example": {
+            "type": ["innate"]
+        },
+        "Mask": {
+            "type": ["misc"]
+        },
+        "Provoke": {
+            "type": ["status"]
+        },
         "Scheming": {
+            "type": ["attack"],
             "damageType": "Scheming",
             "attackStat": "mental",
             "defenseStat": "mental",
             "basePower": 1,
             "priority": 0
+        },
+        "Shatter": {
+            "type": ["attack"],
+            "damageType": "Influence",
+            "basePower": "varies",
+            "priority": "varies"
+        },
+        "Slap": {
+            "type": ["attack", "status"],
+            "damgeType": "Fighting",
+            "defenseStat": "social",
+            "basePower": 0.5
+        },
+        "Slumber": {
+            "type": ["status"]
+        },
+        "Study": {
+            "type": ["boost"],
+            "target": "self",
+            "stat": "varies",
+            "amount": "varies",
+            "numTurns": 1
+        }, 
+        "The Perfect Existence": {
+            "type": ["innate"]
+        },
+        "Unity": {
+            "type": ["boost"],
+            "target": "varies",
+            "stat": "ability",
+            "amount": 0.35,
+            "numTurns": 5
+        },
+        "Unmask": {
+            "type": ["misc"]
+        },
+        "Zenith Pace": {
+            "type": ["innate"]
         }
     },
     "personalityWeaknesses": {
@@ -56,8 +198,5 @@
         "Explosive": ["Academic", "Scheming"],
         "Reserved": ["Athleticism", "Fighting"],
         "Selfish": ["Academic", "Influence"]
-    },
-    "transformChars": ["Perfect Kōenji Rokusuke", "True Kushida Kikyō", "Unmasked Kushida Kikyō"],
-    "excludedChars": [],
-    "excludedCampaignStages": ["25", "27", "28", "30"]
+    }
 }

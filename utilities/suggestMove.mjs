@@ -16,7 +16,7 @@ export function suggestMoves(battleObj, p1name, p2name, p1char, p2char, turn) {
 
 function determineSuggestedMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar) {
     let maxDamageMove = '';
-    let maxPredictedDamage = -1;
+    let maxPredictedDamage = -Infinity;
     let isCritical = false;
 
     for (let move of battleObj[battleKey][attacker].chars[attackChar].moves) {
@@ -42,7 +42,7 @@ function calculateMoveDamage(battleObj, battleKey, attacker, defender, attackCha
         //console.log(`${move} is not in consts.json`);
         return [-1, false];
     }
-    if (typeof moveObj.damageType === 'undefined') {
+    if (!moveObj.type.includes('attack')) {
         //console.log(`${move} is not an Attack type move.`);
         return [-1, false];
     }
@@ -50,6 +50,7 @@ function calculateMoveDamage(battleObj, battleKey, attacker, defender, attackCha
     let baseMoveObj = getBaseMoveObj(moveObj);
     let attackStat = typeof moveObj.attackStat === 'undefined' ? baseMoveObj.attackStat : moveObj.attackStat;
     let defenseStat = typeof moveObj.defenseStat === 'undefined' ? baseMoveObj.defenseStat : moveObj.defenseStat;
+    let basePower = typeof moveObj.basePower === 'undefined' ? baseMoveObj.basePower : moveObj.basePower;
 
     let attackerAttackStat = battleObj[battleKey][attacker].chars[attackChar][attackStat];
     let defenderDefenseStat = battleObj[battleKey][defender].chars[defenseChar][defenseStat];
@@ -63,9 +64,9 @@ function calculateMoveDamage(battleObj, battleKey, attacker, defender, attackCha
     let damage;
     //this is a guess for how much damage will be dealt, since I don't know the exact damage formula
     if (!isCritical) {
-        damage = round(36 * attackerAttackStat / defenderDefenseStat) * moveObj.basePower;
+        damage = round(36 * attackerAttackStat / defenderDefenseStat) * basePower;
     } else {
-        damage = round(36 * attackerAttackStat / defenderDefenseStat) * moveObj.basePower * 1.4;
+        damage = round(36 * attackerAttackStat / defenderDefenseStat) * basePower * 1.4;
     }
 
     return [damage, isCritical];

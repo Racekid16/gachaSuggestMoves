@@ -11,23 +11,20 @@ export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
     let turn = parseInt(battleEmbed.fields[2].name.substring(battleEmbed.fields[2].name.indexOf('__Turn ') + 7, battleEmbed.fields[2].name.length - 2));
     let turnResults = battleEmbed.fields[2].value;
 
-    //TODO: remove this
-    battleObj[battleKey].log(`${p1name}'s previous tagged-in character was ${battleObj[battleKey][p1name].previousTaggedInChar}`);
-    battleObj[battleKey].log(`${p2name}'s previous tagged-in character was ${battleObj[battleKey][p2name].previousTaggedInChar}`);
-
-    //remove the .replace part if you're testing
-    battleObj[battleKey].log(`Turn ${turn}:\n${turnResults}`);
-
     //determine player resolves
     let p1resolvesAfterTurn = getTeamResolvesAfterTurn(1, battleEmbed);
     let p2resolvesAfterTurn = getTeamResolvesAfterTurn(2, battleEmbed);
 
     //determine what characters each player used this turn
-    let p1char = getPreviousTurnChar(battleObj, battleKey, p1name, turnResults);
-    let p2char = getPreviousTurnChar(battleObj, battleKey, p2name, turnResults);
+    let [p1char, p1taggedIn] = getPreviousTurnChar(battleObj, battleKey, p1name, turnResults);
+    let [p2char, p2taggedIn] = getPreviousTurnChar(battleObj, battleKey, p2name, turnResults);
+
+    //remove the .replace part if you're testing
+    battleObj[battleKey].log(`Turn ${turn}:\n${turnResults}`);
 
     if (p1char == p2char) {
-        parseMoveSameChar(battleObj, p1name, p2name, p1char, turnResults, p1resolvesAfterTurn, p2resolvesAfterTurn);      
+        parseMoveSameChar(battleObj, p1name, p2name, p1char, turnResults, turn, 
+                          p1resolvesAfterTurn, p2resolvesAfterTurn, p1taggedIn, p2taggedIn);      
     } else {
         parseMoveDifferentChars(battleObj, battleKey, p1name, p2name, p1char, p2char, turnResults, turn, p1resolvesAfterTurn);
         parseMoveDifferentChars(battleObj, battleKey, p2name, p1name, p2char, p1char, turnResults, turn, p2resolvesAfterTurn);
@@ -95,19 +92,29 @@ function getTeamResolvesAfterTurn(playerNumber, battleEmbed) {
 // get the name of the character that will be used to determine attack and defense char for this turn
 function getPreviousTurnChar(battleObj, battleKey, playerName, turnResults) {
     let charName;
+    let taggedIn = false;
     let playerID = battleObj[battleKey][playerName].id;
+
     let taggedInRegex = /^(\*\*<@(\d+)>\*\* tagged in \*\*(.+)\*\*!\n)?(\*\*<@(\d+)>\*\* tagged in \*\*(.+)\*\*!)?/;
     let taggedInMatch = taggedInRegex.exec(turnResults);
 
     if (taggedInMatch[2] == playerID) {
         charName = taggedInMatch[3];
+        taggedIn = true;
+        //TODO: remove this
+        battleObj[battleKey].log(`${playerName}'s previous tagged-in character was ${battleObj[battleKey][playerName].previousTaggedInChar} but they tagged in ${charName}`);
     } else if (taggedInMatch[5] == playerID) {
         charName = taggedInMatch[6];
+        taggedIn = true;
+        //TODO: remove this
+        battleObj[battleKey].log(`${playerName}'s previous tagged-in character was ${battleObj[battleKey][playerName].previousTaggedInChar} but they tagged in ${charName}`);
     } else {
         charName = battleObj[battleKey][playerName].previousTaggedInChar;
+        //TODO: remove this
+        battleObj[battleKey].log(`${playerName}'s previous tagged-in character was ${battleObj[battleKey][playerName].previousTaggedInChar}`);
     }
 
-    return charName;
+    return [charName, taggedIn];
 }
 
 // determine what character the player is used for this turn
