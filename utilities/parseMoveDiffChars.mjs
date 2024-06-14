@@ -3,22 +3,9 @@
 import { emulateMove } from "./emulateMove.mjs";
 
 export function parseMoveDifferentChars(battleObj, battleKey, attacker, defender, attackChar, 
-                                 defenseChar, turnResults, turn, attackerResolves) {
+                                 defenseChar, turnResults, turn, attackerResolves, attackerTaggedIn) {
     let attackerID = battleObj[battleKey][attacker].id;
     let previousTaggedInChar = battleObj[battleKey][attacker].previousTaggedInChar;
-
-    for (let move of ['Arrogance', 'Blazing Form', 'Charm', 'Dominate', 'From The Shadows', 'Hate',
-                      'Humiliate', 'Kings Command', 'Provoke', 'Slap', 'Slumber', 'Study', 'Unity']) {
-        if (turnResults.includes(`**${attackChar}** used **${move}**!`)) {
-            emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, turnResults, turn, attackerResolves);
-        }
-    }
-
-    for (let move of ['Introversion', 'Kabedon']) {
-        if (turnResults.includes(`**${attackChar}** is preparing **${move}**...`)) {
-            emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, turnResults, turn, attackerResolves);
-        }
-    }
 
     if (previousTaggedInChar !== null && battleObj[battleKey][attacker].chars[previousTaggedInChar].moves.includes("Boss Orders") 
      && attackerResolves[previousTaggedInChar] == 0) {
@@ -30,7 +17,6 @@ export function parseMoveDifferentChars(battleObj, battleKey, attacker, defender
         emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Lead By Example", turnResults, turn, attackerResolves);
     }
 
-    // handle both The Perfect Existence and Kabedon tagging in here
     let taggedInStr = `\\*\\*<@${attackerID}>\\**\\** tagged in \\*\\*(.+)\\*\\*!`;
     let taggedInRegex = new RegExp(taggedInStr);
     let taggedInMatch = taggedInRegex.exec(turnResults);
@@ -39,8 +25,22 @@ export function parseMoveDifferentChars(battleObj, battleKey, attacker, defender
         emulateMove(battleObj, battleKey, attacker, defender, taggedInChar, defenseChar, "Tag-in", turnResults, turn, attackerResolves);
     }
 
-    if (turnResults.includes(`**${attackChar}**'s **Initiative** was boosted!`)
-     && battleObj[battleKey][attacker].chars[attackChar].moves.includes("Zenith Pace")) {
+    if (battleObj[battleKey][p1name].chars[charName].moves.includes("Zenith Pace") && previousTaggedInChar !== null) {
         emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Zenith Pace", turnResults, turn, attackerResolves);
+    }
+
+    for (let move of ['Arrogance', 'Blazing Form', 'Charm', 'Dominate', 'From The Shadows', 'Hate',
+                      'Humiliate', 'Kings Command', 'Provoke', 'Slap', 'Slumber', 'Study', 'Unity']) {
+        if (turnResults.includes(`**${attackChar}** used **${move}**!`)) {
+            emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, turnResults, turn, attackerResolves);
+            return;
+        }
+    }
+
+    for (let move of ['Introversion', 'Kabedon']) {
+        if (turnResults.includes(`**${attackChar}** is preparing **${move}**...`)) {
+            emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, turnResults, turn, attackerResolves);
+            return;
+        }
     }
 }

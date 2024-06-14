@@ -2,7 +2,7 @@
 import { addBoost, addBoostToAliveTeammates, hasBoost } from "./updateBoosts.mjs";
 import { addStatus } from "./updateStatuses.mjs";
 
-export function emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, turnResults, turn, attackerResolves={}) {
+export function emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, turnResults, turn, attackerResolves) {
     switch (move) {
         case 'Arrogance':
             addBoost(battleObj, battleKey, attacker, attackChar, "Arrogance", turn);
@@ -69,8 +69,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             let [lowestResolveTeammateName, lowestResolveTeammate] = 
                 Object.entries(battleObj[battleKey][attacker].chars).reduce((minEntry, currentEntry) => {
                     return (currentEntry[0] != attackChar && currentEntry[1].resolve > 0 && currentEntry[1].resolve < minEntry[1].resolve) ? currentEntry : minEntry;
-                }, ["empty", { resolve: Infinity }]
-            );
+                }, ["empty", { resolve: Infinity }]);
 
             if (lowestResolveTeammateName != "empty") {
                 if (attackerResolves[lowestResolveTeammateName] != 0) {
@@ -173,7 +172,6 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             break;
         
         default:
-            console.log(`Unrecognized move ${move}`);
             break;
     }
 }

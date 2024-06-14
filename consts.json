@@ -116,13 +116,13 @@
             "priority": 0
         },
         "Inspire": {
-            "type": ["misc"]
+            "type": ["vitalize"]
         },
         "Introversion": {
-            "type": ["prepare"]
+            "type": ["counter"]
         },
         "Kabedon": {
-            "type": ["prepare"]
+            "type": ["counter", "status"]
         },
         "Kings Command": {
             "type": ["boost"],
@@ -135,7 +135,7 @@
             "type": ["innate"]
         },
         "Mask": {
-            "type": ["misc"]
+            "type": ["vitalize"]
         },
         "Provoke": {
             "type": ["status"]
@@ -181,7 +181,7 @@
             "numTurns": 5
         },
         "Unmask": {
-            "type": ["misc"]
+            "type": ["vitalize"]
         },
         "Zenith Pace": {
             "type": ["innate"]
