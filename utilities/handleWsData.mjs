@@ -1,6 +1,6 @@
 // handle data received from the websocket. 
 
-import { createBattle, createCampaignBattle, deleteBattle, verifyPlayerResolves } from "./battleManager.mjs";
+import { createBattle, createCampaignBattle, deleteBattle, verifyPlayerResolves, requestPlayerPartyCampaignBattle } from "./battleManager.mjs";
 import { setPlayerParty } from "./setPlayerParty.mjs";
 import { parseTurnResults } from "./parseTurnResults.mjs";
 import config from '../config.json' assert { type: 'json' };
@@ -33,6 +33,18 @@ export function handleWsData(battleObj, responseJSON) {
             deleteBattle(battleObj, playerName, 'Chairman Sakayanagi', null);
         }
         createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL, stage);
+    }
+
+    // request a player's party for a campaign battle when it starts
+    else if (responseJSON.t == 'MESSAGE_UPDATE' && responseJSON.d.author?.id == consts.botID && responseJSON.d.embeds.length > 0
+    && /Campaign Stage \d+/.test(responseJSON.d.embeds[0]?.author?.name) && !responseJSON.d.embeds[0].image?.proxy_url) {
+        let playerName = responseJSON.d.interaction_metadata.user.global_name;
+        let battleKey = playerName + "_vs._Chairman Sakayanagi"
+        if (typeof battleObj[battleKey] === 'undefined') {
+            return;
+        }
+        let playerID = responseJSON.d.interaction_metadata.user.id;
+        requestPlayerPartyCampaignBattle(battleObj, battleKey, playerName, playerID);
     }
 }
 

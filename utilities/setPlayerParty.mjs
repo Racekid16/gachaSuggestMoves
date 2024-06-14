@@ -3,18 +3,28 @@
 import { printParty } from './prettyPrint.mjs';
 import { round } from './round.mjs';
 import consts from '../consts.json' assert { type: 'json' };
+import { deleteBattle } from './battleManager.mjs';
 
 export async function setPlayerParty(battleObj, playerName, imageURL) {
     let battleKey = "";
+
+    let matchingKeys = [];
     for (let key in battleObj) {
-        if (key.includes(playerName) && Object.keys(battleObj[key][playerName].chars).length < 3) {
-            battleKey = key;
-            break;
+        if (key.includes(playerName)) {
+            matchingKeys.push(key)
         }
     }
-    if (battleKey == "") {
+    if (matchingKeys.length == 0) {
         return;
     }
+    if (matchingKeys.length == 1) {
+        battleKey = matchingKeys[0];
+    }
+    if (matchingKeys.length == 2) {
+        let normalBattleKeys = matchingKeys.filter(key => !key.includes("Chairman Sakayanagi"));
+        battleKey = normalBattleKeys[0];
+    }
+
     let party = await fetch(`http://127.0.0.1:${consts.port}/ImageData/parseParty`, {
         method: "POST",
         headers: {

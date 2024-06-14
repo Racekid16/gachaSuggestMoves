@@ -333,7 +333,7 @@ function determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, charName, 
     if (moves[1].type[0] == 'vitalize') {
         let vitalizeStr = `\\*\\*${charName}\\*\\* used \\*\\*${moves[1].name}\\*\\*!\\n\\*\\*(.+)\\*\\* recovered \\*\\*(\\d+)\\*\\* Resolve!(\\n\\*\\*(.+)\\*\\* recovered \\*\\*(\\d+)\\*\\* Resolve!)?`;
         let vitalizeRegex = new RegExp(vitalizeStr);
-        let vitalizeMatch = vitalizeRegex.exec(myStr);
+        let vitalizeMatch = vitalizeRegex.exec(turnResults);
         var move2vitalize = {};
         move2vitalize[charName] = 0;
         if (typeof vitalizeMatch[1] !== 'undefined') {
@@ -342,6 +342,10 @@ function determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, charName, 
         if (typeof vitalizeMatch[4] !== 'undefined') {
             move2vitalize[vitalizeMatch[4]] = parseInt(vitalizeMatch[5]);
         }
+        var move2vitalizedCharsObj = Object.fromEntries(
+            Object.entries(move2vitalize).filter(([key, value]) => value != 0)
+        );
+        var move2vitalizedChars = Object.keys(move2vitalizedCharsObj);
     }
 
     if (moves[0].type[0] == 'attack') {
@@ -437,7 +441,7 @@ function determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, charName, 
         if (moves[0].type[0] == 'vitalize') {
             let vitalizeStr = `\\*\\*${charName}\\*\\* used \\*\\*${moves[0].name}\\*\\*!\\n\\*\\*(.+)\\*\\* recovered \\*\\*(\\d+)\\*\\* Resolve!(\\n\\*\\*(.+)\\*\\* recovered \\*\\*(\\d+)\\*\\* Resolve!)?`;
             let vitalizeRegex = new RegExp(vitalizeStr);
-            let vitalizeMatch = vitalizeRegex.exec(myStr);
+            let vitalizeMatch = vitalizeRegex.exec(turnResults);
             let move1vitalize = {};
             move1vitalize[charName] = 0;
             if (typeof vitalizeMatch[1] !== 'undefined') {
@@ -446,35 +450,42 @@ function determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, charName, 
             if (typeof vitalizeMatch[4] !== 'undefined') {
                 move1vitalize[vitalizeMatch[4]] = parseInt(vitalizeMatch[5]);
             }
+            let move1vitalizedCharsObj = Object.fromEntries(
+                Object.entries(move1vitalize).filter(([key, value]) => value != 0)
+            );
+            let move1vitalizedChars = Object.keys(move1vitalizedCharsObj);
 
-            if (move1vitalize[charName] == move2vitalize[charName]) {
+            if (JSON.stringify(move1vitalizedCharsObj) == JSON.stringify(move2vitalizedCharsObj)) {
                 console.log(`Unable to determine who used ${affectingMove} in turn ${turn} of ${battleKey} (3)`);
                 return;
             }
 
-            // else they vitalized different amounts  
-            if (p1resolveDiff == move1vitalize[charName] && p2resolveDiff == move2vitalize[charName]) {
-                emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, moves[0].name, turnResults, turn, p1resolves);
-                emulateMove(battleObj, battleKey, p2name, p1name, charName, charName, moves[1].name, turnResults, turn, p2resolves);
+            if (move1vitalizedChars.length != 0 || move2vitalizedChars.length != 0) {
+                if (move1vitalizedChars.every(char => p1resolves[char] - battleObj[battleKey][p1name].chars[char]?.resolve == move1vitalizedCharsObj[char])
+                 && move2vitalizedChars.every(char => p2resolves[char] - battleObj[battleKey][p2name].chars[char]?.resolve == move2vitalizedCharsObj[char])) {
+                    emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, moves[0].name, turnResults, turn, p1resolves);
+                    emulateMove(battleObj, battleKey, p2name, p1name, charName, charName, moves[1].name, turnResults, turn, p2resolves);
+                    return;
+                }
+                if (move1vitalizedChars.every(char => p2resolves[char] - battleObj[battleKey][p2name].chars[char]?.resolve == move1vitalizedCharsObj[char])
+                 && move2vitalizedChars.every(char => p1resolves[char] - battleObj[battleKey][p1name].chars[char]?.resolve == move2vitalizedCharsObj[char])) {
+                    emulateMove(battleObj, battleKey, p2name, p1name, charName, charName, moves[0].name, turnResults, turn, p2resolves);
+                    emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, moves[1].name, turnResults, turn, p1resolves);
+                    return;
+                }
+                console.log(`The program unexpectedly reached here on turn ${turn} of ${battleKey} (9)`);
                 return;
-            }
-            if (p2resolveDiff == move1vitalize[charName] && p1resolveDiff == move2vitalize[charName]) {
-                emulateMove(battleObj, battleKey, p2name, p1name, charName, charName, moves[0].name, turnResults, turn, p2resolves);
-                emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, moves[1].name, turnResults, turn, p1resolves);
-                return;
-            }
-            console.log(`The program unexpectedly reached here on turn ${turn} of ${battleKey} (9)`);
-            return;
+            } 
         }
 
         //moves[0].type[0] != 'vitalize' && moves[0].type[0] != 'attack' && moves[1].type[0] == 'vitalize'
-        if (move2vitalize[charName] != 0) {
-            if (p2resolveDiff == move2vitalize[charName]) {
+        if (move2vitalizedChars.length != 0) {
+            if (move2vitalizedChars.every(char => p2resolves[char] - battleObj[battleKey][p2name].chars[char]?.resolve == move2vitalizedCharsObj[char])) {
                 emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, moves[0].name, turnResults, turn, p1resolves);
                 emulateMove(battleObj, battleKey, p2name, p1name, charName, charName, moves[1].name, turnResults, turn, p2resolves);
                 return;
             }
-            if (p1resolveDiff == move2vitalize[charName]) {
+            if (move2vitalizedChars.every(char => p1resolves[char] - battleObj[battleKey][p1name].chars[char]?.resolve == move2vitalizedCharsObj[char])) {
                 emulateMove(battleObj, battleKey, p2name, p1name, charName, charName, moves[0].name, turnResults, turn, p2resolves);
                 emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, moves[1].name, turnResults, turn, p1resolves);
                 return;

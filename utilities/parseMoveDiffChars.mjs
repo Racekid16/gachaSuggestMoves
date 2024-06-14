@@ -25,7 +25,7 @@ export function parseMoveDifferentChars(battleObj, battleKey, attacker, defender
         emulateMove(battleObj, battleKey, attacker, defender, taggedInChar, defenseChar, "Tag-in", turnResults, turn, attackerResolves);
     }
 
-    if (battleObj[battleKey][p1name].chars[charName].moves.includes("Zenith Pace") && previousTaggedInChar !== null) {
+    if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Zenith Pace") && previousTaggedInChar !== null) {
         emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Zenith Pace", turnResults, turn, attackerResolves);
     }
 

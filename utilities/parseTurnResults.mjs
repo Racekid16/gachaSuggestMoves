@@ -34,8 +34,8 @@ export function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
     let p2taggedInChar = getCurrentChar(2, battleEmbed);
 
     //TODO: remove this
-    battleObj[battleKey].log(`${p1name}'s current tagged-in char is ${p1taggedInChar}`);
-    battleObj[battleKey].log(`${p2name}'s current tagged-in char is ${p2taggedInChar}`);
+    //battleObj[battleKey].log(`${p1name}'s current tagged-in char is ${p1taggedInChar}`);
+    //battleObj[battleKey].log(`${p2name}'s current tagged-in char is ${p2taggedInChar}`);
 
     applyTransformation(battleObj, battleKey, p1name, p1taggedInChar, turn);
     applyTransformation(battleObj, battleKey, p2name, p2taggedInChar, turn);
@@ -63,7 +63,7 @@ function getTeamResolvesAfterTurn(playerNumber, battleEmbed) {
     let returnObj = {}
     let charName = "";
 
-    for (let i = 0; i < 3; i++) {
+    while (true) {
         let resolveMatch = resolveRegex.exec(battleEmbed.fields[playerNumber - 1].value);
         if (resolveMatch === null) {
             break;
@@ -77,7 +77,7 @@ function getTeamResolvesAfterTurn(playerNumber, battleEmbed) {
         returnObj[charName] = charResolve;
     }
 
-    for (let i = 0; i < 3; i++) {
+    while (true) {
         let deadMatch = deadRegex.exec(battleEmbed.fields[playerNumber - 1].value);
         if (deadMatch === null) {
             break;
@@ -102,16 +102,16 @@ function getPreviousTurnChar(battleObj, battleKey, playerName, turnResults) {
         charName = taggedInMatch[3];
         taggedIn = true;
         //TODO: remove this
-        battleObj[battleKey].log(`${playerName}'s previous tagged-in character was ${battleObj[battleKey][playerName].previousTaggedInChar} but they tagged in ${charName}`);
+        //battleObj[battleKey].log(`${playerName}'s previous tagged-in character was ${battleObj[battleKey][playerName].previousTaggedInChar} but they tagged in ${charName}`);
     } else if (taggedInMatch[5] == playerID) {
         charName = taggedInMatch[6];
         taggedIn = true;
         //TODO: remove this
-        battleObj[battleKey].log(`${playerName}'s previous tagged-in character was ${battleObj[battleKey][playerName].previousTaggedInChar} but they tagged in ${charName}`);
+        //battleObj[battleKey].log(`${playerName}'s previous tagged-in character was ${battleObj[battleKey][playerName].previousTaggedInChar} but they tagged in ${charName}`);
     } else {
         charName = battleObj[battleKey][playerName].previousTaggedInChar;
         //TODO: remove this
-        battleObj[battleKey].log(`${playerName}'s previous tagged-in character was ${battleObj[battleKey][playerName].previousTaggedInChar}`);
+        //battleObj[battleKey].log(`${playerName}'s previous tagged-in character was ${battleObj[battleKey][playerName].previousTaggedInChar}`);
     }
 
     return [charName, taggedIn];

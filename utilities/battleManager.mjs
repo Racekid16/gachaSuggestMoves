@@ -66,25 +66,11 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
         return;
     }
 
-    let myPromise = addPlayerToBattle(battleObj, battleKey, playerName, 1, null, playerID);
-    let myResult = await myPromise;
-    if (myResult == -1) { 
-        deleteBattle(battleObj, playerName, 'Chairman Sakayanagi', null);
-        console.log(`${playerName} vs. Chairman Sakayanagi was deleted; failed to request ${playerName}'s party`);
-        return;
-    }
-
     battleObj[battleKey]['Chairman Sakayanagi'] = {};
     battleObj[battleKey]['Chairman Sakayanagi'].chars = {};
     battleObj[battleKey]['Chairman Sakayanagi'].id = consts.botID;
     battleObj[battleKey]['Chairman Sakayanagi'].previousTaggedInChar = null;
     setPlayerParty(battleObj, 'Chairman Sakayanagi', botPartyImageURL);
-
-    let validPromise = verifyBattleValidity(battleObj, playerName, 'Chairman Sakayanagi');
-    let promiseResult = await validPromise;
-    if (promiseResult == -1) {
-        return;
-    }
 }
 
 export function deleteBattle(battleObj, p1name, p2name, turnResults) {
@@ -140,7 +126,6 @@ export function verifyPlayerResolves(battleObj, battleKey, playerName, playerNum
             charName = resolveMatch[3];
         }
 
-        //DEBUG
         if (typeof battleObj[battleKey][playerName].chars[charName] === 'undefined') {
             console.log(`${charName} is undefined in ${playerName}'s party`);
             console.log(battleEmbed.fields[0].value);
@@ -154,6 +139,22 @@ export function verifyPlayerResolves(battleObj, battleKey, playerName, playerNum
 
         battleObj[battleKey][playerName].chars[charName].resolve = charResolve;
         battleObj[battleKey][playerName].initialCharStats[charName].resolve = charResolve;
+    }
+}
+
+export async function requestPlayerPartyCampaignBattle(battleObj, battleKey, playerName, playerID) {
+    let myPromise = addPlayerToBattle(battleObj, battleKey, playerName, 1, null, playerID);
+    let myResult = await myPromise;
+    if (myResult == -1) { 
+        deleteBattle(battleObj, playerName, 'Chairman Sakayanagi', null);
+        console.log(`${playerName} vs. Chairman Sakayanagi was deleted; failed to request ${playerName}'s party`);
+        return;
+    }
+    
+    let validPromise = verifyBattleValidity(battleObj, playerName, 'Chairman Sakayanagi');
+    let promiseResult = await validPromise;
+    if (promiseResult == -1) {
+        return;
     }
 }
 
@@ -191,7 +192,7 @@ async function addPlayerToBattle(battleObj, battleKey, playerName, playerNumber,
 }
 
 // if it fails to request someone's party, retry the specified number of times with the specified wait timein between.
-async function fetchWithRetry(url, options, retries = 1, waitTime = 2000) {
+async function fetchWithRetry(url, options, retries=1, waitTime=2000) {
     let response;
     for (let attempt = 0; attempt <= retries; attempt++) {
         response = await fetch(url, options);
@@ -200,7 +201,7 @@ async function fetchWithRetry(url, options, retries = 1, waitTime = 2000) {
         }
         if (attempt < retries) {
             console.log(`Attempt ${attempt + 1} failed with status ${response.status}: ${response.statusText}. Retrying in ${delay / 1000} seconds...`);
-            await waitTime(delay);
+            await delay(waitTime);
         }
     }
     return response;

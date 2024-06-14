@@ -142,17 +142,9 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
                   + `${p2printCritical} ${p2printFatal}`;
     
     let p1moveObj = consts.moveInfo[p1move];
-    //DEBUG
-    if (typeof p1moveObj === 'undefined') {
-        console.log(`Move ${p1move} suggested for ${p1char} of ${battleKey} not found in moveInfo object.`);
-    }
     let p1baseMoveObj = getBaseMoveObj(p1moveObj);
     let p1priority = typeof p1moveObj.priority === 'undefined' ? p1baseMoveObj.priority : p1moveObj.priority;
     let p2moveObj = consts.moveInfo[p2move];
-    //DEBUG
-    if (typeof p2moveObj === 'undefined') {
-        console.log(`Move ${p2move} suggested for ${p2char} of ${battleKey} not found in moveInfo object.`);
-    }
     let p2baseMoveObj = getBaseMoveObj(p2moveObj);
     let p2priority = typeof p2moveObj.priority === 'undefined' ? p2baseMoveObj.priority : p2moveObj.priority;
     

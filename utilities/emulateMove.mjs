@@ -1,6 +1,7 @@
 //apply the effects of moves that impact boosts or statuses (except resolve)
 import { addBoost, addBoostToAliveTeammates, hasBoost } from "./updateBoosts.mjs";
 import { addStatus } from "./updateStatuses.mjs";
+import { round } from "./round.mjs";
 
 export function emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, turnResults, turn, attackerResolves) {
     switch (move) {
