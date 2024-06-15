@@ -32,6 +32,10 @@ export function handleWsData(battleObj, responseJSON) {
         if (typeof battleObj[battleKey] !== 'undefined') {
             deleteBattle(battleObj, playerName, 'Chairman Sakayanagi', null);
         }
+        if (consts.excludedCampaignStages.includes(stage)) {
+            console.log(`${playerName} vs. Chairman Sakayanagi not being tracked; Stage ${stage} is excluded`);
+            return;
+        }
         createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL, stage);
     }
 

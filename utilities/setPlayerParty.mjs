@@ -10,7 +10,7 @@ export async function setPlayerParty(battleObj, playerName, imageURL) {
 
     let matchingKeys = [];
     for (let key in battleObj) {
-        if (key.includes(playerName)) {
+        if (key.includes(playerName) && Object.keys(battleObj[key][playerName].chars).length < 3) {
             matchingKeys.push(key)
         }
     }
@@ -20,7 +20,7 @@ export async function setPlayerParty(battleObj, playerName, imageURL) {
     if (matchingKeys.length == 1) {
         battleKey = matchingKeys[0];
     }
-    if (matchingKeys.length == 2) {
+    if (matchingKeys.length >= 2) {
         let normalBattleKeys = matchingKeys.filter(key => !key.includes("Chairman Sakayanagi"));
         battleKey = normalBattleKeys[0];
     }

@@ -45,10 +45,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             break;
         
         case 'Hate':
-            let defenderHasHateDebuff = hasBoost(battleObj, battleKey, defender, defenseChar, "Hate");
-            if (!defenderHasHateDebuff) {
-                addBoost(battleObj, battleKey, defender, defenseChar, "Hate", turn);
-            }
+            addBoost(battleObj, battleKey, defender, defenseChar, "Hate", turn);
             break;
         
         case 'Humiliate':
@@ -146,8 +143,8 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             break;
         
         case 'Study':
-            addBoost(battleObj, battleKey, attacker, attackChar, "Study Initiative", turn);
             addBoost(battleObj, battleKey, attacker, attackChar, "Study Mental", turn);
+            addBoost(battleObj, battleKey, attacker, attackChar, "Study Initiative", turn);
             break;
         
         case 'Tag-in':
@@ -162,10 +159,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             break;
 
         case 'Unity':
-            let attackerHasUnityBuff = hasBoost(battleObj, battleKey, attacker, attackChar, "Unity");
-            if (!attackerHasUnityBuff) {
-                addBoostToAliveTeammates(battleObj, battleKey, attacker, "Unity", turn);
-            }
+            addBoostToAliveTeammates(battleObj, battleKey, attacker, "Unity", turn);
             break;
         
         case 'Zenith Pace':

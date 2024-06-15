@@ -3,7 +3,7 @@
     "botID": "1101145170466062416",
     "transformChars": ["Serious Kōenji Rokusuke", "True Kushida Kikyō", "Unmasked Kushida Kikyō"],
     "excludedChars": [],
-    "excludedCampaignStages": ["25", "27", "28", "30"],
+    "excludedCampaignStages": ["25", "27", "30"],
     "moveInfo": {
         "Academic": {
             "type": ["attack"],
@@ -116,7 +116,7 @@
             "priority": 0
         },
         "Inspire": {
-            "type": ["vitalize"]
+            "type": ["heal"]
         },
         "Introversion": {
             "type": ["counter"]
@@ -135,7 +135,7 @@
             "type": ["innate"]
         },
         "Mask": {
-            "type": ["vitalize"]
+            "type": ["heal"]
         },
         "Provoke": {
             "type": ["status"]
@@ -156,7 +156,7 @@
         },
         "Slap": {
             "type": ["attack", "status"],
-            "damgeType": "Fighting",
+            "damageType": "Fighting",
             "defenseStat": "social",
             "basePower": 0.5
         },
@@ -181,7 +181,7 @@
             "numTurns": 5
         },
         "Unmask": {
-            "type": ["vitalize"]
+            "type": ["heal"]
         },
         "Zenith Pace": {
             "type": ["innate"]

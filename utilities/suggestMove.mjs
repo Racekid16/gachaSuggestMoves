@@ -66,7 +66,7 @@ function calculateMoveDamage(battleObj, battleKey, attacker, defender, attackCha
     if (!isCritical) {
         damage = round(36 * attackerAttackStat / defenderDefenseStat) * basePower;
     } else {
-        damage = round(36 * attackerAttackStat / defenderDefenseStat) * basePower * 1.4;
+        damage = round(36 * attackerAttackStat / defenderDefenseStat) * basePower * 1.3;
     }
 
     return [damage, isCritical];

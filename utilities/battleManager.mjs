@@ -60,12 +60,6 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
     console.log(`${playerName} vs. Chairman Sakayanagi (Campaign Stage ${stage}) started`);
     battleObj[battleKey].log(`${playerName} vs. Chairman Sakayanagi (Campaign Stage ${stage}) started at ${battleObj[battleKey].time}\n`);
 
-    if (consts.excludedCampaignStages.includes(stage)) {
-        deleteBattle(battleObj, playerName, 'Chairman Sakayanagi', null);
-        console.log(`${playerName} vs. Chairman Sakayanagi was deleted; Stage ${stage} is excluded`);
-        return;
-    }
-
     battleObj[battleKey]['Chairman Sakayanagi'] = {};
     battleObj[battleKey]['Chairman Sakayanagi'].chars = {};
     battleObj[battleKey]['Chairman Sakayanagi'].id = consts.botID;

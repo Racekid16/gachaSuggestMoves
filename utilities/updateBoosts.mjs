@@ -146,7 +146,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
         
         case 'Study Initiative':
             let studyInitiativeBuff = 1;
-            thisChar.initiative = round(thisChar.initiative + (thisCharInitial.initiative * initiativeBuff));
+            thisChar.initiative = round(thisChar.initiative + (thisCharInitial.initiative * studyInitiativeBuff));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
@@ -158,6 +158,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
         
         case 'Study Mental':
             let studyMentalBuff = 1.5;
+            thisChar.mental = round(thisChar.mental + (thisCharInitial.mental * studyMentalBuff));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
@@ -180,15 +181,18 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             break;
 
         case 'Unity':
-            let unityBuff = 0.35;
-            buffCharAbility(thisChar, thisCharInitial, unityBuff);
-            battleObj[battleKey][playerName].chars[charName].buffs.push({
-                name: buff,
-                startTurn: turn,
-                endTurn: turn + 5,
-                stat: "ability",
-                amount: unityBuff
-            }); 
+            let hasUnityBuff = hasBoost(battleObj, battleKey, playerName, charName, "Unity");
+            if (!hasUnityBuff) {
+                let unityBuff = 0.35;
+                buffCharAbility(thisChar, thisCharInitial, unityBuff);
+                battleObj[battleKey][playerName].chars[charName].buffs.push({
+                    name: buff,
+                    startTurn: turn,
+                    endTurn: turn + 5,
+                    stat: "ability",
+                    amount: unityBuff
+                });
+            }
             break;
 
         case 'Zenith Pace':
@@ -245,15 +249,18 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
             break;
 
         case 'Hate':
-            let hateDebuff = -0.35;
-            buffCharAbility(thisChar, thisCharInitial, hateDebuff);
-            battleObj[battleKey][playerName].chars[charName].debuffs.push({
-                name: debuff,
-                startTurn: turn,
-                endTurn: turn + 4,
-                stat: "ability",
-                amount: hateDebuff
-            }); 
+            let hasHateDebuff = hasBoost(battleObj, battleKey, playerName, charName, "Hate");
+            if (!hasHateDebuff) {
+                let hateDebuff = -0.35;
+                buffCharAbility(thisChar, thisCharInitial, hateDebuff);
+                battleObj[battleKey][playerName].chars[charName].debuffs.push({
+                    name: debuff,
+                    startTurn: turn,
+                    endTurn: turn + 4,
+                    stat: "ability",
+                    amount: hateDebuff
+                }); 
+            }
             break;
 
         case 'Humiliate':
