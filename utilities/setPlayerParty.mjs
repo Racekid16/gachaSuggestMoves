@@ -3,7 +3,6 @@
 import { printParty } from './prettyPrint.mjs';
 import { round } from './round.mjs';
 import consts from '../consts.json' assert { type: 'json' };
-import { deleteBattle } from './battleManager.mjs';
 
 export async function setPlayerParty(battleObj, playerName, imageURL) {
     let battleKey = "";

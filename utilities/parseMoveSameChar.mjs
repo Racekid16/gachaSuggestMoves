@@ -303,27 +303,6 @@ function determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, charName, 
             console.log(`The program unexpectedly reached here on turn ${turn} of ${battleKey} (3)`);
             return;
         }
-
-        let introversionStr = `(\\*\\*${charName}\\*\\* countered with \\*\\*Introversion\\*\\*!|\\*\\*${charName}'s\\*\\* counter failed!)(\\n\\*\\*${charName}\\*\\* recovered \\*\\*(\\d+)\\*\\* Resolve!)?`;
-        let introversionRegex = new RegExp(introversionStr);
-        let introversionMatch = introversionRegex.exec(turnResults);
-
-        if (introversionMatch !== null && typeof introversionMatch[3] !== 'undefined') {
-            let introversionHeal = parseInt(introversionMatch[3]);
-
-            if ((p1resolveDiff == 0 || p2resolveDiff == 0) && p1resolveDiff != p2resolveDiff && introversionHeal != 0) {
-                if (p1resolveDiff == introversionHeal || p2resolveDiff == 0) {
-                    emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, "Introversion", turnResults, turn, p1resolves);
-                    emulateMove(battleObj, battleKey, p2name, p1name, charName, charName, otherMoveName, turnResults, turn, p2resolves);
-                    return;
-                }
-                if (p2resolveDiff == introversionHeal || p1resolveDiff == 0) {
-                    emulateMove(battleObj, battleKey, p2name, p1name, charName, charName, "Introversion", turnResults, turn, p2resolves);
-                    emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, otherMoveName, turnResults, turn, p1resolves);
-                    return;
-                }
-            }
-        }
     }
 
     if (moves[0].name == "Unity" || moves[1].name == "Unity") {

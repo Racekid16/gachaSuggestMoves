@@ -8,6 +8,8 @@ import { startWsConnection } from "./utilities/websocket.mjs";
 (async ()=> {
     await deleteAllFilesInDirectory('currentBattles');
     let battleObj = {};
+    battleObj.currentBattles = [];
+    battleObj.usernames = {};
     startWsConnection(battleObj);
 })();
 

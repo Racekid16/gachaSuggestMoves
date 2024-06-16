@@ -1,6 +1,7 @@
 {
     "port": 2700,
     "botID": "1101145170466062416",
+    "serverID": "870355988887265301",
     "transformChars": ["Serious Kōenji Rokusuke", "True Kushida Kikyō", "Unmasked Kushida Kikyō"],
     "excludedChars": [],
     "excludedCampaignStages": ["25", "27", "30"],

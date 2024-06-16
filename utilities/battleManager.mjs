@@ -12,6 +12,7 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
     battleObj[battleKey] = {};
     battleObj[battleKey].time = new Date().toLocaleString();
     battleObj[battleKey].data = "";
+    battleObj.currentBattles.push(['battle', p1name, p2name, battleEmbed]);
     
     //create a new file for this battle
     fs.writeFile(`currentBattles/${battleKey}.txt`, '', (err) => {if (err) { throw err; }});
@@ -26,7 +27,7 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
     let promise1 = addPlayerToBattle(battleObj, battleKey, p1name, 1, turnResults, null);
     let promise2 = addPlayerToBattle(battleObj, battleKey, p2name, 2, turnResults, null);
     let [result1, result2] = await Promise.all([promise1, promise2]);
-    if (result1 == -1 || result2 == -1) {
+    if (result1 != 0 || result2 != 0) {
         deleteBattle(battleObj, p1name, p2name, null);
         console.log(`${p1name} vs. ${p2name} was deleted; failed to request a player's party`);
         return;
@@ -34,7 +35,7 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
 
     let validPromise = verifyBattleValidity(battleObj, p1name, p2name);
     let promiseResult = await validPromise;
-    if (promiseResult == -1) {
+    if (promiseResult != 0) {
         return;
     }
 
@@ -45,10 +46,22 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
 }
 
 export async function createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL, stage) {
+    let response = await fetchWithRetry(`https://discord.com/api/v9/guilds/${consts.serverID}/members/${playerID}`, {
+        method: 'GET',
+        headers: {
+            authorization: config.token,
+            "Content-Type": "application/json"
+        }
+    });
+    let responseJSON = await response.json();
+    if (responseJSON.nick !== null) {
+        playerName = responseJSON.nick;
+    }
     let battleKey = playerName + "_vs._Chairman Sakayanagi";
     battleObj[battleKey] = {};
     battleObj[battleKey].time = new Date().toLocaleString();
     battleObj[battleKey].data = "";
+    battleObj.currentBattles.push(['campaign', playerName, 'Chairman Sakayanagi', playerID]);
 
     //create a new file for this battle
     fs.writeFile(`currentBattles/${battleKey}.txt`, '', (err) => {if (err) { throw err; }});
@@ -64,7 +77,14 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
     battleObj[battleKey]['Chairman Sakayanagi'].chars = {};
     battleObj[battleKey]['Chairman Sakayanagi'].id = consts.botID;
     battleObj[battleKey]['Chairman Sakayanagi'].previousTaggedInChar = null;
+    battleObj.usernames[consts.botID] = 'Chairman Sakayanagi'
     setPlayerParty(battleObj, 'Chairman Sakayanagi', botPartyImageURL);
+
+    battleObj[battleKey][playerName] = {};
+    battleObj[battleKey][playerName].chars = {};
+    battleObj[battleKey][playerName].id = playerID;
+    battleObj[battleKey][playerName].previousTaggedInChar = null;
+    battleObj.usernames[playerID] = playerName;
 }
 
 export function deleteBattle(battleObj, p1name, p2name, turnResults) {
@@ -103,7 +123,10 @@ export function deleteBattle(battleObj, p1name, p2name, turnResults) {
         });
     }
 
-    fs.unlink(`currentBattles/${battleKey}.txt`, (err) => {if (err) { throw err; }});
+    fs.unlinkSync(`currentBattles/${battleKey}.txt`, (err) => {if (err) { throw err; }});
+    battleObj.currentBattles.splice(battleObj.currentBattles.findIndex((arr) => {
+        arr[1] == p1name && arr[2] == p2name
+    }));
     delete battleObj[battleKey];
 }
 
@@ -139,7 +162,7 @@ export function verifyPlayerResolves(battleObj, battleKey, playerName, playerNum
 export async function requestPlayerPartyCampaignBattle(battleObj, battleKey, playerName, playerID) {
     let myPromise = addPlayerToBattle(battleObj, battleKey, playerName, 1, null, playerID);
     let myResult = await myPromise;
-    if (myResult == -1) { 
+    if (myResult != 0) { 
         deleteBattle(battleObj, playerName, 'Chairman Sakayanagi', null);
         console.log(`${playerName} vs. Chairman Sakayanagi was deleted; failed to request ${playerName}'s party`);
         return;
@@ -147,7 +170,7 @@ export async function requestPlayerPartyCampaignBattle(battleObj, battleKey, pla
     
     let validPromise = verifyBattleValidity(battleObj, playerName, 'Chairman Sakayanagi');
     let promiseResult = await validPromise;
-    if (promiseResult == -1) {
+    if (promiseResult != 0) {
         return;
     }
 }
@@ -157,6 +180,7 @@ async function addPlayerToBattle(battleObj, battleKey, playerName, playerNumber,
     battleObj[battleKey][playerName] = {};
     battleObj[battleKey][playerName].chars = {};
     battleObj[battleKey][playerName].previousTaggedInChar = null;
+    battleObj.usernames[playerID] = playerName;
 
     if (turnResults !== null) {
         if (playerNumber == 1) {
@@ -190,11 +214,11 @@ async function fetchWithRetry(url, options, retries=1, waitTime=2000) {
     let response;
     for (let attempt = 0; attempt <= retries; attempt++) {
         response = await fetch(url, options);
-        if (response.status === 204) {
+        if (response.status >= 200 && response.status <= 299) {
             return response;
         }
         if (attempt < retries) {
-            console.log(`Attempt ${attempt + 1} failed with status ${response.status}: ${response.statusText}. Retrying in ${delay / 1000} seconds...`);
+            console.log(`Attempt ${attempt + 1} failed with status ${response.status}: ${response.statusText}. Retrying in ${waitTime / 1000} seconds...`);
             await delay(waitTime);
         }
     }
@@ -220,7 +244,5 @@ async function verifyBattleValidity(battleObj, p1name, p2name) {
         return -1;
     }
 
-    delete battleObj[battleKey][p1name].valid;
-    delete battleObj[battleKey][p2name].valid;
     return 0;
 }

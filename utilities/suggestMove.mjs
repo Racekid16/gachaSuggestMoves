@@ -48,12 +48,17 @@ function calculateMoveDamage(battleObj, battleKey, attacker, defender, attackCha
     }
 
     let baseMoveObj = getBaseMoveObj(moveObj);
-    let attackStat = typeof moveObj.attackStat === 'undefined' ? baseMoveObj.attackStat : moveObj.attackStat;
-    let defenseStat = typeof moveObj.defenseStat === 'undefined' ? baseMoveObj.defenseStat : moveObj.defenseStat;
-    let basePower = typeof moveObj.basePower === 'undefined' ? baseMoveObj.basePower : moveObj.basePower;
+    let completeMoveObj = structuredClone(moveObj);
 
-    let attackerAttackStat = battleObj[battleKey][attacker].chars[attackChar][attackStat];
-    let defenderDefenseStat = battleObj[battleKey][defender].chars[defenseChar][defenseStat];
+    completeMoveObj.attackStat = typeof moveObj.attackStat === 'undefined' ? baseMoveObj.attackStat : moveObj.attackStat;
+    completeMoveObj.defenseStat = typeof moveObj.defenseStat === 'undefined' ? baseMoveObj.defenseStat : moveObj.defenseStat;
+    completeMoveObj.basePower = typeof moveObj.basePower === 'undefined' ? baseMoveObj.basePower : moveObj.basePower;
+    completeMoveObj.priority = typeof moveObj.priority === 'undefined' ? baseMoveObj.priority : moveObj.priority;
+
+    let attackerAttackStat = battleObj[battleKey][attacker].chars[attackChar][completeMoveObj.attackStat];
+    attackerAttackStat = Math.max(attackerAttackStat, 0);
+    let defenderDefenseStat = battleObj[battleKey][defender].chars[defenseChar][completeMoveObj.defenseStat];
+    defenderDefenseStat = Math.max(defenderDefenseStat, 0);
     let defenderPersonality = battleObj[battleKey][defender].chars[defenseChar].personality;
 
     let isCritical = false;
@@ -63,10 +68,18 @@ function calculateMoveDamage(battleObj, battleKey, attacker, defender, attackCha
 
     let damage;
     //this is a guess for how much damage will be dealt, since I don't know the exact damage formula
-    if (!isCritical) {
-        damage = round(36 * attackerAttackStat / defenderDefenseStat) * basePower;
+    if (defenderDefenseStat != 0) {
+        if (!isCritical) {
+            damage = round(36 * attackerAttackStat / defenderDefenseStat * completeMoveObj.basePower);
+        } else {
+            damage = round(36 * attackerAttackStat / defenderDefenseStat * completeMoveObj.basePower * 1.4);
+        }
     } else {
-        damage = round(36 * attackerAttackStat / defenderDefenseStat) * basePower * 1.3;
+        if (!isCritical) {
+            damage = round(2 * attackerAttackStat * completeMoveObj.basePower);
+        } else {
+            damage = round(2 * attackerAttackStat * completeMoveObj.basePower * 1.4);
+        }
     }
 
     return [damage, isCritical];

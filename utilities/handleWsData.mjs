@@ -42,13 +42,34 @@ export function handleWsData(battleObj, responseJSON) {
     // request a player's party for a campaign battle when it starts
     else if (responseJSON.t == 'MESSAGE_UPDATE' && responseJSON.d.author?.id == consts.botID && responseJSON.d.embeds.length > 0
     && /Campaign Stage \d+/.test(responseJSON.d.embeds[0]?.author?.name) && !responseJSON.d.embeds[0].image?.proxy_url) {
+        let playerID = responseJSON.d.interaction_metadata.user.id;
         let playerName = responseJSON.d.interaction_metadata.user.global_name;
+        if (typeof battleObj.usernames[playerID] !== 'undefined') {
+            playerName = battleObj.usernames[playerID];
+        }
         let battleKey = playerName + "_vs._Chairman Sakayanagi"
         if (typeof battleObj[battleKey] === 'undefined') {
             return;
         }
-        let playerID = responseJSON.d.interaction_metadata.user.id;
         requestPlayerPartyCampaignBattle(battleObj, battleKey, playerName, playerID);
+    }
+
+    // bot had an error when it attempted to fetch requested party; re-request both parties
+    else if (responseJSON.t == 'INTERACTION_FAILURE') {
+        let lastBattle = battleObj.currentBattles[battleObj.currentBattles.length - 1];
+        let battleType = lastBattle[0];
+        let p1name = lastBattle[1];
+        let p2name = lastBattle[2];
+        if (battleType == "battle") {
+            deleteBattle(battleObj, p1name, p2name, null);
+            let battleEmbed = lastBattle[3];
+            createBattle(battleObj, p1name, p2name, battleEmbed);
+        }
+        else if (battleType == "campaign") {
+            let battleKey = p1name + "_vs._" + p2name;
+            let playerID = lastBattle[3];
+            requestPlayerPartyCampaignBattle(battleObj, battleKey, p1name, playerID);
+        }
     }
 }
 
@@ -64,6 +85,7 @@ async function processBattleEmbed(battleObj, battleEmbed) {
     } 
 
     else if (typeof battleObj[battleKey] === 'undefined') {
+        console.log(`${battleKey} is undefined`);
         return;
     }
 

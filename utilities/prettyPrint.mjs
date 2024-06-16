@@ -87,28 +87,31 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
 
     let playerNameLength = p1name.length > p2name.length ? p1name.length : p2name.length;
     let charNameLength = p1char.length > p2char.length ? p1char.length : p2char.length;
-    let p1initiative = battleObj[battleKey][p1name].chars[p1char].initiative;
-    let p2initiative = battleObj[battleKey][p2name].chars[p2char].initiative;
+    let p1initiative = Math.max(battleObj[battleKey][p1name].chars[p1char].initiative, 0);
+    let p2initiative = Math.max(battleObj[battleKey][p2name].chars[p2char].initiative, 0);
     let initiativeLength = p1initiative.toString().length > p2initiative.toString().length ?
                            p1initiative.toString().length : p2initiative.toString().length;
-    let p1mental = battleObj[battleKey][p1name].chars[p1char].mental.toString();
-    let p2mental = battleObj[battleKey][p2name].chars[p2char].mental.toString();
-    let mentalLength = p1mental.length > p2mental.length ? p1mental.length : p2mental.length;
-    let p1physical = battleObj[battleKey][p1name].chars[p1char].physical.toString();
-    let p2physical = battleObj[battleKey][p2name].chars[p2char].physical.toString();
-    let physicalLength = p1physical.length > p2physical.length ? p1physical.length : p2physical.length;
-    let p1social = battleObj[battleKey][p1name].chars[p1char].social.toString();
-    let p2social = battleObj[battleKey][p2name].chars[p2char].social.toString();
-    let socialLength = p1social.length > p2social.length ? p1social.length : p2social.length;
+    let p1mental = Math.max(battleObj[battleKey][p1name].chars[p1char].mental, 0);
+    let p2mental = Math.max(battleObj[battleKey][p2name].chars[p2char].mental, 0);
+    let mentalLength = p1mental.toString().length > p2mental.toString().length ? 
+                       p1mental.toString().length : p2mental.toString().length;
+    let p1physical = Math.max(battleObj[battleKey][p1name].chars[p1char].physical, 0);
+    let p2physical = Math.max(battleObj[battleKey][p2name].chars[p2char].physical, 0);
+    let physicalLength = p1physical.toString().length > p2physical.toString().length ? 
+                         p1physical.toString().length : p2physical.toString().length;
+    let p1social = Math.max(battleObj[battleKey][p1name].chars[p1char].social, 0);
+    let p2social = Math.max(battleObj[battleKey][p2name].chars[p2char].social, 0);
+    let socialLength = p1social.toString().length > p2social.toString().length ? 
+                       p1social.toString().length : p2social.toString().length;
     let p1resolve = battleObj[battleKey][p1name].chars[p1char].resolve;
     let p2resolve = battleObj[battleKey][p2name].chars[p2char].resolve;
     let resolveLength = p1resolve.toString().length > p2resolve.toString().length ? 
                         p1resolve.toString().length : p2resolve.toString().length;
     let moveNameLength = p1move.length > p2move.length ? p1move.length: p2move.length;
     let maxVariance = 0.2;
-    let p1lowerBound = round(p1damage * (1 - maxVariance)).toString();
+    let p1lowerBound = Math.max(round(p1damage * (1 - maxVariance)), 0).toString();
     let p1upperBound = round(p1damage * (1 + maxVariance)).toString();
-    let p2lowerBound = round(p2damage * (1 - maxVariance)).toString();
+    let p2lowerBound = Math.max(round(p2damage * (1 - maxVariance)), 0).toString();
     let p2upperBound = round(p2damage * (1 + maxVariance)).toString();
     let lowerBoundLength = p1lowerBound.length > p2lowerBound.length ? p1lowerBound.length : p2lowerBound.length;
     let upperBoundLength = p1upperBound.length > p2upperBound.length ? p1upperBound.length : p2upperBound.length;
@@ -121,9 +124,9 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
     let p1Output = `${p1name} ${" ".repeat(playerNameLength - p1name.length)}` 
                   + `[${p1char}${" ".repeat(charNameLength - p1char.length)} `
                   + `🏃${p1initiative}${" ".repeat(initiativeLength - p1initiative.toString().length)} `
-                  + `🧠${p1mental}${" ".repeat(mentalLength - p1mental.length)} `
-                  + `💪${p1physical}${" ".repeat(physicalLength - p1physical.length)} `
-                  + `🗣️${p1social}${" ".repeat(socialLength - p1social.length)} `
+                  + `🧠${p1mental}${" ".repeat(mentalLength - p1mental.toString().length)} `
+                  + `💪${p1physical}${" ".repeat(physicalLength - p1physical.toString().length)} `
+                  + `🗣️${p1social}${" ".repeat(socialLength - p1social.toString().length)} `
                   + `❤️${p1resolve}${" ".repeat(resolveLength - p1resolve.toString().length)}]: `
                   + `${p1move} ${" ".repeat(moveNameLength - p1move.length)}`
                   + `(${p1lowerBound} ${" ".repeat(lowerBoundLength - p1lowerBound.toString().length)}- `
@@ -132,9 +135,9 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
     let p2Output = `${p2name} ${" ".repeat(playerNameLength - p2name.length)}`
                   + `[${p2char}${" ".repeat(charNameLength - p2char.length)} `
                   + `🏃‍${p2initiative}${" ".repeat(initiativeLength - p2initiative.toString().length)} `
-                  + `🧠${p2mental}${" ".repeat(mentalLength - p2mental.length)} `
-                  + `💪${p2physical}${" ".repeat(physicalLength - p2physical.length)} `
-                  + `🗣️${p2social}${" ".repeat(socialLength - p2social.length)} `
+                  + `🧠${p2mental}${" ".repeat(mentalLength - p2mental.toString().length)} `
+                  + `💪${p2physical}${" ".repeat(physicalLength - p2physical.toString().length)} `
+                  + `🗣️${p2social}${" ".repeat(socialLength - p2social.toString().length)} `
                   + `❤️${p2resolve}${" ".repeat(resolveLength - p2resolve.toString().length)}]: `
                   + `${p2move} ${" ".repeat(moveNameLength - p2move.length)}`
                   + `(${p2lowerBound} ${" ".repeat(lowerBoundLength - p2lowerBound.toString().length)}- `
@@ -170,13 +173,6 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
 export function getBaseMoveObj(moveObj) {
     let damageType = moveObj.damageType;
     return consts.moveInfo[damageType];
-    /*
-    let tempMoveObj = structuredClone(moveObj);
-    while (typeof tempMoveObj.attackStat === 'undefined') {
-        tempMoveObj = structuredClone(consts.moveInfo[tempMoveObj.damageType]);
-    }
-    return tempMoveObj;
-    */
 }
 
 function getMaxLength(chars, property) {
