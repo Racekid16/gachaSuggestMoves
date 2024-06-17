@@ -3,9 +3,10 @@
 import { emulateMove } from './emulateMove.mjs';
 import { addBoost } from './updateBoosts.mjs';
 import { hasStatus } from './updateStatuses.mjs';
+import { getUserInput } from './handleInput.mjs';
 import consts from '../consts.json' assert { type: 'json' };
 
-export function parseMoveSameChar(battleObj, p1name, p2name, charName, battleEmbed, turn, 
+export async function parseMoveSameChar(battleObj, p1name, p2name, charName, battleEmbed, turn, 
                                   p1resolves, p2resolves, p1taggedIn, p2taggedIn) {
     //consider: what if one person uses a non-damaging move while the other uses a damaging move?
     //what if both use a non-damaging move?
@@ -63,7 +64,7 @@ export function parseMoveSameChar(battleObj, p1name, p2name, charName, battleEmb
     for (let move of ['Arrogance', 'Blazing Form', 'Charm', 'Dominate', 'From The Shadows', 'Hate',
                       'Kings Command', 'Provoke', 'Slap', 'Slumber', 'Study', 'Unity']) {
         if (count(turnResults, `**${charName}** used **${move}**!`) == 1) {
-            emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, move);
+            await emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, move);
             return;
         } else if (count(turnResults, `**${charName}** used **${move}**!`) == 2) {
             emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, move, turnResults, turn, p1resolves);
@@ -73,30 +74,23 @@ export function parseMoveSameChar(battleObj, p1name, p2name, charName, battleEmb
     }
 
     if (count(turnResults, `**${charName}** used **Humiliate**!`) == 1) {
-        emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, "Humiliate");
+        await emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, "Humiliate");
         return;
     } else if (count(turnResults, `**${charName}** used **Humiliate**!`) == 2) {
         addBoost(battleObj, battleKey, p1name, charName, "Humiliate", turn);
         addBoost(battleObj, battleKey, p2name, charName, "Humiliate", turn);
-        console.log(`Unable to determine what statuses were inflicted on each player in ${turn} of ${battleKey} (1)`);
+        console.log(`Unable to determine what statuses were inflicted on each player in ${turn} of ${battleKey}`);
     }
 
-    if (count(turnResults, `**${charName}** is preparing **Introversion**...`) == 1) {
-        emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, "Introversion");
-        return;
-    } else if (count(turnResults, `**${charName}** is preparing **Introversion**...`) == 2) {
-        emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, "Introversion", turnResults, turn, p1resolves);
-        emulateMove(battleObj, battleKey, p2name, p1name, charName, charName, "Introversion", turnResults, turn, p2resolves);
-        return;      
-    }
-
-    if (count(turnResults, `**${charName}** is preparing **Kabedon**...`) == 1) {
-        console.log(`Unable to determine which player used Kabedon in turn ${turn} of ${battleKey}`);
-        return;
-    } else if (count(turnResults, `**${charName}** is preparing **Kabedon**...`) == 2) {
-        emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, "Kabedon", turnResults, turn, p1resolves);
-        emulateMove(battleObj, battleKey, p2name, p1name, charName, charName, "Kabedon", turnResults, turn, p2resolves);
-        return;
+    for (let move of ['Introversion', 'Kabedon']) {
+        if (count(turnResults, `**${charName}** is preparing **${move}**...`) == 1) {
+            await emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, move);
+            return;
+        } else if (count(turnResults, `**${charName}** is preparing **${move}**...`) == 2) {
+            emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, move, turnResults, turn, p1resolves);
+            emulateMove(battleObj, battleKey, p2name, p1name, charName, charName, move, turnResults, turn, p2resolves);
+            return;
+        }
     }
 }
 
@@ -121,7 +115,7 @@ function count(str, subStr) {
 //this function assumes that charName does not have the Impulse move
 //we also assume for now that both players' charName have the same initiative and used the same
 //attack + boost/status affecting move
-function emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, affectingMove) {
+async function emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, affectingMove) {
     let battleKey = p1name + "_vs._" + p2name;
     let turnResults = battleEmbed.fields[2].value;
     let resolvesObj = {};
@@ -156,9 +150,11 @@ function emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName, battl
     //only time this isn't the case is when both players have the same initiative and one killed the other.
     //note: invulnerable players take 0 damage
     for (let move of validMoves) {
-        if (turnResults.includes(`**${charName}** used **${move}**!`)
-         || turnResults.includes(`**${charName}** is preparing **${move}**...`)) {
-            determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, affectingMove, move);
+        if (consts.moveInfo[move].type[0] == 'counter' && turnResults.includes(`**${charName}** is preparing **${move}**...`)) {
+            await determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, affectingMove, move);
+        }
+        else if (turnResults.includes(`**${charName}** used **${move}**!`)) {
+            await determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, affectingMove, move);
         }
     }
 }
@@ -219,7 +215,7 @@ function determineIfPlayerUnableToMove(battleObj, p1name, p2name, charName, batt
 }
 
 //affectingMove and otherMove are guaranteed to be different.
-function determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, affectingMove, otherMove) {
+async function determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, affectingMove, otherMove) {
     let battleKey = p1name + "_vs._" + p2name; 
     let turnResults = battleEmbed.fields[2].value;    
     let affectingMoveObj = consts.moveInfo[affectingMove];
@@ -358,24 +354,31 @@ function determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, charName, 
         let move1str = `\\*\\*${charName}\\*\\* used \\*\\*${moves[0].name}\\*\\*!\\n(\\*\\*CRITICAL HIT!!\\*\\*\\n)?\\*\\*.+\\*\\* took \\*\\*(\\d+)\\*\\* damage!`;
         let move1regex = new RegExp(move1str);
         let move1match = move1regex.exec(turnResults);
-        if (typeof move1match === null) {
-            console.log(`The program unexpectedly reached here on turn ${turn} of ${battleKey} (4)`);
-            return;
+        if (move1match === null) {
+            if (moves[1].type[0] == 'counter') {
+                console.log(`Unable to determine who used ${affectingMove} in turn ${turn} of ${battleKey} (1)`);
+                await manuallyDetermineWhoUsedWhichMove(battleObj, battleKey, p1name, p2name, charName, affectingMove, otherMove, turnResults, turn, p1resolves, p2resolves);
+                return;
+            } else {
+                console.log(`The program unexpectedly reached here on turn ${turn} of ${battleKey} (4)`);
+                return;
+            }
         }
-        moves[0].damage = parseInt(move1match[1]) * -1;
+        moves[0].damage = parseInt(move1match[2]) * -1;
 
         //moves[0].type[0] == 'attack' && moves[1].type[0] == 'attack'
         if (moves[1].type[0] == 'attack') { 
             let move2str = `\\*\\*${charName}\\*\\* used \\*\\*${moves[1].name}\\*\\*!\\n(\\*\\*CRITICAL HIT!!\\*\\*\\n)?\\*\\*.+\\*\\* took \\*\\*(\\d+)\\*\\* damage!`;
             let move2regex = new RegExp(move2str);
             let move2match = move2regex.exec(turnResults);
-            if (typeof move2match === null) {
+            if (move2match === null) {
                 console.log(`The program unexpectedly reached here on turn ${turn} of ${battleKey} (5)`);
                 return;
             }
-            moves[1].damage = parseInt(move2match[1]) * -1;
+            moves[1].damage = parseInt(move2match[2]) * -1;
             if (p1resolveDiff == p2resolveDiff) {
-                console.log(`Unable to determine who used ${affectingMove} in turn ${turn} of ${battleKey} (1)`);
+                console.log(`Unable to determine who used ${affectingMove} in turn ${turn} of ${battleKey} (2)`);
+                await manuallyDetermineWhoUsedWhichMove(battleObj, battleKey, p1name, p2name, charName, affectingMove, otherMove, turnResults, turn, p1resolves, p2resolves);
                 return;
             }
             if (p2resolveDiff == moves[0].damage || p1resolveDiff == moves[1].damage) {
@@ -411,7 +414,8 @@ function determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, charName, 
             let healerResolveDiff = move2heal[charName] + moves[0].damage;
 
             if (healerResolveDiff == 0) {
-                console.log(`Unable to determine who used ${affectingMove} in turn ${turn} of ${battleKey} (2)`);
+                console.log(`Unable to determine who used ${affectingMove} in turn ${turn} of ${battleKey} (3)`);
+                await manuallyDetermineWhoUsedWhichMove(battleObj, battleKey, p1name, p2name, charName, affectingMove, otherMove, turnResults, turn, p1resolves, p2resolves);
                 return;
             }
             if (p2resolveDiff == healerResolveDiff || p1resolveDiff == 0) {
@@ -465,7 +469,8 @@ function determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, charName, 
             let move1healedChars = Object.keys(move1healedCharsObj);
 
             if (JSON.stringify(move1healedCharsObj) == JSON.stringify(move2healedCharsObj)) {
-                console.log(`Unable to determine who used ${affectingMove} in turn ${turn} of ${battleKey} (3)`);
+                console.log(`Unable to determine who used ${affectingMove} in turn ${turn} of ${battleKey} (4)`);
+                await manuallyDetermineWhoUsedWhichMove(battleObj, battleKey, p1name, p2name, charName, affectingMove, otherMove, turnResults, turn, p1resolves, p2resolves);
                 return;
             }
 
@@ -505,5 +510,23 @@ function determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, charName, 
     }
 
     //neither move is attack or heal
-    console.log(`Unable to determine who used ${affectingMove} in turn ${turn} of ${battleKey} (4)`);
+    console.log(`Unable to determine who used ${affectingMove} in turn ${turn} of ${battleKey} (5)`);
+    await manuallyDetermineWhoUsedWhichMove(battleObj, battleKey, p1name, p2name, charName, affectingMove, otherMove, turnResults, turn, p1resolves, p2resolves);
+}
+
+async function manuallyDetermineWhoUsedWhichMove(battleObj, battleKey, p1name, p2name, charName, affectingMove, 
+                                                 otherMove, turnResults, turn, p1resolves, p2resolves) {
+    battleObj[battleKey].log("CHECK THE TERMINAL");
+    let response = await getUserInput(battleKey, p1name, p2name, affectingMove);
+    if (response == "1" || response == p1name) {
+        emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, affectingMove, turnResults, turn, p1resolves);
+        emulateMove(battleObj, battleKey, p2name, p1name, charName, charName, otherMove, turnResults, turn, p2resolves);
+    }
+    else if (response == "2" || response == p2name) {
+        emulateMove(battleObj, battleKey, p2name, p1name, charName, charName, affectingMove, turnResults, turn, p2resolves);
+        emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, otherMove, turnResults, turn, p1resolves);
+    }
+    else {
+        console.log(`Did not receive valid input for determining who used ${affectingMove} in turn ${turn}`);
+    }
 }

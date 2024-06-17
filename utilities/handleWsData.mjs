@@ -56,19 +56,22 @@ export function handleWsData(battleObj, responseJSON) {
 
     // bot had an error when it attempted to fetch requested party; re-request both parties
     else if (responseJSON.t == 'INTERACTION_FAILURE') {
+        console.log(responseJSON);
         let lastBattle = battleObj.currentBattles[battleObj.currentBattles.length - 1];
         let battleType = lastBattle[0];
         let p1name = lastBattle[1];
         let p2name = lastBattle[2];
-        if (battleType == "battle") {
-            deleteBattle(battleObj, p1name, p2name, null);
-            let battleEmbed = lastBattle[3];
-            createBattle(battleObj, p1name, p2name, battleEmbed);
-        }
-        else if (battleType == "campaign") {
-            let battleKey = p1name + "_vs._" + p2name;
-            let playerID = lastBattle[3];
-            requestPlayerPartyCampaignBattle(battleObj, battleKey, p1name, playerID);
+        let battleKey = p1name + "_vs._" + p2name;
+        if (typeof battleObj[battleKey] !== 'undefined') {
+            if (battleType == "battle") {
+                deleteBattle(battleObj, p1name, p2name, null);
+                let battleEmbed = lastBattle[3];
+                createBattle(battleObj, p1name, p2name, battleEmbed);
+            }
+            else if (battleType == "campaign") {
+                let playerID = lastBattle[3];
+                requestPlayerPartyCampaignBattle(battleObj, battleKey, p1name, playerID);
+            }
         }
     }
 }
@@ -85,7 +88,6 @@ async function processBattleEmbed(battleObj, battleEmbed) {
     } 
 
     else if (typeof battleObj[battleKey] === 'undefined') {
-        console.log(`${battleKey} is undefined`);
         return;
     }
 

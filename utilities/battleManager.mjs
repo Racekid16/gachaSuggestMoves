@@ -2,6 +2,7 @@
 import fs from 'fs';
 import { setPlayerParty } from './setPlayerParty.mjs';
 import { parseTurnResults } from './parseTurnResults.mjs';
+import { cancelInput } from './handleInput.mjs';
 import config from '../config.json' assert { type: 'json' };
 import consts from '../consts.json' assert { type: 'json' };
 const delay = async (ms = 1000) =>  new Promise(resolve => setTimeout(resolve, ms));
@@ -15,7 +16,7 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
     battleObj.currentBattles.push(['battle', p1name, p2name, battleEmbed]);
     
     //create a new file for this battle
-    fs.writeFile(`currentBattles/${battleKey}.txt`, '', (err) => {if (err) { throw err; }});
+    fs.writeFileSync(`currentBattles/${battleKey}.txt`, '', (err) => {if (err) { throw err; }});
     battleObj[battleKey].log = function (str) {
         this.data += str + "\n";
         fs.appendFileSync(`currentBattles/${battleKey}.txt`, str + "\n", (err) => {if (err) { throw err; }});
@@ -64,7 +65,7 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
     battleObj.currentBattles.push(['campaign', playerName, 'Chairman Sakayanagi', playerID]);
 
     //create a new file for this battle
-    fs.writeFile(`currentBattles/${battleKey}.txt`, '', (err) => {if (err) { throw err; }});
+    fs.writeFileSync(`currentBattles/${battleKey}.txt`, '', (err) => {if (err) { throw err; }});
     battleObj[battleKey].log = function (str) {
         this.data += str + "\n";
         fs.appendFileSync(`currentBattles/${battleKey}.txt`, str + "\n", (err) => {if (err) { throw err; }});
@@ -122,7 +123,8 @@ export function deleteBattle(battleObj, p1name, p2name, turnResults) {
             })
         });
     }
-
+    
+    cancelInput(battleKey);
     fs.unlinkSync(`currentBattles/${battleKey}.txt`, (err) => {if (err) { throw err; }});
     battleObj.currentBattles.splice(battleObj.currentBattles.findIndex((arr) => {
         arr[1] == p1name && arr[2] == p2name

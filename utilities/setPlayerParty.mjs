@@ -125,10 +125,11 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
         }
 
         for (let statKey in thisCharBoosts) {
+            let totalMultiplier = 1;
             for (let buffAmount of thisCharBoosts[statKey]) {
-                thisChar[statKey] += baseStats[charKey][statKey] * buffAmount;
+                totalMultiplier += buffAmount;
             }
-            thisChar[statKey] = round(thisChar[statKey]);
+            thisChar[statKey] = round(thisChar[statKey] * totalMultiplier);
         }
     }
  

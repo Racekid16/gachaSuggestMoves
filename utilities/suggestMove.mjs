@@ -46,7 +46,10 @@ function calculateMoveDamage(battleObj, battleKey, attacker, defender, attackCha
         //console.log(`${move} is not an Attack type move.`);
         return [-1, false];
     }
-
+    //TODO: implement this properly
+    if (Object.values(moveObj).some(value => value === 'varies')) {
+        return [-1, false];
+    }
     let baseMoveObj = getBaseMoveObj(moveObj);
     let completeMoveObj = structuredClone(moveObj);
 

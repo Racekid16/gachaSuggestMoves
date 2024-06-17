@@ -10,6 +10,7 @@ import { startWsConnection } from "./utilities/websocket.mjs";
     let battleObj = {};
     battleObj.currentBattles = [];
     battleObj.usernames = {};
+    battleObj.inputs = {};
     startWsConnection(battleObj);
 })();
 
