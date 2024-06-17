@@ -8,58 +8,9 @@ import consts from '../consts.json' assert { type: 'json' };
 
 export async function parseMoveSameChar(battleObj, p1name, p2name, charName, battleEmbed, turn, 
                                   p1resolves, p2resolves, p1taggedIn, p2taggedIn) {
-    //consider: what if one person uses a non-damaging move while the other uses a damaging move?
-    //what if both use a non-damaging move?
+
     let battleKey = p1name + "_vs._" + p2name;
     let turnResults = battleEmbed.fields[2].value;
-    let resolvesObj = {};
-    resolvesObj[p1name] = p1resolves;
-    resolvesObj[p2name] = p2resolves;
-
-    let p1previousTaggedInChar = battleObj[battleKey][p1name].previousTaggedInChar;
-    let p2previousTaggedInChar = battleObj[battleKey][p2name].previousTaggedInChar;
-    let p1ID = battleObj[battleKey][p1name].id;
-    let p2ID = battleObj[battleKey][p2name].id;
-
-    if (p1previousTaggedInChar !== null && battleObj[battleKey][p1name].chars[p1previousTaggedInChar].moves.includes("Boss Orders") 
-     && p1resolves[p1previousTaggedInChar] == 0) {
-        emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, "Boss Orders", turnResults, turn, p1resolves);
-    }
-    if (p2previousTaggedInChar !== null && battleObj[battleKey][p2name].chars[p2previousTaggedInChar].moves.includes("Boss Orders") 
-     && p2resolves[p2previousTaggedInChar] == 0) {
-        emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, "Boss Orders", turnResults, turn, p2resolves);
-    }
-
-    if (turnResults.includes(`**<@${p1ID}>** tagged in **${charName}**!`) && p1previousTaggedInChar !== null 
-     && battleObj[battleKey][p1name].chars[p1previousTaggedInChar].moves.includes("Lead By Example")) {
-        emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, "Lead By Example", turnResults, turn, p1resolves);
-    }
-    if (turnResults.includes(`**<@${p2ID}>** tagged in **${charName}**!`) && p2previousTaggedInChar !== null 
-     && battleObj[battleKey][p2name].chars[p1previousTaggedInChar].moves.includes("Lead By Example")) {
-        emulateMove(battleObj, battleKey, p2name, p1name, charName, charName, "Lead By Example", turnResults, turn, p2resolves);
-    }
-
-    let taggedInStr = `\\*\\*<@${p1ID}>\\**\\** tagged in \\*\\*(.+)\\*\\*!`;
-    let taggedInRegex = new RegExp(taggedInStr);
-    let taggedInMatch = taggedInRegex.exec(turnResults);
-    if (taggedInMatch !== null) {
-        let taggedInChar = taggedInMatch[1];
-        emulateMove(battleObj, battleKey, p1name, p2name, taggedInChar, charName, "Tag-in", turnResults, turn, p1resolves);
-    }
-    taggedInStr = `\\*\\*<@${p2ID}>\\**\\** tagged in \\*\\*(.+)\\*\\*!`;
-    taggedInRegex = new RegExp(taggedInStr);
-    taggedInMatch = taggedInRegex.exec(turnResults);
-    if (taggedInMatch !== null) {
-        let taggedInChar = taggedInMatch[1];
-        emulateMove(battleObj, battleKey, p2name, p1name, taggedInChar, charName, "Tag-in", turnResults, turn, p2resolves);
-    }
-
-    if (battleObj[battleKey][p1name].chars[charName].moves.includes("Zenith Pace") && p1previousTaggedInChar !== null) {
-        emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, "Zenith Pace", turnResults, turn, p2resolves);
-    }
-    if (battleObj[battleKey][p2name].chars[charName].moves.includes("Zenith Pace") && p2previousTaggedInChar !== null) {
-        emulateMove(battleObj, battleKey, p2name, p1name, charName, charName, "Zenith Pace", turnResults, turn, p2resolves);
-    }
 
     for (let move of ['Arrogance', 'Blazing Form', 'Charm', 'Dominate', 'From The Shadows', 'Hate',
                       'Kings Command', 'Provoke', 'Slap', 'Slumber', 'Study', 'Unity']) {
@@ -94,6 +45,7 @@ export async function parseMoveSameChar(battleObj, p1name, p2name, charName, bat
         emulateDoubleHumiliate(battleObj, p1name, p2name, charName, turnResults, turn, p1resolves, p2resolves);
         return;
     }
+
 }
 
 // determine what character the player is used for this turn

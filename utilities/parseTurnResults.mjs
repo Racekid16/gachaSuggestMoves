@@ -4,6 +4,7 @@ import { parseMoveDifferentChars } from "./parseMoveDiffChars.mjs";
 import { addBoost, removeExpiredBoosts } from "./updateBoosts.mjs";
 import { removeExpiredStatuses } from "./updateStatuses.mjs";
 import { suggestMoves } from "./suggestMove.mjs";
+import { emulateMove } from "./emulateMove.mjs";
 import consts from '../consts.json' assert { type: 'json' };
 
 // identify changes in stats or statuses then update the battleObj accordingly
@@ -23,6 +24,9 @@ export async function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
 
     //remove the .replace part if you're testing
     battleObj[battleKey].log(`Turn ${turn}:\n${turnResults}`);
+
+    applyInnateAbilities(battleObj, battleKey, p1name, p2name, p1char, p2char, turnResults, turn, p1resolvesAfterTurn);
+    applyInnateAbilities(battleObj, battleKey, p2name, p1name, p2char, p1char, turnResults, turn, p2resolvesAfterTurn);
 
     if (p1char == p2char) {
         await parseMoveSameChar(battleObj, p1name, p2name, p1char, battleEmbed, turn, p1resolvesAfterTurn, p2resolvesAfterTurn, p1taggedIn, p2taggedIn);      
@@ -116,6 +120,30 @@ function getPreviousTurnChar(battleObj, battleKey, playerName, turnResults) {
     }
 
     return [charName, taggedIn];
+}
+
+// emulate the effects of innate abilities
+function applyInnateAbilities(battleObj, battleKey, attacker, defender, attackChar, 
+                              defenseChar, turnResults, turn, attackerResolves) {
+    let attackerPreviousTaggedInChar = battleObj[battleKey][attacker].previousTaggedInChar;
+    let attackerID = battleObj[battleKey][attacker].id;
+
+    if (attackerPreviousTaggedInChar !== null && battleObj[battleKey][attacker].chars[attackerPreviousTaggedInChar].moves.includes("Boss Orders") 
+     && attackerResolves[attackerPreviousTaggedInChar] == 0) {
+        emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Boss Orders", turnResults, turn, attackerResolves);
+    }
+
+    let taggedInStr = `\\*\\*<@${attackerID}>\\**\\** tagged in \\*\\*(.+)\\*\\*!`;
+    let taggedInRegex = new RegExp(taggedInStr);
+    let taggedInMatch = taggedInRegex.exec(turnResults);
+    if (taggedInMatch !== null) {
+        let taggedInChar = taggedInMatch[1];
+        emulateMove(battleObj, battleKey, attacker, defender, taggedInChar, defenseChar, "Tag-in", turnResults, turn, attackerResolves);
+    }
+
+    if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Zenith Pace") && attackerPreviousTaggedInChar !== null) {
+        emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Zenith Pace", turnResults, turn, attackerResolves);
+    }
 }
 
 // charName is the current tagged-in char after the turn that was just parsed

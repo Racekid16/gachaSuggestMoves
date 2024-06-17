@@ -3,31 +3,7 @@
 import { emulateMove } from "./emulateMove.mjs";
 
 export function parseMoveDifferentChars(battleObj, battleKey, attacker, defender, attackChar, 
-                                 defenseChar, turnResults, turn, attackerResolves, attackerTaggedIn) {
-    let attackerID = battleObj[battleKey][attacker].id;
-    let previousTaggedInChar = battleObj[battleKey][attacker].previousTaggedInChar;
-
-    if (previousTaggedInChar !== null && battleObj[battleKey][attacker].chars[previousTaggedInChar].moves.includes("Boss Orders") 
-     && attackerResolves[previousTaggedInChar] == 0) {
-        emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Boss Orders", turnResults, turn, attackerResolves);
-    }
-
-    if (turnResults.includes(`**<@${attackerID}>** tagged in **${attackChar}**!`) && previousTaggedInChar !== null 
-     && battleObj[battleKey][attacker].chars[previousTaggedInChar].moves.includes("Lead By Example")) {
-        emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Lead By Example", turnResults, turn, attackerResolves);
-    }
-
-    let taggedInStr = `\\*\\*<@${attackerID}>\\**\\** tagged in \\*\\*(.+)\\*\\*!`;
-    let taggedInRegex = new RegExp(taggedInStr);
-    let taggedInMatch = taggedInRegex.exec(turnResults);
-    if (taggedInMatch !== null) {
-        let taggedInChar = taggedInMatch[1];
-        emulateMove(battleObj, battleKey, attacker, defender, taggedInChar, defenseChar, "Tag-in", turnResults, turn, attackerResolves);
-    }
-
-    if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Zenith Pace") && previousTaggedInChar !== null) {
-        emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Zenith Pace", turnResults, turn, attackerResolves);
-    }
+                                        defenseChar, turnResults, turn, attackerResolves) {
 
     for (let move of ['Arrogance', 'Blazing Form', 'Charm', 'Dominate', 'From The Shadows', 'Hate',
                       'Humiliate', 'Kings Command', 'Provoke', 'Slap', 'Slumber', 'Study', 'Unity']) {
@@ -43,4 +19,5 @@ export function parseMoveDifferentChars(battleObj, battleKey, attacker, defender
             return;
         }
     }
+
 }

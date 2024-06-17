@@ -4,6 +4,8 @@ import { addStatus } from "./updateStatuses.mjs";
 import { round } from "./round.mjs";
 
 export function emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, turnResults, turn, attackerResolves) {
+    let attackerID = battleObj[battleKey][attacker].id;
+
     switch (move) {
         case 'Arrogance':
             addBoost(battleObj, battleKey, attacker, attackChar, "Arrogance", turn);
@@ -32,7 +34,6 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
         case 'From The Shadows':
             addStatus(battleObj, battleKey, defender, defenseChar, "Trapped", turn, 3);
             
-            let attackerID = battleObj[battleKey][attacker].id;
             let fromTheShadowsStr = `\\*\\*${attackChar}\\*\\* used \\*\\*From The Shadows\\*\\*!\\n\\*\\*.+\\*\\* is \\*\\*Trapped\\*\\* for 3 turns!\\n\\*\\*<@${attackerID}>\\*\\* tagged in \\*\\*(.+)\\*\\*!`;
             let fromTheShadowsRegex = new RegExp(fromTheShadowsStr);
             let fromTheShadowsMatch = fromTheShadowsRegex.exec(turnResults);
@@ -153,6 +154,12 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Kabedon")) {
                 battleObj[battleKey][attacker].chars[attackChar].canUseKabedon = true;
             }
+            
+            let attackerPreviousTaggedInChar = battleObj[battleKey][attacker].previousTaggedInChar;
+            if (attackerPreviousTaggedInChar !== null && battleObj[battleKey][attacker].chars[attackerPreviousTaggedInChar].moves.includes("Lead By Example")) {
+                emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Lead By Example", turnResults, turn, attackerResolves);
+            }
+
             if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("The Perfect Existence")) {
                 for (let debuff of battleObj[battleKey][attacker].chars[attackChar].debuffs) {
                     debuff.endTurn = turn;
