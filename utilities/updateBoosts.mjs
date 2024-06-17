@@ -25,7 +25,9 @@ export function addBoost(battleObj, battleKey, playerName, charName, boost, turn
         case 'Charm':
         case 'Dominate':
         case 'Hate':
-        case 'Humiliate':
+        case 'Humiliate Mental':
+        case 'Humiliate Physical':
+        case 'Humiliate Social':
         case 'Kings Command':
             addDebuff(battleObj, battleKey, playerName, charName, boost, turn);
             break;
@@ -263,25 +265,11 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
             }
             break;
 
-        case 'Humiliate':
+        case 'Humiliate Mental':
+        case 'Humiliate Physical':
+        case 'Humiliate Social':
             let humiliateDebuff = -0.25;
-            let attackStats = ['mental', 'physical', 'social'];
-            let highestAttackStat = '';
-            let highestAttackStatVal = -1;
-            for (let attackStat of attackStats) {
-                if (thisChar[attackStat] > highestAttackStatVal) {
-                    highestAttackStat = attackStat;
-                    highestAttackStatVal = thisChar[attackStat];
-                }
-            }
-
-            if (battleObj[battleKey][playerName].chars[charName].moves.includes('Lead By Example')
-             && highestAttackStat == 'physical') {
-                battleObj[battleKey].log(`${debuff} debuff negated as it would lower ${charName}'s physical`);
-                return;
-            }
-
-            thisChar[highestAttackStat] = round(thisChar[highestAttackStat] + (thisCharInitial[highestAttackStat] * humiliateDebuff));
+            let highestAttackStat = debuff.split(" ")[1].toLowerCase();
             battleObj[battleKey][playerName].chars[charName].debuffs.push({
                 name: debuff,
                 startTurn: turn,

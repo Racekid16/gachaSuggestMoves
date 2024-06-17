@@ -50,11 +50,13 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
         
         case 'Humiliate':
             addBoost(battleObj, battleKey, defender, defenseChar, "Humiliate", turn);
-            let statusStr = `\\*\\*${attackChar}\\*\\* used \\*\\*Humiliate\\*\\*!\\n(\\*\\*.+\\*\\*'s \\*\\*.+\\*\\* was weakened!\\n)?\\*\\*.+\\*\\* is \\*\\*(.+)\\*\\* for (\\d+) turns?!`;
-            let statusRegex = new RegExp(statusStr);
-            let statusMatch = statusRegex.exec(turnResults);
+            let humiliateStr = `\\*\\*${attackChar}\\*\\* used \\*\\*Humiliate\\*\\*!\\n\\*\\*.+\\*\\*'s \\*\\*(.+)\\*\\* was weakened!\\n\\*\\*.+\\*\\* is \\*\\*(.+)\\*\\* for (\\d+) turns?!`;
+            let humiliateRegex = new RegExp(humiliateStr);
+            let humiliateMatch = humiliateRegex.exec(turnResults);
 
-            if (statusMatch !== null) {
+            if (humiliateMatch !== null) {
+                let stat = statusMatch[1]
+                addBoost(battleObj, battleKey, defender, defenseChar, `Humiliate ${stat}`, turn);
                 let status = statusMatch[2];
                 let numTurns = parseInt(statusMatch[3]);
                 addStatus(battleObj, battleKey, defender, defenseChar, status, turn, numTurns);

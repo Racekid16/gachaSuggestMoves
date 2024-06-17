@@ -2,7 +2,7 @@
 // where both players used the same character
 import { emulateMove } from './emulateMove.mjs';
 import { addBoost } from './updateBoosts.mjs';
-import { hasStatus } from './updateStatuses.mjs';
+import { addStatus, hasStatus } from './updateStatuses.mjs';
 import { getUserInput } from './handleInput.mjs';
 import consts from '../consts.json' assert { type: 'json' };
 
@@ -66,7 +66,20 @@ export async function parseMoveSameChar(battleObj, p1name, p2name, charName, bat
         if (count(turnResults, `**${charName}** used **${move}**!`) == 1) {
             await emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, move);
             return;
-        } else if (count(turnResults, `**${charName}** used **${move}**!`) == 2) {
+        }
+        if (count(turnResults, `**${charName}** used **${move}**!`) == 2) {
+            emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, move, turnResults, turn, p1resolves);
+            emulateMove(battleObj, battleKey, p2name, p1name, charName, charName, move, turnResults, turn, p2resolves);
+            return;
+        }
+    }
+
+    for (let move of ['Introversion', 'Kabedon']) {
+        if (count(turnResults, `**${charName}** is preparing **${move}**...`) == 1) {
+            await emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, move);
+            return;
+        }
+        if (count(turnResults, `**${charName}** is preparing **${move}**...`) == 2) {
             emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, move, turnResults, turn, p1resolves);
             emulateMove(battleObj, battleKey, p2name, p1name, charName, charName, move, turnResults, turn, p2resolves);
             return;
@@ -76,21 +89,10 @@ export async function parseMoveSameChar(battleObj, p1name, p2name, charName, bat
     if (count(turnResults, `**${charName}** used **Humiliate**!`) == 1) {
         await emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, "Humiliate");
         return;
-    } else if (count(turnResults, `**${charName}** used **Humiliate**!`) == 2) {
-        addBoost(battleObj, battleKey, p1name, charName, "Humiliate", turn);
-        addBoost(battleObj, battleKey, p2name, charName, "Humiliate", turn);
-        console.log(`Unable to determine what statuses were inflicted on each player in ${turn} of ${battleKey}`);
     }
-
-    for (let move of ['Introversion', 'Kabedon']) {
-        if (count(turnResults, `**${charName}** is preparing **${move}**...`) == 1) {
-            await emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, move);
-            return;
-        } else if (count(turnResults, `**${charName}** is preparing **${move}**...`) == 2) {
-            emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, move, turnResults, turn, p1resolves);
-            emulateMove(battleObj, battleKey, p2name, p1name, charName, charName, move, turnResults, turn, p2resolves);
-            return;
-        }
+    if (count(turnResults, `**${charName}** used **Humiliate**!`) == 2) {
+        emulateDoubleHumiliate(battleObj, p1name, p2name, charName, turnResults, turn, p1resolves, p2resolves);
+        return;
     }
 }
 
@@ -152,9 +154,11 @@ async function emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName,
     for (let move of validMoves) {
         if (consts.moveInfo[move].type[0] == 'counter' && turnResults.includes(`**${charName}** is preparing **${move}**...`)) {
             await determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, affectingMove, move);
+            return;
         }
-        else if (turnResults.includes(`**${charName}** used **${move}**!`)) {
+        if (turnResults.includes(`**${charName}** used **${move}**!`)) {
             await determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, affectingMove, move);
+            return;
         }
     }
 }
@@ -359,10 +363,9 @@ async function determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, char
                 console.log(`Unable to determine who used ${affectingMove} in turn ${turn} of ${battleKey} (1)`);
                 await manuallyDetermineWhoUsedWhichMove(battleObj, battleKey, p1name, p2name, charName, affectingMove, otherMove, turnResults, turn, p1resolves, p2resolves);
                 return;
-            } else {
-                console.log(`The program unexpectedly reached here on turn ${turn} of ${battleKey} (4)`);
-                return;
             }
+            console.log(`The program unexpectedly reached here on turn ${turn} of ${battleKey} (4)`);
+            return;
         }
         moves[0].damage = parseInt(move1match[2]) * -1;
 
@@ -529,4 +532,95 @@ async function manuallyDetermineWhoUsedWhichMove(battleObj, battleKey, p1name, p
     else {
         console.log(`Did not receive valid input for determining who used ${affectingMove} in turn ${turn}`);
     }
+}
+
+function emulateDoubleHumiliate(battleObj, p1name, p2name, charName, turnResults, turn, p1resolves, p2resolves) {
+    let battleKey = p1name + "_vs._" + p2name;
+    let attackStats = ['mental', 'physical', 'social'];
+    let p1highestAttackStat =  attackStats.reduce((highest, current) => {
+        let thisStat = battleObj[battleKey][p1name].chars[charName][current];
+        let highestStat = battleObj[battleKey][p1name].chars[charName][highest];
+        return thisStat > highestStat ? current : highest;
+    }, attackStats[0]);
+    let p2highestAttackStat = attackStats.reduce((highest, current) => {
+        let thisStat = battleObj[battleKey][p2name].chars[charName][current];
+        let highestStat = battleObj[battleKey][p2name].chars[charName][highest];
+        return thisStat > highestStat ? current : highest;
+    }, attackStats[0]); 
+    let humiliateStr = `\\*\\*${attackChar}\\*\\* used \\*\\*Humiliate\\*\\*!\\n\\*\\*.+\\*\\*'s \\*\\*(.+)\\*\\* was weakened!\\n\\*\\*.+\\*\\* is \\*\\*(.+)\\*\\* for (\\d+) turns?!`;
+    let humiliateRegex = new RegExp(humiliateStr, 'g');
+    let humiliateMatch1 = humiliateRegex.exec(turnResults);
+    let [move1stat, move1status, move1numTurns] = [humiliateMatch1[1], humiliateMatch1[2], humiliateMatch1[3]];
+    let humiliateMatch2 = humiliateRegex.exec(turnResults);
+    let [move2stat, move2status, move2numTurns] = [humiliateMatch2[1], humiliateMatch2[2], humiliateMatch2[3]];
+
+    let p1initiative = battleObj[battleKey][p1name].chars[charName].initiative;
+    let p2initiative = battleObj[battleKey][p2name].chars[charName].initiative;
+    if (p1initiative > p2initiative) {
+        addBoost(battleObj, battleKey, p2name, charName, `Humiliate ${move1stat}`, turn);
+        addStatus(battleObj, battleKey, p2name, charName, move1status, turn, move1numTurns);
+        addBoost(battleObj, battleKey, p1name, charName, `Humiliate ${move2stat}`, turn);
+        addStatus(battleObj, battleKey, p1name, charName, move2status, turn, move2numTurns);
+        return;
+    }
+    if (p1initiative < p2initiative) {
+        addBoost(battleObj, battleKey, p1name, charName, `Humiliate ${move1stat}`, turn);
+        addStatus(battleObj, battleKey, p1name, charName, move1status, turn, move1numTurns);
+        addBoost(battleObj, battleKey, p2name, charName, `Humiliate ${move2stat}`, turn);
+        addStatus(battleObj, battleKey, p2name, charName, move2status, turn, move2numTurns);
+        return;
+    }
+    // else p1initiative == p2initiative
+    if (move1stat != move2stat) {
+        p1highestAttackStat = p1highestAttackStat.charAt(0).toUpperCase() + p1highestAttackStat.slice(1);
+        p2highestAttackStat = p2highestAttackStat.charAt(0).toUpperCase() + p2highestAttackStat.slice(1);
+        if (p1highestAttackStat == move1stat && p2highestAttackStat == move2stat) {
+            addBoost(battleObj, battleKey, p1name, charName, `Humiliate ${move1stat}`, turn);
+            addStatus(battleObj, battleKey, p1name, charName, move1status, turn, move1numTurns);
+            addBoost(battleObj, battleKey, p2name, charName, `Humiliate ${move2stat}`, turn);
+            addStatus(battleObj, battleKey, p2name, charName, move2status, turn, move2numTurns);
+            return;
+        }
+        if (p1highestAttackStat == move2stat && p2highestAttackStat == move1stat) {
+            addBoost(battleObj, battleKey, p2name, charName, `Humiliate ${move1stat}`, turn);
+            addStatus(battleObj, battleKey, p2name, charName, move1status, turn, move1numTurns);
+            addBoost(battleObj, battleKey, p1name, charName, `Humiliate ${move2stat}`, turn);
+            addStatus(battleObj, battleKey, p1name, charName, move2status, turn, move2numTurns);
+            return;
+        }
+        console.log(`The program unexpectedly reached here on turn ${turn} of ${battleKey} (11)`);
+        return;
+    }
+    // else p1initiative == p2initiative && move1stat == move2stat
+    if (move1status == move2status) {
+        addBoost(battleObj, battleKey, p1name, charName, `Humiliate ${move1stat}`, turn);
+        addStatus(battleObj, battleKey, p1name, charName, move1status, turn, move1numTurns);
+        addBoost(battleObj, battleKey, p2name, charName, `Humiliate ${move2stat}`, turn);
+        addStatus(battleObj, battleKey, p2name, charName, move2status, turn, move2numTurns);
+        return;
+    }
+    // else p1initiative == p2initiative && move1stat == move2stat && move1status != move2status
+    let p1resolveDiff = p1resolves[charName] - battleObj[battleKey][p1name].chars[charName].resolve;
+    let p2resolveDiff = p2resolves[charName] - battleObj[battleKey][p2name].chars[charName].resolve;
+    if (move1status == "Burning" && p1resolveDiff != 0
+     || move2status == "Burning" && p2resolveDiff != 0) {
+        addBoost(battleObj, battleKey, p1name, charName, `Humiliate ${move1stat}`, turn);
+        addStatus(battleObj, battleKey, p1name, charName, move1status, turn, move1numTurns);
+        addBoost(battleObj, battleKey, p2name, charName, `Humiliate ${move2stat}`, turn);
+        addStatus(battleObj, battleKey, p2name, charName, move2status, turn, move2numTurns);
+        return;
+    }
+    if (move1status == "Burning" && p2resolveDiff != 0
+     || move2status == "Burning" && p1resolveDiff != 0) {
+        addBoost(battleObj, battleKey, p2name, charName, `Humiliate ${move1stat}`, turn);
+        addStatus(battleObj, battleKey, p2name, charName, move1status, turn, move1numTurns);
+        addBoost(battleObj, battleKey, p1name, charName, `Humiliate ${move2stat}`, turn);
+        addStatus(battleObj, battleKey, p1name, charName, move2status, turn, move2numTurns);
+        return;
+    }
+    //else move1stat == move2stat && p1initiative == p2initiative && move1status != move2status && neither are burning
+    addBoost(battleObj, battleKey, p1name, charName, `Humiliate ${move1stat}`, turn);
+    addBoost(battleObj, battleKey, p2name, charName, `Humiliate ${move1stat}`, turn);
+    console.log(`Unable to determine what statuses were inflicted on each player in ${turn} of ${battleKey}`);
+    return;
 }
