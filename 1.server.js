@@ -375,8 +375,8 @@ server.post("/ImageData/parseParty", (req, res) => {
                             } else {
                                 party[slotNumber - 1].numStars = getNumStars(slot.name, partyImage);
                             }
-                            party[slotNumber - 1].isTitanium = getTitanium(slot.name, partyImage);
                             party[slotNumber - 1].isInfernal = getInfernal(slot.name, partyImage);
+                            party[slotNumber - 1].isTitanium = getTitanium(slot.name, partyImage);
                             break;
                         }
                     }
@@ -528,21 +528,6 @@ function getNumStars(slotName, image) {
     }
 }
 
-function getTitanium(slotName, image) {
-    switch (slotName) {
-        case 'slot1':
-            return RGBA_difference(RGBA_at(20, 45, image), [255, 255, 255, 255]) == 0;
-        case 'slot2':
-            return RGBA_difference(RGBA_at(123, 45, image), [255, 255, 255, 255]) == 0;
-        case 'slot3':
-            return RGBA_difference(RGBA_at(226, 45, image), [255, 255, 255, 255]) == 0; 
-        case 'slot4':
-        case 'slot5':
-        case 'slot6':
-            return false;
-    }
-}
-
 function getInfernal(slotName, image) {
     switch (slotName) {
         case 'slot1':
@@ -551,6 +536,21 @@ function getInfernal(slotName, image) {
             return RGBA_difference(RGBA_at(123, 45, image), [237, 27, 36, 255]) == 0;
         case 'slot3':
             return RGBA_difference(RGBA_at(226, 45, image), [237, 27, 36, 255]) == 0; 
+        case 'slot4':
+        case 'slot5':
+        case 'slot6':
+            return false;
+    }
+}
+
+function getTitanium(slotName, image) {
+    switch (slotName) {
+        case 'slot1':
+            return RGBA_difference(RGBA_at(20, 45, image), [255, 255, 255, 255]) == 0;
+        case 'slot2':
+            return RGBA_difference(RGBA_at(123, 45, image), [255, 255, 255, 255]) == 0;
+        case 'slot3':
+            return RGBA_difference(RGBA_at(226, 45, image), [255, 255, 255, 255]) == 0; 
         case 'slot4':
         case 'slot5':
         case 'slot6':

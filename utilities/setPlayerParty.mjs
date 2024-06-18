@@ -34,6 +34,11 @@ export async function setPlayerParty(battleObj, playerName, imageURL) {
         })
     });
     let partyJSON = await party.json();
+    if (partyJSON.message) {
+        battleObj[battleKey][playerName].valid = false;
+        battleObj[battleKey][playerName].reason = message.reason;
+        return;
+    }
     for (let i = 0; i < partyJSON.length; i++) {
         let char = partyJSON[i];
         if (char?.name == "empty") {
@@ -53,19 +58,20 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
             } else {
                 //console.log(`${char.name} with ${char.numStars} stars was found in the database!`);
                 let charStatsJSON = await charStats.json();
-                if (char.isTitanium) {
-                    char.name = `Titanium ${char.name}`;
-                }
                 if (char.isInfernal) {
                     char.name = `Infernal ${char.name}`;
                 }
-                battleObj[battleKey][playerName].chars[char.name] = charStatsJSON;
                 if (char.isTitanium) {
-                    battleObj[battleKey][playerName].chars[char.name].moves.push("Aspect Of Metal");
+                    char.name = `Titanium ${char.name}`;
                 }
+                battleObj[battleKey][playerName].chars[char.name] = charStatsJSON;
                 if (char.isInfernal) {
                     battleObj[battleKey][playerName].chars[char.name].moves.push("Aspect Of Fire");
                 }
+                if (char.isTitanium) {
+                    battleObj[battleKey][playerName].chars[char.name].moves.push("Aspect Of Metal");
+                }
+                
                 if (i <= 2) {
                     battleObj[battleKey][playerName].chars[char.name].active = true;
                 } else {
@@ -75,7 +81,7 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
         }
     }
 
-    let baseStats = structuredClone(battleObj[battleKey][playerName].chars);
+    let initialCharStats = structuredClone(battleObj[battleKey][playerName].chars);
 
     let hasStrength = false;
     if (battleObj[battleKey][playerName].id != consts.botID) {
@@ -94,31 +100,31 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
             initiative: 1
         }
 
-        for (let charKey2 in baseStats) {
+        for (let charKey2 in initialCharStats) {
             let charBoosted = false;
-            let ally = baseStats[charKey2].allies[0];
-            let supportCategory = baseStats[charKey2].supportCategory.toLowerCase();
+            let ally = initialCharStats[charKey2].allies[0];
+            let supportCategory = initialCharStats[charKey2].supportCategory.toLowerCase();
             if (thisChar.tags.includes(ally)) {
                 if (supportCategory == 'ability') {
-                    multiplierObj.initiative += baseStats[charKey2].supportBonus / 100;
-                    multiplierObj.mental += baseStats[charKey2].supportBonus / 100;
-                    multiplierObj.physical += baseStats[charKey2].supportBonus / 100;
-                    multiplierObj.social += baseStats[charKey2].supportBonus / 100;
+                    multiplierObj.initiative += initialCharStats[charKey2].supportBonus / 100;
+                    multiplierObj.mental += initialCharStats[charKey2].supportBonus / 100;
+                    multiplierObj.physical += initialCharStats[charKey2].supportBonus / 100;
+                    multiplierObj.social += initialCharStats[charKey2].supportBonus / 100;
                 } else {
-                    multiplierObj[supportCategory] += baseStats[charKey2].supportBonus / 100;
+                    multiplierObj[supportCategory] += initialCharStats[charKey2].supportBonus / 100;
                 }
                 charBoosted = true;
             }
-            if (baseStats[charKey2].allies.length > 1 && !charBoosted) {
-                ally = baseStats[charKey2].allies[1];
+            if (initialCharStats[charKey2].allies.length > 1 && !charBoosted) {
+                ally = initialCharStats[charKey2].allies[1];
                 if (thisChar.tags.includes(ally)) {
                     if (supportCategory == 'ability') {
-                        multiplierObj.initiative += baseStats[charKey2].supportBonus / 100;
-                        multiplierObj.mental += baseStats[charKey2].supportBonus / 100;
-                        multiplierObj.physical += baseStats[charKey2].supportBonus / 100;
-                        multiplierObj.social += baseStats[charKey2].supportBonus / 100;
+                        multiplierObj.initiative += initialCharStats[charKey2].supportBonus / 100;
+                        multiplierObj.mental += initialCharStats[charKey2].supportBonus / 100;
+                        multiplierObj.physical += initialCharStats[charKey2].supportBonus / 100;
+                        multiplierObj.social += initialCharStats[charKey2].supportBonus / 100;
                     } else {
-                        multiplierObj[supportCategory] += baseStats[charKey2].supportBonus / 100;
+                        multiplierObj[supportCategory] += initialCharStats[charKey2].supportBonus / 100;
                     }
                 }
             }
@@ -136,19 +142,6 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
             multiplierObj.initiative += 0.1;
         }
 
-        if (thisChar.moves.includes("Aspect Of Metal")) {
-            multiplierObj.resolve += 1;
-            multiplierObj.mental += 0.5;
-            multiplierObj.physical += 0.5;
-            multiplierObj.social += 0.5;
-        }
-        if (thisChar.moves.includes("Aspect Of Fire")) {
-            multiplierObj.resolve += 0.5;
-            multiplierObj.mental += 0.75;
-            multiplierObj.physical += 0.75;
-            multiplierObj.social += 0.75;
-        }
-
         for (let stat in multiplierObj) {
             thisChar[stat] = round(thisChar[stat] * multiplierObj[stat]);
         }
@@ -164,6 +157,10 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
             thisChar.debuffs = [];
             thisChar.positiveStatuses = [];
             thisChar.negativeStatuses = [];
+            thisChar.inflictMultiplier = 1;
+            thisChar.receiveMultiplier = 1;
+            thisChar.inflictModifiers = [];
+            thisChar.receiveModifiers = [];
             delete thisChar._id;
             delete thisChar.name;
             delete thisChar.active;
@@ -183,6 +180,6 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
         }
     }
 
-    battleObj[battleKey][playerName].initialCharStats = structuredClone(battleObj[battleKey][playerName].chars);
+    battleObj[battleKey][playerName].baseCharStats = structuredClone(battleObj[battleKey][playerName].chars);
     battleObj[battleKey][playerName].valid = true;
 }

@@ -84,7 +84,19 @@ export function printParty(battleObj, battleKey, playerName, partyJSON, hasStren
 export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p1move, p2move, 
                              p1damage, p2damage, p1critical, p2critical) {
     let battleKey = p1name + "_vs._" + p2name;
-
+    
+    let p1inflictMultiplier = battleObj[battleKey][p1name].chars[p1char].inflictMultiplier - 1;
+    let p1printInflict = p1inflictMultiplier != 0 ? `💥+${p1inflictMultiplier * 100}% ` : '';
+    let p2inflictMultiplier = battleObj[battleKey][p2name].chars[p2char].inflictMultiplier - 1;
+    let p2printInflict = p2inflictMultiplier != 0 ? `💥+${p2inflictMultiplier * 100}% ` : '';
+    let inflictLength = p1printInflict.length > p2printInflict.length ?
+                        p1printInflict.length : p2printInflict.length;
+    let p1receiveMultiplier = battleObj[battleKey][p1name].chars[p1char].receiveMultiplier - 1;
+    let p1printReceive = p1receiveMultiplier != 0 ? `🛡️${p1receiveMultiplier * 100}% ` : '';
+    let p2receiveMultiplier = battleObj[battleKey][p2name].chars[p2char].receiveMultiplier - 1;
+    let p2printReceive = p2receiveMultiplier != 0 ? `🛡️${p2receiveMultiplier * 100}% ` : '';
+    let receiveLength = p1printReceive.length > p2printReceive.length ?
+                        p1printReceive.length : p2printReceive.length;
     let playerNameLength = p1name.length > p2name.length ? p1name.length : p2name.length;
     let charNameLength = p1char.length > p2char.length ? p1char.length : p2char.length;
     let p1initiative = battleObj[battleKey][p1name].chars[p1char].initiative;
@@ -122,7 +134,9 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
     let p2printFatal = p2lowerBound > p1resolve ? 'FATAL' : '';
 
     let p1Output = `${p1name} ${" ".repeat(playerNameLength - p1name.length)}` 
-                  + `[${p1char}${" ".repeat(charNameLength - p1char.length)} `
+                  + `[${p1printInflict}${" ".repeat(inflictLength - p1printInflict.length)}`
+                  + `${p1printReceive}${" ".repeat(receiveLength - p1printReceive.length)}`
+                  + `${p1char}${" ".repeat(charNameLength - p1char.length)} `
                   + `🏃${p1initiative}${" ".repeat(initiativeLength - p1initiative.toString().length)} `
                   + `🧠${p1mental}${" ".repeat(mentalLength - p1mental.toString().length)} `
                   + `💪${p1physical}${" ".repeat(physicalLength - p1physical.toString().length)} `
@@ -133,7 +147,9 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
                   + `${p1upperBound}${" ".repeat(upperBoundLength - p1upperBound.toString().length)}) `
                   + `${p1printCritical} ${p1printFatal}`;
     let p2Output = `${p2name} ${" ".repeat(playerNameLength - p2name.length)}`
-                  + `[${p2char}${" ".repeat(charNameLength - p2char.length)} `
+                  + `[${p2printInflict}${" ".repeat(inflictLength - p2printInflict.length)}`
+                  + `${p2printReceive}${" ".repeat(receiveLength - p2printReceive.length)}`
+                  + `${p2char}${" ".repeat(charNameLength - p2char.length)} `
                   + `🏃‍${p2initiative}${" ".repeat(initiativeLength - p2initiative.toString().length)} `
                   + `🧠${p2mental}${" ".repeat(mentalLength - p2mental.toString().length)} `
                   + `💪${p2physical}${" ".repeat(physicalLength - p2physical.toString().length)} `

@@ -156,7 +156,7 @@ export function verifyPlayerResolves(battleObj, battleKey, playerName, playerNum
         }
 
         battleObj[battleKey][playerName].chars[charName].resolve = charResolve;
-        battleObj[battleKey][playerName].initialCharStats[charName].resolve = charResolve;
+        battleObj[battleKey][playerName].baseCharStats[charName].resolve = charResolve;
     }
 }
 

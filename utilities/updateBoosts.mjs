@@ -5,14 +5,22 @@ export function addBoost(battleObj, battleKey, playerName, charName, boost, turn
     // I arrange these alphabetically
     switch (boost) {
 
+        case 'Aspect Of Fire Mental':
+        case 'Aspect Of Fire Physical':
+        case 'Aspect Of Fire Social':
+        case 'Aspect Of Metal Mental':
+        case 'Aspect Of Metal Physical':
+        case 'Aspect Of Metal Social':
         case 'Arrogance':
         case 'Blazing Form':
         case 'Boss Orders':
+        case 'Group Ties':
         case 'Introversion':
         case '1-turn Lead By Example':
         case '2-turn Lead By Example':
         case 'Study Initiative':
         case 'Study Mental':
+        case 'Teamwork':
         case 'The Perfect Existence':
         case 'Unity':
         case 'Zenith Pace':
@@ -37,8 +45,11 @@ export function addBoost(battleObj, battleKey, playerName, charName, boost, turn
 
 // adds the specified boost to all members on the attacker's team (including the attacker themself)
 // who have more than 0 resolve
-export function addBoostToAliveTeammates(battleObj, battleKey, attacker, boost, turn) {
+export function addBoostToAliveTeammates(battleObj, battleKey, attacker, attackChar, boost, turn) {
     for (let charKey in battleObj[battleKey][attacker].chars) {
+        if (charKey == attackChar) {
+            continue;
+        }
         let charResolve = battleObj[battleKey][attacker].chars[charKey].resolve;
         if (charResolve > 0) {
             addBoost(battleObj, battleKey, attacker, charKey, boost, turn);        
@@ -73,7 +84,7 @@ export function applyBoosts(battleObj, battleKey, playerName) {
             continue;
         }
 
-        let thisCharInitialObj = battleObj[battleKey][playerName].initialCharStats[charName];
+        let thisCharBaseObj = battleObj[battleKey][playerName].baseCharStats[charName];
         let multiplierObj = {
             'initiative': 1,
             'mental': 1,
@@ -112,7 +123,7 @@ export function applyBoosts(battleObj, battleKey, playerName) {
         }
 
         for (let stat in multiplierObj) {
-            thisCharObj[stat] = round(thisCharInitialObj[stat] * multiplierObj[stat]);
+            thisCharObj[stat] = round(thisCharBaseObj[stat] * multiplierObj[stat]);
             thisCharObj[stat] = Math.max(thisCharObj[stat], 0);
         }
     }
@@ -121,6 +132,72 @@ export function applyBoosts(battleObj, battleKey, playerName) {
 function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
     let numBuffs = battleObj[battleKey][playerName].chars[charName].buffs.length;
     switch (buff) {
+
+        case 'Aspect Of Fire Mental':
+            let AOFMentalBuff = 0.75;
+            battleObj[battleKey][playerName].chars[charName].buffs.push({
+                name: buff,
+                startTurn: turn,
+                endTurn: Infinity,
+                stat: "mental",
+                amount: AOFMentalBuff
+            });
+            break;
+
+        case 'Aspect Of Fire Physical':
+            let AOFPhysicalBuff = 0.75;
+            battleObj[battleKey][playerName].chars[charName].buffs.push({
+                name: buff,
+                startTurn: turn,
+                endTurn: Infinity,
+                stat: "physical",
+                amount: AOFPhysicalBuff
+            });
+            break;
+
+        case 'Aspect Of Fire Social':
+            let AOFSocialBuff = 0.75;
+            battleObj[battleKey][playerName].chars[charName].buffs.push({
+                name: buff,
+                startTurn: turn,
+                endTurn: Infinity,
+                stat: "social",
+                amount: AOFSocialBuff
+            });
+            break;
+
+        case 'Aspect Of Metal Mental':
+            let AOMMentalBuff = 0.5;
+            battleObj[battleKey][playerName].chars[charName].buffs.push({
+                name: buff,
+                startTurn: turn,
+                endTurn: Infinity,
+                stat: "mental",
+                amount: AOMMentalBuff
+            });
+            break;
+
+        case 'Aspect Of Metal Physical':
+            let AOMPhysicalBuff = 0.5;
+            battleObj[battleKey][playerName].chars[charName].buffs.push({
+                name: buff,
+                startTurn: turn,
+                endTurn: Infinity,
+                stat: "physical",
+                amount: AOMPhysicalBuff
+            });
+            break;
+
+        case 'Aspect Of Metal Social':
+            let AOMSocialBuff = 0.5;
+            battleObj[battleKey][playerName].chars[charName].buffs.push({
+                name: buff,
+                startTurn: turn,
+                endTurn: Infinity,
+                stat: "social",
+                amount: AOMSocialBuff
+            });
+            break;
 
         case 'Arrogance':
             let arroganceBuff = 0.4;
@@ -152,6 +229,17 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 endTurn: Infinity,
                 stat: "mental",
                 amount: bossOrdersBuff
+            }); 
+            break;
+        
+        case 'Group Ties':
+            let groupTiesBuff = 0.5;
+            battleObj[battleKey][playerName].chars[charName].buffs.push({
+                name: buff,
+                startTurn: turn,
+                endTurn: Infinity,
+                stat: "social",
+                amount: groupTiesBuff
             }); 
             break;
 
@@ -209,7 +297,18 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 amount: studyMentalBuff
             });
             break;
-        
+
+        case 'Teamwork':
+            let teamworkBuff = 0.3;
+            battleObj[battleKey][playerName].chars[charName].buffs.push({
+                name: buff,
+                startTurn: turn,
+                endTurn: turn + 2,
+                stat: "ability",
+                amount: teamworkBuff
+            });
+            break;
+
         case 'The Perfect Existence':
             let thePerfectExistenceBuff = 0.5;
             battleObj[battleKey][playerName].chars[charName].buffs.push({
@@ -248,7 +347,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
         default:
             break;
     }
-    // TODO: remove this
+
     if (battleObj[battleKey][playerName].chars[charName].buffs.length > numBuffs) {
         battleObj[battleKey].log(`${buff} added to ${playerName}'s ${charName}!`);
     }
@@ -322,7 +421,7 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
         default:
             break;
     }
-    // TODO: remove this
+    
     if (battleObj[battleKey][playerName].chars[charName].debuffs.length > numDebuffs) {
         battleObj[battleKey].log(`${debuff} added to ${playerName}'s ${charName}!`);
     }
@@ -336,7 +435,7 @@ function removeExpiredBuffs(battleObj, battleKey, playerName, charName, turn) {
 
         if (thisBuff.endTurn == turn) {
             if (thisCharObj.resolve != 0) {
-                battleObj[battleKey].log(`${charName}'s ${thisBuff.name} buff expired! ${thisBuff.stat} decreased by ${thisBuff.amount * 100}%`);
+                battleObj[battleKey].log(`${playerName}'s ${charName}'s ${thisBuff.name} buff expired! ${thisBuff.stat} decreased by ${thisBuff.amount * 100}%`);
             }
             thisCharObj.buffs.splice(i, 1);
             i--;
@@ -352,7 +451,7 @@ function removeExpiredDebuffs(battleObj, battleKey, playerName, charName, turn) 
 
         if (thisDebuff.endTurn == turn) {
             if (thisCharObj.resolve != 0) {
-                battleObj[battleKey].log(`${charName}'s ${thisDebuff.name} debuff expired! ${thisDebuff.stat} increased by ${thisDebuff.amount * -100}%`);
+                battleObj[battleKey].log(`${playerName}'s ${charName}'s ${thisDebuff.name} debuff expired! ${thisDebuff.stat} increased by ${thisDebuff.amount * -100}%`);
             }
             thisCharObj.debuffs.splice(i, 1);
             i--;

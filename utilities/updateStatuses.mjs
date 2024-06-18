@@ -1,12 +1,12 @@
 // add or remove positive or negative statuses.
 
 export function addStatus(battleObj, battleKey, playerName, charName, status, turn, numTurns) {
-    //TODO: remove this
-    battleObj[battleKey].log(`${status} added to ${playerName}'s ${charName}!`);
+    battleObj[battleKey].log(`${status} added to ${playerName}'s ${charName} for ${numTurns} turns!`);
 
     // I arrange these alphabetically
     switch (status) {
 
+        case 'Apathetic':
         case 'Invulnerable':
         case 'Resting':
             addPositiveStatus(battleObj, battleKey, playerName, charName, status, turn, numTurns);
@@ -46,6 +46,32 @@ export function hasStatus(battleObj, battleKey, playerName, charName, status) {
     return hasPositiveStatus || hasNegativeStatus;
 }
 
+export function applyStatuses(battleObj, battleKey, playerName) {
+    for (let charName in battleObj[battleKey][playerName].chars) {
+        let thisCharObj = battleObj[battleKey][playerName].chars[charName];
+
+        if (thisCharObj.resolve == 0) {
+            continue;
+        }
+        
+        for (let positiveStatus of thisCharObj.positiveStatuses) {
+            switch (positiveStatus.name) {
+                case 'Apathetic':
+                    positiveStatus.originalPersonality = thisCharObj.personality;
+                    thisCharObj.personality = "Apathetic";
+                    break;
+                default:
+                    break;
+            }
+        }
+        for (let negativeStatus of thisCharObj.negativeStatuses) {
+            switch (negativeStatus.name) {
+                default:
+                    break;
+            }
+        }
+    }
+}
 
 function addPositiveStatus(battleObj, battleKey, playerName, charName, positiveStatus, turn, numTurns) {
     battleObj[battleKey][playerName].chars[charName].positiveStatuses.push({
@@ -64,32 +90,43 @@ function addNegativeStatus(battleObj, battleKey, playerName, charName, negativeS
 }
 
 function removeExpiredPositiveStatuses(battleObj, battleKey, playerName, charName, turn) {
-    let thisChar = battleObj[battleKey][playerName].chars[charName];
+    let thisCharObj = battleObj[battleKey][playerName].chars[charName];
 
-    if (thisChar.resolve == 0) {
-        return;
-    }
-
-    for (let i = 0; i < thisChar.positiveStatuses.length; i++) {
-        if (thisChar.positiveStatuses[i].endTurn == turn) {
-            battleObj[battleKey].log(`${charName}'s ${thisChar.positiveStatuses[i].name} positive status expired!`);
-            thisChar.positiveStatuses.splice(i, 1);
+    for (let i = 0; i < thisCharObj.positiveStatuses.length; i++) {
+        let thisPositiveStatus = thisCharObj.positiveStatuses[i];
+    
+        if (thisPositiveStatus.endTurn == turn) {
+            if (thisCharObj.resolve != 0) {
+                battleObj[battleKey].log(`${charName}'s ${thisPositiveStatus.name} positive status expired!`);
+            }
+            switch (thisPositiveStatus.name) {
+                case 'Apathetic':
+                    thisCharObj.personality = thisPositiveStatus.original;
+                    break;
+                default:
+                    break;
+            }
+            thisCharObj.positiveStatuses.splice(i, 1);
             i--;
         }
     }
 }
 
 function removeExpiredNegativeStatuses(battleObj, battleKey, playerName, charName, turn) {
-    let thisChar = battleObj[battleKey][playerName].chars[charName];
+    let thisCharObj = battleObj[battleKey][playerName].chars[charName];
 
-    if (thisChar.resolve == 0) {
-        return;
-    }
-
-    for (let i = 0; i < thisChar.negativeStatuses.length; i++) {
-        if (thisChar.negativeStatuses[i].endTurn == turn) {
-            battleObj[battleKey].log(`${charName}'s ${thisChar.negativeStatuses[i].name} negative status expired!`);
-            thisChar.negativeStatuses.splice(i, 1);
+    for (let i = 0; i < thisCharObj.negativeStatuses.length; i++) {
+        let thisNegativeStatus = thisCharObj.negativeStatuses[i];
+    
+        if (thisNegativeStatus.endTurn == turn) {
+            if (thisCharObj.resolve != 0) {
+                battleObj[battleKey].log(`${charName}'s ${thisNegativeStatus.name} negative status expired!`);
+            }
+            switch (thisNegativeStatus.name) {
+                default:
+                    break;
+            }
+            thisCharObj.negativeStatuses.splice(i, 1);
             i--;
         }
     }

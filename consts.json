@@ -46,6 +46,12 @@
         "Boss Orders": {
             "type": ["innate"]
         },
+        "Bottle Break": {
+            "type": ["attack", "boost", "status"],
+            "damageType": "Fighting",
+            "basePower": 1.2,
+            "priority": 1
+        },
         "Charm": {
             "type": ["boost"],
             "target": "opponent",
@@ -86,6 +92,15 @@
             "type": ["attack"],
             "damageType": "Fighting",
             "basePower": "varies"
+        },
+        "Group Determination": {
+            "type": ["innate"]
+        },
+        "Group Efforts": {
+            "type": ["innate"]
+        },
+        "Group Ties": {
+            "type": ["innate"]
         },
         "Hate": {
             "type": ["boost"],
@@ -171,6 +186,9 @@
             "amount": "varies",
             "numTurns": 1
         }, 
+        "Teamwork": {
+            "type": ["innate"]
+        },
         "The Perfect Existence": {
             "type": ["innate"]
         },

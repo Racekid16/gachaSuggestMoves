@@ -59,7 +59,10 @@ function calculateMoveDamage(battleObj, battleKey, attacker, defender, attackCha
     completeMoveObj.priority = typeof moveObj.priority === 'undefined' ? baseMoveObj.priority : moveObj.priority;
 
     let attackerAttackStat = battleObj[battleKey][attacker].chars[attackChar][completeMoveObj.attackStat];
+    let attackerInflictMultiplier = battleObj[battleKey][attacker].chars[attackChar].inflictMultiplier;
+
     let defenderDefenseStat = battleObj[battleKey][defender].chars[defenseChar][completeMoveObj.defenseStat];
+    let defenderReceiveMultiplier = battleObj[battleKey][defender].chars[defenseChar].receiveMultiplier;
     let defenderPersonality = battleObj[battleKey][defender].chars[defenseChar].personality;
 
     let isCritical = false;
@@ -71,9 +74,9 @@ function calculateMoveDamage(battleObj, battleKey, attacker, defender, attackCha
     //this is a guess for how much damage will be dealt, since I don't know the exact damage formula
     if (defenderDefenseStat != 0) {
         if (!isCritical) {
-            damage = round(36 * attackerAttackStat / defenderDefenseStat * completeMoveObj.basePower);
+            damage = round(36 * attackerAttackStat / defenderDefenseStat * completeMoveObj.basePower * attackerInflictMultiplier * defenderReceiveMultiplier);
         } else {
-            damage = round(36 * attackerAttackStat / defenderDefenseStat * completeMoveObj.basePower * 1.4);
+            damage = round(36 * attackerAttackStat / defenderDefenseStat * completeMoveObj.basePower * attackerInflictMultiplier * defenderReceiveMultiplier * 1.4);
         }
     } else {
         if (!isCritical) {
