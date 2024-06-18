@@ -55,22 +55,27 @@ export function handleWsData(battleObj, responseJSON) {
     }
 
     // bot had an error when it attempted to fetch requested party; re-request both parties
-    else if (responseJSON.t == 'INTERACTION_FAILURE') {
-        console.log(responseJSON);
+    else if (responseJSON.t == 'INTERACTION_FAILURE' && battleObj.currentBattles.length > 0) {
         let lastBattle = battleObj.currentBattles[battleObj.currentBattles.length - 1];
-        let battleType = lastBattle[0];
-        let p1name = lastBattle[1];
-        let p2name = lastBattle[2];
-        let battleKey = p1name + "_vs._" + p2name;
-        if (typeof battleObj[battleKey] !== 'undefined') {
-            if (battleType == "battle") {
-                deleteBattle(battleObj, p1name, p2name, null);
-                let battleEmbed = lastBattle[3];
-                createBattle(battleObj, p1name, p2name, battleEmbed);
-            }
-            else if (battleType == "campaign") {
-                let playerID = lastBattle[3];
-                requestPlayerPartyCampaignBattle(battleObj, battleKey, p1name, playerID);
+        let lastBattleStartTime = lastBattle[0];
+        let currentTime = new Date().getTime();
+        let secondsElapsed = (currentTime - lastBattleStartTime) / 1000;
+        if (secondsElapsed < 5) {
+            console.log(responseJSON);
+            let battleType = lastBattle[1];
+            let p1name = lastBattle[2];
+            let p2name = lastBattle[3];
+            let battleKey = p1name + "_vs._" + p2name;
+            if (typeof battleObj[battleKey] !== 'undefined') {
+                if (battleType == "battle") {
+                    deleteBattle(battleObj, p1name, p2name, null);
+                    let battleEmbed = lastBattle[4];
+                    createBattle(battleObj, p1name, p2name, battleEmbed);
+                }
+                else if (battleType == "campaign") {
+                    let playerID = lastBattle[4];
+                    requestPlayerPartyCampaignBattle(battleObj, battleKey, p1name, playerID);
+                }
             }
         }
     }

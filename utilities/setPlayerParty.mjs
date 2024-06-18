@@ -53,7 +53,19 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
             } else {
                 //console.log(`${char.name} with ${char.numStars} stars was found in the database!`);
                 let charStatsJSON = await charStats.json();
+                if (char.isTitanium) {
+                    char.name = `Titanium ${char.name}`;
+                }
+                if (char.isInfernal) {
+                    char.name = `Infernal ${char.name}`;
+                }
                 battleObj[battleKey][playerName].chars[char.name] = charStatsJSON;
+                if (char.isTitanium) {
+                    battleObj[battleKey][playerName].chars[char.name].moves.push("Aspect Of Metal");
+                }
+                if (char.isInfernal) {
+                    battleObj[battleKey][playerName].chars[char.name].moves.push("Aspect Of Fire");
+                }
                 if (i <= 2) {
                     battleObj[battleKey][playerName].chars[char.name].active = true;
                 } else {
@@ -124,8 +136,21 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
             multiplierObj.initiative += 0.1;
         }
 
-        for (let statKey in multiplierObj) {
-            thisChar[statKey] = round(thisChar[statKey] * multiplierObj[statKey]);
+        if (thisChar.moves.includes("Aspect Of Metal")) {
+            multiplierObj.resolve += 1;
+            multiplierObj.mental += 0.5;
+            multiplierObj.physical += 0.5;
+            multiplierObj.social += 0.5;
+        }
+        if (thisChar.moves.includes("Aspect Of Fire")) {
+            multiplierObj.resolve += 0.5;
+            multiplierObj.mental += 0.75;
+            multiplierObj.physical += 0.75;
+            multiplierObj.social += 0.75;
+        }
+
+        for (let stat in multiplierObj) {
+            thisChar[stat] = round(thisChar[stat] * multiplierObj[stat]);
         }
     }
  

@@ -13,7 +13,7 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
     battleObj[battleKey] = {};
     battleObj[battleKey].time = new Date().toLocaleString();
     battleObj[battleKey].data = "";
-    battleObj.currentBattles.push(['battle', p1name, p2name, battleEmbed]);
+    battleObj.currentBattles.push([new Date().getTime(), 'battle', p1name, p2name, battleEmbed]);
     
     //create a new file for this battle
     fs.writeFileSync(`currentBattles/${battleKey}.txt`, '', (err) => {if (err) { throw err; }});
@@ -62,8 +62,7 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
     battleObj[battleKey] = {};
     battleObj[battleKey].time = new Date().toLocaleString();
     battleObj[battleKey].data = "";
-    battleObj.currentBattles.push(['campaign', playerName, 'Chairman Sakayanagi', playerID]);
-
+    
     //create a new file for this battle
     fs.writeFileSync(`currentBattles/${battleKey}.txt`, '', (err) => {if (err) { throw err; }});
     battleObj[battleKey].log = function (str) {
@@ -127,7 +126,7 @@ export function deleteBattle(battleObj, p1name, p2name, turnResults) {
     cancelInput(battleKey);
     fs.unlinkSync(`currentBattles/${battleKey}.txt`, (err) => {if (err) { throw err; }});
     battleObj.currentBattles.splice(battleObj.currentBattles.findIndex((arr) => {
-        arr[1] == p1name && arr[2] == p2name
+        arr[2] == p1name && arr[3] == p2name
     }));
     delete battleObj[battleKey];
 }
@@ -162,6 +161,7 @@ export function verifyPlayerResolves(battleObj, battleKey, playerName, playerNum
 }
 
 export async function requestPlayerPartyCampaignBattle(battleObj, battleKey, playerName, playerID) {
+    battleObj.currentBattles.push([new Date().getTime(), 'campaign', playerName, 'Chairman Sakayanagi', playerID]);
     let myPromise = addPlayerToBattle(battleObj, battleKey, playerName, 1, null, playerID);
     let myResult = await myPromise;
     if (myResult != 0) { 

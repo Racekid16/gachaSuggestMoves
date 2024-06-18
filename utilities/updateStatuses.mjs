@@ -5,7 +5,7 @@ export function addStatus(battleObj, battleKey, playerName, charName, status, tu
     battleObj[battleKey].log(`${status} added to ${playerName}'s ${charName}!`);
 
     // I arrange these alphabetically
-    switch(status) {
+    switch (status) {
 
         case 'Invulnerable':
         case 'Resting':

@@ -115,7 +115,6 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                     debuffs: [],
                     positiveStatuses: [],
                     negativeStatuses: [],
-                    priority: 0,
                     initiative: round(creatorInitialStats.initiative * inheritAmount),
                     mental: round(creatorInitialStats.mental * inheritAmount),
                     physical: round(creatorInitialStats.physical * inheritAmount),

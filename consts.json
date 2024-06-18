@@ -4,7 +4,7 @@
     "serverID": "870355988887265301",
     "transformChars": ["Serious Kōenji Rokusuke", "True Kushida Kikyō", "Unmasked Kushida Kikyō"],
     "excludedChars": [],
-    "excludedCampaignStages": ["25", "27", "30"],
+    "excludedCampaignStages": [],
     "moveInfo": {
         "Academic": {
             "type": ["attack"],

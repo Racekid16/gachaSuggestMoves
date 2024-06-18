@@ -2,9 +2,6 @@
 import { round } from './round.mjs';
 
 export function addBoost(battleObj, battleKey, playerName, charName, boost, turn) {
-    //TODO: remove this
-    battleObj[battleKey].log(`${boost} added to ${playerName}'s ${charName}!`);
-
     // I arrange these alphabetically
     switch (boost) {
 
@@ -71,6 +68,11 @@ export function hasBoost(battleObj, battleKey, playerName, charName, boost) {
 export function applyBoosts(battleObj, battleKey, playerName) {
     for (let charName in battleObj[battleKey][playerName].chars) {
         let thisCharObj = battleObj[battleKey][playerName].chars[charName];
+
+        if (thisCharObj.resolve == 0) {
+            continue;
+        }
+
         let thisCharInitialObj = battleObj[battleKey][playerName].initialCharStats[charName];
         let multiplierObj = {
             'initiative': 1,
@@ -117,7 +119,7 @@ export function applyBoosts(battleObj, battleKey, playerName) {
 }
 
 function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
-
+    let numBuffs = battleObj[battleKey][playerName].chars[charName].buffs.length;
     switch (buff) {
 
         case 'Arrogance':
@@ -246,10 +248,14 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
         default:
             break;
     }
+    // TODO: remove this
+    if (battleObj[battleKey][playerName].chars[charName].buffs.length > numBuffs) {
+        battleObj[battleKey].log(`${buff} added to ${playerName}'s ${charName}!`);
+    }
 }
 
 function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
-
+    let numDebuffs = battleObj[battleKey][playerName].chars[charName].debuffs.length;
     switch (debuff) {
 
         case 'Charm':
@@ -316,39 +322,39 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
         default:
             break;
     }
+    // TODO: remove this
+    if (battleObj[battleKey][playerName].chars[charName].debuffs.length > numDebuffs) {
+        battleObj[battleKey].log(`${debuff} added to ${playerName}'s ${charName}!`);
+    }
 }
 
 function removeExpiredBuffs(battleObj, battleKey, playerName, charName, turn) {
-    let thisChar = battleObj[battleKey][playerName].chars[charName];
-    let thisCharInitial = battleObj[battleKey][playerName].initialCharStats[charName];
-    if (thisChar.resolve == 0) {
-        return;
-    }
+    let thisCharObj = battleObj[battleKey][playerName].chars[charName];
 
-    for (let i = 0; i < thisChar.buffs.length; i++) {
-        let thisBuff = thisChar.buffs[i];
+    for (let i = 0; i < thisCharObj.buffs.length; i++) {
+        let thisBuff = thisCharObj.buffs[i];
 
         if (thisBuff.endTurn == turn) {
-            battleObj[battleKey].log(`${charName}'s ${thisBuff.name} buff expired! ${thisBuff.stat} decreased by ${thisBuff.amount * 100}%`);
-            thisChar.buffs.splice(i, 1);
+            if (thisCharObj.resolve != 0) {
+                battleObj[battleKey].log(`${charName}'s ${thisBuff.name} buff expired! ${thisBuff.stat} decreased by ${thisBuff.amount * 100}%`);
+            }
+            thisCharObj.buffs.splice(i, 1);
             i--;
         }
     }
 }
 
 function removeExpiredDebuffs(battleObj, battleKey, playerName, charName, turn) {
-    let thisChar = battleObj[battleKey][playerName].chars[charName];
-    let thisCharInitial = battleObj[battleKey][playerName].initialCharStats[charName];
-    if (thisChar.resolve == 0) {
-        return;
-    }
+    let thisCharObj = battleObj[battleKey][playerName].chars[charName];
 
-    for (let i = 0; i < thisChar.debuffs.length; i++) {
-        let thisDebuff = thisChar.debuffs[i];
+    for (let i = 0; i < thisCharObj.debuffs.length; i++) {
+        let thisDebuff = thisCharObj.debuffs[i];
 
         if (thisDebuff.endTurn == turn) {
-            battleObj[battleKey].log(`${charName}'s ${thisDebuff.name} debuff expired! ${thisDebuff.stat} increased by ${thisDebuff.amount * -100}%`);
-            thisChar.debuffs.splice(i, 1);
+            if (thisCharObj.resolve != 0) {
+                battleObj[battleKey].log(`${charName}'s ${thisDebuff.name} debuff expired! ${thisDebuff.stat} increased by ${thisDebuff.amount * -100}%`);
+            }
+            thisCharObj.debuffs.splice(i, 1);
             i--;
         }
     }
