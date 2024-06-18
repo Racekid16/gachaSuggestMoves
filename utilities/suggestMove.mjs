@@ -59,9 +59,7 @@ function calculateMoveDamage(battleObj, battleKey, attacker, defender, attackCha
     completeMoveObj.priority = typeof moveObj.priority === 'undefined' ? baseMoveObj.priority : moveObj.priority;
 
     let attackerAttackStat = battleObj[battleKey][attacker].chars[attackChar][completeMoveObj.attackStat];
-    attackerAttackStat = Math.max(attackerAttackStat, 0);
     let defenderDefenseStat = battleObj[battleKey][defender].chars[defenseChar][completeMoveObj.defenseStat];
-    defenderDefenseStat = Math.max(defenderDefenseStat, 0);
     let defenderPersonality = battleObj[battleKey][defender].chars[defenseChar].personality;
 
     let isCritical = false;

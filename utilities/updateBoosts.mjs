@@ -68,15 +68,60 @@ export function hasBoost(battleObj, battleKey, playerName, charName, boost) {
     return hasBuff || hasDebuff;
 }
 
+export function applyBoosts(battleObj, battleKey, playerName) {
+    for (let charName in battleObj[battleKey][playerName].chars) {
+        let thisCharObj = battleObj[battleKey][playerName].chars[charName];
+        let thisCharInitialObj = battleObj[battleKey][playerName].initialCharStats[charName];
+        let multiplierObj = {
+            'initiative': 1,
+            'mental': 1,
+            'physical': 1,
+            'social': 1
+        };
+
+        for (let i = 0; i < thisCharObj.buffs.length; i++) {
+            let buff = thisCharObj.buffs[i];
+            if (buff.stat == 'ability') {
+                multiplierObj.initiative += buff.amount;
+                multiplierObj.mental += buff.amount;
+                multiplierObj.physical += buff.amount;
+                multiplierObj.social += buff.amount;
+            } else {
+                multiplierObj[buff.stat] += buff.amount;
+            }
+        }
+
+        for (let i = 0; i < thisCharObj.debuffs.length; i++) {
+            let debuff = thisCharObj.debuffs[i];
+            if (thisCharObj.moves.includes('Lead By Example') && (debuff.stat == 'ability' || debuff.stat == 'physical')) {
+                battleObj[battleKey].log(`${debuff} debuff negated as it would lower ${charName}'s physical`);
+                thisChar.debuffs.splice(i, 1);
+                i--;
+                continue;
+            }
+            if (debuff.stat == 'ability') {
+                multiplierObj.initiative += debuff.amount;
+                multiplierObj.mental += debuff.amount;
+                multiplierObj.physical += debuff.amount;
+                multiplierObj.social += debuff.amount;
+            } else {
+                multiplierObj[debuff.stat] += debuff.amount;
+            }
+        }
+
+        for (let stat in multiplierObj) {
+            thisCharObj[stat] = round(thisCharInitialObj[stat] * multiplierObj[stat]);
+            thisCharObj[stat] = Math.max(thisCharObj[stat], 0);
+        }
+    }
+}
+
 function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
-    let thisChar = battleObj[battleKey][playerName].chars[charName];
-    let thisCharInitial = battleObj[battleKey][playerName].initialCharStats[charName];
 
     switch (buff) {
 
         case 'Arrogance':
             let arroganceBuff = 0.4;
-            buffCharAbility(thisChar, thisCharInitial, arroganceBuff);
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
@@ -88,7 +133,6 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
         
         case 'Blazing Form':
             let blazingFormBuff = 0.2;
-            thisChar.physical = round(thisChar.physical + (thisCharInitial.physical * blazingFormBuff));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
@@ -100,7 +144,6 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
 
         case 'Boss Orders':
             let bossOrdersBuff = 0.5;
-            thisChar.mental = round(thisChar.mental + (thisCharInitial.mental * bossOrdersBuff));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
@@ -112,7 +155,6 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
 
         case 'Introversion':
             let introversionBuff = 0.6;
-            thisChar.mental = round(thisChar.mental + (thisCharInitial.mental * introversionBuff));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
@@ -124,7 +166,6 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
 
         case '1-turn Lead By Example':
             let leadByExampleBuff1 = 0.25;
-            thisChar.physical = round(thisChar.physical + (thisCharInitial.physical * leadByExampleBuff1));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
@@ -136,7 +177,6 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
         
         case '2-turn Lead By Example':
             let leadByExampleBuff2 = 0.25;
-            thisChar.physical = round(thisChar.physical + (thisCharInitial.physical * leadByExampleBuff2));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
@@ -148,7 +188,6 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
         
         case 'Study Initiative':
             let studyInitiativeBuff = 1;
-            thisChar.initiative = round(thisChar.initiative + (thisCharInitial.initiative * studyInitiativeBuff));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
@@ -160,7 +199,6 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
         
         case 'Study Mental':
             let studyMentalBuff = 1.5;
-            thisChar.mental = round(thisChar.mental + (thisCharInitial.mental * studyMentalBuff));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
@@ -172,7 +210,6 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
         
         case 'The Perfect Existence':
             let thePerfectExistenceBuff = 0.5;
-            buffCharAbility(thisChar, thisCharInitial, thePerfectExistenceBuff);
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
@@ -186,7 +223,6 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             let hasUnityBuff = hasBoost(battleObj, battleKey, playerName, charName, "Unity");
             if (!hasUnityBuff) {
                 let unityBuff = 0.35;
-                buffCharAbility(thisChar, thisCharInitial, unityBuff);
                 battleObj[battleKey][playerName].chars[charName].buffs.push({
                     name: buff,
                     startTurn: turn,
@@ -199,7 +235,6 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
 
         case 'Zenith Pace':
             let zenithPaceBuff = 0.25;
-            thisChar.initiative = round(thisChar.initiative + (thisCharInitial.initiative * zenithPaceBuff));
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
@@ -214,21 +249,11 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
 }
 
 function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
-    let thisChar = battleObj[battleKey][playerName].chars[charName];
-    let thisCharInitial = battleObj[battleKey][playerName].initialCharStats[charName];
-
-    //this isn't an elegant way to code in Lead By Example, but I'm too lazy to improve this
-    if (battleObj[battleKey][playerName].chars[charName].moves.includes('Lead By Example')
-     && ['Dominate', 'Hate', 'Kings Command'].includes(debuff)) {
-        battleObj[battleKey].log(`${debuff} debuff negated as it would lower ${charName}'s physical`);
-        return;
-    }
 
     switch (debuff) {
 
         case 'Charm':
             let charmDebuff = -0.33;
-            thisChar.social = round(thisChar.social + (thisCharInitial.social * charmDebuff));
             battleObj[battleKey][playerName].chars[charName].debuffs.push({
                 name: debuff,
                 startTurn: turn,
@@ -240,7 +265,6 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
 
         case 'Dominate':
             let dominateDebuff = -0.75;
-            buffCharAbility(thisChar, thisCharInitial, dominateDebuff);
             battleObj[battleKey][playerName].chars[charName].debuffs.push({
                 name: debuff,
                 startTurn: turn,
@@ -254,7 +278,6 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
             let hasHateDebuff = hasBoost(battleObj, battleKey, playerName, charName, "Hate");
             if (!hasHateDebuff) {
                 let hateDebuff = -0.35;
-                buffCharAbility(thisChar, thisCharInitial, hateDebuff);
                 battleObj[battleKey][playerName].chars[charName].debuffs.push({
                     name: debuff,
                     startTurn: turn,
@@ -281,7 +304,6 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
 
         case 'Kings Command':
             let kingsCommandDebuff = -0.25;
-            buffCharAbility(thisChar, thisCharInitial, kingsCommandDebuff);
             battleObj[battleKey][playerName].chars[charName].debuffs.push({
                 name: debuff,
                 startTurn: turn,
@@ -296,13 +318,6 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
     }
 }
 
-function buffCharAbility(char, charInitial, buffAmount) {
-    char.initiative = round(char.initiative + (charInitial.initiative * buffAmount));
-    char.mental     = round(char.mental     + (charInitial.mental     * buffAmount));
-    char.physical   = round(char.physical   + (charInitial.physical   * buffAmount));
-    char.social     = round(char.social     + (charInitial.social     * buffAmount));
-}
-
 function removeExpiredBuffs(battleObj, battleKey, playerName, charName, turn) {
     let thisChar = battleObj[battleKey][playerName].chars[charName];
     let thisCharInitial = battleObj[battleKey][playerName].initialCharStats[charName];
@@ -314,11 +329,6 @@ function removeExpiredBuffs(battleObj, battleKey, playerName, charName, turn) {
         let thisBuff = thisChar.buffs[i];
 
         if (thisBuff.endTurn == turn) {
-            if (thisBuff.stat == "ability") {
-                buffCharAbility(thisChar, thisCharInitial, thisBuff.amount * -1);
-            } else {
-                thisChar[thisBuff.stat] = round(thisChar[thisBuff.stat] + (thisCharInitial[thisBuff.stat] * thisBuff.amount * -1));
-            }
             battleObj[battleKey].log(`${charName}'s ${thisBuff.name} buff expired! ${thisBuff.stat} decreased by ${thisBuff.amount * 100}%`);
             thisChar.buffs.splice(i, 1);
             i--;
@@ -337,11 +347,6 @@ function removeExpiredDebuffs(battleObj, battleKey, playerName, charName, turn) 
         let thisDebuff = thisChar.debuffs[i];
 
         if (thisDebuff.endTurn == turn) {
-            if (thisDebuff.stat == "ability") {
-                buffCharAbility(thisChar, thisCharInitial, thisDebuff.amount * -1);
-            } else {
-                thisChar[thisDebuff.stat] = round(thisChar[thisDebuff.stat] + (thisCharInitial[thisDebuff.stat] * thisDebuff.amount * -1));
-            }
             battleObj[battleKey].log(`${charName}'s ${thisDebuff.name} debuff expired! ${thisDebuff.stat} increased by ${thisDebuff.amount * -100}%`);
             thisChar.debuffs.splice(i, 1);
             i--;

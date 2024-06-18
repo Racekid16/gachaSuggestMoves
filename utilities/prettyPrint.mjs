@@ -43,7 +43,7 @@ export function printParty(battleObj, battleKey, playerName, partyJSON, hasStren
     let benchHasAbilityBoost = benchChars.reduce((hasAbility, char) => {
         return hasAbility || char.supportCategory == 'Ability';
     }, false);
-    let supportCategoryLength = benchHasAbilityBoost ? 9 : 1;
+    let supportCategoryLength = benchHasAbilityBoost ? 8 : 1;
     let supportBonusLength = getMaxLength(benchChars, 'supportBonus');
     
     for (let char of benchChars) {
@@ -87,20 +87,20 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
 
     let playerNameLength = p1name.length > p2name.length ? p1name.length : p2name.length;
     let charNameLength = p1char.length > p2char.length ? p1char.length : p2char.length;
-    let p1initiative = Math.max(battleObj[battleKey][p1name].chars[p1char].initiative, 0);
-    let p2initiative = Math.max(battleObj[battleKey][p2name].chars[p2char].initiative, 0);
+    let p1initiative = battleObj[battleKey][p1name].chars[p1char].initiative;
+    let p2initiative = battleObj[battleKey][p2name].chars[p2char].initiative;
     let initiativeLength = p1initiative.toString().length > p2initiative.toString().length ?
                            p1initiative.toString().length : p2initiative.toString().length;
-    let p1mental = Math.max(battleObj[battleKey][p1name].chars[p1char].mental, 0);
-    let p2mental = Math.max(battleObj[battleKey][p2name].chars[p2char].mental, 0);
+    let p1mental = battleObj[battleKey][p1name].chars[p1char].mental;
+    let p2mental = battleObj[battleKey][p2name].chars[p2char].mental;
     let mentalLength = p1mental.toString().length > p2mental.toString().length ? 
                        p1mental.toString().length : p2mental.toString().length;
-    let p1physical = Math.max(battleObj[battleKey][p1name].chars[p1char].physical, 0);
-    let p2physical = Math.max(battleObj[battleKey][p2name].chars[p2char].physical, 0);
+    let p1physical = battleObj[battleKey][p1name].chars[p1char].physical;
+    let p2physical = battleObj[battleKey][p2name].chars[p2char].physical;
     let physicalLength = p1physical.toString().length > p2physical.toString().length ? 
                          p1physical.toString().length : p2physical.toString().length;
-    let p1social = Math.max(battleObj[battleKey][p1name].chars[p1char].social, 0);
-    let p2social = Math.max(battleObj[battleKey][p2name].chars[p2char].social, 0);
+    let p1social = battleObj[battleKey][p1name].chars[p1char].social;
+    let p2social = battleObj[battleKey][p2name].chars[p2char].social;
     let socialLength = p1social.toString().length > p2social.toString().length ? 
                        p1social.toString().length : p2social.toString().length;
     let p1resolve = battleObj[battleKey][p1name].chars[p1char].resolve;

@@ -1,7 +1,7 @@
 import { cancelInput } from "./handleInput.mjs";
 import { parseMoveSameChar, getCurrentChar } from "./parseMoveSameChar.mjs";
 import { parseMoveDifferentChars } from "./parseMoveDiffChars.mjs";
-import { addBoost, removeExpiredBoosts } from "./updateBoosts.mjs";
+import { addBoost, removeExpiredBoosts, applyBoosts } from "./updateBoosts.mjs";
 import { removeExpiredStatuses } from "./updateStatuses.mjs";
 import { suggestMoves } from "./suggestMove.mjs";
 import { emulateMove } from "./emulateMove.mjs";
@@ -48,6 +48,8 @@ export async function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
     updateResolves(battleObj, battleKey, p2name, p2resolvesAfterTurn);
     removeExpiredBoosts(battleObj, battleKey, p1name, turn);
     removeExpiredBoosts(battleObj, battleKey, p2name, turn);
+    applyBoosts(battleObj, battleKey, p1name);
+    applyBoosts(battleObj, battleKey, p2name);
     removeExpiredStatuses(battleObj, battleKey, p1name, turn);
     removeExpiredStatuses(battleObj, battleKey, p2name, turn);
 

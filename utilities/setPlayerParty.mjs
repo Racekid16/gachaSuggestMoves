@@ -74,12 +74,12 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
         let thisChar = battleObj[battleKey][playerName].chars[charKey];
         // I'm changing the way I calculate stats because I believe it is the way Rhymar actually does it
         // hopefully this eliminates the inconsistencies I was observing
-        let thisCharBoosts = {
-            resolve: [],
-            mental: [],
-            physical: [],
-            social: [],
-            initiative: []
+        let multiplierObj = {
+            resolve: 1,
+            mental: 1,
+            physical: 1,
+            social: 1,
+            initiative: 1
         }
 
         for (let charKey2 in baseStats) {
@@ -88,12 +88,12 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
             let supportCategory = baseStats[charKey2].supportCategory.toLowerCase();
             if (thisChar.tags.includes(ally)) {
                 if (supportCategory == 'ability') {
-                    thisCharBoosts.initiative.push(baseStats[charKey2].supportBonus / 100);
-                    thisCharBoosts.mental.push(baseStats[charKey2].supportBonus / 100);
-                    thisCharBoosts.physical.push(baseStats[charKey2].supportBonus / 100);
-                    thisCharBoosts.social.push(baseStats[charKey2].supportBonus / 100);
+                    multiplierObj.initiative += baseStats[charKey2].supportBonus / 100;
+                    multiplierObj.mental += baseStats[charKey2].supportBonus / 100;
+                    multiplierObj.physical += baseStats[charKey2].supportBonus / 100;
+                    multiplierObj.social += baseStats[charKey2].supportBonus / 100;
                 } else {
-                    thisCharBoosts[supportCategory].push(baseStats[charKey2].supportBonus / 100);
+                    multiplierObj[supportCategory] += baseStats[charKey2].supportBonus / 100;
                 }
                 charBoosted = true;
             }
@@ -101,12 +101,12 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
                 ally = baseStats[charKey2].allies[1];
                 if (thisChar.tags.includes(ally)) {
                     if (supportCategory == 'ability') {
-                        thisCharBoosts.initiative.push(baseStats[charKey2].supportBonus / 100);
-                        thisCharBoosts.mental.push(baseStats[charKey2].supportBonus / 100);
-                        thisCharBoosts.physical.push(baseStats[charKey2].supportBonus / 100);
-                        thisCharBoosts.social.push(baseStats[charKey2].supportBonus / 100);
+                        multiplierObj.initiative += baseStats[charKey2].supportBonus / 100;
+                        multiplierObj.mental += baseStats[charKey2].supportBonus / 100;
+                        multiplierObj.physical += baseStats[charKey2].supportBonus / 100;
+                        multiplierObj.social += baseStats[charKey2].supportBonus / 100;
                     } else {
-                        thisCharBoosts[supportCategory].push(baseStats[charKey2].supportBonus / 100);
+                        multiplierObj[supportCategory] += baseStats[charKey2].supportBonus / 100;
                     }
                 }
             }
@@ -117,19 +117,15 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
         // I skipped actually checking and instead just automatically add 10% to all character stats,
         // unless you're going against the Chairman Sakayanagi bot
         if (hasStrength) {
-            thisCharBoosts.resolve.push(0.1);
-            thisCharBoosts.mental.push(0.1);
-            thisCharBoosts.physical.push(0.1);
-            thisCharBoosts.social.push(0.1);
-            thisCharBoosts.initiative.push(0.1);
+            multiplierObj.resolve += 0.1;
+            multiplierObj.mental += 0.1;
+            multiplierObj.physical += 0.1;
+            multiplierObj.social += 0.1;
+            multiplierObj.initiative += 0.1;
         }
 
-        for (let statKey in thisCharBoosts) {
-            let totalMultiplier = 1;
-            for (let buffAmount of thisCharBoosts[statKey]) {
-                totalMultiplier += buffAmount;
-            }
-            thisChar[statKey] = round(thisChar[statKey] * totalMultiplier);
+        for (let statKey in multiplierObj) {
+            thisChar[statKey] = round(thisChar[statKey] * multiplierObj[statKey]);
         }
     }
  
