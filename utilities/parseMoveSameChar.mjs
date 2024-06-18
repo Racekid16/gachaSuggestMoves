@@ -108,6 +108,14 @@ async function emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName,
             await determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, affectingMove, move);
             return;
         }
+        if (move == "Impulse") {
+            for (let stat of ["Mental", "Physical", "Social"]) {
+                if (turnResults.includes(`**${charName}** used **${stat} ${move}**!`)) {
+                    await determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, affectingMove, move);
+                    return;
+                }
+            }
+        }
         if (turnResults.includes(`**${charName}** used **${move}**!`)) {
             await determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, affectingMove, move);
             return;

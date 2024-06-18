@@ -7,8 +7,7 @@ import consts from '../consts.json' assert { type: 'json' };
 
 export function emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, turnResults, turn, attackerResolves) {
     
-    if (typeof consts.moveInfo[move] !== 'undefined' && consts.moveInfo[move].type[0] == "attack"
-     && battleObj[battleKey][defender].chars[defenseChar].moves.includes("Group Determination")) {
+    if (consts.moveInfo[move].type[0] == "attack" && battleObj[battleKey][defender].chars[defenseChar].moves.includes("Group Determination")) {
         for (let charKey in battleObj[battleKey][defender].chars) {
             addInflictModifier(battleObj, battleKey, defender, charKey, 0.05, turn, Infinity);
         }
@@ -62,15 +61,6 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             }
             battleObj[battleKey][attacker].chars[attackChar].secrets.add(defenseChar);
             break;
-        
-        case 'Defeat':
-            if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Boss Orders")) {
-                emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Boss Orders", turnResults, turn, attackerResolves);
-            }
-            if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Group Ties")) {
-                emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Group Ties", turnResults, turn, attackerResolves);
-            }
-            break;
 
         case 'Dominate':
             addBoost(battleObj, battleKey, attacker, attackChar, "Dominate", turn);
@@ -87,20 +77,6 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                 let taggedInChar = fromTheShadowsMatch[1];
                 addStatus(battleObj, battleKey, attacker, taggedInChar, "Pacified", turn, 1);
                 addStatus(battleObj, battleKey, attacker, taggedInChar, "Invulnerable", turn, 1);
-            }
-            break;
-        
-        case 'Game Start':
-            if (attackCharObj.moves.includes("Aspect Of Fire")) {
-                emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Aspect Of Fire", turnResults, turn, attackerResolves);
-            }
-            
-            if (attackCharObj.moves.includes("Aspect Of Metal")) {
-                emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Aspect Of Metal", turnResults, turn, attackerResolves);
-            }
-
-            if (attackCharObj.moves.includes("Group Efforts")) {
-                emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Group Efforts", turnResults, turn, attackerResolves);
             }
             break;
         
@@ -155,15 +131,16 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                 for (let buff of lowestResolveTeammateObj.buffs) {
                     addBoost(battleObj, battleKey, attacker, attackChar, buff.name, buff.startTurn);
                 }
-                for (let positiveStatus of lowestResolveTeammateObj.positiveStatuses) {
-                    addStatus(battleObj, battleKey, attacker, attackChar, positiveStatus.name, positiveStatus.startTurn, positiveStatus.numTurns);
-                }
                 for (let inflictModifier of lowestResolveTeammateObj.inflictModifiers) {
                     addInflictModifier(battleObj, battleKey, attacker, attackChar, inflictModifier.amount, inflictModifier.startTurn, inflictModifier.numTurns);
                 }
                 for (let receiveModifier of lowestResolveTeammateObj.receiveModifiers) {
                     addReceiveModifier(battleObj, battleKey, attacker, attackChar, receiveModifier.amount, receiveModifier.startTurn, receiveModifier.numTurns);
                 }
+                for (let positiveStatus of lowestResolveTeammateObj.positiveStatuses) {
+                    addStatus(battleObj, battleKey, attacker, attackChar, positiveStatus.name, positiveStatus.startTurn, positiveStatus.numTurns);
+                }
+                
                 nullifyBuffs(battleObj, battleKey, attacker, lowestResolveTeammate);
                 for (let positiveStatus of battleObj[battleKey][attacker].chars[lowestResolveTeammate].positiveStatuses) {
                     positiveStatus.endTurn = turn;
@@ -242,6 +219,68 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             addBoost(battleObj, battleKey, attacker, attackChar, "Study Initiative", turn);
             break;
         
+        case 'Teamwork':
+            let previousTaggedInChar = battleObj[battleKey][attacker].previousTaggedInChar;
+            let previousTaggedInCharObj = battleObj[battleKey][attacker].chars[previousTaggedInChar];
+            if (previousTaggedInCharObj.tags.includes("Ayanokōji Group")) {
+                addBoost(battleObj, battleKey, playerName, charName, "Teamwork", turn);
+            }
+            if (previousTaggedInChar.includes("Ayanokōji Kiyotaka")) {
+                addStatus(battleObj, battleKey, playerName, charName, "Apathetic", turn, 2);
+            }
+            if (previousTaggedInChar.includes("Miyake Akito")) {
+                addInflictModifier(battleObj, battleKey, playerName, charName, 0.25, turn, 2);
+            }
+            if (previousTaggedInChar.includes("Sakura Airi") || previousTaggedInChar == "Shizuku") {
+                //TODO
+            }
+            if (previousTaggedInChar.includes("Yukimura Keisei")) {
+                nullifyBuffs(battleObj, battleKey, defender, defenseChar);
+            }
+            break;
+
+        case 'Unity':
+            addBoost(battleObj, battleKey, attacker, attackChar, "Unity", turn);
+            addBoostToAliveTeammates(battleObj, battleKey, attacker, attackChar, "Unity", turn);
+            break;
+        
+        case 'Zenith Pace':
+            addBoost(battleObj, battleKey, attacker, attackChar, "Zenith Pace", turn);
+            break;
+        
+        default:
+            break;
+    }
+}
+
+export function emulateAction(battleObj, battleKey, attacker, defender, attackChar, defenseChar, action, turnResults, turn, attackerResolves) {
+    let attackCharObj = battleObj[battleKey][attacker].chars[attackChar];
+
+    switch (action) {
+
+        case 'Defeat':
+            if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Boss Orders")) {
+                emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Boss Orders", turnResults, turn, attackerResolves);
+            }
+            if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Group Ties")) {
+                emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Group Ties", turnResults, turn, attackerResolves);
+            }
+            break;
+
+        case 'Game Start':
+            if (attackCharObj.moves.includes("Aspect Of Fire")) {
+                emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Aspect Of Fire", turnResults, turn, attackerResolves);
+            }
+            
+            if (attackCharObj.moves.includes("Aspect Of Metal")) {
+                emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Aspect Of Metal", turnResults, turn, attackerResolves);
+            }
+
+            if (attackCharObj.moves.includes("Group Efforts")) {
+                emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Group Efforts", turnResults, turn, attackerResolves);
+            }
+            break;
+        
         case 'Tag-in':
             let attackerPreviousTaggedInChar = battleObj[battleKey][attacker].previousTaggedInChar;
             let attackerPreviousTaggedInCharObj;
@@ -266,41 +305,6 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             }
             break;
 
-        case 'Teamwork':
-            let previousTaggedInChar = battleObj[battleKey][attacker].previousTaggedInChar;
-            let previousTaggedInCharObj = battleObj[battleKey][attacker].chars[previousTaggedInChar];
-            if (previousTaggedInCharObj.tags.includes("Ayanokōji Group")) {
-                addBoost(battleObj, battleKey, playerName, charName, "Teamwork", turn);
-            }
-            if (previousTaggedInChar.includes("Ayanokōji Kiyotaka")) {
-                addStatus(battleObj, battleKey, playerName, charName, "Apathetic", turn, 2);
-            }
-            if (previousTaggedInChar.includes("Miyake Akito")) {
-                addInflictModifier(battleObj, battleKey, playerName, charName, 0.25, turn, 2);
-            }
-            if (previousTaggedInChar.includes("Sakura Airi") || previousTaggedInChar == "Shizuku") {
-                emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Teamwork Counter", turnResults, turn, attackerResolves);
-            }
-            if (previousTaggedInChar.includes("Yukimura Keisei")) {
-                nullifyBuffs(battleObj, battleKey, defender, defenseChar);
-            }
-            break;
-
-        case 'Teamwork Counter':
-            //TODO: see how this works
-            break;
-
-        case 'Unity':
-            addBoost(battleObj, battleKey, attacker, attackChar, "Unity", turn);
-            addBoostToAliveTeammates(battleObj, battleKey, attacker, attackChar, "Unity", turn);
-            break;
-        
-        case 'Zenith Pace':
-            addBoost(battleObj, battleKey, attacker, attackChar, "Zenith Pace", turn);
-            break;
-        
-        default:
-            break;
     }
 }
 

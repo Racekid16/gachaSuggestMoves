@@ -5,7 +5,7 @@ import { addBoost, removeExpiredBoosts, applyBoosts } from "./updateBoosts.mjs";
 import { removeExpiredStatuses, applyStatuses } from "./updateStatuses.mjs";
 import { removeExpiredDamageModifiers, applyDamageModifiers } from "./updateDamageModifiers.mjs";
 import { suggestMoves } from "./suggestMove.mjs";
-import { emulateMove } from "./emulateMove.mjs";
+import { emulateMove, emulateAction } from "./emulateMove.mjs";
 import consts from '../consts.json' assert { type: 'json' };
 
 // identify changes in stats or statuses then update the battleObj accordingly
@@ -122,12 +122,12 @@ function applyInnateAbilities(battleObj, battleKey, attacker, defender, attackCh
     let attackerID = battleObj[battleKey][attacker].id;
 
     if (attackerPreviousTaggedInChar !== null && attackerResolves[attackerPreviousTaggedInChar] == 0) {
-        emulateMove(battleObj, battleKey, attacker, defender, attackerPreviousTaggedInChar, defenseChar, "Defeat", turnResults, turn, attackerResolves);
+        emulateAction(battleObj, battleKey, attacker, defender, attackerPreviousTaggedInChar, defenseChar, "Defeat", turnResults, turn, attackerResolves);
     }
 
     if (turn == 1) {
         for (let charKey in battleObj[battleKey][attacker].chars) {
-            emulateMove(battleObj, battleKey, attacker, defender, charKey, defenseChar, "Game Start", turnResults, turn, attackerResolves);
+            emulateAction(battleObj, battleKey, attacker, defender, charKey, defenseChar, "Game Start", turnResults, turn, attackerResolves);
         }
     }
 
@@ -136,7 +136,7 @@ function applyInnateAbilities(battleObj, battleKey, attacker, defender, attackCh
     let taggedInMatch = taggedInRegex.exec(turnResults);
     if (taggedInMatch !== null) {
         let taggedInChar = taggedInMatch[1];
-        emulateMove(battleObj, battleKey, attacker, defender, taggedInChar, defenseChar, "Tag-in", turnResults, turn, attackerResolves);
+        emulateAction(battleObj, battleKey, attacker, defender, taggedInChar, defenseChar, "Tag-in", turnResults, turn, attackerResolves);
     }
 
 

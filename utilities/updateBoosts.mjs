@@ -383,7 +383,7 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
     switch (debuff) {
 
         case 'Bottle Break Physical':
-            let bottleBreakPhysicalDebuff = -0.25;
+            let bottleBreakPhysicalDebuff = -0.1;
             battleObj[battleKey][playerName].chars[charName].debuffs.push({
                 name: debuff,
                 startTurn: turn,
