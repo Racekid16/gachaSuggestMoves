@@ -5,7 +5,7 @@ import { emulateMove } from "./emulateMove.mjs";
 export function parseMoveDifferentChars(battleObj, battleKey, attacker, defender, attackChar, 
                                         defenseChar, turnResults, turn, attackerResolves) {
 
-    for (let move of ['Arrogance', 'Blazing Form', 'Charm', 'Dominate', 'From The Shadows', 'Hate',
+    for (let move of ['Arrogance', 'Blazing Form', 'Bottle Break', 'Charm', 'Dominate', 'From The Shadows', 'Hate',
                       'Humiliate', 'Kings Command', 'Provoke', 'Slap', 'Slumber', 'Study', 'Unity']) {
         if (turnResults.includes(`**${attackChar}** used **${move}**!`)) {
             emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, turnResults, turn, attackerResolves);

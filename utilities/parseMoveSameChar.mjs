@@ -12,7 +12,7 @@ export async function parseMoveSameChar(battleObj, p1name, p2name, charName, bat
     let battleKey = p1name + "_vs._" + p2name;
     let turnResults = battleEmbed.fields[2].value;
 
-    for (let move of ['Arrogance', 'Blazing Form', 'Charm', 'Dominate', 'From The Shadows', 'Hate',
+    for (let move of ['Arrogance', 'Bottle Break', 'Blazing Form', 'Charm', 'Dominate', 'From The Shadows', 'Hate',
                       'Kings Command', 'Provoke', 'Slap', 'Slumber', 'Study', 'Unity']) {
         if (count(turnResults, `**${charName}** used **${move}**!`) == 1) {
             await emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, move);

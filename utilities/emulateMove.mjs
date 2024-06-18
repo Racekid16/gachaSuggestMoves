@@ -6,6 +6,7 @@ import { round } from "./round.mjs";
 import consts from '../consts.json' assert { type: 'json' };
 
 export function emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, turnResults, turn, attackerResolves) {
+    
     if (typeof consts.moveInfo[move] !== 'undefined' && consts.moveInfo[move].type[0] == "attack"
      && battleObj[battleKey][defender].chars[defenseChar].moves.includes("Group Determination")) {
         for (let charKey in battleObj[battleKey][defender].chars) {
@@ -14,6 +15,8 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
     }
 
     let attackerID = battleObj[battleKey][attacker].id;
+    let attackCharObj = battleObj[battleKey][attacker].chars[attackChar];
+    let attackCharBaseObj = battleObj[battleKey][attacker].baseCharStats[attackChar];
 
     switch (move) {
         
@@ -41,6 +44,17 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             addBoostToAliveTeammates(battleObj, battleKey, attacker, attackChar, "Boss Orders", turn);
             break;
         
+        case 'Bottle Break':
+            addStatus(battleObj, battleKey, defender, defenseChar, "Wounded", turn, 1);
+            nullifyBuffs(battleObj, battleKey, defender, defenseChar);
+            attackCharObj.moves[attackCharObj.moves.indexOf(move)] = "Influence";
+            attackCharBaseObj.moves[attackCharBaseObj.moves.indexOf(move)] = "Influence";
+            attackCharObj.personality = "Reserved";
+            addBoost(battleObj, battleKey, attacker, attackChar, "Bottle Break Social", turn);
+            addBoost(battleObj, battleKey, attacker, attackChar, "Bottle Break Initiative", turn);
+            addBoost(battleObj, battleKey, attacker, attackChar, "Bottle Break Physical", turn);
+            break;
+
         case 'Charm':
             addBoost(battleObj, battleKey, defender, defenseChar, "Charm", turn);
             if (typeof battleObj[battleKey][attacker].chars[attackChar].secrets === 'undefined') {
@@ -77,7 +91,6 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             break;
         
         case 'Game Start':
-            let attackCharObj = battleObj[battleKey][attacker].chars[attackChar];
             if (attackCharObj.moves.includes("Aspect Of Fire")) {
                 emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Aspect Of Fire", turnResults, turn, attackerResolves);
             }
@@ -111,16 +124,17 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             break;
         
         case 'Humiliate':
-            addBoost(battleObj, battleKey, defender, defenseChar, "Humiliate", turn);
-            let humiliateStr = `\\*\\*${attackChar}\\*\\* used \\*\\*Humiliate\\*\\*!\\n\\*\\*.+\\*\\*'s \\*\\*(.+)\\*\\* was weakened!\\n\\*\\*.+\\*\\* is \\*\\*(.+)\\*\\* for (\\d+) turns?!`;
+            let humiliateStr = `\\*\\*${attackChar}\\*\\* used \\*\\*Humiliate\\*\\*!(\\n\\*\\*.+\\*\\*'s \\*\\*(.+)\\*\\* was weakened!)?\\n\\*\\*.+\\*\\* is \\*\\*(.+)\\*\\* for (\\d+) turns?!`;
             let humiliateRegex = new RegExp(humiliateStr);
             let humiliateMatch = humiliateRegex.exec(turnResults);
 
             if (humiliateMatch !== null) {
-                let stat = statusMatch[1]
-                addBoost(battleObj, battleKey, defender, defenseChar, `Humiliate ${stat}`, turn);
-                let status = statusMatch[2];
-                let numTurns = parseInt(statusMatch[3]);
+                let stat = humiliateMatch[2];
+                if (typeof stat !== 'undefined') {
+                    addBoost(battleObj, battleKey, defender, defenseChar, `Humiliate ${stat}`, turn);
+                }
+                let status = humiliateMatch[3];
+                let numTurns = parseInt(humiliateMatch[4]);
                 addStatus(battleObj, battleKey, defender, defenseChar, status, turn, numTurns);
             } else {
                 console.log(`No new status for ${defenseChar} was found in turn ${turn} of ${battleKey}`);
@@ -141,8 +155,19 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                 for (let buff of lowestResolveTeammateObj.buffs) {
                     addBoost(battleObj, battleKey, attacker, attackChar, buff.name, buff.startTurn);
                 }
-                //TODO: see if this steals damage modifiers too
-                lowestResolveTeammateObj.buffs = [];
+                for (let positiveStatus of lowestResolveTeammateObj.positiveStatuses) {
+                    addStatus(battleObj, battleKey, attacker, attackChar, positiveStatus.name, positiveStatus.startTurn, positiveStatus.numTurns);
+                }
+                for (let inflictModifier of lowestResolveTeammateObj.inflictModifiers) {
+                    addInflictModifier(battleObj, battleKey, attacker, attackChar, inflictModifier.amount, inflictModifier.startTurn, inflictModifier.numTurns);
+                }
+                for (let receiveModifier of lowestResolveTeammateObj.receiveModifiers) {
+                    addReceiveModifier(battleObj, battleKey, attacker, attackChar, receiveModifier.amount, receiveModifier.startTurn, receiveModifier.numTurns);
+                }
+                nullifyBuffs(battleObj, battleKey, attacker, lowestResolveTeammate);
+                for (let positiveStatus of battleObj[battleKey][attacker].chars[lowestResolveTeammate].positiveStatuses) {
+                    positiveStatus.endTurn = turn;
+                } 
                 
             }
 
@@ -237,9 +262,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             }
 
             if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("The Perfect Existence")) {
-                for (let debuff of battleObj[battleKey][attacker].chars[attackChar].debuffs) {
-                    debuff.endTurn = turn;
-                }
+                nullifyDebuffs(battleObj, battleKey, attacker, attackChar);
             }
             break;
 
@@ -259,10 +282,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                 emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Teamwork Counter", turnResults, turn, attackerResolves);
             }
             if (previousTaggedInChar.includes("Yukimura Keisei")) {
-                for (let buff of battleObj[battleKey][defender].chars[defenseChar].buffs) {
-                    buff.endTurn = turn;
-                }
-                //TODO: see if this nullifies damage modifiers too
+                nullifyBuffs(battleObj, battleKey, defender, defenseChar);
             }
             break;
 
@@ -281,5 +301,23 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
         
         default:
             break;
+    }
+}
+
+function nullifyBuffs(battleObj, battleKey, playerName, charName) {
+    for (let buff of battleObj[battleKey][playerName].chars[charName].buffs) {
+        buff.endTurn = turn;
+    }
+    for (let inflictModifier of battleObj[battleKey][playerName].chars[charName].inflictModifiers) {
+        inflictModifier.endTurn = turn;
+    }
+    for (let receiveModifier of battleObj[battleKey][playerName].chars[charName].receiveModifiers) {
+        receiveModifier.endTurn = turn;
+    }
+}
+
+function nullifyDebuffs(battleObj, battleKey, playerName, charName) {
+    for (let debuff of battleObj[battleKey][playerName].chars[charName].debuffs) {
+        debuff.endTurn = turn;
     }
 }

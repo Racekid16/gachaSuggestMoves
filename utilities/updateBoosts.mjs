@@ -14,6 +14,8 @@ export function addBoost(battleObj, battleKey, playerName, charName, boost, turn
         case 'Arrogance':
         case 'Blazing Form':
         case 'Boss Orders':
+        case 'Bottle Break Initiative':
+        case 'Bottle Break Social':
         case 'Group Ties':
         case 'Introversion':
         case '1-turn Lead By Example':
@@ -27,6 +29,7 @@ export function addBoost(battleObj, battleKey, playerName, charName, boost, turn
             addBuff(battleObj, battleKey, playerName, charName, boost, turn);
             break;
         
+        case 'Bottle Break Physical':
         case 'Charm':
         case 'Dominate':
         case 'Hate':
@@ -232,6 +235,28 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             }); 
             break;
         
+        case 'Bottle Break Initiative':
+            let bottleBreakInitiativeBuff = 0.5;
+            battleObj[battleKey][playerName].chars[charName].buffs.push({
+                name: buff,
+                startTurn: turn,
+                endTurn: Infinity,
+                stat: "initiative",
+                amount: bottleBreakInitiativeBuff
+            });
+            break;
+
+        case 'Bottle Break Social':
+            let bottleBreakSocialBuff = 0.5;
+            battleObj[battleKey][playerName].chars[charName].buffs.push({
+                name: buff,
+                startTurn: turn,
+                endTurn: Infinity,
+                stat: "social",
+                amount: bottleBreakSocialBuff
+            });
+            break;
+
         case 'Group Ties':
             let groupTiesBuff = 0.5;
             battleObj[battleKey][playerName].chars[charName].buffs.push({
@@ -356,6 +381,17 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
 function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
     let numDebuffs = battleObj[battleKey][playerName].chars[charName].debuffs.length;
     switch (debuff) {
+
+        case 'Bottle Break Physical':
+            let bottleBreakPhysicalDebuff = -0.25;
+            battleObj[battleKey][playerName].chars[charName].debuffs.push({
+                name: debuff,
+                startTurn: turn,
+                endTurn: Infinity,
+                stat: "physical",
+                amount: bottleBreakPhysicalDebuff
+            });
+            break;
 
         case 'Charm':
             let charmDebuff = -0.33;

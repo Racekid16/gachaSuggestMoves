@@ -148,41 +148,52 @@ function applyInnateAbilities(battleObj, battleKey, attacker, defender, attackCh
 // charName is the current tagged-in char after the turn that was just parsed
 // and the one you'll transform into, if applicable
 function applyTransformation(battleObj, battleKey, playerName, charName, turn) {
-    if (charName !== null && typeof battleObj[battleKey][playerName].chars[charName] === 'undefined'
-     && consts.transformChars.includes(charName)) {
-        switch (charName) {
+    if (charName !== null && typeof battleObj[battleKey][playerName].chars[charName] === 'undefined') {
+        if (consts.transformChars.includes(charName)) {
+            switch (charName) {
 
-            case "Serious Kōenji Rokusuke":
-                battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars["Perfect Kōenji Rokusuke"]);
-                battleObj[battleKey][playerName].baseCharStats[charName] = structuredClone(battleObj[battleKey][playerName].baseCharStats["Perfect Kōenji Rokusuke"]);
-                addBoost(battleObj, battleKey, playerName, charName, "The Perfect Existence", turn);
-                battleObj[battleKey][playerName].chars[charName].moves.splice(
-                    battleObj[battleKey][playerName].chars[charName].moves.indexOf("The Perfect Existence")
-                , 1);
-                battleObj[battleKey][playerName].baseCharStats[charName].moves.splice(
-                    battleObj[battleKey][playerName].baseCharStats[charName].moves.indexOf("The Perfect Existence")
-                , 1);
-                delete battleObj[battleKey][playerName].chars["Perfect Kōenji Rokusuke"];
-                delete battleObj[battleKey][playerName].baseCharStats["Perfect Kōenji Rokusuke"];
-                break;
+                case "Freed Horikita Suzune":
+                    battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars["Detained Horikita Suzune"]);
+                    battleObj[battleKey][playerName].baseCharStats[charName] = structuredClone(battleObj[battleKey][playerName].baseCharStats["Detained Horikita Suzune"]);
+                    delete battleObj[battleKey][playerName].chars["Detained Horikita Suzune"];
+                    delete battleObj[battleKey][playerName].baseCharStats["Detained Horikita Suzune"];
+                    break;
 
-            case "True Kushida Kikyō":
-                battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars["Unmasked Kushida Kikyō"]);
-                battleObj[battleKey][playerName].chars[charName].moves = ["Scheming", "Fighting", "Shatter", "Mask"];
-                battleObj[battleKey][playerName].baseCharStats[charName] = structuredClone(battleObj[battleKey][playerName].baseCharStats["Unmasked Kushida Kikyō"]);
-                battleObj[battleKey][playerName].baseCharStats[charName].moves = ["Scheming", "Fighting", "Shatter", "Mask"];
-                delete battleObj[battleKey][playerName].chars["Unmasked Kushida Kikyō"];
-                delete battleObj[battleKey][playerName].baseCharStats["Unmasked Kushida Kikyō"];
-                break;
+                case "Serious Kōenji Rokusuke":
+                    battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars["Perfect Kōenji Rokusuke"]);
+                    battleObj[battleKey][playerName].baseCharStats[charName] = structuredClone(battleObj[battleKey][playerName].baseCharStats["Perfect Kōenji Rokusuke"]);
+                    battleObj[battleKey][playerName].chars[charName].moves.splice(
+                        battleObj[battleKey][playerName].chars[charName].moves.indexOf("The Perfect Existence")
+                    , 1);
+                    battleObj[battleKey][playerName].baseCharStats[charName].moves.splice(
+                        battleObj[battleKey][playerName].baseCharStats[charName].moves.indexOf("The Perfect Existence")
+                    , 1);
+                    delete battleObj[battleKey][playerName].chars["Perfect Kōenji Rokusuke"];
+                    delete battleObj[battleKey][playerName].baseCharStats["Perfect Kōenji Rokusuke"];
+                    addBoost(battleObj, battleKey, playerName, charName, "The Perfect Existence", turn);
+                    break;
 
-            case "Unmasked Kushida Kikyō":
-                battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars["True Kushida Kikyō"]);
-                battleObj[battleKey][playerName].chars[charName].moves = ["Academic", "Empathy", "Charm", "Unmask"];
-                battleObj[battleKey][playerName].baseCharStats[charName] = structuredClone(battleObj[battleKey][playerName].baseCharStats["True Kushida Kikyō"]);
-                battleObj[battleKey][playerName].baseCharStats[charName].moves = ["Academic", "Empathy", "Charm", "Unmask"];
-                delete battleObj[battleKey][playerName].chars["True Kushida Kikyō"];
-                delete battleObj[battleKey][playerName].baseCharStats["True Kushida Kikyō"];
-                break;
+                case "True Kushida Kikyō":
+                    battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars["Unmasked Kushida Kikyō"]);
+                    battleObj[battleKey][playerName].chars[charName].moves = ["Scheming", "Fighting", "Shatter", "Mask"];
+                    battleObj[battleKey][playerName].baseCharStats[charName] = structuredClone(battleObj[battleKey][playerName].baseCharStats["Unmasked Kushida Kikyō"]);
+                    battleObj[battleKey][playerName].baseCharStats[charName].moves = ["Scheming", "Fighting", "Shatter", "Mask"];
+                    delete battleObj[battleKey][playerName].chars["Unmasked Kushida Kikyō"];
+                    delete battleObj[battleKey][playerName].baseCharStats["Unmasked Kushida Kikyō"];
+                    break;
+
+                case "Unmasked Kushida Kikyō":
+                    battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars["True Kushida Kikyō"]);
+                    battleObj[battleKey][playerName].chars[charName].moves = ["Academic", "Empathy", "Charm", "Unmask"];
+                    battleObj[battleKey][playerName].baseCharStats[charName] = structuredClone(battleObj[battleKey][playerName].baseCharStats["True Kushida Kikyō"]);
+                    battleObj[battleKey][playerName].baseCharStats[charName].moves = ["Academic", "Empathy", "Charm", "Unmask"];
+                    delete battleObj[battleKey][playerName].chars["True Kushida Kikyō"];
+                    delete battleObj[battleKey][playerName].baseCharStats["True Kushida Kikyō"];
+                    break;
+            }
+        
+        } else {
+            console.log(`Unrecognized transform character ${charName} in turn ${turn} of ${battleKey}`);
         }
     }
 }
