@@ -111,7 +111,7 @@ export function applyBoosts(battleObj, battleKey, playerName) {
             let debuff = thisCharObj.debuffs[i];
             if (thisCharObj.moves.includes('Lead By Example') && (debuff.stat == 'ability' || debuff.stat == 'physical')) {
                 battleObj[battleKey].log(`${debuff} debuff negated as it would lower ${charName}'s physical`);
-                thisChar.debuffs.splice(i, 1);
+                thisCharObj.debuffs.splice(i, 1);
                 i--;
                 continue;
             }

@@ -8,7 +8,7 @@ import consts from '../consts.json' assert { type: 'json' };
 const delay = async (ms = 1000) =>  new Promise(resolve => setTimeout(resolve, ms));
 
 export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
-    let battleKey = p1name + "_vs._" + p2name;
+    let battleKey = p1name + " vs. " + p2name;
     let turnResults = battleEmbed.fields[2].value;
     battleObj[battleKey] = {};
     battleObj[battleKey].time = new Date().toLocaleString();
@@ -22,15 +22,15 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
         fs.appendFileSync(`currentBattles/${battleKey}.txt`, str + "\n", (err) => {if (err) { throw err; }});
     }
 
-    console.log(`${p1name} vs. ${p2name} started`);
-    battleObj[battleKey].log(`${p1name} vs. ${p2name} started at ${battleObj[battleKey].time}\n`);
+    console.log(`${battleKey} started`);
+    battleObj[battleKey].log(`${battleKey} started at ${battleObj[battleKey].time}\n`);
 
     let promise1 = addPlayerToBattle(battleObj, battleKey, p1name, 1, turnResults, null);
     let promise2 = addPlayerToBattle(battleObj, battleKey, p2name, 2, turnResults, null);
     let [result1, result2] = await Promise.all([promise1, promise2]);
     if (result1 != 0 || result2 != 0) {
         deleteBattle(battleObj, p1name, p2name, null);
-        console.log(`${p1name} vs. ${p2name} was deleted; failed to request a player's party`);
+        console.log(`${battleKey} was deleted; failed to request a player's party`);
         return;
     }
 
@@ -56,9 +56,10 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
     });
     let responseJSON = await response.json();
     if (responseJSON.nick !== null) {
-        playerName = responseJSON.nick;
+        playerName = `1.${responseJSON.nick}`;
     }
-    let battleKey = playerName + "_vs._Chairman Sakayanagi";
+    let botName = "2.Chairman Sakayanagi";
+    let battleKey = playerName + " vs. " + botName;
     battleObj[battleKey] = {};
     battleObj[battleKey].time = new Date().toLocaleString();
     battleObj[battleKey].data = "";
@@ -70,15 +71,15 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
         fs.appendFileSync(`currentBattles/${battleKey}.txt`, str + "\n", (err) => {if (err) { throw err; }});
     }
     
-    console.log(`${playerName} vs. Chairman Sakayanagi (Campaign Stage ${stage}) started`);
-    battleObj[battleKey].log(`${playerName} vs. Chairman Sakayanagi (Campaign Stage ${stage}) started at ${battleObj[battleKey].time}\n`);
+    console.log(`${battleKey} (Campaign Stage ${stage}) started`);
+    battleObj[battleKey].log(`${battleKey} (Campaign Stage ${stage}) started at ${battleObj[battleKey].time}\n`);
 
-    battleObj[battleKey]['Chairman Sakayanagi'] = {};
-    battleObj[battleKey]['Chairman Sakayanagi'].chars = {};
-    battleObj[battleKey]['Chairman Sakayanagi'].id = consts.botID;
-    battleObj[battleKey]['Chairman Sakayanagi'].previousTaggedInChar = null;
-    battleObj.usernames[consts.botID] = 'Chairman Sakayanagi'
-    setPlayerParty(battleObj, 'Chairman Sakayanagi', botPartyImageURL);
+    battleObj[battleKey][botName] = {};
+    battleObj[battleKey][botName].chars = {};
+    battleObj[battleKey][botName].id = consts.botID;
+    battleObj[battleKey][botName].previousTaggedInChar = null;
+    battleObj.usernames[consts.botID] = botName;
+    setPlayerParty(battleObj, "Chairman Sakayanagi", consts.botID, botPartyImageURL);
 
     battleObj[battleKey][playerName] = {};
     battleObj[battleKey][playerName].chars = {};
@@ -88,7 +89,7 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
 }
 
 export function deleteBattle(battleObj, p1name, p2name, turnResults) {
-    let battleKey = p1name + "_vs._" + p2name;
+    let battleKey = p1name + " vs. " + p2name;
     
     if (turnResults !== null) {
         let winnerID = /<@(\d+)>/.exec(turnResults)[1];
@@ -161,16 +162,17 @@ export function verifyPlayerResolves(battleObj, battleKey, playerName, playerNum
 }
 
 export async function requestPlayerPartyCampaignBattle(battleObj, battleKey, playerName, playerID) {
-    battleObj.currentBattles.push([new Date().getTime(), 'campaign', playerName, 'Chairman Sakayanagi', playerID]);
+    let botName = "2.Chairman Sakayanagi";
+    battleObj.currentBattles.push([new Date().getTime(), 'campaign', playerName, botName, playerID]);
     let myPromise = addPlayerToBattle(battleObj, battleKey, playerName, 1, null, playerID);
     let myResult = await myPromise;
     if (myResult != 0) { 
-        deleteBattle(battleObj, playerName, 'Chairman Sakayanagi', null);
-        console.log(`${playerName} vs. Chairman Sakayanagi was deleted; failed to request ${playerName}'s party`);
+        deleteBattle(battleObj, playerName, botName, null);
+        console.log(`${battleKey} was deleted; failed to request ${playerName}'s party`);
         return;
     }
     
-    let validPromise = verifyBattleValidity(battleObj, playerName, 'Chairman Sakayanagi');
+    let validPromise = verifyBattleValidity(battleObj, playerName, botName);
     let promiseResult = await validPromise;
     if (promiseResult != 0) {
         return;
@@ -212,7 +214,7 @@ async function addPlayerToBattle(battleObj, battleKey, playerName, playerNumber,
 }
 
 // if it fails to request someone's party, retry the specified number of times with the specified wait timein between.
-async function fetchWithRetry(url, options, retries=1, waitTime=2000) {
+async function fetchWithRetry(url, options, retries=2) {
     let response;
     for (let attempt = 0; attempt <= retries; attempt++) {
         response = await fetch(url, options);
@@ -220,8 +222,13 @@ async function fetchWithRetry(url, options, retries=1, waitTime=2000) {
             return response;
         }
         if (attempt < retries) {
-            console.log(`Attempt ${attempt + 1} failed with status ${response.status}: ${response.statusText}. Retrying in ${waitTime / 1000} seconds...`);
-            await delay(waitTime);
+            let waitTime = 1;
+            if (response.status == 429) {
+                let responseJSON = await response.json();
+                waitTime = responseJSON.retry_after;
+            }
+            console.log(`Attempt ${attempt + 1} failed with status ${response.status}: ${response.statusText}. Retrying in ${waitTime} seconds...`);
+            await delay(waitTime * 1000);
         }
     }
     return response;
@@ -230,7 +237,7 @@ async function fetchWithRetry(url, options, retries=1, waitTime=2000) {
 // verify that all characters in both player's parties are ones the script is prepared to deal with,
 // and if not, delete the battle
 async function verifyBattleValidity(battleObj, p1name, p2name) { 
-    let battleKey = p1name + "_vs._" + p2name;
+    let battleKey = p1name + " vs. " + p2name;
 
     while (typeof battleObj[battleKey][p1name].valid === 'undefined' || typeof battleObj[battleKey][p2name].valid === 'undefined') {
         await delay(1);
@@ -238,9 +245,9 @@ async function verifyBattleValidity(battleObj, p1name, p2name) {
 
     if (!battleObj[battleKey][p1name].valid || !battleObj[battleKey][p2name].valid) {
         if (!battleObj[battleKey][p1name].valid) {
-            console.log(`${p1name} vs. ${p2name} was deleted because ${battleObj[battleKey][p1name].reason}`);
+            console.log(`${battleKey} was deleted because ${battleObj[battleKey][p1name].reason}`);
         } else {
-            console.log(`${p1name} vs. ${p2name} was deleted because ${battleObj[battleKey][p2name].reason}`);
+            console.log(`${battleKey} was deleted because ${battleObj[battleKey][p2name].reason}`);
         }
         deleteBattle(battleObj, p1name, p2name, null);
         return -1;

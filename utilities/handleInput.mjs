@@ -5,12 +5,12 @@ let inputPromises = {};
 let userInputQueue = [];
 let currentPrompt = null;
 
-export function getUserInput(battleKey, p1name, p2name, affectingMove) {
+export async function getUserInput(battleKey, p1name, p2name, affectingMove) {
     if (inputPromises[battleKey]) {
         cancelInput(battleKey);
     }
 
-    const promptMessage = `Did 1.${p1name} or 2.${p2name} use ${affectingMove}?\n`;
+    const promptMessage = `Did ${p1name} or ${p2name} use ${affectingMove}?\n`;
     const userInputPromise = new Promise((resolve, reject) => {
         userInputQueue.push({
             key: battleKey,

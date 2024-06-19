@@ -9,7 +9,7 @@ import consts from '../consts.json' assert { type: 'json' };
 export async function parseMoveSameChar(battleObj, p1name, p2name, charName, battleEmbed, turn, 
                                   p1resolves, p2resolves, p1taggedIn, p2taggedIn) {
 
-    let battleKey = p1name + "_vs._" + p2name;
+    let battleKey = p1name + " vs. " + p2name;
     let turnResults = battleEmbed.fields[2].value;
 
     for (let move of ['Arrogance', 'Bottle Break', 'Blazing Form', 'Charm', 'Dominate', 'From The Shadows', 'Hate',
@@ -70,14 +70,14 @@ function count(str, subStr) {
 //we also assume for now that both players' charName have the same initiative and used the same
 //attack + boost/status affecting move
 async function emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, affectingMove) {
-    let battleKey = p1name + "_vs._" + p2name;
+    let battleKey = p1name + " vs. " + p2name;
     let turnResults = battleEmbed.fields[2].value;
     let resolvesObj = {};
     resolvesObj[p1name] = p1resolves;
     resolvesObj[p2name] = p2resolves;
     
     let [attacker, defender] = determineIfPlayerUnableToMove(battleObj, p1name, p2name, charName, battleEmbed, p1taggedIn, p2taggedIn);
-    if (attacker != false) {
+    if (attacker !== false) {
         emulateMove(battleObj, battleKey, attacker, defender, charName, charName, affectingMove, turnResults, turn, resolvesObj[attacker]);
         return;
     }
@@ -124,7 +124,7 @@ async function emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName,
 }
 
 function determineIfPlayerUnableToMove(battleObj, p1name, p2name, charName, battleEmbed, p1taggedIn, p2taggedIn) {
-    let battleKey = p1name + "_vs._" + p2name;
+    let battleKey = p1name + " vs. " + p2name;
 
     if (p1taggedIn) {
         return [p2name, p1name];
@@ -180,7 +180,7 @@ function determineIfPlayerUnableToMove(battleObj, p1name, p2name, charName, batt
 
 //affectingMove and otherMove are guaranteed to be different.
 async function determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, affectingMove, otherMove) {
-    let battleKey = p1name + "_vs._" + p2name; 
+    let battleKey = p1name + " vs. " + p2name; 
     let turnResults = battleEmbed.fields[2].value;    
     let affectingMoveObj = consts.moveInfo[affectingMove];
     affectingMoveObj.name = affectingMove;
@@ -495,7 +495,7 @@ async function manuallyDetermineWhoUsedWhichMove(battleObj, battleKey, p1name, p
 }
 
 function emulateDoubleHumiliate(battleObj, p1name, p2name, charName, turnResults, turn, p1resolves, p2resolves) {
-    let battleKey = p1name + "_vs._" + p2name;
+    let battleKey = p1name + " vs. " + p2name;
     let attackStats = ['mental', 'physical', 'social'];
     let p1highestAttackStat =  attackStats.reduce((highest, current) => {
         let thisStat = battleObj[battleKey][p1name].chars[charName][current];

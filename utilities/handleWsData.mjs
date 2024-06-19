@@ -10,30 +10,40 @@ export function handleWsData(battleObj, responseJSON) {
     // update an ongoing battle
     if ((responseJSON.t == 'MESSAGE_CREATE' || responseJSON.t == 'MESSAGE_UPDATE') && responseJSON.d.author?.id == consts.botID 
     && responseJSON.d.embeds?.[0]?.title?.substring(0, 6) == "BATTLE" && responseJSON.d.embeds[0].fields.length == 3) {
-        processBattleEmbed(battleObj, responseJSON.d.embeds[0]);
+        processBattleEmbed(battleObj, responseJSON, responseJSON.d.embeds[0]);
     }
 
     // set the party of a player whose party was just requested by the script (see battleManager.mjs's createBattle function)
     else if (responseJSON.t == 'MESSAGE_UPDATE' && responseJSON.d.author?.id == consts.botID && responseJSON.d.embeds.length > 0
     && responseJSON.d.channel_id == config.privateThread && /.+'s Party/.test(responseJSON.d.embeds[0]?.author?.name)) {
         let playerName = /(.+)'s Party/.exec(responseJSON.d.embeds[0]?.author.name)[1];
+        let playerID = "";
+        let playerIDRegex = /https\:\/\/cdn\.discordapp\.com(\/guilds\/(\d+)\/users\/(\d+))?\/avatars\/(\d+)?/
+        let playerIDMatch = playerIDRegex.exec(responseJSON.d.embeds[0].author.icon_url);
+        if (typeof playerIDMatch[3] !== 'undefined') {
+            playerID = playerIDMatch[3];
+        }
+        if (typeof playerIDMatch[4] !== 'undefined') {
+            playerID = playerIDMatch[4];
+        }
         let imageURL = responseJSON.d.embeds[0].image.proxy_url + 'format=png&width=328&height=254';
-        setPlayerParty(battleObj, playerName, imageURL);
+        setPlayerParty(battleObj, playerName, playerID, imageURL);
     }
 
     // create an entry in battleObj representing a campaign battle
     else if (responseJSON.t == 'MESSAGE_UPDATE' && responseJSON.d.author?.id == consts.botID && responseJSON.d.embeds.length > 0
     && /Campaign Stage \d+/.test(responseJSON.d.embeds[0]?.author?.name) && responseJSON.d.embeds[0].image?.proxy_url) {
-        let playerName = responseJSON.d.interaction_metadata.user.global_name;
+        let playerName = `1.${responseJSON.d.interaction_metadata.user.global_name}`;
+        let botName = "2.Chairman Sakayanagi";
         let playerID = responseJSON.d.interaction_metadata.user.id;
         let botPartyImageURL = responseJSON.d.embeds[0].image.proxy_url + 'format=png&width=328&height=254';
         let stage = /Campaign Stage (\d+)/.exec(responseJSON.d.embeds[0].author.name)[1];
-        let battleKey = playerName + "_vs._Chairman Sakayanagi"
+        let battleKey = playerName + " vs. " + botName;
         if (typeof battleObj[battleKey] !== 'undefined') {
-            deleteBattle(battleObj, playerName, 'Chairman Sakayanagi', null);
+            deleteBattle(battleObj, playerName, botName, null);
         }
         if (consts.excludedCampaignStages.includes(stage)) {
-            console.log(`${playerName} vs. Chairman Sakayanagi not being tracked; Stage ${stage} is excluded`);
+            console.log(`${battleKey} not being tracked; Stage ${stage} is excluded`);
             return;
         }
         createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL, stage);
@@ -43,11 +53,12 @@ export function handleWsData(battleObj, responseJSON) {
     else if (responseJSON.t == 'MESSAGE_UPDATE' && responseJSON.d.author?.id == consts.botID && responseJSON.d.embeds.length > 0
     && /Campaign Stage \d+/.test(responseJSON.d.embeds[0]?.author?.name) && !responseJSON.d.embeds[0].image?.proxy_url) {
         let playerID = responseJSON.d.interaction_metadata.user.id;
-        let playerName = responseJSON.d.interaction_metadata.user.global_name;
+        let playerName = `1.${responseJSON.d.interaction_metadata.user.global_name}`;
         if (typeof battleObj.usernames[playerID] !== 'undefined') {
             playerName = battleObj.usernames[playerID];
         }
-        let battleKey = playerName + "_vs._Chairman Sakayanagi"
+        let botName = "2.Chairman Sakayanagi";
+        let battleKey = playerName + " vs. " + botName;
         if (typeof battleObj[battleKey] === 'undefined') {
             return;
         }
@@ -65,7 +76,7 @@ export function handleWsData(battleObj, responseJSON) {
             let battleType = lastBattle[1];
             let p1name = lastBattle[2];
             let p2name = lastBattle[3];
-            let battleKey = p1name + "_vs._" + p2name;
+            let battleKey = p1name + " vs. " + p2name;
             if (typeof battleObj[battleKey] !== 'undefined') {
                 if (battleType == "battle") {
                     deleteBattle(battleObj, p1name, p2name, null);
@@ -81,13 +92,13 @@ export function handleWsData(battleObj, responseJSON) {
     }
 }
 
-async function processBattleEmbed(battleObj, battleEmbed) {
-    let p1name = battleEmbed.fields[0].name;
-    let p2name = battleEmbed.fields[1].name;
-    let battleKey = p1name + "_vs._" + p2name;
+async function processBattleEmbed(battleObj, responseJSON, battleEmbed) {
+    let p1name = `1.${battleEmbed.fields[0].name}`;
+    let p2name = `2.${battleEmbed.fields[1].name}`;
+    let battleKey = p1name + " vs. " + p2name;
     let turn = parseInt(battleEmbed.fields[2].name.substring(battleEmbed.fields[2].name.indexOf('__Turn ') + 7, battleEmbed.fields[2].name.length - 2));
     
-    if (typeof battleObj[battleKey] === 'undefined' && turn == 1 && p2name != 'Chairman Sakayanagi') {
+    if (typeof battleObj[battleKey] === 'undefined' && turn == 1 && responseJSON.interaction?.name != "campaign") {
         createBattle(battleObj, p1name, p2name, battleEmbed);
         return;
     } 

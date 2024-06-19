@@ -7,7 +7,7 @@ import consts from '../consts.json' assert { type: 'json' };
 
 export function emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, turnResults, turn, attackerResolves) {
     
-    if (consts.moveInfo[move].type[0] == "attack" && battleObj[battleKey][defender].chars[defenseChar].moves.includes("Group Determination")) {
+    if (consts.moveInfo[move]?.type[0] == "attack" && battleObj[battleKey][defender].chars[defenseChar].moves.includes("Group Determination")) {
         for (let charKey in battleObj[battleKey][defender].chars) {
             addInflictModifier(battleObj, battleKey, defender, charKey, 0.05, turn, Infinity);
         }
@@ -125,7 +125,8 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
 
             if (lowestResolveTeammate != "empty") {
                 if (attackerResolves[lowestResolveTeammate] != 0) {
-                    console.log(`Program expected ${attacker}'s ${lowestResolveTeammate} in ${battleKey} to die, but they didn't.`);
+                    console.log(`Program expected ${attacker}'s ${lowestResolveTeammate} in turn ${turn} of ${battleKey} to die, but they didn't.`);
+                    console.log(attackerResolves);
                 }
 
                 for (let buff of lowestResolveTeammateObj.buffs) {
@@ -144,14 +145,14 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                 nullifyBuffs(battleObj, battleKey, attacker, lowestResolveTeammate);
                 for (let positiveStatus of battleObj[battleKey][attacker].chars[lowestResolveTeammate].positiveStatuses) {
                     positiveStatus.endTurn = turn;
-                } 
-                
-            }
+                }
 
-            //this works even if both players use the same character and both use Introversion,
-            //because their counters are guaranteed to fail in that case
-            if (turnResults.includes(`**${attackChar}** countered with **Introversion**!`)) {
-                addBoost(battleObj, battleKey, attacker, attackChar, "Introversion", turn);
+                //note that you can only get the mental buff if you sacrifice a character
+                //this works even if both players use the same character and both use Introversion,
+                //because their counters are guaranteed to fail in that case
+                if (turnResults.includes(`**${attackChar}** countered with **Introversion**!`)) {
+                    addBoost(battleObj, battleKey, attacker, attackChar, "Introversion", turn);
+                }
             }
 
             break;

@@ -4,25 +4,12 @@ import { printParty } from './prettyPrint.mjs';
 import { round } from './round.mjs';
 import consts from '../consts.json' assert { type: 'json' };
 
-export async function setPlayerParty(battleObj, playerName, imageURL) {
-    let battleKey = "";
-
-    let matchingKeys = [];
-    for (let key in battleObj) {
-        if (key.includes(playerName) && Object.keys(battleObj[key][playerName].chars).length < 3) {
-            matchingKeys.push(key)
-        }
-    }
-    if (matchingKeys.length == 0) {
+export async function setPlayerParty(battleObj, playerName, playerID, imageURL) {
+    let [battleKey, playerNumber] = determineBattleKey(battleObj, playerName, playerID);
+    if (battleKey === false) {
         return;
     }
-    if (matchingKeys.length == 1) {
-        battleKey = matchingKeys[0];
-    }
-    if (matchingKeys.length >= 2) {
-        let normalBattleKeys = matchingKeys.filter(key => !key.includes("Chairman Sakayanagi"));
-        battleKey = normalBattleKeys[0];
-    }
+    playerName = `${playerNumber}.${playerName}`;
 
     let party = await fetch(`http://127.0.0.1:${consts.port}/ImageData/parseParty`, {
         method: "POST",
@@ -182,4 +169,39 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
 
     battleObj[battleKey][playerName].baseCharStats = structuredClone(battleObj[battleKey][playerName].chars);
     battleObj[battleKey][playerName].valid = true;
+}
+
+//playerName should not have the player number prepended to it when passed to this function
+function determineBattleKey(battleObj, playerName, playerID) {
+    let battleKey = "";
+    let playerNumber = 0;
+    let possibleReturnVals = [];
+    for (let key in battleObj) {
+        if (typeof battleObj[key][`1.${playerName}`] !== 'undefined' && battleObj[key][`1.${playerName}`].id == playerID
+         && Object.keys(battleObj[key][`1.${playerName}`].chars).length < 3) {
+            possibleReturnVals.push([key, 1]);
+        }
+        else if (typeof battleObj[key][`2.${playerName}`] !== 'undefined' && battleObj[key][`2.${playerName}`].id == playerID
+         && Object.keys(battleObj[key][`2.${playerName}`].chars).length < 3) {
+            possibleReturnVals.push([key, 2]);
+        }
+    }
+    if (possibleReturnVals.length == 0) {
+        return [false, false];
+    }
+    if (possibleReturnVals.length == 1) {
+        return possibleReturnVals[0];
+    }
+    if (possibleReturnVals.length >= 2) {
+        let botName = "2.Chairman Sakayanagi";
+        let excludeCampaign = possibleReturnVals.filter((val) => {
+            battleObj[val[0]]?.[botName]?.id != consts.botID 
+        });
+        if (excludeCampaign.length != 1) {
+            console.log(excludeCampaign);
+            return [false, false];
+        }
+        return excludeCampaign[0];
+    }
+    return [battleKey, playerNumber];
 }

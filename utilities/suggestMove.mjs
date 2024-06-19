@@ -4,7 +4,7 @@ import { round } from './round.mjs';
 import consts from '../consts.json' assert { type: 'json' };
 
 export function suggestMoves(battleObj, p1name, p2name, p1char, p2char, turn) {
-    let battleKey = p1name + "_vs._" + p2name;
+    let battleKey = p1name + " vs. " + p2name;
 
     battleObj[battleKey].log(`For turn ${turn+1}:`);
     let [p1suggestedMove, p1predictedDamage, p1critical] = determineSuggestedMove(battleObj, battleKey, p1name, p2name, p1char, p2char);
