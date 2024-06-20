@@ -26,11 +26,16 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
     completeMoveObj.priority = getPriority(move, moveObj, baseMoveObj);
 
     let attackerAttackStat = battleObj[battleKey][attacker].chars[attackChar][completeMoveObj.attackStat];
+    let attackerAspectBoost = battleObj[battleKey][attacker].chars[attackChar].aspectBoost[completeMoveObj.attackStat];
     let attackerInflictMultiplier = battleObj[battleKey][attacker].chars[attackChar].inflictMultiplier;
+    let attackPower = attackerAttackStat * attackerAspectBoost * attackerInflictMultiplier * completeMoveObj.basePower
 
-    let defenderDefenseStat = battleObj[battleKey][defender].chars[defenseChar][completeMoveObj.defenseStat];
-    let defenderReceiveMultiplier = battleObj[battleKey][defender].chars[defenseChar].receiveMultiplier;
     let defenderPersonality = battleObj[battleKey][defender].chars[defenseChar].personality;
+    let defenderDefenseStat = battleObj[battleKey][defender].chars[defenseChar][completeMoveObj.defenseStat];
+    let defenderAspectBoost = battleObj[battleKey][defender].chars[defenseChar].aspectBoost[completeMoveObj.defenseStat];
+    let defenderReceiveMultiplier = battleObj[battleKey][defender].chars[defenseChar].receiveMultiplier;
+    let defensePower = defenderDefenseStat * defenderAspectBoost * defenderReceiveMultiplier;
+    
 
     let isCritical = false;
     if (consts.personalityWeaknesses[defenderPersonality].includes(moveObj.damageType)) {
@@ -41,15 +46,15 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
     //this is a guess for how much damage will be dealt, since I don't know the exact damage formula
     if (defenderDefenseStat != 0) {
         if (!isCritical) {
-            damage = round(36 * attackerAttackStat / defenderDefenseStat * completeMoveObj.basePower * attackerInflictMultiplier * defenderReceiveMultiplier);
+            damage = round(36 * attackPower / defensePower);
         } else {
-            damage = round(36 * attackerAttackStat / defenderDefenseStat * completeMoveObj.basePower * attackerInflictMultiplier * defenderReceiveMultiplier * 1.4);
+            damage = round(36 * attackPower / defensePower * 1.4);
         }
     } else {
         if (!isCritical) {
-            damage = round(2 * attackerAttackStat * completeMoveObj.basePower);
+            damage = round(2 * attackPower);
         } else {
-            damage = round(2 * attackerAttackStat * completeMoveObj.basePower * 1.4);
+            damage = round(2 * attackPower * 1.4);
         }
     }
 

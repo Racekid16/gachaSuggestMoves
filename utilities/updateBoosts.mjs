@@ -5,12 +5,6 @@ export function addBoost(battleObj, battleKey, playerName, charName, boost, turn
     // I arrange these alphabetically
     switch (boost) {
 
-        case 'Aspect Of Fire Mental':
-        case 'Aspect Of Fire Physical':
-        case 'Aspect Of Fire Social':
-        case 'Aspect Of Metal Mental':
-        case 'Aspect Of Metal Physical':
-        case 'Aspect Of Metal Social':
         case 'Arrogance':
         case 'Blazing Form':
         case 'Boss Orders':
@@ -135,72 +129,6 @@ export function applyBoosts(battleObj, battleKey, playerName) {
 function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
     let numBuffs = battleObj[battleKey][playerName].chars[charName].buffs.length;
     switch (buff) {
-
-        case 'Aspect Of Fire Mental':
-            let AOFMentalBuff = 0.75;
-            battleObj[battleKey][playerName].chars[charName].buffs.push({
-                name: buff,
-                startTurn: turn,
-                endTurn: Infinity,
-                stat: "mental",
-                amount: AOFMentalBuff
-            });
-            break;
-
-        case 'Aspect Of Fire Physical':
-            let AOFPhysicalBuff = 0.75;
-            battleObj[battleKey][playerName].chars[charName].buffs.push({
-                name: buff,
-                startTurn: turn,
-                endTurn: Infinity,
-                stat: "physical",
-                amount: AOFPhysicalBuff
-            });
-            break;
-
-        case 'Aspect Of Fire Social':
-            let AOFSocialBuff = 0.75;
-            battleObj[battleKey][playerName].chars[charName].buffs.push({
-                name: buff,
-                startTurn: turn,
-                endTurn: Infinity,
-                stat: "social",
-                amount: AOFSocialBuff
-            });
-            break;
-
-        case 'Aspect Of Metal Mental':
-            let AOMMentalBuff = 0.5;
-            battleObj[battleKey][playerName].chars[charName].buffs.push({
-                name: buff,
-                startTurn: turn,
-                endTurn: Infinity,
-                stat: "mental",
-                amount: AOMMentalBuff
-            });
-            break;
-
-        case 'Aspect Of Metal Physical':
-            let AOMPhysicalBuff = 0.5;
-            battleObj[battleKey][playerName].chars[charName].buffs.push({
-                name: buff,
-                startTurn: turn,
-                endTurn: Infinity,
-                stat: "physical",
-                amount: AOMPhysicalBuff
-            });
-            break;
-
-        case 'Aspect Of Metal Social':
-            let AOMSocialBuff = 0.5;
-            battleObj[battleKey][playerName].chars[charName].buffs.push({
-                name: buff,
-                startTurn: turn,
-                endTurn: Infinity,
-                stat: "social",
-                amount: AOMSocialBuff
-            });
-            break;
 
         case 'Arrogance':
             let arroganceBuff = 0.4;

@@ -183,7 +183,6 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
     for (let charKey in battleObj[battleKey][playerName].chars) {
         let thisChar = battleObj[battleKey][playerName].chars[charKey];
         if (thisChar.active) {
-            //boosts will keep track of things like unity, hate, and study. 
             thisChar.buffs = [];
             thisChar.debuffs = [];
             thisChar.positiveStatuses = [];
@@ -192,6 +191,22 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
             thisChar.receiveMultiplier = 1;
             thisChar.inflictModifiers = [];
             thisChar.receiveModifiers = [];
+            thisChar.aspectBoost = {
+                initiative: 1,
+                mental: 1,
+                physical: 1,
+                social: 1
+            };
+            if (thisChar.moves.includes("Aspect Of Fire")) {
+                thisChar.aspectBoost.mental += 0.75;
+                thisChar.aspectBoost.physical += 0.75;
+                thisChar.aspectBoost.social += 0.75;
+            }
+            if (thisChar.moves.includes("Aspect Of Metal")) {
+                thisChar.aspectBoost.mental += 0.5;
+                thisChar.aspectBoost.physical += 0.5;
+                thisChar.aspectBoost.social += 0.5;
+            }
             delete thisChar._id;
             delete thisChar.name;
             delete thisChar.active;

@@ -19,18 +19,6 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
 
     switch (move) {
         
-        case 'Aspect Of Fire':
-            addBoost(battleObj, battleKey, attacker, attackChar, "Aspect Of Fire Mental", turn);
-            addBoost(battleObj, battleKey, attacker, attackChar, "Aspect Of Fire Physical", turn);
-            addBoost(battleObj, battleKey, attacker, attackChar, "Aspect Of Fire Social", turn);
-            break;
-        
-        case 'Aspect Of Metal':
-            addBoost(battleObj, battleKey, attacker, attackChar, "Aspect Of Metal Mental", turn);
-            addBoost(battleObj, battleKey, attacker, attackChar, "Aspect Of Metal Physical", turn);
-            addBoost(battleObj, battleKey, attacker, attackChar, "Aspect Of Metal Social", turn);
-            break;
-        
         case 'Arrogance':
             addBoost(battleObj, battleKey, attacker, attackChar, "Arrogance", turn);
             break;
@@ -186,6 +174,12 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                     receiveMultiplier: 1,
                     inflictModifiers: [],
                     receiveModifiers: [],
+                    aspectBoost: {
+                        initiative: 1,
+                        mental: 1,
+                        physical: 1,
+                        social: 1
+                    },
                     initiative: round(creatorBaseCharStats.initiative * inheritAmount),
                     mental: round(creatorBaseCharStats.mental * inheritAmount),
                     physical: round(creatorBaseCharStats.physical * inheritAmount),
@@ -269,14 +263,6 @@ export function emulateAction(battleObj, battleKey, attacker, defender, attackCh
             break;
 
         case 'Game Start':
-            if (attackCharObj.moves.includes("Aspect Of Fire")) {
-                emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Aspect Of Fire", turnResults, turn, attackerResolves);
-            }
-            
-            if (attackCharObj.moves.includes("Aspect Of Metal")) {
-                emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Aspect Of Metal", turnResults, turn, attackerResolves);
-            }
-
             if (attackCharObj.moves.includes("Group Efforts")) {
                 emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Group Efforts", turnResults, turn, attackerResolves);
             }
