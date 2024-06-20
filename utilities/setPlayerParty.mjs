@@ -4,13 +4,9 @@ import { printParty } from './prettyPrint.mjs';
 import { round } from './round.mjs';
 import consts from '../consts.json' assert { type: 'json' };
 
-export async function setPlayerParty(battleObj, playerName, playerID, imageURL) {
-    let [battleKey, playerNumber] = determineBattleKey(battleObj, playerName, playerID);
-    if (battleKey === false) {
-        return;
-    }
-    playerName = `${playerNumber}.${playerName}`;
+const delay = async (ms = 1000) =>  new Promise(resolve => setTimeout(resolve, ms));
 
+export async function setPlayerParty(battleObj, playerName, playerID, imageURL) {
     let party = await fetch(`http://127.0.0.1:${consts.port}/ImageData/parseParty`, {
         method: "POST",
         headers: {
@@ -23,9 +19,58 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
     let partyJSON = await party.json();
     if (partyJSON.message) {
         battleObj[battleKey][playerName].valid = false;
-        battleObj[battleKey][playerName].reason = message.reason;
+        battleObj[battleKey][playerName].reason = partyJSON.message;
         return;
     }
+
+    let battleKey = determineBattleKey(battleObj, playerName, playerID);
+    if (battleKey === false) {
+        return;
+    }
+    let p1name = battleKey.split(" vs. ")[0].split(".")[1];
+    let p2name = battleKey.split(" vs. ")[1].split(".")[1];
+    let playerNumber = 0;
+    while (typeof battleObj[battleKey] !== 'undefined' && battleObj[battleKey]?.numPartiesRequested < 2 
+        && battleObj[battleKey][`1.${p1name}`]?.valid !== false && battleObj[battleKey][`2.${p2name}`]?.valid !== false) {
+        await delay(400);
+    }
+    if (typeof battleObj[battleKey] === 'undefined') {
+        return;
+    }
+    if (battleObj[battleKey][`1.${p1name}`]?.valid === false || battleObj[battleKey][`2.${p2name}`]?.valid === false) {
+        battleObj[battleKey][`1.${p1name}`].valid = false;
+        battleObj[battleKey][`2.${p2name}`].valid = false;
+        return;
+    }
+
+    let defaultAvatarCount = battleObj[battleKey].requestedParties.filter(ID => ID === null).length;
+    if (defaultAvatarCount == 0) {
+        playerNumber = determinePlayerNumberByID(battleObj, battleKey, playerName, playerID);
+    }
+    else if (defaultAvatarCount == 1) {
+        let nonNullIndex = battleObj[battleKey].requestedParties.findIndex(el => el !== null);
+        if (playerID == null) {
+            while (typeof battleObj[battleKey].requestedParties[nonNullIndex] !== 'number') {
+                await delay(400);
+            }
+            playerNumber = 3 - battleObj[battleKey].requestedParties[nonNullIndex];
+        } else {
+            playerNumber = determinePlayerNumberByID(battleObj, battleKey, playerName, playerID);
+            battleObj[battleKey].requestedParties[nonNullIndex] = playerNumber;
+        }
+    }
+    else {  //defaultAvatarCount == 2
+        if (p1name == p2name) {
+            battleObj[battleKey][`1.${p1name}`].valid = false;
+            battleObj[battleKey][`1.${p1name}`].reason = "unable to determine whose party is whose";
+            battleObj[battleKey][`2.${p2name}`].valid = false;
+            battleObj[battleKey][`2.${p2name}`].reason = "unable to determine whose party is whose";
+            return;
+        }
+        playerNumber = determinePlayerNumberByName(battleObj, battleKey, playerName);
+    }
+    playerName = `${playerNumber}.${playerName}`;
+
     for (let i = 0; i < partyJSON.length; i++) {
         let char = partyJSON[i];
         if (char?.name == "empty") {
@@ -38,9 +83,8 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
             let charStats = await fetch(`http://127.0.0.1:${consts.port}/CharacterData/${char.name.replace(' ', '_')}/${char.numStars}`);
             if (charStats.status == 404) {
                 battleObj[battleKey][playerName].valid = false;
-                battleObj[battleKey][playerName].reason = 
-`${char.name} with ${char.numStars} stars in ${playerName}'s party was not found in the database.
-${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
+                battleObj[battleKey][playerName].reason = `${char.name} with ${char.numStars} stars in ${playerName}'s party was not found in the database.\n`
+                                                        + `${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
                 return;
             } else {
                 //console.log(`${char.name} with ${char.numStars} stars was found in the database!`);
@@ -172,36 +216,51 @@ ${playerName}'s id is '${battleObj[battleKey][playerName].id}'`;
 }
 
 //playerName should not have the player number prepended to it when passed to this function
+//return the battleKey that this player is a part of and update the battle's numPartiesRequested property
 function determineBattleKey(battleObj, playerName, playerID) {
-    let battleKey = "";
-    let playerNumber = 0;
     let possibleReturnVals = [];
     for (let key in battleObj) {
-        if (typeof battleObj[key][`1.${playerName}`] !== 'undefined' && battleObj[key][`1.${playerName}`].id == playerID
-         && Object.keys(battleObj[key][`1.${playerName}`].chars).length < 3) {
-            possibleReturnVals.push([key, 1]);
+        if (typeof battleObj[key][`1.${playerName}`] !== 'undefined' && Object.keys(battleObj[key][`1.${playerName}`].chars).length < 3) {
+            possibleReturnVals.push(key);
         }
-        else if (typeof battleObj[key][`2.${playerName}`] !== 'undefined' && battleObj[key][`2.${playerName}`].id == playerID
-         && Object.keys(battleObj[key][`2.${playerName}`].chars).length < 3) {
-            possibleReturnVals.push([key, 2]);
+        else if (typeof battleObj[key][`2.${playerName}`] !== 'undefined' && Object.keys(battleObj[key][`2.${playerName}`].chars).length < 3) {
+            possibleReturnVals.push(key);
         }
-    }
-    if (possibleReturnVals.length == 0) {
-        return [false, false];
-    }
-    if (possibleReturnVals.length == 1) {
-        return possibleReturnVals[0];
     }
     if (possibleReturnVals.length >= 2) {
         let botName = "2.Chairman Sakayanagi";
-        let excludeCampaign = possibleReturnVals.filter((val) => {
-            battleObj[val[0]]?.[botName]?.id != consts.botID 
+        possibleReturnVals = possibleReturnVals.filter((val) => {
+            battleObj[val][botName]?.id !== consts.botID && possibleReturnVals.length > 0
         });
-        if (excludeCampaign.length != 1) {
-            console.log(excludeCampaign);
-            return [false, false];
-        }
-        return excludeCampaign[0];
     }
-    return [battleKey, playerNumber];
+    if (possibleReturnVals.length == 1) {
+        let battleKey = possibleReturnVals[0];
+        battleObj[battleKey].numPartiesRequested++;
+        battleObj[battleKey].requestedParties.push(playerID);
+        return battleKey;
+    }
+    console.log("Unexpectedly got here: could not determine battle Key.");
+    console.log("possibleReturnVals after reducing is", possibleReturnVals);
+    console.log("The battleObj's keys are", Object.keys(battleObj));
+    return false;
+}
+
+function determinePlayerNumberByID(battleObj, battleKey, playerName, playerID) {
+    if (battleObj[battleKey][`1.${playerName}`]?.id == playerID) {
+        return 1;
+    }
+    else if (battleObj[battleKey][`2.${playerName}`]?.id == playerID) {
+        return 2;
+    }
+    console.log(`Unknown player ${playerName} with ID ${playerID} in ${battleKey}`);
+}
+
+function determinePlayerNumberByName(battleObj, battleKey, playerName) {
+    if (typeof battleObj[battleKey][`1.${playerName}`] !== 'undefined') {
+        return 1;
+    }
+    if (typeof battleObj[battleKey][`2.${playerName}`] !== 'undefined') {
+        return 2;
+    }
+    console.log(`Unknown player ${playerName} in ${battleKey}`);
 }

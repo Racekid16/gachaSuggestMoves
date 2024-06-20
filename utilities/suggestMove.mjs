@@ -1,7 +1,6 @@
 // given stats for characters, suggest moves for both players
-import { printSuggestedMoves, getBaseMoveObj } from './prettyPrint.mjs';
-import { round } from './round.mjs';
-import consts from '../consts.json' assert { type: 'json' };
+import { printSuggestedMoves } from './prettyPrint.mjs';
+import { calculateMoveDamage } from './calculateMoveDamage.mjs';
 
 export function suggestMoves(battleObj, p1name, p2name, p1char, p2char, turn) {
     let battleKey = p1name + " vs. " + p2name;
@@ -20,9 +19,7 @@ function determineSuggestedMove(battleObj, battleKey, attacker, defender, attack
     let isCritical = false;
 
     for (let move of battleObj[battleKey][attacker].chars[attackChar].moves) {
-
-        let moveObj = consts.moveInfo[move];
-        let [predictedDamage, predictedCritical] = calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, moveObj);
+        let [predictedDamage, predictedCritical] = calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move);
         
         if (predictedDamage > maxPredictedDamage) {
             maxDamageMove = move;
@@ -33,58 +30,4 @@ function determineSuggestedMove(battleObj, battleKey, attacker, defender, attack
     }
 
     return [maxDamageMove, maxPredictedDamage, isCritical];
-}
-
-// calculate how much damage a move does. This assumes the move is a type that deals damage,
-// and that it is a base type or derives from a base type.
-function calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, moveObj) {
-    if (typeof moveObj === 'undefined') {
-        //console.log(`${move} is not in consts.json`);
-        return [-1, false];
-    }
-    if (!moveObj.type.includes('attack')) {
-        //console.log(`${move} is not an Attack type move.`);
-        return [-1, false];
-    }
-    //TODO: implement this properly
-    if (Object.values(moveObj).some(value => value === 'varies')) {
-        return [-1, false];
-    }
-    let baseMoveObj = getBaseMoveObj(moveObj);
-    let completeMoveObj = structuredClone(moveObj);
-
-    completeMoveObj.attackStat = typeof moveObj.attackStat === 'undefined' ? baseMoveObj.attackStat : moveObj.attackStat;
-    completeMoveObj.defenseStat = typeof moveObj.defenseStat === 'undefined' ? baseMoveObj.defenseStat : moveObj.defenseStat;
-    completeMoveObj.basePower = typeof moveObj.basePower === 'undefined' ? baseMoveObj.basePower : moveObj.basePower;
-    completeMoveObj.priority = typeof moveObj.priority === 'undefined' ? baseMoveObj.priority : moveObj.priority;
-
-    let attackerAttackStat = battleObj[battleKey][attacker].chars[attackChar][completeMoveObj.attackStat];
-    let attackerInflictMultiplier = battleObj[battleKey][attacker].chars[attackChar].inflictMultiplier;
-
-    let defenderDefenseStat = battleObj[battleKey][defender].chars[defenseChar][completeMoveObj.defenseStat];
-    let defenderReceiveMultiplier = battleObj[battleKey][defender].chars[defenseChar].receiveMultiplier;
-    let defenderPersonality = battleObj[battleKey][defender].chars[defenseChar].personality;
-
-    let isCritical = false;
-    if (consts.personalityWeaknesses[defenderPersonality].includes(moveObj.damageType)) {
-        isCritical = true;
-    }
-
-    let damage;
-    //this is a guess for how much damage will be dealt, since I don't know the exact damage formula
-    if (defenderDefenseStat != 0) {
-        if (!isCritical) {
-            damage = round(36 * attackerAttackStat / defenderDefenseStat * completeMoveObj.basePower * attackerInflictMultiplier * defenderReceiveMultiplier);
-        } else {
-            damage = round(36 * attackerAttackStat / defenderDefenseStat * completeMoveObj.basePower * attackerInflictMultiplier * defenderReceiveMultiplier * 1.4);
-        }
-    } else {
-        if (!isCritical) {
-            damage = round(2 * attackerAttackStat * completeMoveObj.basePower);
-        } else {
-            damage = round(2 * attackerAttackStat * completeMoveObj.basePower * 1.4);
-        }
-    }
-
-    return [damage, isCritical];
 }

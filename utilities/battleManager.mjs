@@ -13,6 +13,8 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
     battleObj[battleKey] = {};
     battleObj[battleKey].time = new Date().toLocaleString();
     battleObj[battleKey].data = "";
+    battleObj[battleKey].numPartiesRequested = 0;
+    battleObj[battleKey].requestedParties = [];
     battleObj.currentBattles.push([new Date().getTime(), 'battle', p1name, p2name, battleEmbed]);
     
     //create a new file for this battle
@@ -30,7 +32,7 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
     let [result1, result2] = await Promise.all([promise1, promise2]);
     if (result1 != 0 || result2 != 0) {
         deleteBattle(battleObj, p1name, p2name, null);
-        console.log(`${battleKey} was deleted; failed to request a player's party`);
+        console.log(`failed to request a player's party in ${battleKey}`);
         return;
     }
 
@@ -63,6 +65,8 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
     battleObj[battleKey] = {};
     battleObj[battleKey].time = new Date().toLocaleString();
     battleObj[battleKey].data = "";
+    battleObj[battleKey].numPartiesRequested = 0;
+    battleObj[battleKey].requestedParties = [];
     
     //create a new file for this battle
     fs.writeFileSync(`currentBattles/${battleKey}.txt`, '', (err) => {if (err) { throw err; }});
@@ -122,14 +126,16 @@ export function deleteBattle(battleObj, p1name, p2name, turnResults) {
                 data: battleObj[battleKey].data
             })
         });
+    } else {
+        console.log(`${battleKey} deleted`);
     }
-    
     cancelInput(battleKey);
     fs.unlinkSync(`currentBattles/${battleKey}.txt`, (err) => {if (err) { throw err; }});
     battleObj.currentBattles.splice(battleObj.currentBattles.findIndex((arr) => {
         arr[2] == p1name && arr[3] == p2name
     }));
     delete battleObj[battleKey];
+    
 }
 
 // check whether the actual resolves of characters in a player's party match what was calculated
@@ -168,7 +174,7 @@ export async function requestPlayerPartyCampaignBattle(battleObj, battleKey, pla
     let myResult = await myPromise;
     if (myResult != 0) { 
         deleteBattle(battleObj, playerName, botName, null);
-        console.log(`${battleKey} was deleted; failed to request ${playerName}'s party`);
+        console.log(`failed to request ${playerName}'s party in ${battleKey}`);
         return;
     }
     
@@ -207,6 +213,8 @@ async function addPlayerToBattle(battleObj, battleKey, playerName, playerNumber,
     });
     if (response.status != 204) {
         console.log(`Status ${response.status}: ${response.statusText}`);
+        battleObj[battleKey][playerName].valid = false;
+        battleObj[battleKey][playerName].reason = `Failed to request ${playerName}'s party`
         return -1;
     }
 
@@ -240,14 +248,14 @@ async function verifyBattleValidity(battleObj, p1name, p2name) {
     let battleKey = p1name + " vs. " + p2name;
 
     while (typeof battleObj[battleKey][p1name].valid === 'undefined' || typeof battleObj[battleKey][p2name].valid === 'undefined') {
-        await delay(1);
+        await delay(400);
     }
 
-    if (!battleObj[battleKey][p1name].valid || !battleObj[battleKey][p2name].valid) {
-        if (!battleObj[battleKey][p1name].valid) {
-            console.log(`${battleKey} was deleted because ${battleObj[battleKey][p1name].reason}`);
+    if (battleObj[battleKey][p1name].valid === false || battleObj[battleKey][p2name].valid === false) {
+        if (typeof battleObj[battleKey][p1name].reason !== 'undefined') {
+            console.log(`${battleObj[battleKey][p1name].reason}`);
         } else {
-            console.log(`${battleKey} was deleted because ${battleObj[battleKey][p2name].reason}`);
+            console.log(`${battleObj[battleKey][p2name].reason}`);
         }
         deleteBattle(battleObj, p1name, p2name, null);
         return -1;

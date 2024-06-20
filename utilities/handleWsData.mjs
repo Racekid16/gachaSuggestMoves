@@ -17,14 +17,16 @@ export function handleWsData(battleObj, responseJSON) {
     else if (responseJSON.t == 'MESSAGE_UPDATE' && responseJSON.d.author?.id == consts.botID && responseJSON.d.embeds.length > 0
     && responseJSON.d.channel_id == config.privateThread && /.+'s Party/.test(responseJSON.d.embeds[0]?.author?.name)) {
         let playerName = /(.+)'s Party/.exec(responseJSON.d.embeds[0]?.author.name)[1];
-        let playerID = "";
+        let playerID = null;
         let playerIDRegex = /https\:\/\/cdn\.discordapp\.com(\/guilds\/(\d+)\/users\/(\d+))?\/avatars\/(\d+)?/
         let playerIDMatch = playerIDRegex.exec(responseJSON.d.embeds[0].author.icon_url);
-        if (typeof playerIDMatch[3] !== 'undefined') {
-            playerID = playerIDMatch[3];
-        }
-        if (typeof playerIDMatch[4] !== 'undefined') {
-            playerID = playerIDMatch[4];
+        if (playerIDMatch !== null) {
+            if (typeof playerIDMatch[3] !== 'undefined') {
+                playerID = playerIDMatch[3];
+            }
+            if (typeof playerIDMatch[4] !== 'undefined') {
+                playerID = playerIDMatch[4];
+            }
         }
         let imageURL = responseJSON.d.embeds[0].image.proxy_url + 'format=png&width=328&height=254';
         setPlayerParty(battleObj, playerName, playerID, imageURL);
@@ -98,7 +100,7 @@ async function processBattleEmbed(battleObj, responseJSON, battleEmbed) {
     let battleKey = p1name + " vs. " + p2name;
     let turn = parseInt(battleEmbed.fields[2].name.substring(battleEmbed.fields[2].name.indexOf('__Turn ') + 7, battleEmbed.fields[2].name.length - 2));
     
-    if (typeof battleObj[battleKey] === 'undefined' && turn == 1 && responseJSON.interaction?.name != "campaign") {
+    if (typeof battleObj[battleKey] === 'undefined' && turn == 1 && responseJSON.d.interaction.name != 'campaign') {
         createBattle(battleObj, p1name, p2name, battleEmbed);
         return;
     } 

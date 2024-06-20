@@ -1,5 +1,6 @@
 // pretty-print people's parties and suggested moves.
 import { round } from './round.mjs';
+import { getBaseMoveObj } from './calculateMoveDamage.mjs';
 import consts from '../consts.json' assert { type: 'json' };
 
 export function printParty(battleObj, battleKey, playerName, partyJSON, hasStrength) {
@@ -183,12 +184,6 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
         battleObj[battleKey].log(p2Output);
         battleObj[battleKey].log(p1Output);
     }
-}
-
-// get the base move obj from which this moveObj derives.
-export function getBaseMoveObj(moveObj) {
-    let damageType = moveObj.damageType;
-    return consts.moveInfo[damageType];
 }
 
 function getMaxLength(chars, property) {
