@@ -8,7 +8,7 @@ import consts from '../consts.json' assert { type: 'json' };
 const delay = async (ms = 1000) =>  new Promise(resolve => setTimeout(resolve, ms));
 
 export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
-    let battleKey = p1name + " vs. " + p2name;
+    let battleKey = p1name + " vs. " + p2name;
     let turnResults = battleEmbed.fields[2].value;
     battleObj[battleKey] = {};
     battleObj[battleKey].time = new Date().toLocaleString();
@@ -61,7 +61,7 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
         playerName = `1.${responseJSON.nick}`;
     }
     let botName = "2.Chairman Sakayanagi";
-    let battleKey = playerName + " vs. " + botName;
+    let battleKey = playerName + " vs. " + botName;
     battleObj[battleKey] = {};
     battleObj[battleKey].time = new Date().toLocaleString();
     battleObj[battleKey].data = "";
@@ -93,7 +93,7 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
 }
 
 export function deleteBattle(battleObj, p1name, p2name, turnResults) {
-    let battleKey = p1name + " vs. " + p2name;
+    let battleKey = p1name + " vs. " + p2name;
     
     if (turnResults !== null) {
         let winnerID = /<@(\d+)>/.exec(turnResults)[1];
@@ -245,7 +245,7 @@ async function fetchWithRetry(url, options, retries=2) {
 // verify that all characters in both player's parties are ones the script is prepared to deal with,
 // and if not, delete the battle
 async function verifyBattleValidity(battleObj, p1name, p2name) { 
-    let battleKey = p1name + " vs. " + p2name;
+    let battleKey = p1name + " vs. " + p2name;
 
     while (typeof battleObj[battleKey][p1name].valid === 'undefined' || typeof battleObj[battleKey][p2name].valid === 'undefined') {
         await delay(400);

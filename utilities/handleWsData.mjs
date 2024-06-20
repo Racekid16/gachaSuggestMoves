@@ -40,7 +40,7 @@ export function handleWsData(battleObj, responseJSON) {
         let playerID = responseJSON.d.interaction_metadata.user.id;
         let botPartyImageURL = responseJSON.d.embeds[0].image.proxy_url + 'format=png&width=328&height=254';
         let stage = /Campaign Stage (\d+)/.exec(responseJSON.d.embeds[0].author.name)[1];
-        let battleKey = playerName + " vs. " + botName;
+        let battleKey = playerName + " vs. " + botName;
         if (typeof battleObj[battleKey] !== 'undefined') {
             deleteBattle(battleObj, playerName, botName, null);
         }
@@ -60,7 +60,7 @@ export function handleWsData(battleObj, responseJSON) {
             playerName = battleObj.usernames[playerID];
         }
         let botName = "2.Chairman Sakayanagi";
-        let battleKey = playerName + " vs. " + botName;
+        let battleKey = playerName + " vs. " + botName;
         if (typeof battleObj[battleKey] === 'undefined') {
             return;
         }
@@ -78,7 +78,7 @@ export function handleWsData(battleObj, responseJSON) {
             let battleType = lastBattle[1];
             let p1name = lastBattle[2];
             let p2name = lastBattle[3];
-            let battleKey = p1name + " vs. " + p2name;
+            let battleKey = p1name + " vs. " + p2name;
             if (typeof battleObj[battleKey] !== 'undefined') {
                 if (battleType == "battle") {
                     deleteBattle(battleObj, p1name, p2name, null);
@@ -97,7 +97,7 @@ export function handleWsData(battleObj, responseJSON) {
 async function processBattleEmbed(battleObj, responseJSON, battleEmbed) {
     let p1name = `1.${battleEmbed.fields[0].name}`;
     let p2name = `2.${battleEmbed.fields[1].name}`;
-    let battleKey = p1name + " vs. " + p2name;
+    let battleKey = p1name + " vs. " + p2name;
     let turn = parseInt(battleEmbed.fields[2].name.substring(battleEmbed.fields[2].name.indexOf('__Turn ') + 7, battleEmbed.fields[2].name.length - 2));
     
     if (typeof battleObj[battleKey] === 'undefined' && turn == 1 && responseJSON.d.interaction.name != 'campaign') {

@@ -3,7 +3,7 @@ import { printSuggestedMoves } from './prettyPrint.mjs';
 import { calculateMoveDamage } from './calculateMoveDamage.mjs';
 
 export function suggestMoves(battleObj, p1name, p2name, p1char, p2char, turn) {
-    let battleKey = p1name + " vs. " + p2name;
+    let battleKey = p1name + " vs. " + p2name;
 
     battleObj[battleKey].log(`For turn ${turn+1}:`);
     let [p1suggestedMove, p1predictedDamage, p1critical] = determineSuggestedMove(battleObj, battleKey, p1name, p2name, p1char, p2char);

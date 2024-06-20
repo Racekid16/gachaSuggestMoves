@@ -84,7 +84,7 @@ export function printParty(battleObj, battleKey, playerName, partyJSON, hasStren
 
 export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p1move, p2move, 
                              p1damage, p2damage, p1critical, p2critical) {
-    let battleKey = p1name + " vs. " + p2name;
+    let battleKey = p1name + " vs. " + p2name;
     
     let p1inflictMultiplier = battleObj[battleKey][p1name].chars[p1char].inflictMultiplier - 1;
     let p1printInflict = p1inflictMultiplier != 0 ? `💥+${p1inflictMultiplier * 100}% ` : '';

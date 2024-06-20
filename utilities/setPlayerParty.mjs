@@ -27,8 +27,9 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
     if (battleKey === false) {
         return;
     }
-    let p1name = battleKey.split(" vs. ")[0].split(".")[1];
-    let p2name = battleKey.split(" vs. ")[1].split(".")[1];
+    let splitBattleKey = battleKey.split(" vs. ");
+    let p1name = splitBattleKey[0].slice(splitBattleKey[0].indexOf('1.') + 2);
+    let p2name = splitBattleKey[1].slice(splitBattleKey[1].indexOf('2.') + 2);
     let playerNumber = 0;
     while (typeof battleObj[battleKey] !== 'undefined' && battleObj[battleKey]?.numPartiesRequested < 2 
         && battleObj[battleKey][`1.${p1name}`]?.valid !== false && battleObj[battleKey][`2.${p2name}`]?.valid !== false) {
@@ -68,6 +69,12 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
             return;
         }
         playerNumber = determinePlayerNumberByName(battleObj, battleKey, playerName);
+    }
+
+    if (playerNumber == 2) {
+        while (typeof battleObj[battleKey][`1.${p1name}`].valid === 'undefined') {
+            await delay(400);
+        }
     }
     playerName = `${playerNumber}.${playerName}`;
 
@@ -242,19 +249,27 @@ function determineBattleKey(battleObj, playerName, playerID) {
             possibleReturnVals.push(key);
         }
     }
+    let possibleReturnValsBeforeReducing = structuredClone(possibleReturnVals);
     if (possibleReturnVals.length >= 2) {
         let botName = "2.Chairman Sakayanagi";
         possibleReturnVals = possibleReturnVals.filter((val) => {
-            battleObj[val][botName]?.id !== consts.botID && possibleReturnVals.length > 0
+            return battleObj[val][botName]?.id !== consts.botID;
         });
+        if (possibleReturnVals.length == 0) {
+            possibleReturnVals.push(possibleReturnValsBeforeReducing[0]);
+        }
     }
-    if (possibleReturnVals.length == 1) {
+    if (possibleReturnVals.length > 1) {
+        console.log("There are multiple values in possibleReturnVals:", possibleReturnVals)
+    }
+    if (possibleReturnVals.length > 0) {
         let battleKey = possibleReturnVals[0];
         battleObj[battleKey].numPartiesRequested++;
         battleObj[battleKey].requestedParties.push(playerID);
         return battleKey;
     }
     console.log("Unexpectedly got here: could not determine battle Key.");
+    console.log("possibleReturnVals before reducing is", possibleReturnValsBeforeReducing);
     console.log("possibleReturnVals after reducing is", possibleReturnVals);
     console.log("The battleObj's keys are", Object.keys(battleObj));
     return false;
