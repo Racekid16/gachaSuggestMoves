@@ -33,7 +33,7 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
     let playerNumber = 0;
     while (typeof battleObj[battleKey] !== 'undefined' && battleObj[battleKey]?.numPartiesRequested < 2 
         && battleObj[battleKey][`1.${p1name}`]?.valid !== false && battleObj[battleKey][`2.${p2name}`]?.valid !== false) {
-        await delay(400);
+        await delay(200);
     }
     if (typeof battleObj[battleKey] === 'undefined') {
         return;
@@ -52,7 +52,7 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
         let nonNullIndex = battleObj[battleKey].requestedParties.findIndex(el => el !== null);
         if (playerID == null) {
             while (typeof battleObj[battleKey].requestedParties[nonNullIndex] !== 'number') {
-                await delay(400);
+                await delay(200);
             }
             playerNumber = 3 - battleObj[battleKey].requestedParties[nonNullIndex];
         } else {
@@ -73,7 +73,7 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
 
     if (playerNumber == 2) {
         while (typeof battleObj[battleKey][`1.${p1name}`].valid === 'undefined') {
-            await delay(400);
+            await delay(200);
         }
     }
     playerName = `${playerNumber}.${playerName}`;
@@ -215,7 +215,6 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
                 thisChar.aspectBoost.social += 0.5;
             }
             delete thisChar._id;
-            delete thisChar.name;
             delete thisChar.active;
         } else {
             delete battleObj[battleKey][playerName].chars[charKey];

@@ -83,7 +83,7 @@ export function printParty(battleObj, battleKey, playerName, partyJSON, hasStren
 }
 
 export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p1move, p2move, 
-                             p1damage, p2damage, p1critical, p2critical) {
+                                    p1moveObj, p2moveObj, p1damage, p2damage, p1critical, p2critical) {
     let battleKey = p1name + " vs. " + p2name;
     
     let p1inflictMultiplier = battleObj[battleKey][p1name].chars[p1char].inflictMultiplier - 1;
@@ -161,12 +161,8 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
                   + `${p2upperBound}${" ".repeat(upperBoundLength - p2upperBound.toString().length)}) `
                   + `${p2printCritical} ${p2printFatal}`;
     
-    let p1moveObj = consts.moveInfo[p1move];
-    let p1baseMoveObj = getBaseMoveObj(p1moveObj);
-    let p1priority = typeof p1moveObj.priority === 'undefined' ? p1baseMoveObj.priority : p1moveObj.priority;
-    let p2moveObj = consts.moveInfo[p2move];
-    let p2baseMoveObj = getBaseMoveObj(p2moveObj);
-    let p2priority = typeof p2moveObj.priority === 'undefined' ? p2baseMoveObj.priority : p2moveObj.priority;
+    let p1priority = p1moveObj.priority;
+    let p2priority = p2moveObj.priority;
     
     if (p1priority > p2priority) {
         battleObj[battleKey].log(p1Output);

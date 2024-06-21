@@ -248,7 +248,7 @@ async function verifyBattleValidity(battleObj, p1name, p2name) {
     let battleKey = p1name + " vs. " + p2name;
 
     while (typeof battleObj[battleKey][p1name].valid === 'undefined' || typeof battleObj[battleKey][p2name].valid === 'undefined') {
-        await delay(400);
+        await delay(200);
     }
 
     if (battleObj[battleKey][p1name].valid === false || battleObj[battleKey][p2name].valid === false) {

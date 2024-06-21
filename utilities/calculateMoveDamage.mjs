@@ -13,17 +13,15 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
         //console.log(`${move} is not an Attack type move.`);
         return [-1, false];
     }
-    //TODO: implement this properly
-    if (Object.values(moveObj).some(value => value === 'varies')) {
-        return [-1, false];
-    }
+
+    moveObj.damageType = getDamageType(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj);
     let baseMoveObj = getBaseMoveObj(moveObj);
     let completeMoveObj = structuredClone(moveObj);
 
-    completeMoveObj.attackStat = getAttackStat(move, moveObj, baseMoveObj);
-    completeMoveObj.defenseStat = getDefenseStat(move, moveObj, baseMoveObj);
-    completeMoveObj.basePower = getBasePower(move, moveObj, baseMoveObj);
-    completeMoveObj.priority = getPriority(move, moveObj, baseMoveObj);
+    completeMoveObj.attackStat = getAttackStat(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj, completeMoveObj);
+    completeMoveObj.defenseStat = getDefenseStat(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj, completeMoveObj);
+    completeMoveObj.basePower = getBasePower(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj, completeMoveObj);
+    completeMoveObj.priority = getPriority(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj, completeMoveObj);
 
     let attackerAttackStat = battleObj[battleKey][attacker].chars[attackChar][completeMoveObj.attackStat];
     let attackerAspectBoost = battleObj[battleKey][attacker].chars[attackChar].aspectBoost[completeMoveObj.attackStat];
@@ -36,7 +34,6 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
     let defenderReceiveMultiplier = battleObj[battleKey][defender].chars[defenseChar].receiveMultiplier;
     let defensePower = defenderDefenseStat * defenderAspectBoost * defenderReceiveMultiplier;
     
-
     let isCritical = false;
     if (consts.personalityWeaknesses[defenderPersonality].includes(moveObj.damageType)) {
         isCritical = true;
@@ -58,7 +55,33 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
         }
     }
 
-    return [damage, isCritical];
+    return [completeMoveObj, damage, isCritical];
+}
+
+function getDamageType(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj) {
+    let returnVal = moveObj.damageType;
+    if (returnVal == "varies") {
+        switch (move) {
+            case 'Impulse':
+                const attackStats = ['mental', 'physical', 'social'];
+                let highestAttackStat =  attackStats.reduce((highest, current) => {
+                    let thisStat = battleObj[battleKey][attacker].chars[attackChar][current];
+                    let highestStat = battleObj[battleKey][attacker].chars[attackChar][highest];
+                    return thisStat > highestStat ? current : highest;
+                }, attackStats[0]);
+                let correspondingDamageType = {
+                    "mental": "Academic",
+                    "physical": "Athleticism",
+                    "social": "Empathy"
+                };
+                returnVal = correspondingDamageType[highestAttackStat];
+                break;
+            
+            default:
+                console.log(`There is no specific case to determine the damage type of ${move}`);
+        }
+    }
+    return returnVal;
 }
 
 // get the base move obj from which this moveObj derives.
@@ -67,11 +90,17 @@ export function getBaseMoveObj(moveObj) {
     return consts.moveInfo[damageType];
 }
 
-function getAttackStat(move, moveObj, baseMoveObj) {
+function getAttackStat(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj, completeMoveObj) {
     let returnVal = typeof moveObj.attackStat === 'undefined' ? baseMoveObj.attackStat : moveObj.attackStat;
+    const attackStats = ['mental', 'physical', 'social'];
     if (returnVal == "varies") {
         switch (move) {
             case 'Impulse':
+                returnVal =  attackStats.reduce((highest, current) => {
+                    let thisStat = battleObj[battleKey][attacker].chars[attackChar][current];
+                    let highestStat = battleObj[battleKey][attacker].chars[attackChar][highest];
+                    return thisStat > highestStat ? current : highest;
+                }, attackStats[0]);
                 break;
             
             default:
@@ -81,10 +110,14 @@ function getAttackStat(move, moveObj, baseMoveObj) {
     return returnVal;
 }
 
-function getDefenseStat(move, moveObj, baseMoveObj) {
+function getDefenseStat(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj, completeMoveObj) {
     let returnVal = typeof moveObj.defenseStat === 'undefined' ? baseMoveObj.defenseStat : moveObj.defenseStat;
     if (returnVal == "varies") {
         switch (move) {
+            case 'Impulse':
+                returnVal = completeMoveObj.attackStat;
+                break;
+
             default:
                 console.log(`There is no specific case to determine the defense stat of ${move}`);
         }
@@ -92,10 +125,35 @@ function getDefenseStat(move, moveObj, baseMoveObj) {
     return returnVal;
 }
 
-function getBasePower(move, moveObj, baseMoveObj) {
+function getBasePower(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj) {
     let returnVal = typeof moveObj.basePower === 'undefined' ? baseMoveObj.basePower : moveObj.basePower;
     if (returnVal == "varies") {
         switch (move) {
+            case 'Grit':
+                let baseResolve = battleObj[battleKey][attacker].baseCharStats[attackChar].resolve;
+                let currentResolve = battleObj[battleKey][attacker].chars[attackChar].resolve;
+                let percentMissingResolve = (baseResolve - currentResolve) / baseResolve;
+                returnVal = 2 * percentMissingResolve + 0.5;
+                break;
+            
+            case 'Shatter':
+                let numSecrets = 0;
+                if (typeof battleObj[battleKey][attacker].chars[attackChar].secrets !== 'undefined') {
+                    numSecrets = battleObj[battleKey][attacker].chars[attackChar].secrets.size;
+                }
+
+                if (numSecrets == 0) {
+                    returnVal = 0;
+                }
+                else if (numSecrets == 1 || numSecrets == 2) {
+                    returnVal = 1;
+                }
+                else if (numSecrets == 3) {
+                    returnVal = 2;
+                }
+
+                break;
+
             default:
                 console.log(`There is no specific case to determine the base power of ${move}`);
         }
@@ -103,10 +161,24 @@ function getBasePower(move, moveObj, baseMoveObj) {
     return returnVal;
 }
 
-function getPriority(move, moveObj, baseMoveObj) {
+function getPriority(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj) {
     let returnVal = typeof moveObj.priority === 'undefined' ? baseMoveObj.priority : moveObj.priority;
     if (returnVal == "varies") {
         switch (move) {
+            case 'Shatter':
+                let numSecrets = 0;
+                if (typeof battleObj[battleKey][attacker].chars[attackChar].secrets !== 'undefined') {
+                    numSecrets = battleObj[battleKey][attacker].chars[attackChar].secrets.size;
+                }
+
+                if (numSecrets == 0) {
+                    returnVal = 0;
+                }
+                else if (numSecrets >= 1) {
+                    returnVal = 3;
+                }
+                break;
+        
             default:
                 console.log(`There is no specific case to determine the priority of ${move}`);
         }
