@@ -1,7 +1,9 @@
 // add or remove positive or negative statuses.
 
 export function addStatus(battleObj, battleKey, playerName, charName, status, turn, numTurns) {
-    battleObj[battleKey].log(`${status} added to ${playerName}'s ${charName} for ${numTurns} turns!`);
+    if  (typeof battleObj[battleKey].log !== 'undefind') {
+        battleObj[battleKey].log(`${status} added to ${playerName}'s ${charName} for ${numTurns} turns!`);
+    }
 
     // I arrange these alphabetically
     switch (status) {
@@ -96,7 +98,7 @@ function removeExpiredPositiveStatuses(battleObj, battleKey, playerName, charNam
         let thisPositiveStatus = thisCharObj.positiveStatuses[i];
     
         if (thisPositiveStatus.endTurn == turn) {
-            if (thisCharObj.resolve != 0) {
+            if (typeof battleObj[battleKey].log !== 'undefined' && thisCharObj.resolve != 0) {
                 battleObj[battleKey].log(`${charName}'s ${thisPositiveStatus.name} positive status expired!`);
             }
             switch (thisPositiveStatus.name) {
@@ -119,7 +121,7 @@ function removeExpiredNegativeStatuses(battleObj, battleKey, playerName, charNam
         let thisNegativeStatus = thisCharObj.negativeStatuses[i];
     
         if (thisNegativeStatus.endTurn == turn) {
-            if (thisCharObj.resolve != 0) {
+            if (typeof battleObj[battleKey].log !== 'undefined' && thisCharObj.resolve != 0) {
                 battleObj[battleKey].log(`${charName}'s ${thisNegativeStatus.name} negative status expired!`);
             }
             switch (thisNegativeStatus.name) {

@@ -9,7 +9,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
     
     if (consts.moveInfo[move]?.type[0] == "attack" && battleObj[battleKey][defender].chars[defenseChar].moves.includes("Group Determination")) {
         for (let charKey in battleObj[battleKey][defender].chars) {
-            addInflictModifier(battleObj, battleKey, defender, charKey, 0.05, turn, Infinity);
+            addInflictModifier(battleObj, battleKey, defender, charKey, 0.05, turn, 9999);
         }
     }
 
@@ -104,10 +104,10 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             let [lowestResolveTeammate, lowestResolveTeammateObj] = 
                 Object.entries(battleObj[battleKey][attacker].chars).reduce((minEntry, currentEntry) => {
                     return (currentEntry[0] != attackChar && currentEntry[1].resolve > 0 && currentEntry[1].resolve < minEntry[1].resolve) ? currentEntry : minEntry;
-                }, ["empty", { resolve: Infinity }]);
+                }, ["empty", { resolve: 9999 }]);
 
             if (lowestResolveTeammate != "empty") {
-                if (attackerResolves[lowestResolveTeammate] != 0) {
+                if (typeof attackerResolves !== 'undefined' && attackerResolves[lowestResolveTeammate] != 0) {
                     console.log(`Program expected ${attacker}'s ${lowestResolveTeammate} in turn ${turn} of ${battleKey} to die, but they didn't.`);
                     console.log(attackerResolves);
                 }
@@ -153,7 +153,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             break;
         
         case 'Kings Command':
-            let noAlivePawn = typeof battleObj[battleKey][attacker].chars.Pawn === 'undefined' || attackerResolves.Pawn == 0;
+            let noAlivePawn = typeof battleObj[battleKey][attacker].chars.Pawn === 'undefined' || attackerResolves?.Pawn == 0;
             if (noAlivePawn) {
                 let creatorBaseCharStats = battleObj[battleKey][attacker].baseCharStats[attackChar];
                 let inheritAmount = 0.75;

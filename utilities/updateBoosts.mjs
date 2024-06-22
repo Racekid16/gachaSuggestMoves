@@ -104,7 +104,9 @@ export function applyBoosts(battleObj, battleKey, playerName) {
         for (let i = 0; i < thisCharObj.debuffs.length; i++) {
             let debuff = thisCharObj.debuffs[i];
             if (thisCharObj.moves.includes('Lead By Example') && (debuff.stat == 'ability' || debuff.stat == 'physical')) {
-                battleObj[battleKey].log(`${debuff} debuff negated as it would lower ${charName}'s physical`);
+                if (typeof battleObj[battleKey].log !== 'undefined') {
+                    battleObj[battleKey].log(`${debuff} debuff negated as it would lower ${charName}'s physical`);
+                }
                 thisCharObj.debuffs.splice(i, 1);
                 i--;
                 continue;
@@ -157,7 +159,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: Infinity,
+                endTurn: 9999,
                 stat: "mental",
                 amount: bossOrdersBuff
             }); 
@@ -168,7 +170,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: Infinity,
+                endTurn: 9999,
                 stat: "initiative",
                 amount: bottleBreakInitiativeBuff
             });
@@ -179,7 +181,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: Infinity,
+                endTurn: 9999,
                 stat: "social",
                 amount: bottleBreakSocialBuff
             });
@@ -190,7 +192,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: Infinity,
+                endTurn: 9999,
                 stat: "social",
                 amount: groupTiesBuff
             }); 
@@ -201,7 +203,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: Infinity,
+                endTurn: 9999,
                 stat: "mental",
                 amount: introversionBuff
             });                       
@@ -273,7 +275,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: Infinity,
+                endTurn: 9999,
                 stat: "ability",
                 amount: thePerfectExistenceBuff
             }); 
@@ -298,7 +300,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: Infinity,
+                endTurn: 9999,
                 stat: "initiative",
                 amount: zenithPaceBuff
             })
@@ -307,7 +309,8 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             break;
     }
 
-    if (battleObj[battleKey][playerName].chars[charName].buffs.length > numBuffs) {
+    if (battleObj[battleKey][playerName].chars[charName].buffs.length > numBuffs
+     && typeof battleObj[battleKey].log !== 'undefined') {
         battleObj[battleKey].log(`${buff} added to ${playerName}'s ${charName}!`);
     }
 }
@@ -321,7 +324,7 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
             battleObj[battleKey][playerName].chars[charName].debuffs.push({
                 name: debuff,
                 startTurn: turn,
-                endTurn: Infinity,
+                endTurn: 9999,
                 stat: "physical",
                 amount: bottleBreakPhysicalDebuff
             });
@@ -382,7 +385,7 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
             battleObj[battleKey][playerName].chars[charName].debuffs.push({
                 name: debuff,
                 startTurn: turn,
-                endTurn: Infinity,
+                endTurn: 9999,
                 stat: "ability",
                 amount: kingsCommandDebuff
             }); 
@@ -392,7 +395,8 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
             break;
     }
     
-    if (battleObj[battleKey][playerName].chars[charName].debuffs.length > numDebuffs) {
+    if (battleObj[battleKey][playerName].chars[charName].debuffs.length > numDebuffs
+     && typeof battleObj[battleKey].log !== 'undefined') {
         battleObj[battleKey].log(`${debuff} added to ${playerName}'s ${charName}!`);
     }
 }
@@ -404,7 +408,7 @@ function removeExpiredBuffs(battleObj, battleKey, playerName, charName, turn) {
         let thisBuff = thisCharObj.buffs[i];
 
         if (thisBuff.endTurn == turn) {
-            if (thisCharObj.resolve != 0) {
+            if (thisCharObj.resolve != 0 && typeof battleObj[battleKey].log !== 'undefined') {
                 battleObj[battleKey].log(`${playerName}'s ${charName}'s ${thisBuff.name} buff expired! ${thisBuff.stat} decreased by ${thisBuff.amount * 100}%`);
             }
             thisCharObj.buffs.splice(i, 1);
@@ -420,7 +424,7 @@ function removeExpiredDebuffs(battleObj, battleKey, playerName, charName, turn) 
         let thisDebuff = thisCharObj.debuffs[i];
 
         if (thisDebuff.endTurn == turn) {
-            if (thisCharObj.resolve != 0) {
+            if (thisCharObj.resolve != 0 && typeof battleObj[battleKey].log !== 'undefined') {
                 battleObj[battleKey].log(`${playerName}'s ${charName}'s ${thisDebuff.name} debuff expired! ${thisDebuff.stat} increased by ${thisDebuff.amount * -100}%`);
             }
             thisCharObj.debuffs.splice(i, 1);

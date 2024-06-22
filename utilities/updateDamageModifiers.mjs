@@ -55,7 +55,7 @@ function removeExpiredInflictModifiers(battleObj, battleKey, playerName, charNam
     for (let i = 0; i < thisChar.inflictModifiers.length; i++) {
         let thisModifier = thisChar.inflictModifiers[i];
         if (thisModifier.endTurn == turn) {
-            if (thisChar.resolve != 0) {
+            if (typeof battleObj[battleKey].log !== 'undefined' && thisChar.resolve != 0) {
                 battleObj[battleKey].log(`${playerName}'s ${charName}'s ${thisModifier.endTurn - thisModifier.startTurn}-turn ${thisModifier.amount * 100}% `
                                        + `damage inflicted modifier expired! Damage inflicted decreased by ${thisModifier.amount * 100}%`);
             }
@@ -71,7 +71,7 @@ function removeExpiredReceiveModifiers(battleObj, battleKey, playerName, charNam
     for (let i = 0; i < thisChar.receiveModifiers.length; i++) {
         let thisModifier = thisChar.receiveModifiers[i];
         if (thisModifier.endTurn == turn) {
-            if (thisChar.resolve != 0) {
+            if (typeof battleObj[battleKey].log !== 'undefined' && thisChar.resolve != 0) {
                 battleObj[battleKey].log(`${playerName}'s ${charName}'s ${thisModifier.endTurn - thisModifier.startTurn}-turn ${thisModifier.amount * 100}% `
                                        + `damage received modifier expired! Damage receieved increased by ${thisModifier.amount * -100}%`);
             }

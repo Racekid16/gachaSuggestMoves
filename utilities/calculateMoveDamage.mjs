@@ -6,7 +6,7 @@ import consts from '../consts.json' assert { type: 'json' };
 export function calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move) {
     let moveObj = consts.moveInfo[move];
     if (typeof moveObj === 'undefined') {
-        console.log(`${move} is not in consts.json`);
+        console.log(move, 'is not in consts.json');
         return [{}, -1, false];
     }
     if (!moveObj.type.includes('attack')) {
@@ -14,14 +14,7 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
         return [moveObj, 0, false];
     }
 
-    moveObj.damageType = getDamageType(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj);
-    let baseMoveObj = getBaseMoveObj(moveObj);
-    let completeMoveObj = structuredClone(moveObj);
-
-    completeMoveObj.attackStat = getAttackStat(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj, completeMoveObj);
-    completeMoveObj.defenseStat = getDefenseStat(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj, completeMoveObj);
-    completeMoveObj.basePower = getBasePower(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj, completeMoveObj);
-    completeMoveObj.priority = getPriority(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj, completeMoveObj);
+    let completeMoveObj = getCompleteMoveObj(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move);
 
     let attackerAttackStat = battleObj[battleKey][attacker].chars[attackChar][completeMoveObj.attackStat];
     let attackerAspectBoost = battleObj[battleKey][attacker].chars[attackChar].aspectBoost[completeMoveObj.attackStat];
@@ -62,7 +55,7 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
 export function calculateMoveHealing(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move) {
     let moveObj = consts.moveInfo[move];
     if (typeof moveObj === 'undefined') {
-        console.log(`${move} is not in consts.json`);
+        console.log(move, 'is not in consts.json');
         return [{}, -1];
     }
 
@@ -151,6 +144,22 @@ export function calculateMoveHealing(battleObj, battleKey, attacker, defender, a
     return [moveObj, healAmounts];
 }
 
+export function getCompleteMoveObj(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move) {
+    let moveObj = consts.moveInfo[move];
+    if (typeof moveObj.damageType === "undefined") {
+        return moveObj;
+    }
+    moveObj.damageType = getDamageType(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj);
+    let baseMoveObj = consts.moveInfo[moveObj.damageType];
+    let completeMoveObj = structuredClone(moveObj);
+
+    completeMoveObj.attackStat = getAttackStat(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj, completeMoveObj);
+    completeMoveObj.defenseStat = getDefenseStat(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj, completeMoveObj);
+    completeMoveObj.basePower = getBasePower(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj, completeMoveObj);
+    completeMoveObj.priority = getPriority(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj, completeMoveObj);
+    return completeMoveObj;
+}
+
 function getDamageType(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj) {
     let returnVal = moveObj.damageType;
     if (returnVal == "varies") {
@@ -176,12 +185,6 @@ function getDamageType(battleObj, battleKey, attacker, defender, attackChar, def
         }
     }
     return returnVal;
-}
-
-// get the base move obj from which this moveObj derives.
-export function getBaseMoveObj(moveObj) {
-    let damageType = moveObj.damageType;
-    return consts.moveInfo[damageType];
 }
 
 function getAttackStat(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj, completeMoveObj) {

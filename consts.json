@@ -16,7 +16,7 @@
         },
         "Arrogance": {
             "type": ["boost"],
-            "target": "self",
+            "target": "attacker",
             "stat": "ability",
             "amount": 0.4,
             "numTurns": 2
@@ -38,7 +38,7 @@
         "Blazing Form": {
             "type": ["attack", "boost"],
             "damageType": "Athleticism",
-            "target": "self",
+            "target": "attacker",
             "stat": "physical",
             "amount": 0.2,
             "numTurns": 5
@@ -54,7 +54,7 @@
         },
         "Charm": {
             "type": ["boost"],
-            "target": "opponent",
+            "target": "defender",
             "stat": "social",
             "amount": -0.33,
             "numTurns": 4 
@@ -64,7 +64,7 @@
             "damageType": "Influence",
             "basePower": 2,
             "priority": -3,
-            "target": "self",
+            "target": "attacker",
             "stat": "ability",
             "amount": -0.75,
             "numTurns": 5
@@ -104,14 +104,15 @@
         },
         "Hate": {
             "type": ["boost"],
-            "target": "opponent", 
+            "target": "defender", 
             "stat": "ability",
             "amount": -0.35,
-            "numTurns": 4
+            "numTurns": 4,
+            "stacks": false
         },
         "Humiliate": {
             "type": ["boost", "status"],
-            "target": "opponent",
+            "target": "defender",
             "stat": "varies",
             "amount": -0.25,
             "numTurns": 2
@@ -142,7 +143,7 @@
         },
         "Kings Command": {
             "type": ["boost"],
-            "target": "self",
+            "target": "attacker",
             "stat": "ability",
             "amount": -0.25,
             "numTurns": "Infinity"
@@ -181,10 +182,11 @@
         },
         "Study": {
             "type": ["boost"],
-            "target": "self",
+            "target": "attacker",
             "stat": "varies",
             "amount": "varies",
-            "numTurns": 1
+            "numTurns": 1,
+            "stacks": false
         }, 
         "Teamwork": {
             "type": ["innate"]
@@ -194,10 +196,11 @@
         },
         "Unity": {
             "type": ["boost"],
-            "target": "varies",
+            "target": "attacker",
             "stat": "ability",
             "amount": 0.35,
-            "numTurns": 5
+            "numTurns": 5,
+            "stacks": false
         },
         "Unmask": {
             "type": ["heal"]
@@ -216,6 +219,6 @@
         "Timid": ["Athleticism", "Empathy"],
         "Explosive": ["Academic", "Scheming"],
         "Reserved": ["Athleticism", "Fighting"],
-        "Selfish": ["Academic", "Influence"]
+        "attackerish": ["Academic", "Influence"]
     }
 }
