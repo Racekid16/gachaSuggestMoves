@@ -130,12 +130,13 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                     positiveStatus.endTurn = turn;
                 }
 
-                //note that you can only get the mental buff if you sacrifice a character
-                //this works even if both players use the same character and both use Introversion,
-                //because their counters are guaranteed to fail in that case
-                if (turnResults.includes(`**${attackChar}** countered with **Introversion**!`)) {
-                    addBoost(battleObj, battleKey, attacker, attackChar, "Introversion", turn);
-                }
+            }
+
+            //note that you can only get the mental buff if you sacrifice a character
+            //this works even if both players use the same character and both use Introversion,
+            //because their counters are guaranteed to fail in that case
+            if (turnResults.includes(`**${attackChar}** countered with **Introversion**!`)) {
+                addBoost(battleObj, battleKey, attacker, attackChar, "Introversion", turn);
             }
 
             break;

@@ -231,24 +231,30 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
         
         case 'Study Initiative':
             let studyInitiativeBuff = 1;
-            battleObj[battleKey][playerName].chars[charName].buffs.push({
-                name: buff,
-                startTurn: turn,
-                endTurn: turn + 1,
-                stat: "initiative",
-                amount: studyInitiativeBuff
-            }); 
+            let hasStudyInitiativeBuff = hasBoost(battleObj, battleKey, playerName, charName, "Study Initiative");
+            if (!hasStudyInitiativeBuff) {
+                battleObj[battleKey][playerName].chars[charName].buffs.push({
+                    name: buff,
+                    startTurn: turn,
+                    endTurn: turn + 1,
+                    stat: "initiative",
+                    amount: studyInitiativeBuff
+                });
+            }
             break;
         
         case 'Study Mental':
             let studyMentalBuff = 1.5;
-            battleObj[battleKey][playerName].chars[charName].buffs.push({
-                name: buff,
-                startTurn: turn,
-                endTurn: turn + 1,
-                stat: "mental",
-                amount: studyMentalBuff
-            });
+            let hasStudyMentalBuff = hasBoost(battleObj, battleKey, playerName, charName, "Study Mental");
+            if (!hasStudyMentalBuff) {
+                battleObj[battleKey][playerName].chars[charName].buffs.push({
+                    name: buff,
+                    startTurn: turn,
+                    endTurn: turn + 1,
+                    stat: "mental",
+                    amount: studyMentalBuff
+                });
+            }
             break;
 
         case 'Teamwork':
