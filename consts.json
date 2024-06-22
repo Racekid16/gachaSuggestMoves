@@ -151,7 +151,7 @@
             "type": ["innate"]
         },
         "Mask": {
-            "type": ["heal"]
+            "type": ["status"]
         },
         "Provoke": {
             "type": ["status"]

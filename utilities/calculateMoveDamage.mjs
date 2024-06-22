@@ -6,12 +6,12 @@ import consts from '../consts.json' assert { type: 'json' };
 export function calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move) {
     let moveObj = consts.moveInfo[move];
     if (typeof moveObj === 'undefined') {
-        //console.log(`${move} is not in consts.json`);
-        return [-1, false];
+        console.log(`${move} is not in consts.json`);
+        return [{}, -1, false];
     }
     if (!moveObj.type.includes('attack')) {
         //console.log(`${move} is not an Attack type move.`);
-        return [-1, false];
+        return [moveObj, 0, false];
     }
 
     moveObj.damageType = getDamageType(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj);
@@ -58,6 +58,99 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
     return [completeMoveObj, damage, isCritical];
 }
 
+//return: an array of characters and how much they heal for, format: [moveObj, healAmounts] (both objects)
+export function calculateMoveHealing(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move) {
+    let moveObj = consts.moveInfo[move];
+    if (typeof moveObj === 'undefined') {
+        console.log(`${move} is not in consts.json`);
+        return [{}, -1];
+    }
+
+    let currentResolve = battleObj[battleKey][attacker].chars[attackChar].resolve;
+    let baseResolve = battleObj[battleKey][attacker].baseCharStats[attackChar].resolve;
+    let healAmounts = {};
+
+    switch (move) {
+        case 'Bottle Break':
+            let bottleBreakHealPercent = 0.2;
+            healAmounts[attackChar] = Math.min(baseResolve, currentResolve + round(baseResolve * bottleBreakHealPercent)) - currentResolve;
+            break;
+        
+        case 'Group Determination':
+            //TODO: confirm this is how the move's heal mechanic actually works (only alive teammates?)
+            let selfHealPercent = 0;
+            let otherHealPercent = 0.25;
+            for (let charKey in battleObj[battleKey][attacker].chars) {
+                if (battleObj[battleKey][attacker].chars[charKey].resolve != 0) {
+                    selfHealPercent += 0.25;
+                    let charCurrentResolve = battleObj[battleKey][attacker].chars[charKey].resolve;
+                    let charBaseResolve = battleObj[battleKey][attacker].baseCharStats[charKey].resolve;
+                    healAmounts[charKey] = Math.min(charBaseResolve, charCurrentResolve + round(charBaseResolve * otherHealPercent)) - charCurrentResolve;
+                }
+            }
+            healAmounts[attackChar] = round(baseResolve * selfHealPercent);
+            break;
+
+        case 'Inspire':
+            let inspireHealPercent = 0.33;
+            for (let charKey in battleObj[battleKey][attacker].chars) {
+                if (charKey != attackChar && battleObj[battleKey][attacker].chars[charKey].resolve != 0) {
+                    let charCurrentResolve = battleObj[battleKey][attacker].chars[charKey].resolve;
+                    let charBaseResolve = battleObj[battleKey][attacker].baseCharStats[charKey].resolve;
+                    healAmounts[charKey] = Math.min(charBaseResolve, charCurrentResolve + round(charBaseResolve * inspireHealPercent)) - charCurrentResolve;
+                }
+            }
+            break;
+        
+        case 'Introversion':
+            let introversionHealPercent = 0.4;
+            for (let charKey in battleObj[battleKey][attacker].chars) {
+                if (charKey != attackChar && battleObj[battleKey][attacker].chars[charKey].resolve != 0) {
+                    healAmounts[attackChar] = Math.min(baseResolve, currentResolve + round(baseResolve * introversionHealPercent)) - currentResolve;
+                }
+            }
+            break;
+        
+        case 'Shatter':
+            let defenderResolve = battleObj[battleKey][defender].chars[defenseChar].resolve;
+            let shatterDamage = Math.min(defenderResolve, calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move)[1]);
+            let shatterHealPercent = 0.35;
+            let numSecrets = 0;
+            if (typeof battleObj[battleKey][attacker].chars[attackChar].secrets !== 'undefined') {
+                numSecrets = battleObj[battleKey][attacker].chars[attackChar].secrets.size;
+            }
+            if (numSecrets >= 2) {
+                healAmounts[attackChar] = Math.min(baseResolve, currentResolve + round(shatterDamage * shatterHealPercent)) - currentResolve;            
+            }
+            break;
+        
+        case 'Teamwork':
+            let teamworkHealPercent = 0.2;
+            let previousTaggedInChar = battleObj[battleKey][attacker].previousTaggedInChar;
+            let previousTaggedInCharObj = battleObj[battleKey][attacker].chars[previousTaggedInChar];
+            if (previousTaggedInCharObj.tags.includes("Class D")) {
+                healAmounts[attackChar] = Math.min(baseResolve, currentResolve + round(baseResolve * teamworkHealPercent)) - currentResolve;
+            }
+            break;
+        
+        case 'The Perfect Existence':
+            let thePerfectExistenceHealPercent = 0.5;
+            healAmounts[attackChar] = round(baseResolve * thePerfectExistenceHealPercent);
+            break;
+        
+        case 'Unmask':
+            let unmaskHealPercent = 0.4;
+            healAmounts[attackChar] = Math.min(baseResolve, currentResolve + round(baseResolve * unmaskHealPercent)) - currentResolve;
+            break;
+        
+        default:
+            break;
+
+    }
+
+    return [moveObj, healAmounts];
+}
+
 function getDamageType(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj) {
     let returnVal = moveObj.damageType;
     if (returnVal == "varies") {
@@ -79,6 +172,7 @@ function getDamageType(battleObj, battleKey, attacker, defender, attackChar, def
             
             default:
                 console.log(`There is no specific case to determine the damage type of ${move}`);
+                break;
         }
     }
     return returnVal;
@@ -105,6 +199,7 @@ function getAttackStat(battleObj, battleKey, attacker, defender, attackChar, def
             
             default:
                 console.log(`There is no specific case to determine the attack stat of ${move}`);
+                break;
         }
     }
     return returnVal;
@@ -120,6 +215,7 @@ function getDefenseStat(battleObj, battleKey, attacker, defender, attackChar, de
 
             default:
                 console.log(`There is no specific case to determine the defense stat of ${move}`);
+                break;
         }
     }
     return returnVal;
@@ -156,6 +252,7 @@ function getBasePower(battleObj, battleKey, attacker, defender, attackChar, defe
 
             default:
                 console.log(`There is no specific case to determine the base power of ${move}`);
+                break;
         }
     }
     return returnVal;
@@ -181,6 +278,7 @@ function getPriority(battleObj, battleKey, attacker, defender, attackChar, defen
         
             default:
                 console.log(`There is no specific case to determine the priority of ${move}`);
+                break;
         }
     }
     return returnVal;
