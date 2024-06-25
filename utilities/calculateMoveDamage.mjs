@@ -36,15 +36,15 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
     //this is a guess for how much damage will be dealt, since I don't know the exact damage formula
     if (defenderDefenseStat != 0) {
         if (!isCritical) {
-            damage = round(36 * attackPower / defensePower);
+            damage = round(40 * attackPower / defensePower);
         } else {
-            damage = round(36 * attackPower / defensePower * 1.4);
+            damage = round(40 * attackPower / defensePower * 1.3);
         }
     } else {
         if (!isCritical) {
             damage = round(2 * attackPower);
         } else {
-            damage = round(2 * attackPower * 1.4);
+            damage = round(2 * attackPower * 1.3);
         }
     }
 

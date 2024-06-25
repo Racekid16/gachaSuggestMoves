@@ -1,12 +1,11 @@
 import { cancelInput } from "./handleInput.mjs";
 import { parseMoveSameChar, getCurrentChar } from "./parseMoveSameChar.mjs";
 import { parseMoveDifferentChars } from "./parseMoveDiffChars.mjs";
-import { addBoost, removeExpiredBoosts, applyBoosts } from "./updateBoosts.mjs";
+import { removeExpiredBoosts, applyBoosts } from "./updateBoosts.mjs";
 import { removeExpiredStatuses, applyStatuses } from "./updateStatuses.mjs";
 import { removeExpiredDamageModifiers, applyDamageModifiers } from "./updateDamageModifiers.mjs";
 import { suggestMoves } from "./suggestMove.mjs";
 import { emulateMove, emulateAction, applyTransformation } from "./emulateMove.mjs";
-import consts from '../consts.json' assert { type: 'json' };
 
 // identify changes in stats or statuses then update the battleObj accordingly
 export async function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
