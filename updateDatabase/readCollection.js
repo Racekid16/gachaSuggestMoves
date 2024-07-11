@@ -73,7 +73,7 @@ async function getCollection(userId) {
     //getting the number of characters they own
     let collectionSize = parseInt(embed.footer.text.slice(embed.footer.text.lastIndexOf("/") + 1, embed.footer.text.lastIndexOf(")")));
     examinedChars = [];
-    let buttons = document.getElementsByClassName("button__581d0 lookFilled__950dd colorPrimary_ebe632 sizeSmall_da7d10 grow__4c8a4");
+    let buttons = document.getElementsByClassName("button_dd4f85 lookFilled_dd4f85 colorPrimary_dd4f85 sizeSmall_dd4f85 grow_dd4f85");
     let rightArrowButton = buttons[buttons.length - 1];
     //now getting the names of all the other characters they own
     while (examinedChars.length != collectionSize) {

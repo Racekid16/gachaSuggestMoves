@@ -6,7 +6,9 @@ export function addInflictModifier(battleObj, battleKey, playerName, charName, a
         endTurn: turn + numTurns,
         amount: amount
     });
-    console.log(`+${amount * 100}% damage inflicted added to ${playerName}'s ${charName} for ${numTurns} turns!`);
+    if (typeof battleObj[battleKey].log !== 'undefined') {
+        battleObj[battleKey].log(`+${amount * 100}% damage inflicted added to ${playerName}'s ${charName} for ${numTurns} turns!`);
+    }
 }
 
 export function addReceiveModifier(battleObj, battleKey, playerName, charName, amount, turn, numTurns) {
@@ -15,7 +17,9 @@ export function addReceiveModifier(battleObj, battleKey, playerName, charName, a
         endTurn: turn + numTurns,
         amount: amount
     });
-    console.log(`${amount * 100}% damage received added to ${playerName}'s ${charName} for ${numTurns} turns!`);
+    if (typeof battleObj[battleKey].log !== 'undefined') {
+        battleObj[battleKey].log(`${amount * 100}% damage received added to ${playerName}'s ${charName} for ${numTurns} turns!`);
+    }
 }
 
 export function removeExpiredDamageModifiers(battleObj, battleKey, playerName, turn) {

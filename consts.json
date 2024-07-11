@@ -27,6 +27,9 @@
         "Aspect Of Metal": {
             "type": ["innate"]
         },
+        "Aspect Of Water": {
+            "type": ["innate"]
+        },
         "Athleticism": {
             "type": ["attack"],
             "damageType": "Athleticism",
@@ -219,6 +222,6 @@
         "Timid": ["Athleticism", "Empathy"],
         "Explosive": ["Academic", "Scheming"],
         "Reserved": ["Athleticism", "Fighting"],
-        "attackerish": ["Academic", "Influence"]
+        "Selfish": ["Academic", "Influence"]
     }
 }

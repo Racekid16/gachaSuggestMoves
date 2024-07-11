@@ -10,18 +10,21 @@ export function printParty(battleObj, battleKey, playerName, partyJSON, hasStren
     let activeChars = [];
     for (let i = 0; i < 3; i++) {
         if (partyJSON[i].name != "empty") {
-            activeChars.push(charStats[partyJSON[i].name]);
+            activeChars.push(charStats[partyJSON[i].aspect + partyJSON[i].name]);
         }
     }
 
-    let activeNameLength = getMaxLength(activeChars, 'name');
+    let activeNameLength = activeChars.reduce((maxLength, char) => {
+        return Math.max(maxLength, char.aspect.length + char.name.length);
+    }, 0);
     let initiativeLength = getMaxLength(activeChars, 'initiative');
     let mentalLength = getMaxLength(activeChars, 'mental');
     let physicalLength = getMaxLength(activeChars, 'physical');
     let socialLength = getMaxLength(activeChars, 'social');
 
     for (let char of activeChars) {
-        battleObj[battleKey].log(`${char.numStars}⭐ ${char.name}${" ".repeat(activeNameLength - char.name.length)} `
+        let charFullName = char.aspect + char.name;
+        battleObj[battleKey].log(`${char.numStars}⭐ ${charFullName}${" ".repeat(activeNameLength - charFullName.length)} `
                   + `🏃‍${char.initiative}${" ".repeat(initiativeLength - char.initiative.toString().length)} `
                   + `🧠${char.mental}${" ".repeat(mentalLength - char.mental.toString().length)} `
                   + `💪${char.physical}${" ".repeat(physicalLength - char.physical.toString().length)} `
@@ -64,7 +67,7 @@ export function printParty(battleObj, battleKey, playerName, partyJSON, hasStren
         for (let i = 0; i < activeChars.length; i++) {
             for (let ally of char.allies) {
                 if (activeChars[i].tags.includes(ally)) {
-                    alliedActiveChars[i] = activeChars[i].name;
+                    alliedActiveChars[i] = activeChars[i].aspect + activeChars[i].name;
                 }
             }
         }

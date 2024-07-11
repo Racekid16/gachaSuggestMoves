@@ -7,6 +7,7 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
     let moveObj = consts.moveInfo[move];
     if (typeof moveObj === 'undefined') {
         console.log(move, 'is not in consts.json');
+        console.log(battleObj[battleKey][attacker].chars[attackChar]);
         return [{}, -1, false];
     }
     if (!moveObj.type.includes('attack')) {
@@ -31,20 +32,20 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
     if (consts.personalityWeaknesses[defenderPersonality].includes(moveObj.damageType)) {
         isCritical = true;
     }
-
     let damage;
+    let criticalMultiplier = 1.35;
     //this is a guess for how much damage will be dealt, since I don't know the exact damage formula
     if (defenderDefenseStat != 0) {
         if (!isCritical) {
             damage = round(40 * attackPower / defensePower);
         } else {
-            damage = round(40 * attackPower / defensePower * 1.3);
+            damage = round(40 * attackPower / defensePower * criticalMultiplier);
         }
     } else {
         if (!isCritical) {
             damage = round(2 * attackPower);
         } else {
-            damage = round(2 * attackPower * 1.3);
+            damage = round(2 * attackPower * criticalMultiplier);
         }
     }
 
@@ -56,6 +57,7 @@ export function calculateMoveHealing(battleObj, battleKey, attacker, defender, a
     let moveObj = consts.moveInfo[move];
     if (typeof moveObj === 'undefined') {
         console.log(move, 'is not in consts.json');
+        console.log(battleObj[battleKey][attacker].chars[attackChar]);
         return [{}, -1];
     }
 
@@ -70,15 +72,16 @@ export function calculateMoveHealing(battleObj, battleKey, attacker, defender, a
             break;
         
         case 'Group Determination':
-            //TODO: confirm this is how the move's heal mechanic actually works (only alive teammates?)
             let selfHealPercent = 0;
             let otherHealPercent = 0.25;
             for (let charKey in battleObj[battleKey][attacker].chars) {
-                if (battleObj[battleKey][attacker].chars[charKey].resolve != 0) {
+                if (battleObj[battleKey][attacker].chars[charKey].tags.includes("Ayanokōji Group")) {
                     selfHealPercent += 0.25;
                     let charCurrentResolve = battleObj[battleKey][attacker].chars[charKey].resolve;
-                    let charBaseResolve = battleObj[battleKey][attacker].baseCharStats[charKey].resolve;
-                    healAmounts[charKey] = Math.min(charBaseResolve, charCurrentResolve + round(charBaseResolve * otherHealPercent)) - charCurrentResolve;
+                    if (charCurrentResolve != 0) {
+                        let charBaseResolve = battleObj[battleKey][attacker].baseCharStats[charKey].resolve;
+                        healAmounts[charKey] = Math.min(charBaseResolve, charCurrentResolve + round(charBaseResolve * otherHealPercent)) - charCurrentResolve;
+                    }
                 }
             }
             healAmounts[attackChar] = round(baseResolve * selfHealPercent);

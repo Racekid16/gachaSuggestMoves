@@ -4,6 +4,7 @@ import { addStatus } from "./updateStatuses.mjs";
 import { addInflictModifier, addReceiveModifier } from "./updateDamageModifiers.mjs";
 import { round } from "./round.mjs";
 import consts from '../consts.json' assert { type: 'json' };
+import { resolve } from "path";
 
 export function emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, turnResults, turn, attackerResolves) {
     
@@ -174,7 +175,8 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                         initiative: 1,
                         mental: 1,
                         physical: 1,
-                        social: 1
+                        social: 1,
+                        resolve: 1
                     },
                     initiative: round(creatorBaseCharStats.initiative * inheritAmount),
                     mental: round(creatorBaseCharStats.mental * inheritAmount),
@@ -214,16 +216,19 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             let previousTaggedInChar = battleObj[battleKey][attacker].previousTaggedInChar;
             let previousTaggedInCharObj = battleObj[battleKey][attacker].chars[previousTaggedInChar];
             if (previousTaggedInCharObj.tags.includes("Ayanokōji Group")) {
-                addBoost(battleObj, battleKey, playerName, charName, "Teamwork", turn);
+                addBoost(battleObj, battleKey, attacker, charName, "Teamwork", turn);
             }
             if (previousTaggedInChar.includes("Ayanokōji Kiyotaka")) {
-                addStatus(battleObj, battleKey, playerName, charName, "Apathetic", turn, 2);
+                addStatus(battleObj, battleKey, attacker, charName, "Apathetic", turn, 2);
             }
             if (previousTaggedInChar.includes("Miyake Akito")) {
-                addInflictModifier(battleObj, battleKey, playerName, charName, 0.25, turn, 2);
+                addInflictModifier(battleObj, battleKey, attacker, charName, 0.25, turn, 2);
             }
             if (previousTaggedInChar.includes("Sakura Airi") || previousTaggedInChar == "Shizuku") {
-                //TODO
+                if (turnResults.includes(`**${attackChar}** countered with **Airi Assist**!`)) {
+                    addStatus(battleObj, battleKey, defender, defenseChar, "Pacified", turn, 2);
+                    addStatus(battleObj, battleKey, defender, defenseChar, "Trapped", turn, 2);
+                }
             }
             if (previousTaggedInChar.includes("Yukimura Keisei")) {
                 nullifyBuffs(battleObj, battleKey, defender, defenseChar);

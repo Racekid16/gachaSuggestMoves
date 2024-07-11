@@ -103,6 +103,7 @@ export function applyBoosts(battleObj, battleKey, playerName) {
 
         for (let i = 0; i < thisCharObj.debuffs.length; i++) {
             let debuff = thisCharObj.debuffs[i];
+
             if (thisCharObj.moves.includes('Lead By Example') && (debuff.stat == 'ability' || debuff.stat == 'physical')) {
                 if (typeof battleObj[battleKey].log !== 'undefined') {
                     battleObj[battleKey].log(`${debuff} debuff negated as it would lower ${charName}'s physical`);
@@ -111,6 +112,15 @@ export function applyBoosts(battleObj, battleKey, playerName) {
                 i--;
                 continue;
             }
+            if (thisCharObj.moves.includes('Aspect Of Metal')) {
+                if (typeof battleObj[battleKey].log !== 'undefined') {
+                    battleObj[battleKey].log(`${debuff} debuff negated as ${charName} has Aspect Of Metal`);
+                }
+                thisCharObj.debuffs.splice(i, 1);
+                i--;
+                continue;
+            }
+
             if (debuff.stat == 'ability') {
                 multiplierObj.initiative += debuff.amount;
                 multiplierObj.mental += debuff.amount;
@@ -122,7 +132,7 @@ export function applyBoosts(battleObj, battleKey, playerName) {
         }
 
         for (let stat in multiplierObj) {
-            thisCharObj[stat] = round(thisCharBaseObj[stat] * multiplierObj[stat]);
+            thisCharObj[stat] = round(thisCharBaseObj[stat] * multiplierObj[stat] * thisCharObj.aspectBoost[stat]);
             thisCharObj[stat] = Math.max(thisCharObj[stat], 0);
         }
     }

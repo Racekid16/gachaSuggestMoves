@@ -375,8 +375,7 @@ server.post("/ImageData/parseParty", (req, res) => {
                             } else {
                                 party[slotNumber - 1].numStars = getNumStars(slot.name, partyImage);
                             }
-                            party[slotNumber - 1].isInfernal = getInfernal(slot.name, partyImage);
-                            party[slotNumber - 1].isTitanium = getTitanium(slot.name, partyImage);
+                            party[slotNumber - 1].aspect = getAspect(slot.name, partyImage);
                             break;
                         }
                     }
@@ -528,7 +527,20 @@ function getNumStars(slotName, image) {
     }
 }
 
-function getInfernal(slotName, image) {
+function getAspect(slotName, image) {
+    if (isInfernal(slotName, image)) {
+        return "Infernal ";
+    }
+    if (isTitanium(slotName, image)) {
+        return "Titanium ";
+    }
+    if (isTidal(slotName, image)) {
+        return "Tidal ";
+    }
+    return "";
+}
+
+function isInfernal(slotName, image) {
     switch (slotName) {
         case 'slot1':
             return RGBA_difference(RGBA_at(20, 45, image), [237, 27, 36, 255]) == 0;
@@ -543,7 +555,7 @@ function getInfernal(slotName, image) {
     }
 }
 
-function getTitanium(slotName, image) {
+function isTitanium(slotName, image) {
     switch (slotName) {
         case 'slot1':
             return RGBA_difference(RGBA_at(20, 45, image), [255, 255, 255, 255]) == 0;
@@ -551,6 +563,19 @@ function getTitanium(slotName, image) {
             return RGBA_difference(RGBA_at(123, 45, image), [255, 255, 255, 255]) == 0;
         case 'slot3':
             return RGBA_difference(RGBA_at(226, 45, image), [255, 255, 255, 255]) == 0; 
+        case 'slot4':
+        case 'slot5':
+        case 'slot6':
+            return false;
+    }
+}
+
+//implement this once there are tidal campaign enemiees
+function isTidal(slotName, image) {
+    switch (slotName) {
+        case 'slot1':
+        case 'slot2':
+        case 'slot3':
         case 'slot4':
         case 'slot5':
         case 'slot6':

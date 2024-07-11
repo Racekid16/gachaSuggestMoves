@@ -142,8 +142,11 @@ export function deleteBattle(battleObj, p1name, p2name, turnResults) {
 export function verifyPlayerResolves(battleObj, battleKey, playerName, playerNumber, battleEmbed) {
     let resolveRegex = / (\*__(.+)__\*\*\*|\*(.+)\*) - \*\*(\d+)\*\*:heart:/g;
 
-    for (let i = 0; i < 3; i++) {
+    while (true) {
         let resolveMatch = resolveRegex.exec(battleEmbed.fields[playerNumber - 1].value);
+        if (resolveMatch === null) {
+            break;
+        }
         let charName = "";
         if (typeof resolveMatch[2] !== 'undefined') {
             charName = resolveMatch[2];

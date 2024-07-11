@@ -2,6 +2,8 @@
 // calculate the stats of those characters, and update the battleObj accordingly.
 import { printParty } from './prettyPrint.mjs';
 import { round } from './round.mjs';
+import { addAspectAttributes, applyAspectBoost } from './aspect.mjs';
+import { applyBoosts } from './updateBoosts.mjs';
 import consts from '../consts.json' assert { type: 'json' };
 
 const delay = async (ms = 1000) =>  new Promise(resolve => setTimeout(resolve, ms));
@@ -96,24 +98,14 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
             } else {
                 //console.log(`${char.name} with ${char.numStars} stars was found in the database!`);
                 let charStatsJSON = await charStats.json();
-                if (char.isInfernal) {
-                    char.name = `Infernal ${char.name}`;
-                }
-                if (char.isTitanium) {
-                    char.name = `Titanium ${char.name}`;
-                }
-                battleObj[battleKey][playerName].chars[char.name] = charStatsJSON;
-                if (char.isInfernal) {
-                    battleObj[battleKey][playerName].chars[char.name].moves.push("Aspect Of Fire");
-                }
-                if (char.isTitanium) {
-                    battleObj[battleKey][playerName].chars[char.name].moves.push("Aspect Of Metal");
-                }
+                addAspectAttributes(char, charStatsJSON);
+                let charFullName = char.aspect + char.name;
+                battleObj[battleKey][playerName].chars[charFullName] = charStatsJSON;
                 
                 if (i <= 2) {
-                    battleObj[battleKey][playerName].chars[char.name].active = true;
+                    battleObj[battleKey][playerName].chars[charFullName].active = true;
                 } else {
-                    battleObj[battleKey][playerName].chars[char.name].active = false;
+                    battleObj[battleKey][playerName].chars[charFullName].active = false;
                 }
             }
         }
@@ -184,45 +176,34 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
             thisChar[stat] = round(thisChar[stat] * multiplierObj[stat]);
         }
     }
- 
+
+    for (let charKey in battleObj[battleKey][playerName].chars) {
+        let thisChar = battleObj[battleKey][playerName].chars[charKey];
+        thisChar.buffs = [];
+        thisChar.debuffs = [];
+        thisChar.positiveStatuses = [];
+        thisChar.negativeStatuses = [];
+        thisChar.inflictMultiplier = 1;
+        thisChar.receiveMultiplier = 1;
+        thisChar.inflictModifiers = [];
+        thisChar.receiveModifiers = [];
+        applyAspectBoost(thisChar);
+    }
+
+    battleObj[battleKey][playerName].baseCharStats = structuredClone(battleObj[battleKey][playerName].chars);
+    applyBoosts(battleObj, battleKey, playerName);
     printParty(battleObj, battleKey, playerName, partyJSON, hasStrength);
 
     for (let charKey in battleObj[battleKey][playerName].chars) {
         let thisChar = battleObj[battleKey][playerName].chars[charKey];
         if (thisChar.active) {
-            thisChar.buffs = [];
-            thisChar.debuffs = [];
-            thisChar.positiveStatuses = [];
-            thisChar.negativeStatuses = [];
-            thisChar.inflictMultiplier = 1;
-            thisChar.receiveMultiplier = 1;
-            thisChar.inflictModifiers = [];
-            thisChar.receiveModifiers = [];
-            thisChar.aspectBoost = {
-                initiative: 1,
-                mental: 1,
-                physical: 1,
-                social: 1
-            };
-            if (thisChar.moves.includes("Aspect Of Fire")) {
-                thisChar.aspectBoost.mental += 0.75;
-                thisChar.aspectBoost.physical += 0.75;
-                thisChar.aspectBoost.social += 0.75;
-            }
-            if (thisChar.moves.includes("Aspect Of Metal")) {
-                thisChar.aspectBoost.mental += 0.5;
-                thisChar.aspectBoost.physical += 0.5;
-                thisChar.aspectBoost.social += 0.5;
-            }
             delete thisChar._id;
             delete thisChar.active;
         } else {
             delete battleObj[battleKey][playerName].chars[charKey];
+            delete battleObj[battleKey][playerName].baseCharStats[charKey];
         }
     }
-
-    //if you want to double-check that the characters' stats were calculated correctly
-    //console.log(battleObj[battleKey][playerName].chars);
 
     for (let charKey in battleObj[battleKey][playerName].chars) {
         if (consts.excludedChars.includes(charKey)) {
@@ -232,7 +213,6 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
         }
     }
 
-    battleObj[battleKey][playerName].baseCharStats = structuredClone(battleObj[battleKey][playerName].chars);
     battleObj[battleKey][playerName].valid = true;
 }
 
