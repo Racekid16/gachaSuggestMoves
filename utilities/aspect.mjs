@@ -5,7 +5,9 @@ import { round } from "./round.mjs";
 //char is an object of the character's name, number of stars, and aspects
 //charObj is an object containing more information about the character such as their initial stats and moves
 export function addAspectAttributes(char, charObj) {
+    char.name = char.aspect + char.name;
     charObj.aspect = char.aspect;
+    charObj.name = char.name;
     switch (char.aspect) {
         case "Infernal ":
             charObj.moves.push("Aspect Of Fire");
@@ -48,4 +50,14 @@ export function applyAspectBoost(charObj) {
         charObj.aspectBoost.physical += 0.5;
         charObj.aspectBoost.social += 0.5;
     }
+}
+
+//split a character's name into its aspect and base name
+export function splitCharName(charName) {
+    for (let aspect of ['Infernal ', 'Titanium ', 'Tidal ']) {
+        if (charName.startsWith(aspect)) {
+            return [aspect, returnVal.slice(aspect.length)];
+        }
+    }
+    return ["", charName];
 }

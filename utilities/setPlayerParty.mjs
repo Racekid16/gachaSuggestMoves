@@ -99,13 +99,12 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
                 //console.log(`${char.name} with ${char.numStars} stars was found in the database!`);
                 let charStatsJSON = await charStats.json();
                 addAspectAttributes(char, charStatsJSON);
-                let charFullName = char.aspect + char.name;
-                battleObj[battleKey][playerName].chars[charFullName] = charStatsJSON;
+                battleObj[battleKey][playerName].chars[charStatsJSON.name] = charStatsJSON;
                 
                 if (i <= 2) {
-                    battleObj[battleKey][playerName].chars[charFullName].active = true;
+                    battleObj[battleKey][playerName].chars[charStatsJSON.name].active = true;
                 } else {
-                    battleObj[battleKey][playerName].chars[charFullName].active = false;
+                    battleObj[battleKey][playerName].chars[charStatsJSON.name].active = false;
                 }
             }
         }
@@ -199,6 +198,9 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
         if (thisChar.active) {
             delete thisChar._id;
             delete thisChar.active;
+            delete thisChar.name;
+            delete battleObj[battleKey][playerName].baseCharStats[charKey]._id;
+            delete battleObj[battleKey][playerName].baseCharStats[charKey].active;
         } else {
             delete battleObj[battleKey][playerName].chars[charKey];
             delete battleObj[battleKey][playerName].baseCharStats[charKey];

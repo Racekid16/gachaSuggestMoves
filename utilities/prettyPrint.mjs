@@ -10,21 +10,18 @@ export function printParty(battleObj, battleKey, playerName, partyJSON, hasStren
     let activeChars = [];
     for (let i = 0; i < 3; i++) {
         if (partyJSON[i].name != "empty") {
-            activeChars.push(charStats[partyJSON[i].aspect + partyJSON[i].name]);
+            activeChars.push(charStats[partyJSON[i].name]);
         }
     }
 
-    let activeNameLength = activeChars.reduce((maxLength, char) => {
-        return Math.max(maxLength, char.aspect.length + char.name.length);
-    }, 0);
+    let activeNameLength = getMaxLength(activeChars, 'name');
     let initiativeLength = getMaxLength(activeChars, 'initiative');
     let mentalLength = getMaxLength(activeChars, 'mental');
     let physicalLength = getMaxLength(activeChars, 'physical');
     let socialLength = getMaxLength(activeChars, 'social');
 
     for (let char of activeChars) {
-        let charFullName = char.aspect + char.name;
-        battleObj[battleKey].log(`${char.numStars}⭐ ${charFullName}${" ".repeat(activeNameLength - charFullName.length)} `
+        battleObj[battleKey].log(`${char.numStars}⭐ ${char.name}${" ".repeat(activeNameLength - char.name.length)} `
                   + `🏃‍${char.initiative}${" ".repeat(initiativeLength - char.initiative.toString().length)} `
                   + `🧠${char.mental}${" ".repeat(mentalLength - char.mental.toString().length)} `
                   + `💪${char.physical}${" ".repeat(physicalLength - char.physical.toString().length)} `
@@ -67,7 +64,7 @@ export function printParty(battleObj, battleKey, playerName, partyJSON, hasStren
         for (let i = 0; i < activeChars.length; i++) {
             for (let ally of char.allies) {
                 if (activeChars[i].tags.includes(ally)) {
-                    alliedActiveChars[i] = activeChars[i].aspect + activeChars[i].name;
+                    alliedActiveChars[i] = activeChars[i].name;
                 }
             }
         }
@@ -84,7 +81,7 @@ export function printParty(battleObj, battleKey, playerName, partyJSON, hasStren
 }
 
 export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p1move, p2move, 
-                                    p1moveObj, p2moveObj, p1damage, p2damage, p1critical, p2critical) {
+                                    p1moveObj, p2moveObj, p1damage, p2damage, p1hitType, p2hitType) {
     let battleKey = p1name + " vs. " + p2name;
     
     let p1inflictMultiplier = battleObj[battleKey][p1name].chars[p1char].inflictMultiplier - 1;
@@ -130,8 +127,6 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
     let lowerBoundLength = p1lowerBound.length > p2lowerBound.length ? p1lowerBound.length : p2lowerBound.length;
     let upperBoundLength = p1upperBound.length > p2upperBound.length ? p1upperBound.length : p2upperBound.length;
     
-    let p1printCritical = p1critical ? 'CRITICAL' : '        ';
-    let p2printCritical = p2critical ? 'CRITICAL' : '        ';
     let p1printFatal = p1lowerBound > p2resolve ? 'FATAL' : '';
     let p2printFatal = p2lowerBound > p1resolve ? 'FATAL' : '';
 
@@ -147,7 +142,7 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
                   + `${p1move} ${" ".repeat(moveNameLength - p1move.length)}`
                   + `(${p1lowerBound} ${" ".repeat(lowerBoundLength - p1lowerBound.toString().length)}- `
                   + `${p1upperBound}${" ".repeat(upperBoundLength - p1upperBound.toString().length)}) `
-                  + `${p1printCritical} ${p1printFatal}`;
+                  + `${p1hitType} ${p1printFatal}`;
     let p2Output = `${p2name} ${" ".repeat(playerNameLength - p2name.length)}`
                   + `[${p2printInflict}${" ".repeat(inflictLength - p2printInflict.length)}`
                   + `${p2printReceive}${" ".repeat(receiveLength - p2printReceive.length)}`
@@ -160,7 +155,7 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
                   + `${p2move} ${" ".repeat(moveNameLength - p2move.length)}`
                   + `(${p2lowerBound} ${" ".repeat(lowerBoundLength - p2lowerBound.toString().length)}- `
                   + `${p2upperBound}${" ".repeat(upperBoundLength - p2upperBound.toString().length)}) `
-                  + `${p2printCritical} ${p2printFatal}`;
+                  + `${p2hitType} ${p2printFatal}`;
     
     let p1priority = p1moveObj.priority;
     let p2priority = p2moveObj.priority;

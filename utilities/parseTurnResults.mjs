@@ -5,7 +5,8 @@ import { removeExpiredBoosts, applyBoosts } from "./updateBoosts.mjs";
 import { removeExpiredStatuses, applyStatuses } from "./updateStatuses.mjs";
 import { removeExpiredDamageModifiers, applyDamageModifiers } from "./updateDamageModifiers.mjs";
 import { suggestMoves } from "./suggestMove.mjs";
-import { emulateMove, emulateAction, applyTransformation } from "./emulateMove.mjs";
+import { emulateMove, emulateAction } from "./emulateMove.mjs";
+import { applyTransformation } from "./transform.mjs";
 
 // identify changes in stats or statuses then update the battleObj accordingly
 export async function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {

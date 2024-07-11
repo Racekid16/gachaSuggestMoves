@@ -4,6 +4,7 @@ import { emulateMove } from './emulateMove.mjs';
 import { addBoost } from './updateBoosts.mjs';
 import { addStatus, hasStatus } from './updateStatuses.mjs';
 import { getUserInput } from './handleInput.mjs';
+import { setTransformationResolve } from './transform.mjs';
 import consts from '../consts.json' assert { type: 'json' };
 
 export async function parseMoveSameChar(battleObj, p1name, p2name, charName, battleEmbed, turn, 
@@ -83,18 +84,10 @@ async function emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName,
     }
 
     if (typeof p1resolves[charName] == 'undefined') {
-        switch (charName) {
-            case 'Perfect Kōenji Rokusuke': p1resolves['Perfect Kōenji Rokusuke'] = 0; break;
-            case 'True Kushida Kikyō': p1resolves['True Kushida Kikyō'] = p1resolves['Unmasked Kushida Kikyō']; break;
-            case 'Unmasked Kushida Kikyō': p1resolves['Unmasked Kushida Kikyō'] = p1resolves['True Kushida Kikyō']; break;
-        }
+        setTransformationResolve(charName, p1resolves);
     }
     if (typeof p2resolves[charName] === 'undefined') {
-        switch (charName) {
-            case 'Perfect Kōenji Rokusuke': p2resolves['Perfect Kōenji Rokusuke'] = 0; break;
-            case 'True Kushida Kikyō': p2resolves['True Kushida Kikyō'] = p2resolves['Unmasked Kushida Kikyō']; break;
-            case 'Unmasked Kushida Kikyō': p2resolves['Unmasked Kushida Kikyō'] = p2resolves['True Kushida Kikyō']; break;
-        }
+        setTransformationResolve(charName, p2resolves);
     }
 
     let validMoves = battleObj[battleKey][p1name].chars[charName].moves

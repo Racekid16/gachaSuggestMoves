@@ -4,7 +4,6 @@ import { addStatus } from "./updateStatuses.mjs";
 import { addInflictModifier, addReceiveModifier } from "./updateDamageModifiers.mjs";
 import { round } from "./round.mjs";
 import consts from '../consts.json' assert { type: 'json' };
-import { resolve } from "path";
 
 export function emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, turnResults, turn, attackerResolves) {
     
@@ -292,69 +291,6 @@ export function emulateAction(battleObj, battleKey, attacker, defender, attackCh
             }
             break;
 
-    }
-}
-
-// charName is the current tagged-in char after the turn that was just parsed
-// and the one you'll transform into, if applicable
-export function applyTransformation(battleObj, battleKey, playerName, charName, turn) {
-    if (charName !== null && typeof battleObj[battleKey][playerName].chars[charName] === 'undefined') {
-        if (consts.transformChars.includes(charName)) {
-            switch (charName) {
-
-                case "Freed Horikita Suzune":
-                    battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars["Detained Horikita Suzune"]);
-                    battleObj[battleKey][playerName].baseCharStats[charName] = structuredClone(battleObj[battleKey][playerName].baseCharStats["Detained Horikita Suzune"]);
-                    let attackCharObj = battleObj[battleKey][playerName].chars[charName];
-                    let attackCharBaseObj = battleObj[battleKey][playerName].baseCharStats[charName];
-                    attackCharObj.moves[attackCharObj.moves.indexOf("Bottle Break")] = "Influence";
-                    attackCharBaseObj.moves[attackCharBaseObj.moves.indexOf("Bottle Break")] = "Influence";
-                    attackCharObj.personality = "Reserved";
-                    attackCharBaseObj.personality = "Reserved";
-                    delete battleObj[battleKey][playerName].chars["Detained Horikita Suzune"];
-                    delete battleObj[battleKey][playerName].baseCharStats["Detained Horikita Suzune"];
-                    break;
-
-                case "Serious Kōenji Rokusuke":
-                    battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars["Perfect Kōenji Rokusuke"]);
-                    battleObj[battleKey][playerName].baseCharStats[charName] = structuredClone(battleObj[battleKey][playerName].baseCharStats["Perfect Kōenji Rokusuke"]);
-                    battleObj[battleKey][playerName].chars[charName].moves.splice(
-                        battleObj[battleKey][playerName].chars[charName].moves.indexOf("The Perfect Existence")
-                    , 1);
-                    battleObj[battleKey][playerName].baseCharStats[charName].moves.splice(
-                        battleObj[battleKey][playerName].baseCharStats[charName].moves.indexOf("The Perfect Existence")
-                    , 1);
-                    delete battleObj[battleKey][playerName].chars["Perfect Kōenji Rokusuke"];
-                    delete battleObj[battleKey][playerName].baseCharStats["Perfect Kōenji Rokusuke"];
-                    addBoost(battleObj, battleKey, playerName, charName, "The Perfect Existence", turn);
-                    break;
-
-                case "True Kushida Kikyō":
-                    battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars["Unmasked Kushida Kikyō"]);
-                    battleObj[battleKey][playerName].baseCharStats[charName] = structuredClone(battleObj[battleKey][playerName].baseCharStats["Unmasked Kushida Kikyō"]);
-                    battleObj[battleKey][playerName].chars[charName].moves = ["Academic", "Empathy", "Charm", "Unmask"];
-                    battleObj[battleKey][playerName].baseCharStats[charName].moves = ["Academic", "Empathy", "Charm", "Unmask"];
-                    battleObj[battleKey][playerName].chars[charName].personality = "Benevolent";
-                    battleObj[battleKey][playerName].baseCharStats[charName].personality = "Benevolent";
-                    delete battleObj[battleKey][playerName].chars["Unmasked Kushida Kikyō"];
-                    delete battleObj[battleKey][playerName].baseCharStats["Unmasked Kushida Kikyō"];
-                    break;
-
-                case "Unmasked Kushida Kikyō":
-                    battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars["True Kushida Kikyō"]);
-                    battleObj[battleKey][playerName].baseCharStats[charName] = structuredClone(battleObj[battleKey][playerName].baseCharStats["True Kushida Kikyō"]);
-                    battleObj[battleKey][playerName].chars[charName].moves = ["Scheming", "Fighting", "Shatter", "Mask"];
-                    battleObj[battleKey][playerName].baseCharStats[charName].moves = ["Scheming", "Fighting", "Shatter", "Mask"];
-                    battleObj[battleKey][playerName].chars[charName].personality = "Cold";
-                    battleObj[battleKey][playerName].baseCharStats[charName].personality = "Cold";
-                    delete battleObj[battleKey][playerName].chars["True Kushida Kikyō"];
-                    delete battleObj[battleKey][playerName].baseCharStats["True Kushida Kikyō"];
-                    break;
-            }
-        
-        } else {
-            console.log(`Unrecognized transform character ${charName} in turn ${turn} of ${battleKey}`);
-        }
     }
 }
 

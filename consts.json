@@ -212,16 +212,28 @@
             "type": ["innate"]
         }
     },
+    "personalityResistances": {
+        "Apathetic": [],
+        "Benevolent": ["Influence", "Empathy"],
+        "Bold": ["Athleticism", "Influence"],
+        "Cold": ["Academic", "Fighting"],
+        "Cunning": ["Scheming", "Fighting"],
+        "Explosive": ["Fighting", "Athleticism"],
+        "Reserved": ["Scheming", "Empathy"],
+        "Selfish": ["Athleticism", "Empathy"],
+        "Savant": ["Academic", "Scheming"],
+        "Timid": ["Academic", "Influence"]
+    },
     "personalityWeaknesses": {
         "Apathetic": [],
-        "Cold": ["Scheming", "Empathy"],
-        "Bold": ["Academic", "Fighting"],
-        "Savant": ["Athleticism", "Influence"],
-        "Cunning": ["Influence", "Empathy"],
         "Benevolent": ["Scheming", "Fighting"],
-        "Timid": ["Athleticism", "Empathy"],
+        "Bold": ["Academic", "Fighting"],
+        "Cold": ["Scheming", "Empathy"],
+        "Cunning": ["Influence", "Empathy"],
         "Explosive": ["Academic", "Scheming"],
         "Reserved": ["Athleticism", "Fighting"],
-        "Selfish": ["Academic", "Influence"]
+        "Selfish": ["Academic", "Influence"],
+        "Savant": ["Athleticism", "Influence"],
+        "Timid": ["Athleticism", "Empathy"]
     }
 }
