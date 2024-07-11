@@ -4,6 +4,7 @@
     "serverID": "870355988887265301",
     "transformChars": ["Freed Horikita Suzune", "Serious Kōenji Rokusuke", "True Kushida Kikyō", "Unmasked Kushida Kikyō"],
     "excludedChars": [],
+    "excludedMoves": ["Kings Command", "From The Shadows"],
     "excludedCampaignStages": [],
     "moveInfo": {
         "Academic": {

@@ -82,7 +82,7 @@ export function applyBoosts(battleObj, battleKey, playerName) {
         }
 
         let thisCharBaseObj = battleObj[battleKey][playerName].baseCharStats[charName];
-        let multiplierObj = {
+        let baseMultiplierObj = {
             'initiative': 1,
             'mental': 1,
             'physical': 1,
@@ -91,13 +91,15 @@ export function applyBoosts(battleObj, battleKey, playerName) {
 
         for (let i = 0; i < thisCharObj.buffs.length; i++) {
             let buff = thisCharObj.buffs[i];
-            if (buff.stat == 'ability') {
-                multiplierObj.initiative += buff.amount;
-                multiplierObj.mental += buff.amount;
-                multiplierObj.physical += buff.amount;
-                multiplierObj.social += buff.amount;
-            } else {
-                multiplierObj[buff.stat] += buff.amount;
+            if (buff.type == "base") {
+                if (buff.stat == 'ability' ) {
+                    baseMultiplierObj.initiative += buff.amount;
+                    baseMultiplierObj.mental += buff.amount;
+                    baseMultiplierObj.physical += buff.amount;
+                    baseMultiplierObj.social += buff.amount;
+                } else {
+                    baseMultiplierObj[buff.stat] += buff.amount;
+                }
             }
         }
 
@@ -121,18 +123,41 @@ export function applyBoosts(battleObj, battleKey, playerName) {
                 continue;
             }
 
-            if (debuff.stat == 'ability') {
-                multiplierObj.initiative += debuff.amount;
-                multiplierObj.mental += debuff.amount;
-                multiplierObj.physical += debuff.amount;
-                multiplierObj.social += debuff.amount;
-            } else {
-                multiplierObj[debuff.stat] += debuff.amount;
+            if (debuff.type == "base") {
+                if (debuff.stat == 'ability') {
+                    baseMultiplierObj.initiative += debuff.amount;
+                    baseMultiplierObj.mental += debuff.amount;
+                    baseMultiplierObj.physical += debuff.amount;
+                    baseMultiplierObj.social += debuff.amount;
+                } else {
+                    baseMultiplierObj[debuff.stat] += debuff.amount;
+                }
             }
         }
 
-        for (let stat in multiplierObj) {
-            thisCharObj[stat] = round(thisCharBaseObj[stat] * multiplierObj[stat] * thisCharObj.aspectBoost[stat]);
+        //applying base boosts
+        for (let stat in baseMultiplierObj) {
+            thisCharObj[stat] = round(thisCharBaseObj[stat] * baseMultiplierObj[stat]);
+        }
+        //applying total boosts
+        for (let boost of [...thisCharObj.buffs, ...thisCharObj.debuffs]) {
+            if (boost.type == "total") {
+                if (boost.stat == "ability") {
+                    thisCharObj.initiative = round(thisCharObj.initiative * (1 + boost.amount));
+                    thisCharObj.mental = round(thisCharObj.mental * (1 + boost.amount));
+                    thisCharObj.physical = round(thisCharObj.physical * (1 + boost.amount));
+                    thisCharObj.social = round(thisCharObj.social * (1 + boost.amount));
+                } else {
+                    thisCharObj[stat] = round(thisCharObj[stat] * (1 + boost.amount));
+                }
+            }
+        }
+        //applying aspect boost
+        for (let stat in thisCharObj.aspectBoost) {
+            thisCharObj[stat] = round(thisCharObj[stat] * (1 + thisCharObj.aspectBoost[stat]));
+        }
+        //stats cannot be less than 0
+        for (let stat of ['initiative', 'mental', 'physical', 'social']) {
             thisCharObj[stat] = Math.max(thisCharObj[stat], 0);
         }
     }
@@ -149,6 +174,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 startTurn: turn,
                 endTurn: turn + 2,
                 stat: "ability",
+                type: "base",
                 amount: arroganceBuff
             });
             break;
@@ -160,6 +186,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 startTurn: turn,
                 endTurn: turn + 5,
                 stat: "physical",
+                type: "base",
                 amount: blazingFormBuff
             }); 
             break;
@@ -171,6 +198,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 startTurn: turn,
                 endTurn: 9999,
                 stat: "mental",
+                type: "base",
                 amount: bossOrdersBuff
             }); 
             break;
@@ -182,6 +210,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 startTurn: turn,
                 endTurn: 9999,
                 stat: "initiative",
+                type: "total",
                 amount: bottleBreakInitiativeBuff
             });
             break;
@@ -193,6 +222,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 startTurn: turn,
                 endTurn: 9999,
                 stat: "social",
+                type: "total",
                 amount: bottleBreakSocialBuff
             });
             break;
@@ -204,6 +234,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 startTurn: turn,
                 endTurn: 9999,
                 stat: "social",
+                type: "base",
                 amount: groupTiesBuff
             }); 
             break;
@@ -215,6 +246,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 startTurn: turn,
                 endTurn: 9999,
                 stat: "mental",
+                type: "base",
                 amount: introversionBuff
             });                       
             break;
@@ -226,6 +258,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 startTurn: turn,
                 endTurn: turn + 1,
                 stat: "physical",
+                type: "base",
                 amount: leadByExampleBuff1
             }); 
             break;
@@ -237,6 +270,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 startTurn: turn,
                 endTurn: turn + 2,
                 stat: "physical",
+                type: "base",
                 amount: leadByExampleBuff2
             }); 
             break;
@@ -250,6 +284,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                     startTurn: turn,
                     endTurn: turn + 1,
                     stat: "initiative",
+                    type: "total",
                     amount: studyInitiativeBuff
                 });
             }
@@ -264,6 +299,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                     startTurn: turn,
                     endTurn: turn + 1,
                     stat: "mental",
+                    type: "base",
                     amount: studyMentalBuff
                 });
             }
@@ -276,6 +312,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 startTurn: turn,
                 endTurn: turn + 2,
                 stat: "ability",
+                type: "total",
                 amount: teamworkBuff
             });
             break;
@@ -287,6 +324,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 startTurn: turn,
                 endTurn: 9999,
                 stat: "ability",
+                type: "total",
                 amount: thePerfectExistenceBuff
             }); 
             break;
@@ -300,6 +338,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                     startTurn: turn,
                     endTurn: turn + 5,
                     stat: "ability",
+                    type: "total",
                     amount: unityBuff
                 });
             }
@@ -312,6 +351,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 startTurn: turn,
                 endTurn: 9999,
                 stat: "initiative",
+                type: "base",
                 amount: zenithPaceBuff
             })
 
@@ -336,6 +376,7 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
                 startTurn: turn,
                 endTurn: 9999,
                 stat: "physical",
+                type: "base",
                 amount: bottleBreakPhysicalDebuff
             });
             break;
@@ -347,6 +388,7 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
                 startTurn: turn,
                 endTurn: turn + 4,
                 stat: "social",
+                type: "base",
                 amount: charmDebuff
             })
             break;
@@ -358,6 +400,7 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
                 startTurn: turn,
                 endTurn: turn + 5,
                 stat: "ability",
+                type: "base",
                 amount: dominateDebuff
             }); 
             break;
@@ -371,6 +414,7 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
                     startTurn: turn,
                     endTurn: turn + 4,
                     stat: "ability",
+                    type: "total",
                     amount: hateDebuff
                 }); 
             }
@@ -386,6 +430,7 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
                 startTurn: turn,
                 endTurn: turn + 2,
                 stat: highestAttackStat,
+                type: "base",
                 amount: humiliateDebuff
             }); 
             break;
@@ -397,6 +442,7 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
                 startTurn: turn,
                 endTurn: 9999,
                 stat: "ability",
+                type: "total",
                 amount: kingsCommandDebuff
             }); 
             break;

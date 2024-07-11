@@ -1,6 +1,10 @@
 // pretty-print people's parties and suggested moves.
 import { round } from './round.mjs';
+import { calculateMoveDamage } from './calculateMoveDamage.mjs';
+import { hasStatus } from './updateStatuses.mjs';
+import consts from '../consts.json' assert { type: 'json' };
 
+// print the stats of a party at the beginning of a battle
 export function printParty(battleObj, battleKey, playerName, partyJSON, hasStrength) {
     let charStats = battleObj[battleKey][playerName].chars;
 
@@ -80,6 +84,7 @@ export function printParty(battleObj, battleKey, playerName, partyJSON, hasStren
     battleObj[battleKey].log("");
 }
 
+// print the move that the program determines is good to play
 export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p1move, p2move, 
                                     p1moveObj, p2moveObj, p1damage, p2damage, p1hitType, p2hitType) {
     let battleKey = p1name + " vs. " + p2name;
@@ -130,7 +135,7 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
     let p1printFatal = p1lowerBound > p2resolve ? 'FATAL' : '';
     let p2printFatal = p2lowerBound > p1resolve ? 'FATAL' : '';
 
-    let p1Output = `${p1name} ${" ".repeat(playerNameLength - p1name.length)}` 
+    let p1Output =  `${p1name} ${" ".repeat(playerNameLength - p1name.length)}` 
                   + `[${p1printInflict}${" ".repeat(inflictLength - p1printInflict.length)}`
                   + `${p1printReceive}${" ".repeat(receiveLength - p1printReceive.length)}`
                   + `${p1char}${" ".repeat(charNameLength - p1char.length)} `
@@ -139,11 +144,15 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
                   + `💪${p1physical}${" ".repeat(physicalLength - p1physical.toString().length)} `
                   + `🗣️${p1social}${" ".repeat(socialLength - p1social.toString().length)} `
                   + `❤️${p1resolve}${" ".repeat(resolveLength - p1resolve.toString().length)}]: `
-                  + `${p1move} ${" ".repeat(moveNameLength - p1move.length)}`
-                  + `(${p1lowerBound} ${" ".repeat(lowerBoundLength - p1lowerBound.toString().length)}- `
+                  + `${p1move} ${" ".repeat(moveNameLength - p1move.length)}`;
+    if (p1damage != 0) {
+        p1Output += `(${p1lowerBound} ${" ".repeat(lowerBoundLength - p1lowerBound.toString().length)}- `
                   + `${p1upperBound}${" ".repeat(upperBoundLength - p1upperBound.toString().length)}) `
                   + `${p1hitType} ${p1printFatal}`;
-    let p2Output = `${p2name} ${" ".repeat(playerNameLength - p2name.length)}`
+    }
+    p1Output += printOtherMoves(battleObj, battleKey, p1name, p2name, p1char, p2char, p1move);
+            
+    let p2Output =  `${p2name} ${" ".repeat(playerNameLength - p2name.length)}`
                   + `[${p2printInflict}${" ".repeat(inflictLength - p2printInflict.length)}`
                   + `${p2printReceive}${" ".repeat(receiveLength - p2printReceive.length)}`
                   + `${p2char}${" ".repeat(charNameLength - p2char.length)} `
@@ -153,9 +162,12 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
                   + `🗣️${p2social}${" ".repeat(socialLength - p2social.toString().length)} `
                   + `❤️${p2resolve}${" ".repeat(resolveLength - p2resolve.toString().length)}]: `
                   + `${p2move} ${" ".repeat(moveNameLength - p2move.length)}`
-                  + `(${p2lowerBound} ${" ".repeat(lowerBoundLength - p2lowerBound.toString().length)}- `
+    if (p2damage != 0) {
+        p2Output += `(${p2lowerBound} ${" ".repeat(lowerBoundLength - p2lowerBound.toString().length)}- `
                   + `${p2upperBound}${" ".repeat(upperBoundLength - p2upperBound.toString().length)}) `
                   + `${p2hitType} ${p2printFatal}`;
+    }
+    p2Output += printOtherMoves(battleObj, battleKey, p2name, p1name, p2char, p1char, p2move);
     
     let p1priority = p1moveObj.priority;
     let p2priority = p2moveObj.priority;
@@ -182,4 +194,51 @@ function getMaxLength(chars, property) {
     return chars.reduce((maxLength, char) => {
         return Math.max(maxLength, char[property].toString().length);
     }, 0);
+}
+
+// print all the other possible moves that can be made besides the recommended move,
+// in the order of damage decreasing
+function printOtherMoves(battleObj, battleKey, attacker, defender, attackChar, defenseChar, recommendedMove) {
+    let validMoves = battleObj[battleKey][attacker].chars[attackChar].moves
+        .filter(move => !consts.moveInfo[move].type.includes("innate") && move != recommendedMove);
+    let moveDamageObjs = [];
+    for (let move of validMoves) {
+        let moveDamageObj = calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move);
+        //moveDamageObj is formatted as [moveObj, moveDamage, hitType]
+        if (moveDamageObj[1] == -1 || hasStatus(battleObj, battleKey, attacker, attackChar, "Stunned")) {
+            continue;
+        }
+        if (moveDamageObj[0].type.includes("Attack") && hasStatus(battleObj, battleKey, attacker, attackChar, "Pacified")) {
+            continue;   
+        }
+        if (!moveDamageObj[0].type.includes("Attack") && hasStatus(battleObj, battleKey, attacker, attackChar, "Taunted")) {
+            continue;
+        }
+        if (hasStatus(battleObj, battleKey, defender, defenseChar, "Invulnerable")) {
+            moveDamageObj[1] = 0;
+        }
+        moveDamageObjs.push([move, ...moveDamageObj]);
+    }
+    if (!hasStatus(battleObj, battleKey, attacker, attackChar, "Trapped") && !hasStatus(battleObj, battleKey, attacker, attackChar, "Taunted")) {
+        let numAliveAllies = Object.keys(battleObj[battleKey][attacker].chars).reduce((countSoFar, charKey) => 
+            battleObj[battleKey][attacker].chars[charKey].resolve > 0 ? countSoFar + 1 : countSoFar
+        , 0);
+        if (numAliveAllies > 1) {
+            moveDamageObjs.push(["Switch-in", {}, 0, '        ']);
+        }
+    }
+    let returnStr = "";
+    moveDamageObjs = moveDamageObjs.sort((a, b) => b[2] - a[2]);
+    //moveDamageObj is formatted as [moveName, moveObj, moveDamage, hitType]
+    for (let moveDamageObj of moveDamageObjs) {
+        returnStr += `\n${moveDamageObj[0]} `;
+        let moveDamage = moveDamageObj[2];
+        if (moveDamage != 0) {
+            let maxVariance = 0.2;
+            let lowerBound = Math.max(round(moveDamage * (1 - maxVariance)), 0);
+            let upperBound = round(moveDamage * (1 + maxVariance));
+            returnStr += `(${lowerBound} - ${upperBound}) ${moveDamageObj[3]}`;
+        }
+    }
+    return returnStr;
 }

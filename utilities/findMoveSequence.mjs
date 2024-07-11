@@ -5,8 +5,6 @@ import { removeExpiredStatuses, applyStatuses} from './updateStatuses.mjs';
 import { removeExpiredDamageModifiers, applyDamageModifiers } from './updateDamageModifiers.mjs';
 import consts from '../consts.json' assert { type: 'json' };
 
-const excludedMoves = ["Kings Command", "From The Shadows"];
-
 export function findOptimalSequence(battleObj, battleKey, attacker, defender, attackChar, defenseChar, turn) {
     let optimalSequenceNoDefender = findOptimalSequenceNoDefender(battleObj, battleKey, attacker, defender, attackChar, defenseChar, turn);
     return optimalSequenceNoDefender;
@@ -14,10 +12,10 @@ export function findOptimalSequence(battleObj, battleKey, attacker, defender, at
 
 function findOptimalSequenceNoDefender(battleObj, battleKey, attacker, defender, attackChar, defenseChar, turn) {
     let validMoves = battleObj[battleKey][attacker].chars[attackChar].moves
-        .filter(move => !consts.moveInfo[move].type.includes("innate") && !excludedMoves.includes(move)
+        .filter(move => !consts.moveInfo[move].type.includes("innate") && !consts.excludedMoves.includes(move)
                      && (consts.moveInfo[move].type[0] == "attack" || consts.moveInfo[move].type[0] == "boost"));
     let validMovesObjs = validMoves.map(move => {
-        let moveObj = getCompleteMoveObj(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move)
+        let moveObj = getCompleteMoveObj(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move);
         return { ...moveObj, name: move };
     });
     let attackMoves = validMoves.filter(move => consts.moveInfo[move].type.includes("attack"));

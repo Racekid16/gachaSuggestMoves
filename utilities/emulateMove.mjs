@@ -171,11 +171,11 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                     inflictModifiers: [],
                     receiveModifiers: [],
                     aspectBoost: {
-                        initiative: 1,
-                        mental: 1,
-                        physical: 1,
-                        social: 1,
-                        resolve: 1
+                        initiative: 0,
+                        mental: 0,
+                        physical: 0,
+                        social: 0,
+                        resolve: 0
                     },
                     initiative: round(creatorBaseCharStats.initiative * inheritAmount),
                     mental: round(creatorBaseCharStats.mental * inheritAmount),

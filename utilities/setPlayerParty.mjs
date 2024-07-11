@@ -163,6 +163,7 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
         // but since all factions now have strength level 3, and network processes are slow,
         // I skipped actually checking and instead just automatically add 10% to all character stats,
         // unless you're going against the Chairman Sakayanagi bot
+        // this affects base stats, but cannot be nullified or plundered
         if (hasStrength) {
             multiplierObj.resolve += 0.1;
             multiplierObj.mental += 0.1;

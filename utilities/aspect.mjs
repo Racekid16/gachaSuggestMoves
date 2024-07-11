@@ -24,31 +24,32 @@ export function addAspectAttributes(char, charObj) {
 }
 
 //increase the character's aspect multiplier based on the aspect move they have.
+//I do not consider these normal boosts; they cannot be nullified or stolen.
 export function applyAspectBoost(charObj) {
     charObj.aspectBoost = {
-        initiative: 1,
-        mental: 1,
-        physical: 1,
-        social: 1,
-        resolve: 1
+        initiative: 0,
+        mental: 0,
+        physical: 0,
+        social: 0,
+        resolve: 0
     };
     if (charObj.moves.includes("Aspect Of Fire")) {
         charObj.resolve = round(charObj.resolve * 1.5);
-        charObj.aspectBoost.mental += 0.75;
-        charObj.aspectBoost.physical += 0.75;
-        charObj.aspectBoost.social += 0.75;
+        charObj.aspectBoost.mental = 0.75;
+        charObj.aspectBoost.physical = 0.75;
+        charObj.aspectBoost.social = 0.75;
     }
     if (charObj.moves.includes("Aspect Of Metal")) {
         charObj.resolve = round(charObj.resolve * 2);
-        charObj.aspectBoost.mental += 0.5;
-        charObj.aspectBoost.physical += 0.5;
-        charObj.aspectBoost.social += 0.5;
+        charObj.aspectBoost.mental = 0.5;
+        charObj.aspectBoost.physical = 0.5;
+        charObj.aspectBoost.social = 0.5;
     }
     if (charObj.moves.includes("Aspect Of Water")) {
         charObj.resolve = round(charObj.resolve * 1.5);
-        charObj.aspectBoost.mental += 0.5;
-        charObj.aspectBoost.physical += 0.5;
-        charObj.aspectBoost.social += 0.5;
+        charObj.aspectBoost.mental = 0.5;
+        charObj.aspectBoost.physical = 0.5;
+        charObj.aspectBoost.social = 0.5;
     }
 }
 
