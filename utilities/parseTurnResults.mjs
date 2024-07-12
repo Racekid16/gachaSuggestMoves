@@ -22,7 +22,6 @@ export async function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
     let p1taggedInChar = getCurrentChar(1, battleEmbed);
     let p2taggedInChar = getCurrentChar(2, battleEmbed);
 
-    //remove the .replace part if you're testing
     battleObj[battleKey].log(`Turn ${turn}:\n${turnResults}`);
 
     applyInnateAbilities(battleObj, battleKey, p1name, p2name, p1char, p2char, turnResults, turn, p1resolvesAfterTurn);
@@ -121,8 +120,10 @@ function applyInnateAbilities(battleObj, battleKey, attacker, defender, attackCh
     let attackerPreviousTaggedInChar = battleObj[battleKey][attacker].previousTaggedInChar;
     let attackerID = battleObj[battleKey][attacker].id;
 
-    if (attackerPreviousTaggedInChar !== null && attackerResolves[attackerPreviousTaggedInChar] == 0) {
-        emulateAction(battleObj, battleKey, attacker, defender, attackerPreviousTaggedInChar, defenseChar, "Defeat", turnResults, turn, attackerResolves);
+    for (let char in battleObj[battleKey][attacker].chars) {
+        if (battleObj[battleKey][attacker].chars[char].resolve != 0 && attackerResolves[char] == 0) {
+            emulateAction(battleObj, battleKey, attacker, defender, char, defenseChar, "Defeat", turnResults, turn, attackerResolves);
+        }
     }
 
     if (turn == 1) {

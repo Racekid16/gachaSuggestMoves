@@ -148,7 +148,7 @@ export function applyBoosts(battleObj, battleKey, playerName) {
                     thisCharObj.physical = round(thisCharObj.physical * (1 + boost.amount));
                     thisCharObj.social = round(thisCharObj.social * (1 + boost.amount));
                 } else {
-                    thisCharObj[stat] = round(thisCharObj[stat] * (1 + boost.amount));
+                    thisCharObj[boost.stat] = round(thisCharObj[boost.stat] * (1 + boost.amount));
                 }
             }
         }
@@ -196,7 +196,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: 9999,
+                endTurn: Infinity,
                 stat: "mental",
                 type: "base",
                 amount: bossOrdersBuff
@@ -208,7 +208,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: 9999,
+                endTurn: Infinity,
                 stat: "initiative",
                 type: "total",
                 amount: bottleBreakInitiativeBuff
@@ -220,7 +220,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: 9999,
+                endTurn: Infinity,
                 stat: "social",
                 type: "total",
                 amount: bottleBreakSocialBuff
@@ -232,7 +232,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: 9999,
+                endTurn: Infinity,
                 stat: "social",
                 type: "base",
                 amount: groupTiesBuff
@@ -244,7 +244,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: 9999,
+                endTurn: Infinity,
                 stat: "mental",
                 type: "base",
                 amount: introversionBuff
@@ -322,7 +322,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: 9999,
+                endTurn: Infinity,
                 stat: "ability",
                 type: "total",
                 amount: thePerfectExistenceBuff
@@ -349,7 +349,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
-                endTurn: 9999,
+                endTurn: Infinity,
                 stat: "initiative",
                 type: "base",
                 amount: zenithPaceBuff
@@ -374,7 +374,7 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
             battleObj[battleKey][playerName].chars[charName].debuffs.push({
                 name: debuff,
                 startTurn: turn,
-                endTurn: 9999,
+                endTurn: Infinity,
                 stat: "physical",
                 type: "base",
                 amount: bottleBreakPhysicalDebuff
@@ -440,7 +440,7 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
             battleObj[battleKey][playerName].chars[charName].debuffs.push({
                 name: debuff,
                 startTurn: turn,
-                endTurn: 9999,
+                endTurn: Infinity,
                 stat: "ability",
                 type: "total",
                 amount: kingsCommandDebuff

@@ -80,4 +80,5 @@ export function applyRuneOfAffinity(battleObj, battleKey, playerName, charName) 
     battleObj[battleKey][playerName].baseCharStats[charName] = structuredClone(charObj);
     delete battleObj[battleKey][playerName].chars[charNameNoAspect];
     delete battleObj[battleKey][playerName].baseCharStats[charNameNoAspect];
+    //console.log(`${playerName}'s ${charName} has the Rune Of Affinity`);
 }

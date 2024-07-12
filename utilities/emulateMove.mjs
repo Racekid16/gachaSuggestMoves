@@ -9,7 +9,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
     
     if (consts.moveInfo[move]?.type[0] == "attack" && battleObj[battleKey][defender].chars[defenseChar].moves.includes("Group Determination")) {
         for (let charKey in battleObj[battleKey][defender].chars) {
-            addInflictModifier(battleObj, battleKey, defender, charKey, 0.05, turn, 9999);
+            addInflictModifier(battleObj, battleKey, defender, charKey, 0.05, turn, Infinity);
         }
     }
 
@@ -31,7 +31,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
         
         case 'Bottle Break':
             addStatus(battleObj, battleKey, defender, defenseChar, "Wounded", turn, 1);
-            nullifyBuffs(battleObj, battleKey, defender, defenseChar);
+            nullifyBuffs(battleObj, battleKey, defender, defenseChar, turn);
             addBoost(battleObj, battleKey, attacker, attackChar, "Bottle Break Social", turn);
             addBoost(battleObj, battleKey, attacker, attackChar, "Bottle Break Initiative", turn);
             addBoost(battleObj, battleKey, attacker, attackChar, "Bottle Break Physical", turn);
@@ -125,7 +125,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                     addStatus(battleObj, battleKey, attacker, attackChar, positiveStatus.name, positiveStatus.startTurn, positiveStatus.numTurns);
                 }
                 
-                nullifyBuffs(battleObj, battleKey, attacker, lowestResolveTeammate);
+                nullifyBuffs(battleObj, battleKey, attacker, lowestResolveTeammate, turn);
                 for (let positiveStatus of battleObj[battleKey][attacker].chars[lowestResolveTeammate].positiveStatuses) {
                     positiveStatus.endTurn = turn;
                 }
@@ -215,22 +215,24 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             let previousTaggedInChar = battleObj[battleKey][attacker].previousTaggedInChar;
             let previousTaggedInCharObj = battleObj[battleKey][attacker].chars[previousTaggedInChar];
             if (previousTaggedInCharObj.tags.includes("Ayanokōji Group")) {
-                addBoost(battleObj, battleKey, attacker, charName, "Teamwork", turn);
+                addBoost(battleObj, battleKey, attacker, attackChar, "Teamwork", turn);
             }
             if (previousTaggedInChar.includes("Ayanokōji Kiyotaka")) {
-                addStatus(battleObj, battleKey, attacker, charName, "Apathetic", turn, 2);
+                addStatus(battleObj, battleKey, attacker, attackChar, "Apathetic", turn, 2);
             }
             if (previousTaggedInChar.includes("Miyake Akito")) {
-                addInflictModifier(battleObj, battleKey, attacker, charName, 0.25, turn, 2);
+                addInflictModifier(battleObj, battleKey, attacker, attackChar, 0.25, turn, 2);
             }
             if (previousTaggedInChar.includes("Sakura Airi") || previousTaggedInChar == "Shizuku") {
+                //this can be wrong in the case where one player tags into Hasebe from Airi and the other player
+                //attacks with Hasebe, but overall this case isn't very important.
                 if (turnResults.includes(`**${attackChar}** countered with **Airi Assist**!`)) {
                     addStatus(battleObj, battleKey, defender, defenseChar, "Pacified", turn, 2);
                     addStatus(battleObj, battleKey, defender, defenseChar, "Trapped", turn, 2);
                 }
             }
             if (previousTaggedInChar.includes("Yukimura Keisei")) {
-                nullifyBuffs(battleObj, battleKey, defender, defenseChar);
+                nullifyBuffs(battleObj, battleKey, defender, defenseChar, turn);
             }
             break;
 
@@ -294,7 +296,7 @@ export function emulateAction(battleObj, battleKey, attacker, defender, attackCh
     }
 }
 
-function nullifyBuffs(battleObj, battleKey, playerName, charName) {
+function nullifyBuffs(battleObj, battleKey, playerName, charName, turn) {
     for (let buff of battleObj[battleKey][playerName].chars[charName].buffs) {
         buff.endTurn = turn;
     }

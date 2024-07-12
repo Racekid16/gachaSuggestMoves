@@ -90,9 +90,9 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
     let battleKey = p1name + " vs. " + p2name;
     
     let p1inflictMultiplier = battleObj[battleKey][p1name].chars[p1char].inflictMultiplier - 1;
-    let p1printInflict = p1inflictMultiplier != 0 ? `💥+${p1inflictMultiplier * 100}% ` : '';
+    let p1printInflict = p1inflictMultiplier != 0 ? `💥+${Math.round(p1inflictMultiplier * 100)}% ` : '';
     let p2inflictMultiplier = battleObj[battleKey][p2name].chars[p2char].inflictMultiplier - 1;
-    let p2printInflict = p2inflictMultiplier != 0 ? `💥+${p2inflictMultiplier * 100}% ` : '';
+    let p2printInflict = p2inflictMultiplier != 0 ? `💥+${Math.round(p2inflictMultiplier * 100)}% ` : '';
     let inflictLength = p1printInflict.length > p2printInflict.length ?
                         p1printInflict.length : p2printInflict.length;
     let p1receiveMultiplier = battleObj[battleKey][p1name].chars[p1char].receiveMultiplier - 1;
@@ -132,8 +132,8 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
     let lowerBoundLength = p1lowerBound.length > p2lowerBound.length ? p1lowerBound.length : p2lowerBound.length;
     let upperBoundLength = p1upperBound.length > p2upperBound.length ? p1upperBound.length : p2upperBound.length;
     
-    let p1printFatal = p1lowerBound > p2resolve ? 'FATAL' : '';
-    let p2printFatal = p2lowerBound > p1resolve ? 'FATAL' : '';
+    let p1printFatal = p1lowerBound >= p2resolve ? 'FATAL' : '';
+    let p2printFatal = p2lowerBound >= p1resolve ? 'FATAL' : '';
 
     let p1Output =  `${p1name} ${" ".repeat(playerNameLength - p1name.length)}` 
                   + `[${p1printInflict}${" ".repeat(inflictLength - p1printInflict.length)}`
@@ -208,10 +208,10 @@ function printOtherMoves(battleObj, battleKey, attacker, defender, attackChar, d
         if (moveDamageObj[1] == -1 || hasStatus(battleObj, battleKey, attacker, attackChar, "Stunned")) {
             continue;
         }
-        if (moveDamageObj[0].type.includes("Attack") && hasStatus(battleObj, battleKey, attacker, attackChar, "Pacified")) {
+        if (moveDamageObj[0].type.includes("attack") && hasStatus(battleObj, battleKey, attacker, attackChar, "Pacified")) {
             continue;   
         }
-        if (!moveDamageObj[0].type.includes("Attack") && hasStatus(battleObj, battleKey, attacker, attackChar, "Taunted")) {
+        if (!moveDamageObj[0].type.includes("attack") && hasStatus(battleObj, battleKey, attacker, attackChar, "Taunted")) {
             continue;
         }
         if (hasStatus(battleObj, battleKey, defender, defenseChar, "Invulnerable")) {
@@ -237,7 +237,11 @@ function printOtherMoves(battleObj, battleKey, attacker, defender, attackChar, d
             let maxVariance = 0.2;
             let lowerBound = Math.max(round(moveDamage * (1 - maxVariance)), 0);
             let upperBound = round(moveDamage * (1 + maxVariance));
-            returnStr += `(${lowerBound} - ${upperBound}) ${moveDamageObj[3]}`;
+            let isFatal = '';
+            if (lowerBound >= battleObj[battleKey][defender].chars[defenseChar].resolve) {
+                isFatal = 'FATAL'
+            }
+            returnStr += `(${lowerBound} - ${upperBound}) ${moveDamageObj[3]} ${isFatal}`;
         }
     }
     return returnStr;

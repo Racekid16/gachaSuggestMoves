@@ -48,11 +48,7 @@ export function handleWsData(battleObj, responseJSON) {
             console.log(`${battleKey} not being tracked; Stage ${stage} is excluded`);
             return;
         }
-        //TODO: remove condition
-        if (playerName.includes("Tommy3")) {
-            createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL, stage);
-    
-        }
+        createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL, stage);
     }
 
     // request a player's party for a campaign battle when it starts
@@ -83,18 +79,16 @@ export function handleWsData(battleObj, responseJSON) {
             let p1name = lastBattle[2];
             let p2name = lastBattle[3];
             let battleKey = p1name + " vs. " + p2name;
-            //TODO: remove condition
-            if (battleKey.includes("Tommy3")) {
-                if (typeof battleObj[battleKey] !== 'undefined') {
-                    if (battleType == "battle") {
-                        deleteBattle(battleObj, p1name, p2name, null);
-                        let battleEmbed = lastBattle[4];
-                        createBattle(battleObj, p1name, p2name, battleEmbed);
-                    }
-                    else if (battleType == "campaign") {
-                        let playerID = lastBattle[4];
-                        requestPlayerPartyCampaignBattle(battleObj, battleKey, p1name, playerID);
-                    }
+
+            if (typeof battleObj[battleKey] !== 'undefined') {
+                if (battleType == "battle") {
+                    deleteBattle(battleObj, p1name, p2name, null);
+                    let battleEmbed = lastBattle[4];
+                    createBattle(battleObj, p1name, p2name, battleEmbed);
+                }
+                else if (battleType == "campaign") {
+                    let playerID = lastBattle[4];
+                    requestPlayerPartyCampaignBattle(battleObj, battleKey, p1name, playerID);
                 }
             }
         }
@@ -106,30 +100,27 @@ async function processBattleEmbed(battleObj, responseJSON, battleEmbed) {
     let p2name = `2.${battleEmbed.fields[1].name}`;
     let battleKey = p1name + " vs. " + p2name;
     let turn = parseInt(battleEmbed.fields[2].name.substring(battleEmbed.fields[2].name.indexOf('__Turn ') + 7, battleEmbed.fields[2].name.length - 2));
-    
-    //TODO: remove condition
-    if (battleKey.includes("Tommy3")) {
-        if (typeof battleObj[battleKey] === 'undefined' && turn == 1 && responseJSON.d.interaction.name != 'campaign') {
-            createBattle(battleObj, p1name, p2name, battleEmbed);
-            return;
-        }
 
-        else if (typeof battleObj[battleKey] === 'undefined') {
-            return;
-        }
-
-        else if (battleEmbed.fields[2].name == 'WINNER:') {
-            let turnResults = battleEmbed.fields[2].value;
-            deleteBattle(battleObj, p1name, p2name, turnResults);
-            return;
-        }
-
-
-        if (typeof battleObj[battleKey] !== 'undefined' && turn == 1 && battleObj[battleKey][p2name].id == consts.botID) {
-            verifyPlayerResolves(battleObj, battleKey, p1name, 1, battleEmbed);
-            verifyPlayerResolves(battleObj, battleKey, p2name, 2, battleEmbed);
-        }
-        
-        parseTurnResults(battleObj, p1name, p2name, battleEmbed);
+    if (typeof battleObj[battleKey] === 'undefined' && turn == 1 && responseJSON.d.interaction.name != 'campaign') {
+        createBattle(battleObj, p1name, p2name, battleEmbed);
+        return;
     }
+
+    else if (typeof battleObj[battleKey] === 'undefined') {
+        return;
+    }
+
+    else if (battleEmbed.fields[2].name == 'WINNER:') {
+        let turnResults = battleEmbed.fields[2].value;
+        deleteBattle(battleObj, p1name, p2name, turnResults);
+        return;
+    }
+
+
+    if (typeof battleObj[battleKey] !== 'undefined' && turn == 1 && battleObj[battleKey][p2name].id == consts.botID) {
+        verifyPlayerResolves(battleObj, battleKey, p1name, 1, battleEmbed);
+        verifyPlayerResolves(battleObj, battleKey, p2name, 2, battleEmbed);
+    }
+    
+    parseTurnResults(battleObj, p1name, p2name, battleEmbed);
 }

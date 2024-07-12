@@ -157,12 +157,12 @@ export function verifyPlayerResolves(battleObj, battleKey, playerName, playerNum
 
         if (typeof battleObj[battleKey][playerName].chars[charName] === 'undefined') {
             let [aspect, charNameNoAspect] = splitCharName(charName);
-            if (aspect == "") {
+            if (typeof battleObj[battleKey][playerName].chars[charNameNoAspect] !== 'undefined') {
+                applyRuneOfAffinity(battleObj, battleKey, playerName, charName);     
+            } else {
                 console.log(`${charName} is undefined in ${playerName}'s party`);
                 console.log(battleEmbed.fields[0].value);
                 console.log(battleObj[battleKey][playerName]);
-            } else {
-                applyRuneOfAffinity(battleObj, battleKey, playerName, charName);
             }
         }
 
