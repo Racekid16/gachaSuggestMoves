@@ -9,7 +9,9 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
     
     if (consts.moveInfo[move]?.type[0] == "attack" && battleObj[battleKey][defender].chars[defenseChar].moves.includes("Group Determination")) {
         for (let charKey in battleObj[battleKey][defender].chars) {
-            addInflictModifier(battleObj, battleKey, defender, charKey, 0.05, turn, Infinity);
+            if (battleObj[battleKey][defender].chars[charKey].resolve > 0) {
+                addInflictModifier(battleObj, battleKey, defender, charKey, 0.05, turn, Infinity);
+            }
         }
     }
 

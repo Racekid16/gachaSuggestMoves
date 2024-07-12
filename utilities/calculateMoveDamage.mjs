@@ -4,7 +4,7 @@ import consts from '../consts.json' assert { type: 'json' };
 // calculate how much damage a move does. This assumes the move is a type that deals damage,
 // and that it is a base type or derives from a base type.
 export function calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move) {
-    let moveObj = consts.moveInfo[move];
+    const moveObj = consts.moveInfo[move];
     if (typeof moveObj === 'undefined') {
         console.log(move, 'is not in consts.json');
         console.log(battleObj[battleKey][attacker].chars[attackChar]);
@@ -23,7 +23,7 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
     let attackerAttackStat = battleObj[battleKey][attacker].chars[attackChar][completeMoveObj.attackStat];
     let attackerInflictMultiplier = battleObj[battleKey][attacker].chars[attackChar].inflictMultiplier;
     let criticalMultiplier = 1;
-    if (consts.personalityWeaknesses[defenderPersonality].includes(moveObj.damageType)) {
+    if (consts.personalityWeaknesses[defenderPersonality].includes(completeMoveObj.damageType)) {
         criticalMultiplier = 1.35;
         hitType = 'CRITICAL';
     }
@@ -32,7 +32,7 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
     let defenderDefenseStat = battleObj[battleKey][defender].chars[defenseChar][completeMoveObj.defenseStat];
     let defenderReceiveMultiplier = battleObj[battleKey][defender].chars[defenseChar].receiveMultiplier;
     let resistMultiplier = 1;
-    if (consts.personalityResistances[defenderPersonality].includes(moveObj.damageType)) {
+    if (consts.personalityResistances[defenderPersonality].includes(completeMoveObj.damageType)) {
         resistMultiplier = 1.35;
         hitType = 'RESISTED';
     }
@@ -50,7 +50,7 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
 
 //return: an array of characters and how much they heal for, format: [moveObj, healAmounts] (both objects)
 export function calculateMoveHealing(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move) {
-    let moveObj = consts.moveInfo[move];
+    const moveObj = consts.moveInfo[move];
     if (typeof moveObj === 'undefined') {
         console.log(move, 'is not in consts.json');
         console.log(battleObj[battleKey][attacker].chars[attackChar]);
@@ -144,12 +144,12 @@ export function calculateMoveHealing(battleObj, battleKey, attacker, defender, a
 }
 
 export function getCompleteMoveObj(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move) {
-    let moveObj = consts.moveInfo[move];
+    let moveObj = structuredClone(consts.moveInfo[move]);
     if (typeof moveObj.damageType === "undefined") {
         return moveObj;
     }
     moveObj.damageType = getDamageType(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj);
-    let baseMoveObj = consts.moveInfo[moveObj.damageType];
+    const baseMoveObj = consts.moveInfo[moveObj.damageType];
     let completeMoveObj = structuredClone(moveObj);
 
     completeMoveObj.attackStat = getAttackStat(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj, completeMoveObj);
@@ -165,7 +165,7 @@ function getDamageType(battleObj, battleKey, attacker, defender, attackChar, def
         switch (move) {
             case 'Impulse':
                 const attackStats = ['mental', 'physical', 'social'];
-                let highestAttackStat =  attackStats.reduce((highest, current) => {
+                let highestAttackStat = attackStats.reduce((highest, current) => {
                     let thisStat = battleObj[battleKey][attacker].chars[attackChar][current];
                     let highestStat = battleObj[battleKey][attacker].chars[attackChar][highest];
                     return thisStat > highestStat ? current : highest;

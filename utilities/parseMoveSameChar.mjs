@@ -13,10 +13,13 @@ export async function parseMoveSameChar(battleObj, p1name, p2name, charName, bat
     let battleKey = p1name + " vs. " + p2name;
     let turnResults = battleEmbed.fields[2].value;
 
-    for (let move of ['Arrogance', 'Bottle Break', 'Blazing Form', 'Charm', 'Dominate', 'From The Shadows', 'Hate',
-                      'Kings Command', 'Provoke', 'Slap', 'Slumber', 'Study', 'Unity']) {
+    let moveStr = `\\*\\*${charName}\\*\\* used \\*\\*(.+)\\*\\*!`;
+    let moveRegex = new RegExp(moveStr);
+    let moveMatch = moveRegex.exec(turnResults);
+    if (moveMatch !== null) {
+        let move = moveMatch[1];
         if (count(turnResults, `**${charName}** used **${move}**!`) == 1) {
-            await emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, move);
+            await emulateMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, move);
             return;
         }
         if (count(turnResults, `**${charName}** used **${move}**!`) == 2) {
@@ -28,7 +31,7 @@ export async function parseMoveSameChar(battleObj, p1name, p2name, charName, bat
 
     for (let move of ['Introversion', 'Kabedon']) {
         if (count(turnResults, `**${charName}** is preparing **${move}**...`) == 1) {
-            await emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, move);
+            await emulateMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, move);
             return;
         }
         if (count(turnResults, `**${charName}** is preparing **${move}**...`) == 2) {
@@ -39,7 +42,7 @@ export async function parseMoveSameChar(battleObj, p1name, p2name, charName, bat
     }
 
     if (count(turnResults, `**${charName}** used **Humiliate**!`) == 1) {
-        await emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, "Humiliate");
+        await emulateMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, "Humiliate");
         return;
     }
     if (count(turnResults, `**${charName}** used **Humiliate**!`) == 2) {
@@ -70,7 +73,7 @@ function count(str, subStr) {
 //this function assumes that charName does not have the Impulse move
 //we also assume for now that both players' charName have the same initiative and used the same
 //attack + boost/status affecting move
-async function emulateAffectingMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, affectingMove) {
+async function emulateMoveAndOther(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn, affectingMove) {
     let battleKey = p1name + " vs. " + p2name;
     let turnResults = battleEmbed.fields[2].value;
     let resolvesObj = {};
@@ -175,9 +178,9 @@ function determineIfPlayerUnableToMove(battleObj, p1name, p2name, charName, batt
 async function determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, charName, battleEmbed, turn, p1resolves, p2resolves, affectingMove, otherMove) {
     let battleKey = p1name + " vs. " + p2name; 
     let turnResults = battleEmbed.fields[2].value;    
-    let affectingMoveObj = consts.moveInfo[affectingMove];
+    const affectingMoveObj = consts.moveInfo[affectingMove];
     affectingMoveObj.name = affectingMove;
-    let otherMoveObj = consts.moveInfo[otherMove];
+    const otherMoveObj = consts.moveInfo[otherMove];
     otherMoveObj.name = otherMove;
     let p1resolveDiff = p1resolves[charName] - battleObj[battleKey][p1name].chars[charName].resolve;
     let p2resolveDiff = p2resolves[charName] - battleObj[battleKey][p2name].chars[charName].resolve;
@@ -500,7 +503,7 @@ function emulateDoubleHumiliate(battleObj, p1name, p2name, charName, turnResults
         let highestStat = battleObj[battleKey][p2name].chars[charName][highest];
         return thisStat > highestStat ? current : highest;
     }, attackStats[0]); 
-    let humiliateStr = `\\*\\*${attackChar}\\*\\* used \\*\\*Humiliate\\*\\*!\\n\\*\\*.+\\*\\*'s \\*\\*(.+)\\*\\* was weakened!\\n\\*\\*.+\\*\\* is \\*\\*(.+)\\*\\* for (\\d+) turns?!`;
+    let humiliateStr = `\\*\\*${charName}\\*\\* used \\*\\*Humiliate\\*\\*!\\n\\*\\*.+\\*\\*'s \\*\\*(.+)\\*\\* was weakened!\\n\\*\\*.+\\*\\* is \\*\\*(.+)\\*\\* for (\\d+) turns?!`;
     let humiliateRegex = new RegExp(humiliateStr, 'g');
     let humiliateMatch1 = humiliateRegex.exec(turnResults);
     let [move1stat, move1status, move1numTurns] = [humiliateMatch1[1], humiliateMatch1[2], humiliateMatch1[3]];
