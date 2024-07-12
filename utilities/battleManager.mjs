@@ -3,6 +3,7 @@ import fs from 'fs';
 import { setPlayerParty } from './setPlayerParty.mjs';
 import { parseTurnResults } from './parseTurnResults.mjs';
 import { cancelInput } from './handleInput.mjs';
+import { splitCharName, applyRuneOfAffinity } from './aspect.mjs';
 import config from '../config.json' assert { type: 'json' };
 import consts from '../consts.json' assert { type: 'json' };
 const delay = async (ms = 1000) =>  new Promise(resolve => setTimeout(resolve, ms));
@@ -155,9 +156,14 @@ export function verifyPlayerResolves(battleObj, battleKey, playerName, playerNum
         }
 
         if (typeof battleObj[battleKey][playerName].chars[charName] === 'undefined') {
-            console.log(`${charName} is undefined in ${playerName}'s party`);
-            console.log(battleEmbed.fields[0].value);
-            console.log(battleObj[battleKey][playerName]);
+            let [aspect, charNameNoAspect] = splitCharName(charName);
+            if (aspect == "") {
+                console.log(`${charName} is undefined in ${playerName}'s party`);
+                console.log(battleEmbed.fields[0].value);
+                console.log(battleObj[battleKey][playerName]);
+            } else {
+                applyRuneOfAffinity(battleObj, battleKey, playerName, charName);
+            }
         }
 
         let charResolve = parseInt(resolveMatch[4]);

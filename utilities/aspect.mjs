@@ -25,7 +25,7 @@ export function addAspectAttributes(char, charObj) {
 
 //increase the character's aspect multiplier based on the aspect move they have.
 //I do not consider these normal boosts; they cannot be nullified or stolen.
-export function applyAspectBoost(charObj) {
+export function addAspectBoost(charObj) {
     charObj.aspectBoost = {
         initiative: 0,
         mental: 0,
@@ -57,8 +57,27 @@ export function applyAspectBoost(charObj) {
 export function splitCharName(charName) {
     for (let aspect of ['Infernal ', 'Titanium ', 'Tidal ']) {
         if (charName.startsWith(aspect)) {
-            return [aspect, returnVal.slice(aspect.length)];
+            return [aspect, charName.slice(aspect.length)];
         }
     }
     return ["", charName];
+}
+
+//add the rune of affinity to a character
+export function applyRuneOfAffinity(battleObj, battleKey, playerName, charName) {
+    let [aspect, charNameNoAspect] = splitCharName(charName);
+    let charIdentification = {};
+    charIdentification.name = charNameNoAspect;
+    charIdentification.numStars = battleObj[battleKey][playerName].chars[charNameNoAspect].numStars;
+    charIdentification.aspect = aspect;
+    addAspectAttributes(charIdentification, battleObj[battleKey][playerName].chars[charNameNoAspect]);
+    battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars[charNameNoAspect]);
+    let charObj = battleObj[battleKey][playerName].chars[charName];
+    charObj.resolve = round(charObj.resolve * 1.1);
+    charObj.mental = round(charObj.mental * 1.1);
+    charObj.physical = round(charObj.physical * 1.1);
+    charObj.social = round(charObj.social * 1.1);
+    battleObj[battleKey][playerName].baseCharStats[charName] = structuredClone(charObj);
+    delete battleObj[battleKey][playerName].chars[charNameNoAspect];
+    delete battleObj[battleKey][playerName].baseCharStats[charNameNoAspect];
 }

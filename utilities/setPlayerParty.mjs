@@ -2,7 +2,7 @@
 // calculate the stats of those characters, and update the battleObj accordingly.
 import { printParty } from './prettyPrint.mjs';
 import { round } from './round.mjs';
-import { addAspectAttributes, applyAspectBoost } from './aspect.mjs';
+import { addAspectAttributes, addAspectBoost } from './aspect.mjs';
 import { applyBoosts } from './updateBoosts.mjs';
 import consts from '../consts.json' assert { type: 'json' };
 
@@ -187,7 +187,7 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
         thisChar.receiveMultiplier = 1;
         thisChar.inflictModifiers = [];
         thisChar.receiveModifiers = [];
-        applyAspectBoost(thisChar);
+        addAspectBoost(thisChar);
     }
 
     battleObj[battleKey][playerName].baseCharStats = structuredClone(battleObj[battleKey][playerName].chars);

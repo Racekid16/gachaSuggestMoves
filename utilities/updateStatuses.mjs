@@ -84,6 +84,9 @@ function addPositiveStatus(battleObj, battleKey, playerName, charName, positiveS
 }
 
 function addNegativeStatus(battleObj, battleKey, playerName, charName, negativeStatus, turn, numTurns) {
+    if (battleObj[battleKey][playerName].chars[charName].moves.includes("Aspect Of Metal")) {
+        return;
+    }
     battleObj[battleKey][playerName].chars[charName].negativeStatuses.push({
         name: negativeStatus,
         startTurn: turn,
