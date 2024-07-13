@@ -208,8 +208,7 @@ async function determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, char
             emulateMove(battleObj, battleKey, p1name, p2name, charName, charName, otherMoveName, turnResults, turn, p1resolves);
             return;
         }
-        console.log(`The program unexpectedly reached here on turn ${turn} of ${battleKey} (1)`);
-        return;
+        //else the Kings Command failed
     }
 
     if (moves[0].name == "From The Shadows" || moves[1].name == "From The Shadows") {
@@ -311,7 +310,7 @@ async function determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, char
     }
 
     if (moves[0].type[0] == 'attack') {
-        let move1str = `\\*\\*${charName}\\*\\* used \\*\\*${moves[0].name}\\*\\*!\\n(\\*\\*CRITICAL HIT!!\\*\\*\\n)?\\*\\*.+\\*\\* took \\*\\*(\\d+)\\*\\* damage!`;
+        let move1str = `\\*\\*${charName}\\*\\* used \\*\\*${moves[0].name}\\*\\*!\\n(\\*\\*CRITICAL HIT!!\\*\\*\\n)?(The hit was resisted\\.\\.\\.\\n)?\\*\\*.+\\*\\* took \\*\\*(\\d+)\\*\\* damage!`;
         let move1regex = new RegExp(move1str);
         let move1match = move1regex.exec(turnResults);
         if (move1match === null) {
@@ -323,18 +322,18 @@ async function determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, char
             console.log(`The program unexpectedly reached here on turn ${turn} of ${battleKey} (4)`);
             return;
         }
-        moves[0].damage = parseInt(move1match[2]) * -1;
+        moves[0].damage = parseInt(move1match[3]) * -1;
 
         //moves[0].type[0] == 'attack' && moves[1].type[0] == 'attack'
         if (moves[1].type[0] == 'attack') { 
-            let move2str = `\\*\\*${charName}\\*\\* used \\*\\*${moves[1].name}\\*\\*!\\n(\\*\\*CRITICAL HIT!!\\*\\*\\n)?\\*\\*.+\\*\\* took \\*\\*(\\d+)\\*\\* damage!`;
+            let move2str = `\\*\\*${charName}\\*\\* used \\*\\*${moves[1].name}\\*\\*!\\n(\\*\\*CRITICAL HIT!!\\*\\*\\n)?(The hit was resisted\\.\\.\\.\\n)?\\*\\*.+\\*\\* took \\*\\*(\\d+)\\*\\* damage!`;
             let move2regex = new RegExp(move2str);
             let move2match = move2regex.exec(turnResults);
             if (move2match === null) {
                 console.log(`The program unexpectedly reached here on turn ${turn} of ${battleKey} (5)`);
                 return;
             }
-            moves[1].damage = parseInt(move2match[2]) * -1;
+            moves[1].damage = parseInt(move2match[3]) * -1;
             if (p1resolveDiff == p2resolveDiff) {
                 console.log(`Unable to determine who used ${affectingMove} in turn ${turn} of ${battleKey} (2)`);
                 await manuallyDetermineWhoUsedWhichMove(battleObj, battleKey, p1name, p2name, charName, affectingMove, otherMove, turnResults, turn, p1resolves, p2resolves);

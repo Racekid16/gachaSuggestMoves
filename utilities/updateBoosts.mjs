@@ -108,15 +108,7 @@ export function applyBoosts(battleObj, battleKey, playerName) {
 
             if (thisCharObj.moves.includes('Lead By Example') && (debuff.stat == 'ability' || debuff.stat == 'physical')) {
                 if (typeof battleObj[battleKey].log !== 'undefined') {
-                    battleObj[battleKey].log(`${debuff} debuff negated as it would lower ${charName}'s physical`);
-                }
-                thisCharObj.debuffs.splice(i, 1);
-                i--;
-                continue;
-            }
-            if (thisCharObj.moves.includes('Aspect Of Metal')) {
-                if (typeof battleObj[battleKey].log !== 'undefined') {
-                    battleObj[battleKey].log(`${debuff} debuff negated as ${charName} has Aspect Of Metal`);
+                    //battleObj[battleKey].log(`${debuff.name} debuff negated as it would lower ${charName}'s physical`);
                 }
                 thisCharObj.debuffs.splice(i, 1);
                 i--;
@@ -361,7 +353,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
 
     if (battleObj[battleKey][playerName].chars[charName].buffs.length > numBuffs
      && typeof battleObj[battleKey].log !== 'undefined') {
-        battleObj[battleKey].log(`${buff} added to ${playerName}'s ${charName}!`);
+        //battleObj[battleKey].log(`${buff} added to ${playerName}'s ${charName}!`);
     }
 }
 
@@ -453,7 +445,7 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
     
     if (battleObj[battleKey][playerName].chars[charName].debuffs.length > numDebuffs
      && typeof battleObj[battleKey].log !== 'undefined') {
-        battleObj[battleKey].log(`${debuff} added to ${playerName}'s ${charName}!`);
+        //battleObj[battleKey].log(`${debuff} added to ${playerName}'s ${charName}!`);
     }
 }
 
@@ -465,7 +457,7 @@ function removeExpiredBuffs(battleObj, battleKey, playerName, charName, turn) {
 
         if (thisBuff.endTurn == turn) {
             if (thisCharObj.resolve != 0 && typeof battleObj[battleKey].log !== 'undefined') {
-                battleObj[battleKey].log(`${playerName}'s ${charName}'s ${thisBuff.name} buff expired! ${thisBuff.stat} decreased by ${thisBuff.amount * 100}%`);
+                //battleObj[battleKey].log(`${playerName}'s ${charName}'s ${thisBuff.name} buff expired! ${thisBuff.stat} decreased by ${thisBuff.amount * 100}%`);
             }
             thisCharObj.buffs.splice(i, 1);
             i--;
@@ -481,7 +473,7 @@ function removeExpiredDebuffs(battleObj, battleKey, playerName, charName, turn) 
 
         if (thisDebuff.endTurn == turn) {
             if (thisCharObj.resolve != 0 && typeof battleObj[battleKey].log !== 'undefined') {
-                battleObj[battleKey].log(`${playerName}'s ${charName}'s ${thisDebuff.name} debuff expired! ${thisDebuff.stat} increased by ${thisDebuff.amount * -100}%`);
+                //battleObj[battleKey].log(`${playerName}'s ${charName}'s ${thisDebuff.name} debuff expired! ${thisDebuff.stat} increased by ${thisDebuff.amount * -100}%`);
             }
             thisCharObj.debuffs.splice(i, 1);
             i--;

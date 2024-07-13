@@ -159,10 +159,15 @@ export function verifyPlayerResolves(battleObj, battleKey, playerName, playerNum
             let [aspect, charNameNoAspect] = splitCharName(charName);
             if (typeof battleObj[battleKey][playerName].chars[charNameNoAspect] !== 'undefined') {
                 applyRuneOfAffinity(battleObj, battleKey, playerName, charName);     
+            // This sometimes happens; not entirely sure why. Need to look into it more.
             } else {
                 console.log(`${charName} is undefined in ${playerName}'s party`);
+                console.log(`The player's character resolves are:`);
                 console.log(battleEmbed.fields[0].value);
+                console.log(`battleObj[${battleKey}][${playerName}] is:`);
                 console.log(battleObj[battleKey][playerName]);
+                let splitBattleKey = battleKey.split(" vs. ");
+                deleteBattle(battleObj, splitBattleKey[0], splitBattleKey[1], null);
             }
         }
 

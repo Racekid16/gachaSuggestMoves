@@ -39,7 +39,7 @@ function findOptimalSequenceNoDefender(battleObj, battleKey, attacker, defender,
                 let highestDamageMove = attackMoves.reduce((maxMove, currentMove) => {
                     let maxMoveDamage = calculateMoveDamage(tempBattleObj, battleKey, attacker, defender, attackChar, defenseChar, maxMove)[1];
                     let currentMoveDamage = calculateMoveDamage(tempBattleObj, battleKey, attacker, defender, attackChar, defenseChar, currentMove)[1];
-                    return currentMoveDamage > maxMoveDamage ? currentMove : maxMove;
+                    return currentMoveDamage > maxMoveDamage && !consts.moveInfo[currentMove].hasNegativeImpact ? currentMove : maxMove;
                 });
                 let highestDamage = calculateMoveDamage(tempBattleObj, battleKey, attacker, defender, attackChar, defenseChar, highestDamageMove)[1];
                 let moveDamage = calculateMoveDamage(tempBattleObj, battleKey, attacker, defender, attackChar, defenseChar, moveObj.name)[1];
@@ -81,6 +81,15 @@ function findOptimalSequenceNoDefender(battleObj, battleKey, attacker, defender,
     //only allow shortest sequences
     let shortestResultLength = results.reduce((shortest, current) => current.length < shortest.length ? current : shortest).length;
     let bestSequences = results.filter((sequence) => sequence.length == shortestResultLength);
+    //only allow minimum negative impact
+    let minNegativeImpact = bestSequences.reduce((minSoFar, currentSequence) => {
+        let numNegativeImpact = currentSequence.reduce((numSoFar, move) => consts.moveInfo[move]?.hasNegativeImpact ? ++numSoFar : numSoFar, 0);
+        return numNegativeImpact < minSoFar ? numNegativeImpact : minSoFar;
+    }, Infinity);
+    bestSequences = bestSequences.filter((sequence) => {
+        let numNegativeImpact = sequence.reduce((numSoFar, move) => consts.moveInfo[move]?.hasNegativeImpact ? ++numSoFar : numSoFar, 0);
+        return numNegativeImpact == minNegativeImpact;
+    });
     //only allow most damage
     let lowestEndResolve = bestSequences.reduce((minSoFar, currentSequence) => {
         let endResolve = currentSequence[currentSequence.length - 1];
@@ -111,6 +120,7 @@ function findOptimalSequenceNoDefender(battleObj, battleKey, attacker, defender,
     });
     //remove the last element from the sequence arrays as that is the final resolve of the attacker
     bestSequences.forEach((sequence) => sequence.pop());
+    //if there are multiple best sequences, just return the first one
     return bestSequences[0];
 }
 

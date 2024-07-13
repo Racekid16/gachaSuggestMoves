@@ -71,7 +71,8 @@
             "target": "attacker",
             "stat": "ability",
             "amount": -0.75,
-            "numTurns": 5
+            "numTurns": 5,
+            "hasNegativeImpact": true
         },
         "Empathy": {
             "type": ["attack"],
@@ -126,7 +127,8 @@
             "damageType": "varies",
             "attackStat": "varies",
             "defenseStat": "varies",
-            "basePower": 1.5
+            "basePower": 1.5,
+            "hasNegativeImpact": true
         },
         "Influence": {
             "type": ["attack"],

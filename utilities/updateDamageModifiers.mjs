@@ -7,7 +7,7 @@ export function addInflictModifier(battleObj, battleKey, playerName, charName, a
         amount: amount
     });
     if (typeof battleObj[battleKey].log !== 'undefined') {
-        battleObj[battleKey].log(`+${amount * 100}% damage inflicted added to ${playerName}'s ${charName} for ${numTurns} turns!`);
+        //battleObj[battleKey].log(`+${amount * 100}% damage inflicted added to ${playerName}'s ${charName} for ${numTurns} turns!`);
     }
 }
 
@@ -18,7 +18,7 @@ export function addReceiveModifier(battleObj, battleKey, playerName, charName, a
         amount: amount
     });
     if (typeof battleObj[battleKey].log !== 'undefined') {
-        battleObj[battleKey].log(`${amount * 100}% damage received added to ${playerName}'s ${charName} for ${numTurns} turns!`);
+        //battleObj[battleKey].log(`${amount * 100}% damage received added to ${playerName}'s ${charName} for ${numTurns} turns!`);
     }
 }
 
@@ -60,8 +60,8 @@ function removeExpiredInflictModifiers(battleObj, battleKey, playerName, charNam
         let thisModifier = thisChar.inflictModifiers[i];
         if (thisModifier.endTurn == turn) {
             if (typeof battleObj[battleKey].log !== 'undefined' && thisChar.resolve != 0) {
-                battleObj[battleKey].log(`${playerName}'s ${charName}'s ${thisModifier.endTurn - thisModifier.startTurn}-turn ${thisModifier.amount * 100}% `
-                                       + `damage inflicted modifier expired! Damage inflicted decreased by ${thisModifier.amount * 100}%`);
+                /* battleObj[battleKey].log(`${playerName}'s ${charName}'s ${thisModifier.endTurn - thisModifier.startTurn}-turn ${thisModifier.amount * 100}% `
+                                       + `damage inflicted modifier expired! Damage inflicted decreased by ${thisModifier.amount * 100}%`); */
             }
             thisChar.inflictModifiers.splice(i, 1);
             i--;
@@ -76,8 +76,8 @@ function removeExpiredReceiveModifiers(battleObj, battleKey, playerName, charNam
         let thisModifier = thisChar.receiveModifiers[i];
         if (thisModifier.endTurn == turn) {
             if (typeof battleObj[battleKey].log !== 'undefined' && thisChar.resolve != 0) {
-                battleObj[battleKey].log(`${playerName}'s ${charName}'s ${thisModifier.endTurn - thisModifier.startTurn}-turn ${thisModifier.amount * 100}% `
-                                       + `damage received modifier expired! Damage receieved increased by ${thisModifier.amount * -100}%`);
+                /* battleObj[battleKey].log(`${playerName}'s ${charName}'s ${thisModifier.endTurn - thisModifier.startTurn}-turn ${thisModifier.amount * 100}% `
+                                       + `damage received modifier expired! Damage receieved increased by ${thisModifier.amount * -100}%`); */
             }
             thisChar.receiveModifiers.splice(i, 1);
             i--;

@@ -98,7 +98,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                 let numTurns = parseInt(humiliateMatch[4]);
                 addStatus(battleObj, battleKey, defender, defenseChar, status, turn, numTurns);
             } else {
-                console.log(`No new status for ${defenseChar} was found in turn ${turn} of ${battleKey}`);
+                //console.log(`No new status for ${defenseChar} was found in turn ${turn} of ${battleKey}`);
             }
             break;
         

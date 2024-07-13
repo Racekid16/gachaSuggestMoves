@@ -2,7 +2,7 @@
 
 export function addStatus(battleObj, battleKey, playerName, charName, status, turn, numTurns) {
     if  (typeof battleObj[battleKey].log !== 'undefind') {
-        battleObj[battleKey].log(`${status} added to ${playerName}'s ${charName} for ${numTurns} turns!`);
+        //battleObj[battleKey].log(`${status} added to ${playerName}'s ${charName} for ${numTurns} turns!`);
     }
 
     // I arrange these alphabetically
@@ -85,6 +85,9 @@ function addPositiveStatus(battleObj, battleKey, playerName, charName, positiveS
 
 function addNegativeStatus(battleObj, battleKey, playerName, charName, negativeStatus, turn, numTurns) {
     if (battleObj[battleKey][playerName].chars[charName].moves.includes("Aspect Of Metal")) {
+        if (typeof battleObj[battleKey].log !== 'undefined') {
+            battleObj[battleKey].log(`${negativeStatus} negative status negated as ${charName} has Aspect Of Metal`);
+        }
         return;
     }
     battleObj[battleKey][playerName].chars[charName].negativeStatuses.push({
@@ -102,7 +105,7 @@ function removeExpiredPositiveStatuses(battleObj, battleKey, playerName, charNam
     
         if (thisPositiveStatus.endTurn == turn) {
             if (typeof battleObj[battleKey].log !== 'undefined' && thisCharObj.resolve != 0) {
-                battleObj[battleKey].log(`${charName}'s ${thisPositiveStatus.name} positive status expired!`);
+                //battleObj[battleKey].log(`${charName}'s ${thisPositiveStatus.name} positive status expired!`);
             }
             switch (thisPositiveStatus.name) {
                 case 'Apathetic':
@@ -125,7 +128,7 @@ function removeExpiredNegativeStatuses(battleObj, battleKey, playerName, charNam
     
         if (thisNegativeStatus.endTurn == turn) {
             if (typeof battleObj[battleKey].log !== 'undefined' && thisCharObj.resolve != 0) {
-                battleObj[battleKey].log(`${charName}'s ${thisNegativeStatus.name} negative status expired!`);
+                //battleObj[battleKey].log(`${charName}'s ${thisNegativeStatus.name} negative status expired!`);
             }
             switch (thisNegativeStatus.name) {
                 default:

@@ -24,7 +24,7 @@ export function handleWsData(battleObj, responseJSON) {
             if (typeof playerIDMatch[3] !== 'undefined') {
                 playerID = playerIDMatch[3];
             }
-            if (typeof playerIDMatch[4] !== 'undefined') {
+            else if (typeof playerIDMatch[4] !== 'undefined') {
                 playerID = playerIDMatch[4];
             }
         }

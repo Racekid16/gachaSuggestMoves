@@ -85,8 +85,8 @@ export function printParty(battleObj, battleKey, playerName, partyJSON, hasStren
 }
 
 // print the move that the program determines is good to play
-export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p1move, p2move, 
-                                    p1moveObj, p2moveObj, p1damage, p2damage, p1hitType, p2hitType) {
+export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p1moveSequence, p2moveSequence,
+                                    p1move, p2move, p1moveObj, p2moveObj, p1damage, p2damage, p1hitType, p2hitType, turn) {
     let battleKey = p1name + " vs. " + p2name;
     
     let p1inflictMultiplier = battleObj[battleKey][p1name].chars[p1char].inflictMultiplier - 1;
@@ -150,7 +150,7 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
                   + `${p1upperBound}${" ".repeat(upperBoundLength - p1upperBound.toString().length)}) `
                   + `${p1hitType} ${p1printFatal}`;
     }
-    p1Output += printOtherMoves(battleObj, battleKey, p1name, p2name, p1char, p2char, p1move);
+    p1Output += printCharacterOtherInformation(battleObj, battleKey, p1name, p2name, p1char, p2char, p1moveSequence, p1move, turn);
             
     let p2Output =  `${p2name} ${" ".repeat(playerNameLength - p2name.length)}`
                   + `[${p2printInflict}${" ".repeat(inflictLength - p2printInflict.length)}`
@@ -167,7 +167,7 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
                   + `${p2upperBound}${" ".repeat(upperBoundLength - p2upperBound.toString().length)}) `
                   + `${p2hitType} ${p2printFatal}`;
     }
-    p2Output += printOtherMoves(battleObj, battleKey, p2name, p1name, p2char, p1char, p2move);
+    p2Output += printCharacterOtherInformation(battleObj, battleKey, p2name, p1name, p2char, p1char, p2moveSequence, p2move, turn);
     
     let p1priority = p1moveObj.priority;
     let p2priority = p2moveObj.priority;
@@ -196,8 +196,87 @@ function getMaxLength(chars, property) {
     }, 0);
 }
 
-// print all the other possible moves that can be made besides the recommended move,
-// in the order of damage decreasing
+// print the move sequence, current buffs, current debuffs, and all the other possible moves that can be made besides 
+// the recommended move, in the order of damage decreasing
+function printCharacterOtherInformation(battleObj, battleKey, attacker, defender, attackChar, defenseChar, 
+                                        moveSequence, recommendedMove, turn) {
+    let returnStr = "";
+    returnStr += printMoveSequence(moveSequence);
+    returnStr += printModifiers(battleObj, battleKey, attacker, attackChar, turn);
+    returnStr += printOtherMoves(battleObj, battleKey, attacker, defender, attackChar, defenseChar, recommendedMove);
+    return returnStr;
+}
+
+function printMoveSequence(moveSequence) {
+    // assumes moveSequence has at least one move
+    let returnStr = "";
+    if (moveSequence.length > 1) {
+        returnStr += `\nMove sequence: ${moveSequence[0]}`;
+        for (let i = 1; i < moveSequence.length; i++) {
+            returnStr += `, ${moveSequence[i]}`;
+        } 
+        returnStr += ` (${moveSequence.length} moves)`
+    } 
+    return returnStr;
+}
+
+function printModifiers(battleObj, battleKey, playerName, charName, turn) {
+    let returnStr = "";
+    const buffs = battleObj[battleKey][playerName].chars[charName].buffs;
+    const damageBuffs = battleObj[battleKey][playerName].chars[charName].inflictModifiers;
+    const receiveBuffs = battleObj[battleKey][playerName].chars[charName].receiveModifiers;
+    const debuffs = battleObj[battleKey][playerName].chars[charName].debuffs;
+    if (buffs.length > 0 || damageBuffs.length > 0 ||receiveBuffs.length > 0) {
+        returnStr += debuffs.length == 0 ? `\nBuffs: ` : `\nBuffs  : `;
+        
+    }
+    if (buffs.length > 0) {
+        returnStr += `${buffs[0].name} ${buffs[0].endTurn - turn}`; 
+        for (let i = 1; i < buffs.length; i++) {
+            returnStr += `, ${buffs[i].name} ${buffs[i].endTurn - turn}`;
+        }
+    }
+    if (damageBuffs.length > 0) {
+        let startIndex = buffs.length > 0 ? 0 : 1;
+        if (startIndex) {   //nonzero numbers evaluate to true
+            returnStr += `+${damageBuffs[0].amount * 100}% damage ${damageBuffs[0].endTurn - turn}`;
+        }
+        for (let i = startIndex; i < damageBuffs.length; i++) {
+            returnStr += `, +${damageBuffs[0].amount * 100}% damage ${damageBuffs[i].endTurn - turn}`;
+        }
+    }
+    if (receiveBuffs.length > 0) {
+        let startIndex = (buffs.length > 0 || damageBuffs.length > 0) ? 0 : 1;
+        if (startIndex) {   //nonzero numbers evaluate to true
+            returnStr += `${receiveBuffs[0].amount * 100}% damage received ${receiveBuffs[0].endTurn - turn}`;
+        }
+        for (let i = startIndex; i < receiveBuffs.length; i++) {
+            returnStr += `, ${receiveBuffs[0].amount * 100}% damage received ${receiveBuffs[i].endTurn - turn}`;
+        }
+    }
+    const positiveStatuses = battleObj[battleKey][playerName].chars[charName].positiveStatuses;
+    if (positiveStatuses.length > 0) {
+        returnStr += `\nPositive statuses: ${positiveStatuses[0].name} ${positiveStatuses[0].endTurn - turn}`; 
+        for (let i = 1; i < positiveStatuses.length; i++) {
+            returnStr += `, ${positiveStatuses[i].name} ${positiveStatuses[i].endTurn - turn}`;
+        }
+    }
+    if (debuffs.length > 0) {
+        returnStr += `\nDebuffs: ${debuffs[0].name} ${debuffs[0].endTurn - turn}`; 
+        for (let i = 1; i < debuffs.length; i++) {
+            returnStr += `, ${debuffs[i].name} ${debuffs[i].endTurn - turn}`;
+        }
+    }
+    const negativeStatuses = battleObj[battleKey][playerName].chars[charName].negativeStatuses;
+    if (negativeStatuses.length > 0) {
+        returnStr += `\nNegative statuses: ${negativeStatuses[0].name} ${negativeStatuses[0].endTurn - turn}`; 
+        for (let i = 1; i < negativeStatuses.length; i++) {
+            returnStr += `, ${negativeStatuses[i].name} ${negativeStatuses[i].endTurn - turn}`;
+        }
+    }
+    return returnStr;
+}
+
 function printOtherMoves(battleObj, battleKey, attacker, defender, attackChar, defenseChar, recommendedMove) {
     let validMoves = battleObj[battleKey][attacker].chars[attackChar].moves
         .filter(move => !consts.moveInfo[move].type.includes("innate") && move != recommendedMove);
@@ -205,13 +284,16 @@ function printOtherMoves(battleObj, battleKey, attacker, defender, attackChar, d
     for (let move of validMoves) {
         let moveDamageObj = calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move);
         //moveDamageObj is formatted as [moveObj, moveDamage, hitType]
-        if (moveDamageObj[1] == -1 || hasStatus(battleObj, battleKey, attacker, attackChar, "Stunned")) {
+        if (moveDamageObj[1] == -1 || hasStatus(battleObj, battleKey, attacker, attackChar, "Stunned") || hasStatus(battleObj, battleKey, attacker, attackChar, "Resting")) {
             continue;
         }
         if (moveDamageObj[0].type.includes("attack") && hasStatus(battleObj, battleKey, attacker, attackChar, "Pacified")) {
             continue;   
         }
         if (!moveDamageObj[0].type.includes("attack") && hasStatus(battleObj, battleKey, attacker, attackChar, "Taunted")) {
+            continue;
+        }
+        if (move == "Kabedon" && battleObj[battleKey][attacker].chars[attackChar].canUseKabedon != true) {
             continue;
         }
         if (hasStatus(battleObj, battleKey, defender, defenseChar, "Invulnerable")) {
@@ -227,21 +309,36 @@ function printOtherMoves(battleObj, battleKey, attacker, defender, attackChar, d
             moveDamageObjs.push(["Switch-in", {}, 0, '        ']);
         }
     }
-    let returnStr = "";
+    
     moveDamageObjs = moveDamageObjs.sort((a, b) => b[2] - a[2]);
     //moveDamageObj is formatted as [moveName, moveObj, moveDamage, hitType]
+    let printArr = [];
     for (let moveDamageObj of moveDamageObjs) {
-        returnStr += `\n${moveDamageObj[0]} `;
+        let moveName = moveDamageObj[0];
         let moveDamage = moveDamageObj[2];
-        if (moveDamage != 0) {
-            let maxVariance = 0.2;
-            let lowerBound = Math.max(round(moveDamage * (1 - maxVariance)), 0);
-            let upperBound = round(moveDamage * (1 + maxVariance));
-            let isFatal = '';
-            if (lowerBound >= battleObj[battleKey][defender].chars[defenseChar].resolve) {
-                isFatal = 'FATAL'
+        let isCritical = moveDamageObj[3];
+        let maxVariance = 0.2;
+        let lowerBound = Math.max(round(moveDamage * (1 - maxVariance)), 0);
+        let upperBound = round(moveDamage * (1 + maxVariance));
+        let isFatal = '';
+        if (lowerBound >= battleObj[battleKey][defender].chars[defenseChar].resolve) {
+            isFatal = 'FATAL'
+        }
+        printArr.push([moveName, lowerBound, upperBound, isCritical, isFatal]);
+    }
+    let nameLength = getMaxLength(printArr, 0);
+    let lowerBoundLength = getMaxLength(printArr, 1);
+    let upperBoundLength = getMaxLength(printArr, 2);
+    let returnStr = "";
+    if (printArr.length > 0) {
+        returnStr += `\nOther moves the player can make:`;
+        for (let moveArr of printArr) {
+            returnStr += `\n${moveArr[0]} ${" ".repeat(nameLength - moveArr[0].length)}`;
+            if (moveArr[1] > 0) {
+                returnStr += `(${moveArr[1]} ${" ".repeat(lowerBoundLength - moveArr[1].toString().length)}- `
+                          + `${moveArr[2]}${" ".repeat(upperBoundLength - moveArr[2].toString().length)}) `
+                          + `${moveArr[3]} ${moveArr[4]}`;
             }
-            returnStr += `(${lowerBound} - ${upperBound}) ${moveDamageObj[3]} ${isFatal}`;
         }
     }
     return returnStr;
