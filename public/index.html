@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Move Suggestor</title>
+</head>
+<body>
+    <h1>Server is running</h1>
+    <p>You can currently receive suggestions for battles.</p>
+    <div id="content"></div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        socket.on('new-data', (data) => {
+            const contentDiv = document.getElementById('content');
+            const newElement = document.createElement('div');
+            newElement.textContent = JSON.stringify(data);
+            contentDiv.appendChild(newElement);
+        });
+    </script>
+</body>
+</html>

@@ -3,7 +3,7 @@ The goal of this project is to create a program that will view battles in real-t
 
 The first thing you'll need to do is make Download MongoDB on Windows (I haven't tried downloading MongoDB on other Operating Systems) and make a MongoDB database. Call it "BattleData" and create collections "CharacterData", "ImageData", "UserCollections", and "BattleLogs" within it, like below (Note: you do not need the "Interactions" or "CriticalInteractions" collections):
 
-![Image of database](databasePicture.png)
+![Image of database](./images/databasePicture.png)
 
 You can then add data to the collections by importing the data stored in this repository's characterData folder. You can also add more data to your database by running the scripts in the updateDatabase folder- just follow the instructions at the top of the files.
 
@@ -15,9 +15,9 @@ config.json should look like this:
 }
 
 Once you have all that set up, you can run this program with:
-$ node 1.server.js
+$ node 1.server.mjs
 $ node 2.driver.mjs
 
 Whenever a battle occurs in a channel you have permission to view, recommendations will be printed to the corresponding file in the currentBattles directory, looking something like this:
 
-![Image of terminal](terminalPicture.png)
+![Image of terminal](./images/terminalPicture.png)
