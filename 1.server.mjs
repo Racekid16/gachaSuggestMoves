@@ -8,19 +8,18 @@
 // 4. in these scripts, when connecting to the mongoDB database, replace 127.0.0.1 with your windows host ip
 // in the case of this directory, change the ip Address in ipAddress.txt
 
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
-const { connectToDb, getDb } = require('./utilities/database');
-const fs = require('fs');
+import express from 'express';
+import cors from 'cors';
+import path from 'path';
+import { connectToDb, getDb } from './serverModules/database.mjs';
+import fs from 'fs';
+import getPixels from 'get-pixels';
 
 const server = express();
 server.use(express.json());
 
 const constsFile = './consts.json';
 const configFile = './config.json';
-//for extracting pixels from image
-const getPixels = require("get-pixels")
 const imageWidth = 328;
 
 //allow requests to be made to this server from any url

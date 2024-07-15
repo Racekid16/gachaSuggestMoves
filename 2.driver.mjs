@@ -3,7 +3,7 @@
 
 import { promises as fs } from 'fs';
 import path from 'path';
-import { startWsConnection } from "./utilities/websocket.mjs";
+import { startWsConnection } from "./driverModules/websocket.mjs";
 
 (async ()=> {
     await deleteAllFilesInDirectory('currentBattles');
