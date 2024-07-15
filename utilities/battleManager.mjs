@@ -8,7 +8,7 @@ import config from '../config.json' assert { type: 'json' };
 import consts from '../consts.json' assert { type: 'json' };
 const delay = async (ms = 1000) =>  new Promise(resolve => setTimeout(resolve, ms));
 
-export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
+export async function createBattle(battleObj, p1name, p2name, battleEmbed, messageLink) {
     let battleKey = p1name + " vs. " + p2name;
     let turnResults = battleEmbed.fields[2].value;
     battleObj[battleKey] = {};
@@ -26,7 +26,8 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
     }
 
     console.log(`${battleKey} started`);
-    battleObj[battleKey].log(`${battleKey} started at ${battleObj[battleKey].time}\n`);
+    battleObj[battleKey].log(`${battleKey} started at ${battleObj[battleKey].time}`);
+    battleObj[battleKey].log(`Link: ${messageLink}\n`);
 
     let promise1 = addPlayerToBattle(battleObj, battleKey, p1name, 1, turnResults, null);
     let promise2 = addPlayerToBattle(battleObj, battleKey, p2name, 2, turnResults, null);
@@ -49,7 +50,7 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed) {
     parseTurnResults(battleObj, p1name, p2name, battleEmbed);
 }
 
-export async function createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL, stage) {
+export async function createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL, messageLink, stage) {
     let response = await fetchWithRetry(`https://discord.com/api/v9/guilds/${consts.serverID}/members/${playerID}`, {
         method: 'GET',
         headers: {
@@ -77,7 +78,8 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
     }
     
     console.log(`${battleKey} (Campaign Stage ${stage}) started`);
-    battleObj[battleKey].log(`${battleKey} (Campaign Stage ${stage}) started at ${battleObj[battleKey].time}\n`);
+    battleObj[battleKey].log(`${battleKey} (Campaign Stage ${stage}) started at ${battleObj[battleKey].time}`);
+    battleObj[battleKey].log(`Link: ${messageLink}\n`);
 
     battleObj[battleKey][botName] = {};
     battleObj[battleKey][botName].chars = {};

@@ -39,6 +39,7 @@ export function handleWsData(battleObj, responseJSON) {
         let botName = "2.Chairman Sakayanagi";
         let playerID = responseJSON.d.interaction_metadata.user.id;
         let botPartyImageURL = responseJSON.d.embeds[0].image.proxy_url + 'format=png&width=328&height=254';
+        let messageLink = `https://discord.com/channels/${responseJSON.d.guild_id}/${responseJSON.d.channel_id}/${responseJSON.d.id}`;
         let stage = /Campaign Stage (\d+)/.exec(responseJSON.d.embeds[0].author.name)[1];
         let battleKey = playerName + " vs. " + botName;
         if (typeof battleObj[battleKey] !== 'undefined') {
@@ -48,7 +49,7 @@ export function handleWsData(battleObj, responseJSON) {
             console.log(`${battleKey} not being tracked; Stage ${stage} is excluded`);
             return;
         }
-        createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL, stage);
+        createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL, messageLink, stage);
     }
 
     // request a player's party for a campaign battle when it starts
@@ -102,7 +103,8 @@ async function processBattleEmbed(battleObj, responseJSON, battleEmbed) {
     let turn = parseInt(battleEmbed.fields[2].name.substring(battleEmbed.fields[2].name.indexOf('__Turn ') + 7, battleEmbed.fields[2].name.length - 2));
 
     if (typeof battleObj[battleKey] === 'undefined' && turn == 1 && responseJSON.d.interaction.name != 'campaign') {
-        createBattle(battleObj, p1name, p2name, battleEmbed);
+        let messageLink = `https://discord.com/channels/${responseJSON.d.guild_id}/${responseJSON.d.channel_id}/${responseJSON.d.id}`;
+        createBattle(battleObj, p1name, p2name, battleEmbed, messageLink);
         return;
     }
 
