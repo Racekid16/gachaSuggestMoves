@@ -19,11 +19,13 @@ import BattleLogsRouter from './serverModules/BattleLogsRouter.mjs';
 import CharacterDataRouter from './serverModules/CharacterDataRouter.mjs';
 import ImageDataRouter from './serverModules/ImageDataRouter.mjs';
 import UserCollectionsRouter from './serverModules/UserCollectionsRouter.mjs';
+import socketRouter from './serverModules/socketRouter.mjs';
 import consts from './consts.json' assert { type: 'json' };
 import config from './config.json' assert { type: 'json' };
 
-let sharedData = {
-    database: null
+const sharedData = {
+    database: null,
+    io: null
 }
 
 const app = express();
@@ -34,9 +36,10 @@ app.use('/BattleLogs', BattleLogsRouter(sharedData));
 app.use('/CharacterData', CharacterDataRouter(sharedData));
 app.use('/ImageData', ImageDataRouter(sharedData));
 app.use('/UserCollections', UserCollectionsRouter(sharedData));
+app.use('/socket', socketRouter(sharedData));
 
 const server = http.createServer(app);
-const io = new SocketIOServer(server);
+sharedData.io = new SocketIOServer(server);
 
 connectToDb((error) => {
     if (!error) {
@@ -65,9 +68,9 @@ app.get("/getToken", (req, res) => {
     res.status(200).send({token: token});
 });
 
-io.on('connection', (socket) => {
-  console.log('A user connected');
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
-  });
+sharedData.io.on('connection', (socket) => {
+    console.log('A user connected');
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+    });
 });
