@@ -1,9 +1,11 @@
 const socket = io(`http://127.0.0.1:2700`);
+let tabsToDelete = [];
 
-console.log('Client websocket is connecting to server...');
+console.log('Establishing websocket connection to the server...');
 
 socket.on('connect', () => {
     console.log('Connected to the server!');
+    updateHomeVisibility();
 })
 
 socket.on('disconnect', () => {
@@ -16,6 +18,7 @@ socket.on('connect_error', (error) => {
 
 socket.on('battleStart', (data) => {
     createTab(data.battleKey, data.time, data.link);
+    updateHomeVisibility();
 });
 
 socket.on('playerParty', (data) => {
@@ -24,6 +27,7 @@ socket.on('playerParty', (data) => {
 
 socket.on('battleEnd', (data) => {
     deleteTab(data.battleKey);
+    updateHomeVisibility();
 });
 
 socket.on('turnResults', (data) => {
@@ -35,11 +39,19 @@ socket.on('suggestedMoves', (data) => {
 });
 
 function showTab(battleKey) {
+    const selectedTab = document.getElementById(`${battleKey}-content`);
+    let tabActive = selectedTab.classList.contains('active');
     const tabs = document.querySelectorAll('.tab-content');
     tabs.forEach(tab => {
         tab.classList.remove('active');
     });
-    document.getElementById(`${battleKey}-content`).classList.add('active');
+    if (!tabActive) {
+        selectedTab.classList.add('active');
+    }
+    for (let key of tabsToDelete) {
+        deleteTab(key);
+    }
+    updateHomeVisibility();
 }
 
 function createTab(battleKey, time, battleLink) {
@@ -64,9 +76,32 @@ function deleteTab(battleKey) {
     const tabButton = document.getElementById(`${battleKey}-button`);
     const tabContent = document.getElementById(`${battleKey}-content`);
 
-    if (tabButton) tabButton.remove();
-    if (tabContent) tabContent.remove();
+    if (tabButton && tabContent) {
+        if (!tabContent.classList.contains('active')) {
+            tabButton.remove();
+            tabContent.remove();
+        } else if (!tabsToDelete.includes(battleKey)) {
+            tabsToDelete.push(battleKey);
+        }
+    }
 }
+
+function updateHomeVisibility() {
+    const homeContent = document.getElementById('home-content');
+    const numTabs = document.querySelectorAll('.tab-button').length;
+    const activeTabs = document.querySelectorAll('.tab-content.active').length;
+    if (activeTabs === 0) {
+        homeContent.style.display = 'block';
+        if (numTabs == 0) {
+            homeContent.textContent = "A program that tracks gacha battles in real time, updates boosts and statuses, calculates stats, and suggests moves.\nClickable tabs representing battles will appear once a battle begins.";
+        } else {
+            homeContent.textContent = "A program that tracks gacha battles in real time, updates boosts and statuses, calculates stats, and suggests moves.\nClick on a tab to receive move suggestions for that battle.";
+        }
+    } else {
+        homeContent.style.display = 'none';
+    }
+};
+
 
 function addPlayerParty(battleObj, battleKey, playerName, partyJSON, hasStrength) {
     const tabContent = document.getElementById(`${battleKey}-content`);

@@ -113,7 +113,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                 }, ["empty", { resolve: 9999 }]);
 
             if (lowestResolveTeammate != "empty") {
-                if (typeof attackerResolves !== 'undefined' && attackerResolves[lowestResolveTeammate] != 0) {
+                if (typeof attackerResolves !== 'undefined' && typeof attackerResolves[lowestResolveTeammate] != 'undefined' && attackerResolves[lowestResolveTeammate] != 0) {
                     console.log(`Program expected ${attacker}'s ${lowestResolveTeammate} in turn ${turn} of ${battleKey} to die, but they didn't.`);
                     console.log(attackerResolves);
                 }

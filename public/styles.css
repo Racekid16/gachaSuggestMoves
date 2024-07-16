@@ -1,10 +1,13 @@
+body {
+    font-family: 'Arial', sans-serif;
+}
 .tab-content {
     display: none;
 }
 .tab-content.active {
     display: block;
 }
-.tab-buttons-container {
+#tab-buttons-container {
     margin-bottom: 20px;
 }
 .tab-button {
