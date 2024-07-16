@@ -25,6 +25,18 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed, messa
         fs.appendFileSync(`currentBattles/${battleKey}.txt`, str + "\n", (err) => {if (err) { throw err; }});
     }
 
+    fetch(`http://127.0.0.1:${consts.port}/socket/battleStart`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            battleKey: battleKey,
+            time: battleObj[battleKey].time,
+            link: messageLink
+        })
+    });
+
     console.log(`${battleKey} started`);
     battleObj[battleKey].log(`${battleKey} started at ${battleObj[battleKey].time}`);
     battleObj[battleKey].log(`Link: ${messageLink}\n`);
@@ -46,7 +58,7 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed, messa
 
     verifyPlayerResolves(battleObj, battleKey, p1name, 1, battleEmbed);
     verifyPlayerResolves(battleObj, battleKey, p2name, 2, battleEmbed);
-
+    
     parseTurnResults(battleObj, p1name, p2name, battleEmbed);
 }
 
@@ -76,6 +88,18 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
         this.data += str + "\n";
         fs.appendFileSync(`currentBattles/${battleKey}.txt`, str + "\n", (err) => {if (err) { throw err; }});
     }
+
+    fetch(`http://127.0.0.1:${consts.port}/socket/battleStart`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            battleKey: battleKey,
+            time: battleObj[battleKey].time,
+            link: messageLink
+        })
+    });
     
     console.log(`${battleKey} (Campaign Stage ${stage}) started`);
     battleObj[battleKey].log(`${battleKey} (Campaign Stage ${stage}) started at ${battleObj[battleKey].time}`);
@@ -137,6 +161,17 @@ export function deleteBattle(battleObj, p1name, p2name, turnResults) {
     battleObj.currentBattles.splice(battleObj.currentBattles.findIndex((arr) => {
         arr[2] == p1name && arr[3] == p2name
     }));
+
+    fetch(`http://127.0.0.1:${consts.port}/socket/battleEnd`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            battleKey: battleKey
+        })
+    });
+
     delete battleObj[battleKey];
     
 }

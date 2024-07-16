@@ -135,7 +135,7 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
     let p1printFatal = p1lowerBound >= p2resolve ? 'FATAL' : '';
     let p2printFatal = p2lowerBound >= p1resolve ? 'FATAL' : '';
 
-    let p1Output =  `${p1name} ${" ".repeat(playerNameLength - p1name.length)}` 
+    let p1output =  `${p1name} ${" ".repeat(playerNameLength - p1name.length)}` 
                   + `[${p1printInflict}${" ".repeat(inflictLength - p1printInflict.length)}`
                   + `${p1printReceive}${" ".repeat(receiveLength - p1printReceive.length)}`
                   + `${p1char}${" ".repeat(charNameLength - p1char.length)} `
@@ -146,13 +146,13 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
                   + `❤️${p1resolve}${" ".repeat(resolveLength - p1resolve.toString().length)}]: `
                   + `${p1move} ${" ".repeat(moveNameLength - p1move.length)}`;
     if (p1damage != 0) {
-        p1Output += `(${p1lowerBound} ${" ".repeat(lowerBoundLength - p1lowerBound.toString().length)}- `
+        p1output += `(${p1lowerBound} ${" ".repeat(lowerBoundLength - p1lowerBound.toString().length)}- `
                   + `${p1upperBound}${" ".repeat(upperBoundLength - p1upperBound.toString().length)}) `
                   + `${p1hitType} ${p1printFatal}`;
     }
-    p1Output += printCharacterOtherInformation(battleObj, battleKey, p1name, p2name, p1char, p2char, p1moveSequence, p1move, turn);
+    p1output += printCharacterOtherInformation(battleObj, battleKey, p1name, p2name, p1char, p2char, p1moveSequence, p1move, turn);
             
-    let p2Output =  `${p2name} ${" ".repeat(playerNameLength - p2name.length)}`
+    let p2output =  `${p2name} ${" ".repeat(playerNameLength - p2name.length)}`
                   + `[${p2printInflict}${" ".repeat(inflictLength - p2printInflict.length)}`
                   + `${p2printReceive}${" ".repeat(receiveLength - p2printReceive.length)}`
                   + `${p2char}${" ".repeat(charNameLength - p2char.length)} `
@@ -163,31 +163,43 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
                   + `❤️${p2resolve}${" ".repeat(resolveLength - p2resolve.toString().length)}]: `
                   + `${p2move} ${" ".repeat(moveNameLength - p2move.length)}`
     if (p2damage != 0) {
-        p2Output += `(${p2lowerBound} ${" ".repeat(lowerBoundLength - p2lowerBound.toString().length)}- `
+        p2output += `(${p2lowerBound} ${" ".repeat(lowerBoundLength - p2lowerBound.toString().length)}- `
                   + `${p2upperBound}${" ".repeat(upperBoundLength - p2upperBound.toString().length)}) `
                   + `${p2hitType} ${p2printFatal}`;
     }
-    p2Output += printCharacterOtherInformation(battleObj, battleKey, p2name, p1name, p2char, p1char, p2moveSequence, p2move, turn);
+    p2output += printCharacterOtherInformation(battleObj, battleKey, p2name, p1name, p2char, p1char, p2moveSequence, p2move, turn);
     
     let p1priority = p1moveObj.priority;
     let p2priority = p2moveObj.priority;
+
+    let suggestedMovesOutput = "";
     
     if (p1priority > p2priority) {
-        battleObj[battleKey].log(p1Output);
-        battleObj[battleKey].log(p2Output);
+        suggestedMovesOutput = p1output + "\n" + p2output;
     }
     else if (p2priority > p1priority) {
-        battleObj[battleKey].log(p2Output);
-        battleObj[battleKey].log(p1Output);
+        suggestedMovesOutput = p2output + "\n" + p1output; 
     }
     else if (p1initiative >= p2initiative) {
-        battleObj[battleKey].log(p1Output);
-        battleObj[battleKey].log(p2Output);
+        suggestedMovesOutput = p1output + "\n" + p2output;
     } 
     else {    //p1initiative < p2initiative
-        battleObj[battleKey].log(p2Output);
-        battleObj[battleKey].log(p1Output);
+        suggestedMovesOutput = p2output + "\n" + p1output;
     }
+
+    battleObj[battleKey].log(suggestedMovesOutput);
+
+    //TODO: finish this, this is just temporary
+    fetch(`http://127.0.0.1:${consts.port}/socket/suggestedMoves`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            battleKey: battleKey,
+            text: suggestedMovesOutput
+        })
+    });
 }
 
 function getMaxLength(chars, property) {
@@ -242,7 +254,7 @@ function printModifiers(battleObj, battleKey, playerName, charName, turn) {
             returnStr += `+${damageBuffs[0].amount * 100}% damage ${damageBuffs[0].endTurn - turn}`;
         }
         for (let i = startIndex; i < damageBuffs.length; i++) {
-            returnStr += `, +${damageBuffs[0].amount * 100}% damage ${damageBuffs[i].endTurn - turn}`;
+            returnStr += `, +${damageBuffs[i].amount * 100}% damage ${damageBuffs[i].endTurn - turn}`;
         }
     }
     if (receiveBuffs.length > 0) {
@@ -251,7 +263,7 @@ function printModifiers(battleObj, battleKey, playerName, charName, turn) {
             returnStr += `${receiveBuffs[0].amount * 100}% damage received ${receiveBuffs[0].endTurn - turn}`;
         }
         for (let i = startIndex; i < receiveBuffs.length; i++) {
-            returnStr += `, ${receiveBuffs[0].amount * 100}% damage received ${receiveBuffs[i].endTurn - turn}`;
+            returnStr += `, ${receiveBuffs[i].amount * 100}% damage received ${receiveBuffs[i].endTurn - turn}`;
         }
     }
     const positiveStatuses = battleObj[battleKey][playerName].chars[charName].positiveStatuses;

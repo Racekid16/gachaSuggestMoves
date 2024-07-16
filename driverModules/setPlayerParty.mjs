@@ -194,6 +194,20 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
     applyBoosts(battleObj, battleKey, playerName);
     printParty(battleObj, battleKey, playerName, partyJSON, hasStrength);
 
+    fetch(`http://127.0.0.1:${consts.port}/socket/playerParty`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            battleObj: battleObj,
+            battleKey: battleKey,
+            playerName: playerName,
+            partyJSON: partyJSON,
+            hasStrength: hasStrength
+        })
+    });
+
     for (let charKey in battleObj[battleKey][playerName].chars) {
         let thisChar = battleObj[battleKey][playerName].chars[charKey];
         if (thisChar.active) {

@@ -30,27 +30,27 @@ function findOptimalSequenceNoDefender(battleObj, battleKey, attacker, defender,
 
     function makeSequencesNoDefender(battleObj, battleKey, attacker, defender, attackChar, defenseChar, validMovesObjs, sequence, turn, boostTurns, maxBoostTurns) {
         for (let moveObj of validMovesObjs) {
-            let tempBattleObj = structuredClone(battleObj);
-            if (tempBattleObj[battleKey][defender].chars[defenseChar].resolve <= 0) {
+            let tempbattleObj = structuredClone(battleObj);
+            if (tempbattleObj[battleKey][defender].chars[defenseChar].resolve <= 0) {
                 results.push([...sequence, battleObj[battleKey][defender].chars[defenseChar].resolve]);
                 return;
             }
             if (moveObj.type.includes("attack")) {
                 let highestDamageMove = attackMoves.reduce((maxMove, currentMove) => {
-                    let maxMoveDamage = calculateMoveDamage(tempBattleObj, battleKey, attacker, defender, attackChar, defenseChar, maxMove)[1];
-                    let currentMoveDamage = calculateMoveDamage(tempBattleObj, battleKey, attacker, defender, attackChar, defenseChar, currentMove)[1];
+                    let maxMoveDamage = calculateMoveDamage(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, maxMove)[1];
+                    let currentMoveDamage = calculateMoveDamage(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, currentMove)[1];
                     return currentMoveDamage > maxMoveDamage && !consts.moveInfo[currentMove].hasNegativeImpact ? currentMove : maxMove;
                 });
-                let highestDamage = calculateMoveDamage(tempBattleObj, battleKey, attacker, defender, attackChar, defenseChar, highestDamageMove)[1];
-                let moveDamage = calculateMoveDamage(tempBattleObj, battleKey, attacker, defender, attackChar, defenseChar, moveObj.name)[1];
+                let highestDamage = calculateMoveDamage(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, highestDamageMove)[1];
+                let moveDamage = calculateMoveDamage(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, moveObj.name)[1];
                 //only allow highest damaging move
                 if (moveDamage <= 0 || moveDamage < highestDamage) {
                     continue;
                 }
                 sequence.push(moveObj.name);
-                emulateTurnAction(tempBattleObj, battleKey, attacker, defender, attackChar, defenseChar, turn, moveObj.name);
-                emulateTurnEnd(tempBattleObj, battleKey, attacker, defender, turn);
-                makeSequencesNoDefender(tempBattleObj, battleKey, attacker, defender, attackChar, defenseChar, validMovesObjs, sequence, turn + 1, 0, maxBoostTurns);
+                emulateTurnAction(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, turn, moveObj.name);
+                emulateTurnEnd(tempbattleObj, battleKey, attacker, defender, turn);
+                makeSequencesNoDefender(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, validMovesObjs, sequence, turn + 1, 0, maxBoostTurns);
                 sequence.pop();
             } 
             else if (moveObj.type.includes("boost")) {
@@ -59,25 +59,25 @@ function findOptimalSequenceNoDefender(battleObj, battleKey, attacker, defender,
                 }
                 let targetPlayer = moveObj.target == "attacker" ? attacker : defender;
                 let targetChar = targetPlayer == attacker ? attackChar : defenseChar;
-                if (hasBoost(tempBattleObj, battleKey, targetPlayer, targetChar, moveObj.name) && moveObj.stacks === false) {
+                if (hasBoost(tempbattleObj, battleKey, targetPlayer, targetChar, moveObj.name) && moveObj.stacks === false) {
                     continue;
                 }
                 sequence.push(moveObj.name);
-                emulateTurnAction(tempBattleObj, battleKey, attacker, defender, attackChar, defenseChar, turn, moveObj.name);
-                emulateTurnEnd(tempBattleObj, battleKey, attacker, defender, turn);
-                makeSequencesNoDefender(tempBattleObj, battleKey, attacker, defender, attackChar, defenseChar, validMovesObjs, sequence, turn + 1, boostTurns + 1, maxBoostTurns);
+                emulateTurnAction(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, turn, moveObj.name);
+                emulateTurnEnd(tempbattleObj, battleKey, attacker, defender, turn);
+                makeSequencesNoDefender(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, validMovesObjs, sequence, turn + 1, boostTurns + 1, maxBoostTurns);
                 sequence.pop();
             }
         }
     }
 
-    let tempBattleObj = {};
+    let tempbattleObj = {};
     let loggingFunc = battleObj[battleKey].log;
     delete battleObj[battleKey].log;
     let battleClone = structuredClone(battleObj[battleKey]);
-    tempBattleObj[battleKey] = battleClone;
+    tempbattleObj[battleKey] = battleClone;
     battleObj[battleKey].log = loggingFunc;
-    makeSequencesNoDefender(tempBattleObj, battleKey, attacker, defender, attackChar, defenseChar, validMovesObjs, [], turn, 0, maxBoostTurns);
+    makeSequencesNoDefender(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, validMovesObjs, [], turn, 0, maxBoostTurns);
     //only allow shortest sequences
     let shortestResultLength = results.reduce((shortest, current) => current.length < shortest.length ? current : shortest).length;
     let bestSequences = results.filter((sequence) => sequence.length == shortestResultLength);
@@ -132,24 +132,24 @@ function simulateSequences(battleObj, p1name, p2name, p1char, p2char, turn, p1se
     console.log(p1name, tempP1sequence);
     console.log(p2name, tempP2sequence);
 
-    let tempBattleObj = {};
+    let tempbattleObj = {};
     let loggingFunc = battleObj[battleKey].log;
     delete battleObj[battleKey].log;
     let battleClone = structuredClone(battleObj[battleKey]);
-    tempBattleObj[battleKey] = battleClone;
+    tempbattleObj[battleKey] = battleClone;
     battleObj[battleKey].log = loggingFunc;
 
     while (tempP1sequence.length != 0 && tempP2sequence.length != 0) {
         let p1move = tempP1sequence.shift();
         let p2move = tempP2sequence.shift();
-        emulateTurnMoves(tempBattleObj, battleKey, p1name, p2name, p1char, p2char, turn, p1move, p2move);
-        emulateTurnEnd(tempBattleObj, battleKey, p1name, p2name, turn);
+        emulateTurnMoves(tempbattleObj, battleKey, p1name, p2name, p1char, p2char, turn, p1move, p2move);
+        emulateTurnEnd(tempbattleObj, battleKey, p1name, p2name, turn);
     }
     if (tempP1sequence.length > tempP2sequence.length) {
-        console.log(p2name, "would win and have", tempBattleObj[battleKey][p2name].chars[p2char].resolve, "resolve remaining.");
+        console.log(p2name, "would win and have", tempbattleObj[battleKey][p2name].chars[p2char].resolve, "resolve remaining.");
         return [p2name, p1name];
     }
-    console.log(p1name, "would win and have", tempBattleObj[battleKey][p1name].chars[p1char].resolve, "resolve remaining.");
+    console.log(p1name, "would win and have", tempbattleObj[battleKey][p1name].chars[p1char].resolve, "resolve remaining.");
     return [p1name, p2name];
 }
 

@@ -7,6 +7,7 @@ import { removeExpiredDamageModifiers, applyDamageModifiers } from "./updateDama
 import { suggestMoves } from "./suggestMove.mjs";
 import { emulateMove, emulateAction } from "./emulateMove.mjs";
 import { applyTransformation } from "./transform.mjs";
+import consts from '../consts.json' assert { type: 'json' };
 
 // identify changes in stats or statuses then update the battleObj accordingly
 export async function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
@@ -23,6 +24,18 @@ export async function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
     let p2taggedInChar = getCurrentChar(2, battleEmbed);
 
     battleObj[battleKey].log(`Turn ${turn}:\n${turnResults}`);
+
+    fetch(`http://127.0.0.1:${consts.port}/socket/turnResults`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            battleKey: battleKey,
+            turn: turn,
+            turnResults: turnResults
+        })
+    });
 
     applyInnateAbilities(battleObj, battleKey, p1name, p2name, p1char, p2char, turnResults, turn, p1resolvesAfterTurn);
     applyInnateAbilities(battleObj, battleKey, p2name, p1name, p2char, p1char, turnResults, turn, p2resolvesAfterTurn);

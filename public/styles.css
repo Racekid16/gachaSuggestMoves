@@ -1,0 +1,14 @@
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
+.tab-buttons-container {
+    margin-bottom: 20px;
+}
+.tab-button {
+    margin-right: 10px;
+    padding: 10px;
+    cursor: pointer;
+}

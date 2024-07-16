@@ -15,6 +15,10 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
         }
     }
 
+    if (consts.moveInfo[move]?.type[0] == "attack" && battleObj[battleKey][attacker].chars[attackChar].moves.includes("Aspect Of Fire")) {
+        addStatus(battleObj, battleKey, defender, defenseChar, "Burning", turn, 1);
+    }
+
     let attackerID = battleObj[battleKey][attacker].id;
 
     switch (move) {
