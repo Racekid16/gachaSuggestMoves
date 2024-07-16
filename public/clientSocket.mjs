@@ -1,3 +1,6 @@
+//code for the client to handle receiving data on the websocket
+import { createPartyFlexBox, createSuggestedMoveFlexBox } from './createFlexBoxes.mjs'
+
 const socket = io(`http://127.0.0.1:2700`);
 let tabsToDelete = [];
 
@@ -22,7 +25,8 @@ socket.on('battleStart', (data) => {
 });
 
 socket.on('playerParty', (data) => {
-    addPlayerParty(data.battleObj, data.battleKey, data.playerName, data.partyJSON, data.hasStrength);
+    const highQualityImageURL = data.imageURL.replace('format=png&width=328&height=254', "");
+    addPlayerParty(data.battleObj, data.battleKey, data.playerName, data.hasStrength, data.partyJSON, highQualityImageURL);
 });
 
 socket.on('battleEnd', (data) => {
@@ -38,15 +42,21 @@ socket.on('suggestedMoves', (data) => {
     addSuggestedMoves(data.battleKey, data.text);
 });
 
-function showTab(battleKey) {
-    const selectedTab = document.getElementById(`${battleKey}-content`);
-    let tabActive = selectedTab.classList.contains('active');
-    const tabs = document.querySelectorAll('.tab-content');
-    tabs.forEach(tab => {
-        tab.classList.remove('active');
+function toggleTab(battleKey) {
+    const selectedTabButton = document.getElementById(`${battleKey}-button`);
+    const selectedTabContent = document.getElementById(`${battleKey}-content`);
+    let tabActive = selectedTabButton.classList.contains('active');
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(tabButton => {
+        tabButton.classList.remove('active');
+    });
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabContents.forEach(tabContent => {
+        tabContent.classList.remove('active');
     });
     if (!tabActive) {
-        selectedTab.classList.add('active');
+        selectedTabButton.classList.add('active');
+        selectedTabContent.classList.add('active');
     }
     for (let key of tabsToDelete) {
         deleteTab(key);
@@ -62,14 +72,18 @@ function createTab(battleKey, time, battleLink) {
     tabButton.className = 'tab-button';
     tabButton.id = `${battleKey}-button`
     tabButton.textContent = battleKey;
-    tabButton.onclick = () => showTab(battleKey);
+    tabButton.onclick = () => toggleTab(battleKey);
     tabButtonsContainer.appendChild(tabButton);
 
     const tabContent = document.createElement('div');
     tabContent.id = `${battleKey}-content`;
     tabContent.className = 'tab-content';
-    tabContent.innerHTML = `<h2>${battleKey}</h2>`;
+    tabContent.innerHTML = `<h2><a href="${battleLink}" target="_blank">${battleKey}</a></h2>`;
     tabContentContainer.appendChild(tabContent);
+
+    const battleInformation = document.createElement('div');
+    battleInformation.innerHTML = `started at ${time}<br>`;
+    tabContent.append(battleInformation);
 }
 
 function deleteTab(battleKey) {
@@ -77,9 +91,10 @@ function deleteTab(battleKey) {
     const tabContent = document.getElementById(`${battleKey}-content`);
 
     if (tabButton && tabContent) {
-        if (!tabContent.classList.contains('active')) {
+        if (!tabButton.classList.contains('active')) {
             tabButton.remove();
             tabContent.remove();
+            tabsToDelete = tabsToDelete.filter(key => key != battleKey);
         } else if (!tabsToDelete.includes(battleKey)) {
             tabsToDelete.push(battleKey);
         }
@@ -89,7 +104,7 @@ function deleteTab(battleKey) {
 function updateHomeVisibility() {
     const homeContent = document.getElementById('home-content');
     const numTabs = document.querySelectorAll('.tab-button').length;
-    const activeTabs = document.querySelectorAll('.tab-content.active').length;
+    const activeTabs = document.querySelectorAll('.tab-button.active').length;
     if (activeTabs === 0) {
         homeContent.style.display = 'block';
         if (numTabs == 0) {
@@ -102,24 +117,37 @@ function updateHomeVisibility() {
     }
 };
 
-
-function addPlayerParty(battleObj, battleKey, playerName, partyJSON, hasStrength) {
+function addPlayerParty(battleObj, battleKey, playerName, hasStrength, partyJSON, imageURL) {
     const tabContent = document.getElementById(`${battleKey}-content`);
     const newElement = document.createElement('div');
-    newElement.textContent = JSON.stringify(partyJSON);
+    const partyLabel = document.createElement('div');
+
+    if (!hasStrength) {
+        partyLabel.innerHTML = `<b>${playerName}</b>'s party`
+    } else {
+        partyLabel.innerHTML = `<b>${playerName}</b>'s party (Strength 3: +10% to stats)`
+    }    
+    const partyTable = createPartyFlexBox(battleObj, battleKey, playerName, partyJSON, imageURL);
+
+    newElement.appendChild(partyLabel);
+    newElement.appendChild(partyTable);
+    newElement.appendChild(document.createElement('br'));
     tabContent.appendChild(newElement);
 }
 
 function addTurnResults(battleKey, turn, turnResults) {
     const tabContent = document.getElementById(`${battleKey}-content`);
     const newElement = document.createElement('div');
-    newElement.textContent = `Turn ${turn}:\n${turnResults}`;
+    newElement.innerHTML = `Turn ${turn}:\n${turnResults}`
+                           .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
+                           .replace(/\n/g, '<br>')
+                           + '<br><br>';
     tabContent.appendChild(newElement);
 }
 
 function addSuggestedMoves(battleKey, text) {
     const tabContent = document.getElementById(`${battleKey}-content`);
     const newElement = document.createElement('div');
-    newElement.textContent = text;
+    newElement.innerHTML = text.replace(/\n/g, '<br>') + '<br><br>';
     tabContent.appendChild(newElement);
 }

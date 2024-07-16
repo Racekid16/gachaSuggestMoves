@@ -9,11 +9,15 @@
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-    <h1>Tommy3's Move Suggestor</h1>
+    <div id="banner">
+        <img src="/images/shark.png" alt="shark.png">
+        <h1>Tommy3's Move Suggestor</h1>
+    </div>
     <div id="tab-buttons-container"></div>
     <div id="tab-content-container"></div>
     <div id="home-content"></div>
     <script src="/socket.io/socket.io.js"></script>
-    <script type="module" src="/clientSocket.js"></script>
+    <script type="module" src="/clientSocket.mjs"></script>
+    <script type="module" src="/createTables.mjs"></script>
 </body>
 </html>

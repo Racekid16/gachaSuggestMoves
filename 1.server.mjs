@@ -69,7 +69,7 @@ app.get("/getToken", (req, res) => {
 });
 
 sharedData.io.on('connection', (socket) => {
-    console.log('A user connected');
+    console.log('User connected');
     socket.on('disconnect', () => {
         console.log('User disconnected');
     });

@@ -203,8 +203,9 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
             battleObj: battleObj,
             battleKey: battleKey,
             playerName: playerName,
+            hasStrength: hasStrength,
             partyJSON: partyJSON,
-            hasStrength: hasStrength
+            imageURL: imageURL
         })
     });
 
