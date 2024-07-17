@@ -12,7 +12,7 @@ socket.on('connect', () => {
     const homeButton = document.getElementById('Home-button');
     const homeContent = document.getElementById('Home-content');
     const programInformation = document.createElement('div');
-    programInformation.innerHTML = "A program that tracks gacha battles in real time, updates boosts and statuses, calculates stats, and suggests moves.\nClick on a tab to receive move suggestions for that battle.";
+    programInformation.innerHTML = "This is a program that tracks gacha battles in real time, updates boosts and statuses, calculates stats, and suggests moves.<br>Click on a tab to view move suggestions for that battle.";
     homeContent.appendChild(programInformation);
     homeButton.click();
 })
@@ -26,13 +26,13 @@ socket.on('connect_error', (error) => {
 });
 
 socket.on('battleStart', (data) => {
+    deleteTab(data.battleKey, true);
     createTab(data.battleKey, data.time, data.link);
     addBattleStartToHome(data.battleKey, data.time, data.link);
 });
 
 socket.on('playerParty', (data) => {
-    const highQualityImageURL = data.imageURL.replace('format=png&width=328&height=254', "");
-    addPlayerParty(data.battleObj, data.battleKey, data.playerName, data.hasStrength, data.partyJSON, highQualityImageURL);
+    addPlayerParty(data.battleObj, data.battleKey, data.playerNumber, data.playerName, data.hasStrength, data.partyJSON);
 });
 
 socket.on('battleEnd', (data) => {
@@ -96,12 +96,12 @@ function createTab(battleKey, time, battleLink) {
     }
 }
 
-function deleteTab(battleKey) {
+function deleteTab(battleKey, force=false) {
     const tabButton = document.getElementById(`${battleKey}-button`);
     const tabContent = document.getElementById(`${battleKey}-content`);
 
     if (tabButton && tabContent) {
-        if (!tabButton.classList.contains('active')) {
+        if (!tabButton.classList.contains('active') || force) {
             tabButton.remove();
             tabContent.remove();
             tabsToDelete = tabsToDelete.filter(key => key != battleKey);
@@ -133,7 +133,7 @@ function scrollToBottom(battleKey) {
     tabContent.scrollTop = tabContent.scrollHeight;
 }
 
-function addPlayerParty(battleObj, battleKey, playerName, hasStrength, partyJSON, imageURL) {
+function addPlayerParty(battleObj, battleKey, playerNumber, playerName, hasStrength, partyJSON) {
     const tabContent = document.getElementById(`${battleKey}-content`);
     const newElement = document.createElement('div');
     const partyLabel = document.createElement('div');
@@ -143,11 +143,10 @@ function addPlayerParty(battleObj, battleKey, playerName, hasStrength, partyJSON
     } else {
         partyLabel.innerHTML = `<b>${playerName}</b>'s party (Strength 3: +10% to stats)`
     }    
-    const partyFlexBox = createPartyFlexBox(battleObj, battleKey, playerName, partyJSON, imageURL);
+    const partyFlexBox = createPartyFlexBox(battleObj, battleKey, playerNumber, playerName, partyJSON);
 
     newElement.appendChild(partyLabel);
     newElement.appendChild(partyFlexBox);
-    newElement.appendChild(document.createElement('br'));
     tabContent.appendChild(newElement);
 }
 

@@ -6,7 +6,8 @@ import path from 'path';
 import { startWsConnection } from "./driverModules/websocket.mjs";
 
 (async ()=> {
-    await deleteAllFilesInDirectory('currentBattles');
+    await deleteAllFilesInDirectory('./currentBattles');
+    await deleteAllFilesInDirectory('./website/partyImages');
     let battleObj = {
         currentBattles: [],
         usernames: {},

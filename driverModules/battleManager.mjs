@@ -19,10 +19,10 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed, messa
     battleObj.currentBattles.push([new Date().getTime(), 'battle', p1name, p2name, battleEmbed]);
     
     //create a new file for this battle
-    fs.writeFileSync(`currentBattles/${battleKey}.txt`, '', (err) => {if (err) { throw err; }});
+    fs.writeFileSync(`./currentBattles/${battleKey}.txt`, '', (err) => {if (err) { throw err; }});
     battleObj[battleKey].log = function (str) {
         this.data += str + "\n";
-        fs.appendFileSync(`currentBattles/${battleKey}.txt`, str + "\n", (err) => {if (err) { throw err; }});
+        fs.appendFileSync(`./currentBattles/${battleKey}.txt`, str + "\n", (err) => {if (err) { throw err; }});
     }
 
     fetch(`http://127.0.0.1:${consts.port}/socket/battleStart`, {
@@ -83,10 +83,10 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
     battleObj[battleKey].requestedParties = [];
     
     //create a new file for this battle
-    fs.writeFileSync(`currentBattles/${battleKey}.txt`, '', (err) => {if (err) { throw err; }});
+    fs.writeFileSync(`./currentBattles/${battleKey}.txt`, '', (err) => {if (err) { throw err; }});
     battleObj[battleKey].log = function (str) {
         this.data += str + "\n";
-        fs.appendFileSync(`currentBattles/${battleKey}.txt`, str + "\n", (err) => {if (err) { throw err; }});
+        fs.appendFileSync(`./currentBattles/${battleKey}.txt`, str + "\n", (err) => {if (err) { throw err; }});
     }
 
     fetch(`http://127.0.0.1:${consts.port}/socket/battleStart`, {
@@ -159,10 +159,16 @@ export function deleteBattle(battleObj, p1name, p2name, turnResults) {
         console.log(battleEndMessage);
     }
     cancelInput(battleKey);
-    fs.unlinkSync(`currentBattles/${battleKey}.txt`, (err) => {if (err) { throw err; }});
+    fs.unlink(`./currentBattles/${battleKey}.txt`, (err) => {if (err) { throw err; }});
     battleObj.currentBattles.splice(battleObj.currentBattles.findIndex((arr) => {
         arr[2] == p1name && arr[3] == p2name
     }));
+    for (let fileName of [`${battleKey}_party_1.png`, `${battleKey}_party_2.png`]) {
+        let imageLocation = `./website/partyImages/${fileName}`;
+        if (fs.existsSync(imageLocation)) {
+            fs.unlink(imageLocation, (err) => {if (err) { throw err; }});
+        }
+    }
 
     fetch(`http://127.0.0.1:${consts.port}/socket/battleEnd`, {
         method: "POST",

@@ -1,5 +1,8 @@
 // Given an image of the user's party, parse it for the characters they're using,
 // calculate the stats of those characters, and update the battleObj accordingly.
+import fs from 'fs';
+import axios from 'axios';
+import crypto from 'crypto';
 import { printParty } from './prettyPrint.mjs';
 import { round } from './round.mjs';
 import { addAspectAttributes, addAspectBoost } from './aspect.mjs';
@@ -9,6 +12,10 @@ import consts from '../consts.json' assert { type: 'json' };
 const delay = async (ms = 1000) =>  new Promise(resolve => setTimeout(resolve, ms));
 
 export async function setPlayerParty(battleObj, playerName, playerID, imageURL) {
+    let tempImageName = generateRandomFileName();
+    let tempSaveLocation = `./website/partyImages/${tempImageName}.png`;
+    downloadImage(imageURL.replace('format=png&width=328&height=254', ""), tempSaveLocation)
+        .catch(err => console.error(`Failed to download image to ${saveLocation}:`, err));
     let party = await fetch(`http://127.0.0.1:${consts.port}/ImageData/parseParty`, {
         method: "POST",
         headers: {
@@ -72,6 +79,9 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
         }
         playerNumber = determinePlayerNumberByName(battleObj, battleKey, playerName);
     }
+
+    let saveLocation = `./website/partyImages/${battleKey}_party_${playerNumber}.png`;
+    fs.renameSync(tempSaveLocation, saveLocation);
 
     if (playerNumber == 2) {
         while (typeof battleObj[battleKey][`1.${p1name}`].valid === 'undefined') {
@@ -202,10 +212,10 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
         body: JSON.stringify({
             battleObj: battleObj,
             battleKey: battleKey,
+            playerNumber: playerNumber,
             playerName: playerName,
             hasStrength: hasStrength,
-            partyJSON: partyJSON,
-            imageURL: imageURL
+            partyJSON: partyJSON
         })
     });
 
@@ -290,4 +300,35 @@ function determinePlayerNumberByName(battleObj, battleKey, playerName) {
         return 2;
     }
     console.log(`Unknown player ${playerName} in ${battleKey}`);
+}
+
+//got this from GPT
+function generateRandomFileName() {
+    const randomBytes = crypto.randomBytes(16).toString('hex');
+    return randomBytes;
+}
+
+//got this from chat GPT
+async function downloadImage(url, savePath) {
+    try {
+        const response = await axios({
+            url,
+            method: 'GET',
+            responseType: 'stream'
+        });
+
+        // Create a write stream to save the image
+        const writer = fs.createWriteStream(savePath);
+
+        // Pipe the response data to the file
+        response.data.pipe(writer);
+
+        // Return a promise that resolves when the stream finishes
+        return new Promise((resolve, reject) => {
+            writer.on('finish', resolve);
+            writer.on('error', reject);
+        });
+    } catch (error) {
+        console.error(`Error downloading image: ${error.message}`);
+    }
 }
