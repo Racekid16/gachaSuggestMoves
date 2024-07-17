@@ -32,7 +32,7 @@ socket.on('battleStart', (data) => {
 });
 
 socket.on('playerParty', (data) => {
-    addPlayerParty(data.battleObj, data.battleKey, data.playerNumber, data.playerName, data.hasStrength, data.partyJSON);
+    addPlayerParty(data.battleObj, data.battleKey, data.playerNumber, data.playerName, data.hasStrength, data.partyArray);
 });
 
 socket.on('battleEnd', (data) => {
@@ -133,27 +133,17 @@ function scrollToBottom(battleKey) {
     tabContent.scrollTop = tabContent.scrollHeight;
 }
 
-function addPlayerParty(battleObj, battleKey, playerNumber, playerName, hasStrength, partyJSON) {
-    const tabContent = document.getElementById(`${battleKey}-content`);
-    const newElement = document.createElement('div');
-    const partyLabel = document.createElement('div');
-
-    if (!hasStrength) {
-        partyLabel.innerHTML = `<b>${playerName}</b>'s party`
-    } else {
-        partyLabel.innerHTML = `<b>${playerName}</b>'s party (Strength 3: +10% to stats)`
-    }    
-    const partyFlexBox = createPartyFlexBox(battleObj, battleKey, playerNumber, playerName, partyJSON);
-
-    newElement.appendChild(partyLabel);
-    newElement.appendChild(partyFlexBox);
-    tabContent.appendChild(newElement);
+function addPlayerParty(battleObj, battleKey, playerNumber, playerName, hasStrength, partyArray) {
+    const tabContent = document.getElementById(`${battleKey}-content`); 
+    const partyFlexBox = createPartyFlexBox(battleObj, battleKey, playerNumber, playerName, hasStrength, partyArray);
+    tabContent.appendChild(partyFlexBox);
 }
 
 function addTurnResults(battleKey, turn, turnResults, usernames) {
     const tabContent = document.getElementById(`${battleKey}-content`);
     const newElement = document.createElement('div');
-    newElement.classList.add('turn-results');
+    newElement.classList.add('discord-embed');
+    newElement.classList.add('turn-results-embed');
     newElement.innerHTML = `<b><u>Turn ${turn}</u></b>\n${turnResults}`
                            .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
                            .replace(/\n/g, '<br>')

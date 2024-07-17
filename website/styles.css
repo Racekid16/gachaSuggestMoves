@@ -49,23 +49,23 @@ body {
 }
 .party-image {
     height: 40vh;
-    margin-right: 10px;
 }
-.party-stats {
+.party-stats-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr); 
-    gap: 10px; 
-    width: max-content;
-    margin: 20px auto;
+    grid-template-columns: repeat(7, minmax(auto, max-content));
     border-collapse: collapse;
-    font-family: Arial, sans-serif;
+    margin-bottom: 20px;
+    border-style: solid;
+    border-width: 3px;
+    border-radius: 3px;
+    border-color: rgb(168, 50, 111);
+    white-space: nowrap;
 }
 .cell {
-    padding: 10px;
-    white-space: nowrap; 
+    padding: 2px 5px 2px 5px;
     overflow: hidden; 
 }
-.turn-results {
+.discord-embed {
     color: white;
     line-height: 1.5;
     background-color: oklab(0.296332 -0.000731647 -0.00768477);
@@ -73,12 +73,16 @@ body {
     border-radius: 4px;
     border-left-style: solid;
     border-left-width: 5.5px;
+    margin-right: 10px;
+}
+.turn-results-embed {
     border-left-color: rgb(248,125,114);
-    margin-bottom: 10px;
-    width: 40vw;
+    width: 500px;
+}
+.party-embed {
+    border-left-color: rgb(246, 147, 55);
 }
 .ping {
-    color: white;
     display: inline;
     background-color: oklab(0.576971 0.014185 -0.208914 / 0.3);
     border-style: solid;

@@ -250,7 +250,6 @@ async function addPlayerToBattle(battleObj, battleKey, playerName, playerNumber,
     battleObj[battleKey][playerName] = {};
     battleObj[battleKey][playerName].chars = {};
     battleObj[battleKey][playerName].previousTaggedInChar = null;
-    battleObj.usernames[playerID] = playerName;
 
     if (turnResults !== null) {
         if (playerNumber == 1) {
@@ -261,6 +260,8 @@ async function addPlayerToBattle(battleObj, battleKey, playerName, playerNumber,
     } else {
         battleObj[battleKey][playerName].id = playerID;
     }
+
+    battleObj.usernames[battleObj[battleKey][playerName].id] = playerName;
 
     let payload = `{"type":2,"application_id":"1101145170466062416","guild_id":"870355988887265301","channel_id":${config.privateThread},"session_id":"5da606d879de77e2287e7d26d2ddb04d","data":{"version":"1109844232824426714","id":"1109844232665059379","guild_id":"870355988887265301","name":"party","type":1,"options":[{"type":6,"name":"member","value":${battleObj[battleKey][playerName].id}}],"application_command":{"id":"1109844232665059379","application_id":"1101145170466062416","version":"1109844232824426714","default_member_permissions":null,"type":1,"nsfw":false,"name":"party","description":"View/Edit your active party!","guild_id":"870355988887265301","options":[{"type":6,"name":"member","description":"…"}]},"attachments":[]}}`;
     let response = await fetchWithRetry('https://discord.com/api/v9/interactions', {

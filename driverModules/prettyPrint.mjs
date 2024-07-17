@@ -5,7 +5,7 @@ import { hasStatus } from './updateStatuses.mjs';
 import consts from '../consts.json' assert { type: 'json' };
 
 // print the stats of a party at the beginning of a battle
-export function printParty(battleObj, battleKey, playerName, partyJSON, hasStrength) {
+export function printParty(battleObj, battleKey, playerName, partyArray, hasStrength) {
     let charStats = battleObj[battleKey][playerName].chars;
 
     let printStrength = hasStrength ? '(Strength 3: +10% to stats)' : '';
@@ -13,8 +13,8 @@ export function printParty(battleObj, battleKey, playerName, partyJSON, hasStren
 
     let activeChars = [];
     for (let i = 0; i < 3; i++) {
-        if (partyJSON[i].name != "empty") {
-            activeChars.push(charStats[partyJSON[i].name]);
+        if (partyArray[i].name != "empty") {
+            activeChars.push(charStats[partyArray[i].name]);
         }
     }
 
@@ -37,8 +37,8 @@ export function printParty(battleObj, battleKey, playerName, partyJSON, hasStren
 
     let benchChars = [];
     for (let i = 3; i < 6; i++) {
-        if (partyJSON[i].name != "empty") {
-            benchChars.push(charStats[partyJSON[i].name]);
+        if (partyArray[i].name != "empty") {
+            benchChars.push(charStats[partyArray[i].name]);
         }
     }
 

@@ -25,10 +25,10 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
             imageURL: imageURL
         })
     });
-    let partyJSON = await party.json();
-    if (partyJSON.message) {
+    let partyArray = await party.json();
+    if (partyArray.message) {
         battleObj[battleKey][playerName].valid = false;
-        battleObj[battleKey][playerName].reason = partyJSON.message;
+        battleObj[battleKey][playerName].reason = partyArray.message;
         return;
     }
 
@@ -80,6 +80,9 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
         playerNumber = determinePlayerNumberByName(battleObj, battleKey, playerName);
     }
 
+    while (!fs.existsSync(tempSaveLocation)) {
+        await delay(200);
+    }
     let saveLocation = `./website/partyImages/${battleKey}_party_${playerNumber}.png`;
     fs.renameSync(tempSaveLocation, saveLocation);
 
@@ -90,8 +93,8 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
     }
     playerName = `${playerNumber}.${playerName}`;
 
-    for (let i = 0; i < partyJSON.length; i++) {
-        let char = partyJSON[i];
+    for (let i = 0; i < partyArray.length; i++) {
+        let char = partyArray[i];
         if (char?.name == "empty") {
             //console.log(`There is no character in slot ${i + 1} of ${playerName}'s party.`);
         } else if (char === null) {
@@ -202,7 +205,7 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
 
     battleObj[battleKey][playerName].baseCharStats = structuredClone(battleObj[battleKey][playerName].chars);
     applyBoosts(battleObj, battleKey, playerName);
-    printParty(battleObj, battleKey, playerName, partyJSON, hasStrength);
+    printParty(battleObj, battleKey, playerName, partyArray, hasStrength);
 
     fetch(`http://127.0.0.1:${consts.port}/socket/playerParty`, {
         method: "POST",
@@ -215,7 +218,7 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
             playerNumber: playerNumber,
             playerName: playerName,
             hasStrength: hasStrength,
-            partyJSON: partyJSON
+            partyArray: partyArray
         })
     });
 
