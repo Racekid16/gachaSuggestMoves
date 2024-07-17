@@ -8,7 +8,13 @@ console.log('Establishing websocket connection to the server...');
 
 socket.on('connect', () => {
     console.log('Connected to the server!');
-    updateHomeVisibility();
+    createTab("Home");
+    const homeButton = document.getElementById('Home-button');
+    const homeContent = document.getElementById('Home-content');
+    const programInformation = document.createElement('div');
+    programInformation.innerHTML = "A program that tracks gacha battles in real time, updates boosts and statuses, calculates stats, and suggests moves.\nClick on a tab to receive move suggestions for that battle.";
+    homeContent.appendChild(programInformation);
+    homeButton.click();
 })
 
 socket.on('disconnect', () => {
@@ -21,7 +27,7 @@ socket.on('connect_error', (error) => {
 
 socket.on('battleStart', (data) => {
     createTab(data.battleKey, data.time, data.link);
-    updateHomeVisibility();
+    addBattleStartToHome(data.battleKey, data.time, data.link);
 });
 
 socket.on('playerParty', (data) => {
@@ -31,11 +37,11 @@ socket.on('playerParty', (data) => {
 
 socket.on('battleEnd', (data) => {
     deleteTab(data.battleKey);
-    updateHomeVisibility();
+    addBattleEndToHome(data.battleEndMessage);
 });
 
 socket.on('turnResults', (data) => {
-    addTurnResults(data.battleKey, data.turn, data.turnResults);
+    addTurnResults(data.battleKey, data.turn, data.turnResults, data.usernames);
 });
 
 socket.on('suggestedMoves', (data) => {
@@ -44,8 +50,7 @@ socket.on('suggestedMoves', (data) => {
 
 function toggleTab(battleKey) {
     const selectedTabButton = document.getElementById(`${battleKey}-button`);
-    const selectedTabContent = document.getElementById(`${battleKey}-content`);
-    let tabActive = selectedTabButton.classList.contains('active');
+    const selectedTabContent = document.getElementById(`${battleKey}-content`); 
     const tabButtons = document.querySelectorAll('.tab-button');
     tabButtons.forEach(tabButton => {
         tabButton.classList.remove('active');
@@ -54,14 +59,12 @@ function toggleTab(battleKey) {
     tabContents.forEach(tabContent => {
         tabContent.classList.remove('active');
     });
-    if (!tabActive) {
-        selectedTabButton.classList.add('active');
-        selectedTabContent.classList.add('active');
-    }
+    selectedTabButton.classList.add('active');
+    selectedTabContent.classList.add('active');
     for (let key of tabsToDelete) {
         deleteTab(key);
     }
-    updateHomeVisibility();
+    scrollToBottom(battleKey);
 }
 
 function createTab(battleKey, time, battleLink) {
@@ -78,12 +81,19 @@ function createTab(battleKey, time, battleLink) {
     const tabContent = document.createElement('div');
     tabContent.id = `${battleKey}-content`;
     tabContent.className = 'tab-content';
-    tabContent.innerHTML = `<h2><a href="${battleLink}" target="_blank">${battleKey}</a></h2>`;
+    if (battleLink) {
+        tabContent.innerHTML = `<h2><a href="${battleLink}" target="_blank">${battleKey}</a></h2>`;
+    } else {
+        tabContent.innerHTML = `<h2>${battleKey}</h2>`;
+    }
     tabContentContainer.appendChild(tabContent);
 
-    const battleInformation = document.createElement('div');
-    battleInformation.innerHTML = `started at ${time}<br>`;
-    tabContent.append(battleInformation);
+    if (time) {
+        const battleInformation = document.createElement('div');
+        battleInformation.style.marginBottom = "20px";
+        battleInformation.innerHTML = `started at ${time}`;
+        tabContent.append(battleInformation);
+    }
 }
 
 function deleteTab(battleKey) {
@@ -101,21 +111,27 @@ function deleteTab(battleKey) {
     }
 }
 
-function updateHomeVisibility() {
-    const homeContent = document.getElementById('home-content');
-    const numTabs = document.querySelectorAll('.tab-button').length;
-    const activeTabs = document.querySelectorAll('.tab-button.active').length;
-    if (activeTabs === 0) {
-        homeContent.style.display = 'block';
-        if (numTabs == 0) {
-            homeContent.textContent = "A program that tracks gacha battles in real time, updates boosts and statuses, calculates stats, and suggests moves.\nClickable tabs representing battles will appear once a battle begins.";
-        } else {
-            homeContent.textContent = "A program that tracks gacha battles in real time, updates boosts and statuses, calculates stats, and suggests moves.\nClick on a tab to receive move suggestions for that battle.";
-        }
-    } else {
-        homeContent.style.display = 'none';
-    }
-};
+function addBattleStartToHome(battleKey, time, battleLink) {
+    const homeContent = document.getElementById('Home-content');
+    const newElement = document.createElement('div');
+    let partialTime = time.slice(time.indexOf(", ") + 2);
+    newElement.innerHTML = `${partialTime}: <a href=${battleLink} target="_blank">${battleKey}</a> started`;
+    homeContent.appendChild(newElement);
+}
+
+function addBattleEndToHome(battleEndMessage) {
+    const homeContent = document.getElementById('Home-content');
+    const newElement = document.createElement('div');
+    let time = new Date().toLocaleString();
+    let partialTime = time.slice(time.indexOf(", ") + 2);
+    newElement.innerHTML = `${partialTime}: ${battleEndMessage}`;
+    homeContent.appendChild(newElement);
+}
+
+function scrollToBottom(battleKey) {
+    const tabContent = document.getElementById(`${battleKey}-content`);
+    tabContent.scrollTop = tabContent.scrollHeight;
+}
 
 function addPlayerParty(battleObj, battleKey, playerName, hasStrength, partyJSON, imageURL) {
     const tabContent = document.getElementById(`${battleKey}-content`);
@@ -127,27 +143,28 @@ function addPlayerParty(battleObj, battleKey, playerName, hasStrength, partyJSON
     } else {
         partyLabel.innerHTML = `<b>${playerName}</b>'s party (Strength 3: +10% to stats)`
     }    
-    const partyTable = createPartyFlexBox(battleObj, battleKey, playerName, partyJSON, imageURL);
+    const partyFlexBox = createPartyFlexBox(battleObj, battleKey, playerName, partyJSON, imageURL);
 
     newElement.appendChild(partyLabel);
-    newElement.appendChild(partyTable);
+    newElement.appendChild(partyFlexBox);
     newElement.appendChild(document.createElement('br'));
     tabContent.appendChild(newElement);
 }
 
-function addTurnResults(battleKey, turn, turnResults) {
+function addTurnResults(battleKey, turn, turnResults, usernames) {
     const tabContent = document.getElementById(`${battleKey}-content`);
     const newElement = document.createElement('div');
-    newElement.innerHTML = `Turn ${turn}:\n${turnResults}`
+    newElement.classList.add('turn-results');
+    newElement.innerHTML = `<b><u>Turn ${turn}</u></b>\n${turnResults}`
                            .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
                            .replace(/\n/g, '<br>')
-                           + '<br><br>';
+                           .replace(/<@(\d+)>/g, (match, playerID) => `<div class="ping"> @${usernames[playerID]}</div>`);
     tabContent.appendChild(newElement);
 }
 
 function addSuggestedMoves(battleKey, text) {
     const tabContent = document.getElementById(`${battleKey}-content`);
     const newElement = document.createElement('div');
-    newElement.innerHTML = text.replace(/\n/g, '<br>') + '<br><br>';
+    newElement.innerHTML = text.replace(/\n/g, '<br>');
     tabContent.appendChild(newElement);
 }

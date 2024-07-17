@@ -30,7 +30,7 @@ const sharedData = {
 
 const app = express();
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static('website'));
 app.use(cors({origin: '*'}));
 app.use('/BattleLogs', BattleLogsRouter(sharedData));
 app.use('/CharacterData', CharacterDataRouter(sharedData));
@@ -55,7 +55,7 @@ connectToDb((error) => {
 app.get("/", (req, res) => {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
-    res.sendFile(path.join(__dirname, '/public/index.html'));
+    res.sendFile(path.join(__dirname, '/website/index.html'));
 })
 
 app.get("/getToken", (req, res) => {

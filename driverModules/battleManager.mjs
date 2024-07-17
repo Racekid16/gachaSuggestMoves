@@ -121,6 +121,7 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
 
 export function deleteBattle(battleObj, p1name, p2name, turnResults) {
     let battleKey = p1name + " vs. " + p2name;
+    let battleEndMessage;
     
     if (turnResults !== null) {
         let winnerID = /<@(\d+)>/.exec(turnResults)[1];
@@ -135,12 +136,12 @@ export function deleteBattle(battleObj, p1name, p2name, turnResults) {
             loser = p1name;
         }
         if (!turnResults.includes("forfeit by inactivity")) {
-            console.log(`${winner} won against ${loser}`);
-            battleObj[battleKey].log(`${winner} won against ${loser}`);
+            battleEndMessage = `${winner} won against ${loser}`;
         } else {
-            console.log(`${winner} won against ${loser} (forfeit by inactivity)`);
-            battleObj[battleKey].log(`${winner} won against ${loser} (forfeit by inactivity)`);
+            battleEndMessage = `${winner} won against ${loser} (forfeit by inactivity)`;
         }
+        console.log(battleEndMessage);
+        battleObj[battleKey].log(battleEndMessage);
         
         fetch(`http://127.0.0.1:${consts.port}/BattleLogs/updateDb`, {
             method: "POST",
@@ -154,7 +155,8 @@ export function deleteBattle(battleObj, p1name, p2name, turnResults) {
             })
         });
     } else {
-        console.log(`${battleKey} deleted`);
+        battleEndMessage = `${battleKey} deleted`;
+        console.log(battleEndMessage);
     }
     cancelInput(battleKey);
     fs.unlinkSync(`currentBattles/${battleKey}.txt`, (err) => {if (err) { throw err; }});
@@ -168,7 +170,8 @@ export function deleteBattle(battleObj, p1name, p2name, turnResults) {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            battleKey: battleKey
+            battleKey: battleKey,
+            battleEndMessage: battleEndMessage
         })
     });
 

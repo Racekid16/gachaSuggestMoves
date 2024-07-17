@@ -33,7 +33,8 @@ export async function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
         body: JSON.stringify({
             battleKey: battleKey,
             turn: turn,
-            turnResults: turnResults
+            turnResults: turnResults,
+            usernames: battleObj.usernames
         })
     });
 
