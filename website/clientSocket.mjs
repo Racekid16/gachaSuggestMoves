@@ -28,20 +28,24 @@ socket.on('connect_error', (error) => {
 socket.on('battleStart', (data) => {
     deleteTab(data.battleKey, true);
     createTab(data.battleKey, data.time, data.link);
-    addBattleStartToHome(data.battleKey, data.time, data.link);
+    const message = `<a href=${data.link} target="_blank">${data.battleKey}</a> started`;
+    addToHome(data.time, message);
 });
 
 socket.on('playerParty', (data) => {
-    addPlayerParty(data.battleObj, data.battleKey, data.playerNumber, data.playerName, data.hasStrength, data.partyArray);
+    addPlayerParty(data.battleObj, data.battleKey, data.playerName, data.hasStrength, data.supportBonus, data.partyArray);
 });
 
 socket.on('battleEnd', (data) => {
+    addEmbed(data.battleKey, "Battle End", data.battleEndMessage);
     deleteTab(data.battleKey);
-    addBattleEndToHome(data.battleEndMessage);
+    const time = new Date().toLocaleString();
+    addToHome(time, data.battleEndMessage);
 });
 
 socket.on('turnResults', (data) => {
-    addTurnResults(data.battleKey, data.turn, data.turnResults, data.usernames);
+    const header = `Turn ${data.turn}`;
+    addEmbed(data.battleKey, header, data.turnResults, data.battleObj.usernames);
 });
 
 socket.on('suggestedMoves', (data) => {
@@ -111,20 +115,20 @@ function deleteTab(battleKey, force=false) {
     }
 }
 
-function addBattleStartToHome(battleKey, time, battleLink) {
+function addToHome(time, message) {
     const homeContent = document.getElementById('Home-content');
     const newElement = document.createElement('div');
-    let partialTime = time.slice(time.indexOf(", ") + 2);
-    newElement.innerHTML = `${partialTime}: <a href=${battleLink} target="_blank">${battleKey}</a> started`;
-    homeContent.appendChild(newElement);
-}
+    newElement.classList.add('one-by-two');
 
-function addBattleEndToHome(battleEndMessage) {
-    const homeContent = document.getElementById('Home-content');
-    const newElement = document.createElement('div');
-    let time = new Date().toLocaleString();
+    const timeDiv = document.createElement('div');
     let partialTime = time.slice(time.indexOf(", ") + 2);
-    newElement.innerHTML = `${partialTime}: ${battleEndMessage}`;
+    timeDiv.innerHTML = `<b style="margin-right: 30px">${partialTime}</b>`;
+
+    const messageDiv = document.createElement('div');
+    messageDiv.innerHTML = message;
+    
+    newElement.appendChild(timeDiv);
+    newElement.appendChild(messageDiv);
     homeContent.appendChild(newElement);
 }
 
@@ -133,21 +137,21 @@ function scrollToBottom(battleKey) {
     tabContent.scrollTop = tabContent.scrollHeight;
 }
 
-function addPlayerParty(battleObj, battleKey, playerNumber, playerName, hasStrength, partyArray) {
+function addPlayerParty(battleObj, battleKey, playerName, hasStrength, supportBonus, partyArray) {
     const tabContent = document.getElementById(`${battleKey}-content`); 
-    const partyFlexBox = createPartyFlexBox(battleObj, battleKey, playerNumber, playerName, hasStrength, partyArray);
+    const partyFlexBox = createPartyFlexBox(battleObj, battleKey, playerName, hasStrength, supportBonus, partyArray);
     tabContent.appendChild(partyFlexBox);
 }
 
-function addTurnResults(battleKey, turn, turnResults, usernames) {
+function addEmbed(battleKey, header, body, usernames) {
     const tabContent = document.getElementById(`${battleKey}-content`);
     const newElement = document.createElement('div');
     newElement.classList.add('discord-embed');
     newElement.classList.add('turn-results-embed');
-    newElement.innerHTML = `<b><u>Turn ${turn}</u></b>\n${turnResults}`
+    newElement.innerHTML = `<b><u>${header}</u></b>\n${body}`
                            .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
                            .replace(/\n/g, '<br>')
-                           .replace(/<@(\d+)>/g, (match, playerID) => `<div class="ping"> @${usernames[playerID]}</div>`);
+                           .replace(/<@(\d+)>/g, (match, playerID) => `<div class="ping">@${usernames[playerID]}</div>`);
     tabContent.appendChild(newElement);
 }
 

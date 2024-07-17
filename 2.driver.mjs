@@ -8,9 +8,11 @@ import { startWsConnection } from "./driverModules/websocket.mjs";
 (async ()=> {
     await deleteAllFilesInDirectory('./currentBattles');
     await deleteAllFilesInDirectory('./website/partyImages');
+    await deleteAllFilesInDirectory('./website/avatars');
     let battleObj = {
         currentBattles: [],
         usernames: {},
+        avatars: {},
         inputs: {}
     };
     startWsConnection(battleObj);

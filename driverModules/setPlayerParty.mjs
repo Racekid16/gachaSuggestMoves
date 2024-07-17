@@ -11,11 +11,17 @@ import consts from '../consts.json' assert { type: 'json' };
 
 const delay = async (ms = 1000) =>  new Promise(resolve => setTimeout(resolve, ms));
 
-export async function setPlayerParty(battleObj, playerName, playerID, imageURL) {
-    let tempImageName = generateRandomFileName();
-    let tempSaveLocation = `./website/partyImages/${tempImageName}.png`;
-    downloadImage(imageURL.replace('format=png&width=328&height=254', ""), tempSaveLocation)
-        .catch(err => console.error(`Failed to download image to ${saveLocation}:`, err));
+export async function setPlayerParty(battleObj, playerName, playerID, imageURL, avatarURL, supportBonus) {
+    let tempPartyImageName = generateRandomFileName();
+    let tempPartySaveLocation = `./website/partyImages/${tempPartyImageName}.png`;
+    downloadImage(imageURL.replace('format=png&width=328&height=254', ""), tempPartySaveLocation)
+        .catch(err => console.error(`Failed to download image to ${tempPartySaveLocation}:`, err));
+
+    let tempAvatarName = generateRandomFileName();
+    let tempAvatarSaveLocation = `./website/avatars/${tempAvatarName}.png`;
+    downloadImage(avatarURL.replace('?size=1024', ""), tempAvatarSaveLocation)
+        .catch(err => console.error(`Failed to download image to ${tempAvatarSaveLocation}:`, err));
+
     let party = await fetch(`http://127.0.0.1:${consts.port}/ImageData/parseParty`, {
         method: "POST",
         headers: {
@@ -80,18 +86,26 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
         playerNumber = determinePlayerNumberByName(battleObj, battleKey, playerName);
     }
 
-    while (!fs.existsSync(tempSaveLocation)) {
+    playerName = `${playerNumber}.${playerName}`;
+    playerID = battleObj[battleKey][playerName].id;
+
+    while (!fs.existsSync(tempPartySaveLocation)) {
         await delay(200);
     }
-    let saveLocation = `./website/partyImages/${battleKey}_party_${playerNumber}.png`;
-    fs.renameSync(tempSaveLocation, saveLocation);
+    let partySaveLocation = `./website/partyImages/${battleKey}_party_${playerID}.png`;
+    fs.renameSync(tempPartySaveLocation, partySaveLocation);
+
+    while (!fs.existsSync(tempAvatarSaveLocation)) {
+        await delay(200);
+    }
+    let avatarSaveLocation = `./website/avatars/${playerID}.png`;
+    fs.renameSync(tempAvatarSaveLocation, avatarSaveLocation);
 
     if (playerNumber == 2) {
         while (typeof battleObj[battleKey][`1.${p1name}`].valid === 'undefined') {
             await delay(200);
         }
     }
-    playerName = `${playerNumber}.${playerName}`;
 
     for (let i = 0; i < partyArray.length; i++) {
         let char = partyArray[i];
@@ -218,7 +232,8 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL) 
             playerNumber: playerNumber,
             playerName: playerName,
             hasStrength: hasStrength,
-            partyArray: partyArray
+            partyArray: partyArray,
+            supportBonus: supportBonus
         })
     });
 

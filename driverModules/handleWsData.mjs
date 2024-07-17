@@ -19,7 +19,8 @@ export function handleWsData(battleObj, responseJSON) {
         let playerName = /(.+)'s Party/.exec(responseJSON.d.embeds[0]?.author.name)[1];
         let playerID = null;
         let playerIDRegex = /https\:\/\/cdn\.discordapp\.com(\/guilds\/(\d+)\/users\/(\d+))?\/avatars\/(\d+)?/
-        let playerIDMatch = playerIDRegex.exec(responseJSON.d.embeds[0].author.icon_url);
+        let avatarURL = responseJSON.d.embeds[0].author.icon_url;
+        let playerIDMatch = playerIDRegex.exec(avatarURL);
         if (playerIDMatch !== null) {
             if (typeof playerIDMatch[3] !== 'undefined') {
                 playerID = playerIDMatch[3];
@@ -29,7 +30,8 @@ export function handleWsData(battleObj, responseJSON) {
             }
         }
         let imageURL = responseJSON.d.embeds[0].image.proxy_url + 'format=png&width=328&height=254';
-        setPlayerParty(battleObj, playerName, playerID, imageURL);
+        let supportBonus = /Support Bonus: (\d+)%/.exec(responseJSON.d.embeds[0].title)[1];
+        setPlayerParty(battleObj, playerName, playerID, imageURL, avatarURL, supportBonus);
     }
 
     // create an entry in battleObj representing a campaign battle
@@ -38,7 +40,9 @@ export function handleWsData(battleObj, responseJSON) {
         let playerName = `1.${responseJSON.d.interaction_metadata.user.global_name}`;
         let botName = "2.Chairman Sakayanagi";
         let playerID = responseJSON.d.interaction_metadata.user.id;
+        let botAvatarURL = responseJSON.d.embeds[0].author.icon_url;
         let botPartyImageURL = responseJSON.d.embeds[0].image.proxy_url + 'format=png&width=328&height=254';
+        let supportBonus = /Support Bonus: (\d+)%/.exec(responseJSON.d.embeds[0].title)[1];
         let messageLink = `https://discord.com/channels/${responseJSON.d.guild_id}/${responseJSON.d.channel_id}/${responseJSON.d.id}`;
         let stage = /Campaign Stage (\d+)/.exec(responseJSON.d.embeds[0].author.name)[1];
         let battleKey = playerName + " vs. " + botName;
@@ -49,7 +53,7 @@ export function handleWsData(battleObj, responseJSON) {
             console.log(`${battleKey} not being tracked; Stage ${stage} is excluded`);
             return;
         }
-        createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL, messageLink, stage);
+        createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL, botAvatarURL, supportBonus, messageLink, stage);
     }
 
     // request a player's party for a campaign battle when it starts

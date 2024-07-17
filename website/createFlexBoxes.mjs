@@ -1,12 +1,12 @@
 //functions for creating tables
 
-export function createPartyFlexBox(battleObj, battleKey, playerNumber, playerName, hasStrength, partyArray) {
+export function createPartyFlexBox(battleObj, battleKey, playerName, hasStrength, supportBonus, partyArray) {
     const partyContainer = document.createElement('div');
     partyContainer.style.height = "30%";
-    partyContainer.classList.add('party-information');
+    partyContainer.classList.add('one-by-two');
 
-    const partyEmbed = createPartyEmbed(battleKey, playerNumber, playerName, hasStrength);
-    const partyStats = createPartyStatsGrid(battleObj, battleKey, playerName, partyArray);
+    const partyEmbed = createPartyEmbed(battleObj, battleKey, playerName, hasStrength, supportBonus);
+    const partyStats = createPartyStats(battleObj, battleKey, playerName, partyArray);
 
     partyContainer.appendChild(partyEmbed);
     partyContainer.appendChild(partyStats);
@@ -17,26 +17,50 @@ export function createSuggestedMoveFlexBox() {
     
 }
 
-function createPartyEmbed(battleKey, playerNumber, playerName, hasStrength) {
+function createPartyEmbed(battleObj, battleKey, playerName, hasStrength, supportBonus) {
+    const playerID = battleObj[battleKey][playerName].id;
+
     const partyEmbed = document.createElement('div');
     partyEmbed.classList.add('discord-embed');
     partyEmbed.classList.add('party-embed');
+
+    const partyHeader = document.createElement('div');
+    partyHeader.classList.add('one-by-two');
+    partyHeader.classList.add('party-header');
+
+    const avatar = document.createElement('img');
+    avatar.src = `./avatars/${playerID}.png`;
+    avatar.alt = `${playerName}_avatar.png`;
+    avatar.classList.add('avatar');
+    partyHeader.appendChild(avatar);
+
     const partyLabel = document.createElement('div');
+    partyLabel.innerHTML = `<b>${playerName}'s party</b>`;
+    /*
     if (!hasStrength) {
         partyLabel.innerHTML = `<b>${playerName}'s party</b>`;
     } else {
         partyLabel.innerHTML = `<b>${playerName}'s party</b> (Strength 3: +10% to stats)`
     }
+    */
+    partyHeader.appendChild(partyLabel);
+
+    const supportBonusContainer = document.createElement('div');
+    supportBonusContainer.innerHTML = `<b>Support Bonus: ${supportBonus}%</b>`;
+    supportBonusContainer.classList.add('support-bonus-container');
+
     const partyImage = document.createElement('img');
-    partyImage.src = `./partyImages/${battleKey}_party_${playerNumber}.png`;
+    partyImage.src = `./partyImages/${battleKey}_party_${playerID}.png`;
     partyImage.alt = `${playerName}_party.png`;
     partyImage.classList.add('party-image');
-    partyEmbed.appendChild(partyLabel);
+
+    partyEmbed.appendChild(partyHeader);
+    partyEmbed.appendChild(supportBonusContainer);
     partyEmbed.appendChild(partyImage);
     return partyEmbed;
 }
 
-function createPartyStatsGrid(battleObj, battleKey, playerName, partyArray) {
+function createPartyStats(battleObj, battleKey, playerName, partyArray) {
     const partyStats = document.createElement('div');
 
     const statSymbol = {
@@ -47,8 +71,8 @@ function createPartyStatsGrid(battleObj, battleKey, playerName, partyArray) {
         "resolve": "❤️"
     }
 
-    const activeLabel = document.createElement('div');
-    activeLabel.innerHTML = "<b>Active</b>";
+    const activeHeader = document.createElement('div');
+    activeHeader.innerHTML = "<b>Active</b>";
 
     const activeCharStats = document.createElement('div');
     activeCharStats.classList.add('party-stats-grid');
@@ -78,8 +102,8 @@ function createPartyStatsGrid(battleObj, battleKey, playerName, partyArray) {
 
     statSymbol.ability = "🏃🧠💪🗣️";
 
-    const benchLabel = document.createElement('div');
-    benchLabel.innerHTML = '<b>Bench</b>'
+    const benchHeader = document.createElement('div');
+    benchHeader.innerHTML = '<b>Bench</b>'
 
     const benchCharStats = document.createElement('div');
     benchCharStats.classList.add('party-stats-grid');
@@ -131,9 +155,9 @@ function createPartyStatsGrid(battleObj, battleKey, playerName, partyArray) {
 
     }
 
-    partyStats.append(activeLabel);
+    partyStats.append(activeHeader);
     partyStats.append(activeCharStats);
-    partyStats.append(benchLabel);
+    partyStats.append(benchHeader);
     partyStats.append(benchCharStats);
     return partyStats;
 }

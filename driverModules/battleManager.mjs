@@ -62,7 +62,7 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed, messa
     parseTurnResults(battleObj, p1name, p2name, battleEmbed);
 }
 
-export async function createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL, messageLink, stage) {
+export async function createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL, botAvatarURL, supportBonus, messageLink, stage) {
     let response = await fetchWithRetry(`https://discord.com/api/v9/guilds/${consts.serverID}/members/${playerID}`, {
         method: 'GET',
         headers: {
@@ -110,7 +110,7 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
     battleObj[battleKey][botName].id = consts.botID;
     battleObj[battleKey][botName].previousTaggedInChar = null;
     battleObj.usernames[consts.botID] = botName;
-    setPlayerParty(battleObj, "Chairman Sakayanagi", consts.botID, botPartyImageURL);
+    setPlayerParty(battleObj, "Chairman Sakayanagi", consts.botID, botPartyImageURL, botAvatarURL, supportBonus);
 
     battleObj[battleKey][playerName] = {};
     battleObj[battleKey][playerName].chars = {};
@@ -122,13 +122,15 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
 export function deleteBattle(battleObj, p1name, p2name, turnResults) {
     let battleKey = p1name + " vs. " + p2name;
     let battleEndMessage;
+    let p1ID = battleObj[battleKey][p1name].id;
+    let p2ID = battleObj[battleKey][p2name].id
     
     if (turnResults !== null) {
         let winnerID = /<@(\d+)>/.exec(turnResults)[1];
         let winner;
         let loser;
 
-        if (battleObj[battleKey][p1name].id == winnerID) {
+        if (p1ID == winnerID) {
             winner = p1name;
             loser = p2name;
         } else {
@@ -149,7 +151,7 @@ export function deleteBattle(battleObj, p1name, p2name, turnResults) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                players: [battleObj[battleKey][p1name].id, battleObj[battleKey][p2name].id],
+                players: [p1ID, p2ID],
                 time: battleObj[battleKey].time,
                 data: battleObj[battleKey].data
             })
@@ -163,7 +165,14 @@ export function deleteBattle(battleObj, p1name, p2name, turnResults) {
     battleObj.currentBattles.splice(battleObj.currentBattles.findIndex((arr) => {
         arr[2] == p1name && arr[3] == p2name
     }));
-    for (let fileName of [`${battleKey}_party_1.png`, `${battleKey}_party_2.png`]) {
+
+    for (let fileName of [`${p1ID}.png`, `${p2ID}.png`]) {
+        let imageLocation = `./website/avatars/${fileName}`;
+        if (fs.existsSync(imageLocation)) {
+            fs.unlink(imageLocation, (err) => {if (err) { throw err; }});
+        }
+    }
+    for (let fileName of [`${battleKey}_party_${p1ID}.png`, `${battleKey}_party_${p2ID}.png`]) {
         let imageLocation = `./website/partyImages/${fileName}`;
         if (fs.existsSync(imageLocation)) {
             fs.unlink(imageLocation, (err) => {if (err) { throw err; }});
