@@ -1,5 +1,5 @@
 //code for the client to handle receiving data on the websocket
-import { createPartyFlexBox, createSuggestedMoveFlexBox } from './createFlexBoxes.mjs'
+import { createPartyFlexBox, createSuggestionFlexBox } from './createFlexBoxes.mjs'
 
 const socket = io(`http://127.0.0.1:2700`);
 let tabsToDelete = [];
@@ -48,7 +48,7 @@ socket.on('turnResults', (data) => {
 });
 
 socket.on('suggestedMoves', (data) => {
-    addSuggestedMoves(data.battleKey, data.text);
+    addSuggestedMoves(data.battleObj, data.battleKey, data.p1information, data.p2information, data.playerNumberToPrintFirst);
 });
 
 function setTabContentMaxHeight() {
@@ -155,13 +155,19 @@ function addToHome(time, message) {
 }
 
 function addPlayerParty(battleObj, battleKey, playerName, hasStrength, supportBonus, partyArray) {
-    const tabContent = document.getElementById(`${battleKey}-content`); 
+    const tabContent = document.getElementById(`${battleKey}-content`);
+    if (tabContent === null) {
+        return;
+    }
     const partyFlexBox = createPartyFlexBox(battleObj, battleKey, playerName, hasStrength, supportBonus, partyArray);
     tabContent.appendChild(partyFlexBox);
 }
 
 function addEmbed(battleKey, header, body, usernames) {
     const tabContent = document.getElementById(`${battleKey}-content`);
+    if (tabContent === null) {
+        return;
+    }
     const newElement = document.createElement('div');
     newElement.classList.add('discord-embed');
     newElement.classList.add('turn-results-embed');
@@ -172,9 +178,18 @@ function addEmbed(battleKey, header, body, usernames) {
     tabContent.appendChild(newElement);
 }
 
-function addSuggestedMoves(battleKey, text) {
+function addSuggestedMoves(battleObj, battleKey, p1information, p2information, playerNumberToPrintFirst) {
     const tabContent = document.getElementById(`${battleKey}-content`);
-    const newElement = document.createElement('div');
-    newElement.innerHTML = text.replace(/\n/g, '<br>');
-    tabContent.appendChild(newElement);
+    if (tabContent === null) {
+        return;
+    }
+    const p1suggestion = createSuggestionFlexBox(battleObj, battleKey, p1information);
+    const p2suggestion = createSuggestionFlexBox(battleObj, battleKey, p2information);
+    if (playerNumberToPrintFirst == 1) {
+        tabContent.appendChild(p1suggestion);
+        tabContent.appendChild(p2suggestion);
+    } else {
+        tabContent.appendChild(p2suggestion);
+        tabContent.appendChild(p1suggestion);
+    }
 }

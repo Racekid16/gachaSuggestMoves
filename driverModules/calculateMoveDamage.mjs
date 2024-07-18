@@ -8,16 +8,16 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
     if (typeof moveObj === 'undefined') {
         console.log(move, 'is not in consts.json');
         console.log(battleObj[battleKey][attacker].chars[attackChar]);
-        return [{}, -1, '        '];
+        return [{}, -1, ''];
     }
     if (!moveObj.type.includes('attack')) {
         //console.log(`${move} is not an Attack type move.`);
-        return [moveObj, 0, '        '];
+        return [moveObj, 0, ''];
     }
 
     let completeMoveObj = getCompleteMoveObj(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move);
     let damage;
-    let hitType = '        ';
+    let hitType = '';
     let defenderPersonality = battleObj[battleKey][defender].chars[defenseChar].personality;
 
     let attackerAttackStat = battleObj[battleKey][attacker].chars[attackChar][completeMoveObj.attackStat];
@@ -40,7 +40,10 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
     
     //this is a guess for how much damage will be dealt, since I don't know the exact damage formula
     if (defensePower != 0) {
-        damage = round(40 * (attackPower / defensePower) ** 0.75);
+        damage = Math.min(
+            round(40 * (attackPower / defensePower)),
+            round(40 * (attackPower / defensePower) ** 0.85)
+        );
     } else {
         damage = round(2 * attackPower);
     }

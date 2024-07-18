@@ -5,7 +5,7 @@ export function createPartyFlexBox(battleObj, battleKey, playerName, hasStrength
     partyContainer.style.height = "30%";
     partyContainer.classList.add('one-by-two');
 
-    const partyEmbed = createPartyEmbed(battleObj, battleKey, playerName, supportBonus);
+    const partyEmbed = createPartyEmbed(battleKey, playerName, supportBonus);
     const partyStats = createPartyStats(battleObj, battleKey, playerName, hasStrength, partyArray);
 
     partyContainer.appendChild(partyEmbed);
@@ -13,11 +13,14 @@ export function createPartyFlexBox(battleObj, battleKey, playerName, hasStrength
     return partyContainer
 }
 
-export function createSuggestedMoveFlexBox() {
-    
+//TODO
+export function createSuggestionFlexBox(battleObj, battleKey, playerInformation) {
+    const suggestionBox = document.createElement('div');
+    suggestionBox.innerHTML = `<pr>${JSON.stringify(playerInformation, null, 4)}</pr>`;
+    return suggestionBox;
 }
 
-function createPartyEmbed(battleObj, battleKey, playerName, supportBonus) {
+function createPartyEmbed(battleKey, playerName, supportBonus) {
     //const playerID = battleObj[battleKey][playerName].id;
 
     const partyEmbed = document.createElement('div');
@@ -31,7 +34,7 @@ function createPartyEmbed(battleObj, battleKey, playerName, supportBonus) {
     const avatar = document.createElement('img');
     avatar.src = `./battleAssets/${battleKey}/${playerName}/avatar.png`;
     avatar.alt = `${playerName}_avatar.png`;
-    avatar.classList.add('avatar');
+    avatar.classList.add('party-avatar');
     partyHeader.appendChild(avatar);
 
     const partyLabel = document.createElement('div');
