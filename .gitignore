@@ -4,5 +4,4 @@ package-lock.json
 *.txt
 config.json
 currentBattles/
-website/partyImages/
-website/avatars/
+website/battleAssets/

@@ -37,15 +37,14 @@ socket.on('playerParty', (data) => {
 });
 
 socket.on('battleEnd', (data) => {
-    addEmbed(data.battleKey, "Battle End", data.battleEndMessage);
+    addEmbed(data.battleKey, "<b>WINNER:</b>", data.turnResults, data.usernames);
     deleteTab(data.battleKey);
     const time = new Date().toLocaleString();
     addToHome(time, data.battleEndMessage);
 });
 
 socket.on('turnResults', (data) => {
-    const header = `Turn ${data.turn}`;
-    addEmbed(data.battleKey, header, data.turnResults, data.battleObj.usernames);
+    addEmbed(data.battleKey, `<b><u>Turn ${data.turn}</u></b>`, data.turnResults, data.usernames);
 });
 
 socket.on('suggestedMoves', (data) => {
@@ -148,7 +147,7 @@ function addEmbed(battleKey, header, body, usernames) {
     const newElement = document.createElement('div');
     newElement.classList.add('discord-embed');
     newElement.classList.add('turn-results-embed');
-    newElement.innerHTML = `<b><u>${header}</u></b>\n${body}`
+    newElement.innerHTML = `${header}\n${body}`
                            .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
                            .replace(/\n/g, '<br>')
                            .replace(/<@(\d+)>/g, (match, playerID) => `<div class="ping">@${usernames[playerID]}</div>`);

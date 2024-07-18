@@ -187,7 +187,8 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                     mental: round(creatorBaseCharStats.mental * inheritAmount),
                     physical: round(creatorBaseCharStats.physical * inheritAmount),
                     social: round(creatorBaseCharStats.social * inheritAmount),
-                    resolve: round(creatorBaseCharStats.resolve * inheritAmount)
+                    resolve: round(creatorBaseCharStats.resolve * inheritAmount),
+                    imageName: creatorBaseCharStats.imageName
                 };
                 battleObj[battleKey][attacker].baseCharStats.Pawn = structuredClone(battleObj[battleKey][attacker].chars.Pawn);
                 addBoost(battleObj, battleKey, attacker, attackChar, "Kings Command", turn);

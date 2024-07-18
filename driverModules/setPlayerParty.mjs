@@ -3,6 +3,7 @@
 import fs from 'fs';
 import axios from 'axios';
 import crypto from 'crypto';
+import sharp from 'sharp';
 import { printParty } from './prettyPrint.mjs';
 import { round } from './round.mjs';
 import { addAspectAttributes, addAspectBoost } from './aspect.mjs';
@@ -11,14 +12,20 @@ import consts from '../consts.json' assert { type: 'json' };
 
 const delay = async (ms = 1000) =>  new Promise(resolve => setTimeout(resolve, ms));
 
+//the playerName parameter of this function does not have the player number prepended to it
 export async function setPlayerParty(battleObj, playerName, playerID, imageURL, avatarURL, supportBonus) {
+    let battleKey = determineBattleKey(battleObj, playerName, playerID);
+    if (battleKey === false) {
+        return;
+    }
+    
     let tempPartyImageName = generateRandomFileName();
-    let tempPartySaveLocation = `./website/partyImages/${tempPartyImageName}.png`;
+    let tempPartySaveLocation = `./website/battleAssets/${battleKey}/${tempPartyImageName}.png`;
     downloadImage(imageURL.replace('format=png&width=328&height=254', ""), tempPartySaveLocation)
         .catch(err => console.error(`Failed to download image to ${tempPartySaveLocation}:`, err));
 
     let tempAvatarName = generateRandomFileName();
-    let tempAvatarSaveLocation = `./website/avatars/${tempAvatarName}.png`;
+    let tempAvatarSaveLocation = `./website/battleAssets/${battleKey}/${tempAvatarName}.png`;
     downloadImage(avatarURL.replace('?size=1024', ""), tempAvatarSaveLocation)
         .catch(err => console.error(`Failed to download image to ${tempAvatarSaveLocation}:`, err));
 
@@ -38,10 +45,6 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL, 
         return;
     }
 
-    let battleKey = determineBattleKey(battleObj, playerName, playerID);
-    if (battleKey === false) {
-        return;
-    }
     let splitBattleKey = battleKey.split(" vs. ");
     let p1name = splitBattleKey[0].slice(splitBattleKey[0].indexOf('1.') + 2);
     let p2name = splitBattleKey[1].slice(splitBattleKey[1].indexOf('2.') + 2);
@@ -92,13 +95,13 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL, 
     while (!fs.existsSync(tempPartySaveLocation)) {
         await delay(200);
     }
-    let partySaveLocation = `./website/partyImages/${battleKey}_party_${playerID}.png`;
+    let partySaveLocation = `./website/battleAssets/${battleKey}/${playerName}/party.png`;
     fs.renameSync(tempPartySaveLocation, partySaveLocation);
 
     while (!fs.existsSync(tempAvatarSaveLocation)) {
         await delay(200);
     }
-    let avatarSaveLocation = `./website/avatars/${playerID}.png`;
+    let avatarSaveLocation = `./website/battleAssets/${battleKey}/${playerName}/avatar.png`;
     fs.renameSync(tempAvatarSaveLocation, avatarSaveLocation);
 
     if (playerNumber == 2) {
@@ -126,12 +129,26 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL, 
                 //console.log(`${char.name} with ${char.numStars} stars was found in the database!`);
                 let charStatsJSON = await charStats.json();
                 addAspectAttributes(char, charStatsJSON);
-                battleObj[battleKey][playerName].chars[charStatsJSON.name] = charStatsJSON;
+                let charName = charStatsJSON.name;
+                battleObj[battleKey][playerName].chars[charName] = charStatsJSON;
                 
                 if (i <= 2) {
-                    battleObj[battleKey][playerName].chars[charStatsJSON.name].active = true;
+                    battleObj[battleKey][playerName].chars[charName].active = true;
+                    battleObj[battleKey][playerName].chars[charName].imageName = `${charName}.png`;
+                    
+                    let charSaveLocation = `./website/battleAssets/${battleKey}/${playerName}/chars/${charName}.png`;
+                    let cropOptions = {
+                        left: 149 + 656 * i,
+                        top: 149,
+                        width: 482,
+                        height: 482,
+                    };
+                    sharp(partySaveLocation)
+                        .extract(cropOptions) // Crop the image using the specified options
+                        .toFile(charSaveLocation, (err, info) => { if (err) { throw err; }});
+
                 } else {
-                    battleObj[battleKey][playerName].chars[charStatsJSON.name].active = false;
+                    battleObj[battleKey][playerName].chars[charName].active = false;
                 }
             }
         }
@@ -320,7 +337,7 @@ function determinePlayerNumberByName(battleObj, battleKey, playerName) {
     console.log(`Unknown player ${playerName} in ${battleKey}`);
 }
 
-//got this from GPT
+//got this from chat GPT
 function generateRandomFileName() {
     const randomBytes = crypto.randomBytes(16).toString('hex');
     return randomBytes;

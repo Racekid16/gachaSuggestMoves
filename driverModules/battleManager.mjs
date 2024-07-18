@@ -19,12 +19,18 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed, messa
     battleObj.currentBattles.push([new Date().getTime(), 'battle', p1name, p2name, battleEmbed]);
     
     //create a new file for this battle
-    fs.writeFileSync(`./currentBattles/${battleKey}.txt`, '', (err) => {if (err) { throw err; }});
+    fs.writeFileSync(`./currentBattles/${battleKey}.txt`, '');
     battleObj[battleKey].log = function (str) {
         this.data += str + "\n";
         fs.appendFileSync(`./currentBattles/${battleKey}.txt`, str + "\n", (err) => {if (err) { throw err; }});
     }
 
+    fs.mkdirSync(`./website/battleAssets/${battleKey}`);
+    fs.mkdirSync(`./website/battleAssets/${battleKey}/${p1name}`);
+    fs.mkdirSync(`./website/battleAssets/${battleKey}/${p1name}/chars`);
+    fs.mkdirSync(`./website/battleAssets/${battleKey}/${p2name}`);
+    fs.mkdirSync(`./website/battleAssets/${battleKey}/${p2name}/chars`);
+    
     fetch(`http://127.0.0.1:${consts.port}/socket/battleStart`, {
         method: "POST",
         headers: {
@@ -83,11 +89,17 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
     battleObj[battleKey].requestedParties = [];
     
     //create a new file for this battle
-    fs.writeFileSync(`./currentBattles/${battleKey}.txt`, '', (err) => {if (err) { throw err; }});
+    fs.writeFileSync(`./currentBattles/${battleKey}.txt`, '');
     battleObj[battleKey].log = function (str) {
         this.data += str + "\n";
         fs.appendFileSync(`./currentBattles/${battleKey}.txt`, str + "\n", (err) => {if (err) { throw err; }});
     }
+
+    fs.mkdirSync(`./website/battleAssets/${battleKey}`);
+    fs.mkdirSync(`./website/battleAssets/${battleKey}/${playerName}`);
+    fs.mkdirSync(`./website/battleAssets/${battleKey}/${playerName}/chars`);
+    fs.mkdirSync(`./website/battleAssets/${battleKey}/${botName}`);
+    fs.mkdirSync(`./website/battleAssets/${battleKey}/${botName}/chars`);
 
     fetch(`http://127.0.0.1:${consts.port}/socket/battleStart`, {
         method: "POST",
@@ -165,18 +177,10 @@ export function deleteBattle(battleObj, p1name, p2name, turnResults) {
     battleObj.currentBattles.splice(battleObj.currentBattles.findIndex((arr) => {
         arr[2] == p1name && arr[3] == p2name
     }));
-
-    for (let fileName of [`${p1ID}.png`, `${p2ID}.png`]) {
-        let imageLocation = `./website/avatars/${fileName}`;
-        if (fs.existsSync(imageLocation)) {
-            fs.unlink(imageLocation, (err) => {if (err) { throw err; }});
-        }
-    }
-    for (let fileName of [`${battleKey}_party_${p1ID}.png`, `${battleKey}_party_${p2ID}.png`]) {
-        let imageLocation = `./website/partyImages/${fileName}`;
-        if (fs.existsSync(imageLocation)) {
-            fs.unlink(imageLocation, (err) => {if (err) { throw err; }});
-        }
+    
+    let battleAssetsPath = `./website/battleAssets/${battleKey}`;
+    if (fs.existsSync(battleAssetsPath)) {
+        fs.rm(battleAssetsPath, { recursive: true }, (err) => { if (err) { throw err; } });
     }
 
     fetch(`http://127.0.0.1:${consts.port}/socket/battleEnd`, {
@@ -186,7 +190,9 @@ export function deleteBattle(battleObj, p1name, p2name, turnResults) {
         },
         body: JSON.stringify({
             battleKey: battleKey,
-            battleEndMessage: battleEndMessage
+            turnResults: turnResults,
+            battleEndMessage: battleEndMessage,
+            usernames: battleObj.usernames
         })
     });
 

@@ -6,9 +6,8 @@ import path from 'path';
 import { startWsConnection } from "./driverModules/websocket.mjs";
 
 (async ()=> {
-    await deleteAllFilesInDirectory('./currentBattles');
-    await deleteAllFilesInDirectory('./website/partyImages');
-    await deleteAllFilesInDirectory('./website/avatars');
+    await deleteAllContents('./currentBattles');
+    await deleteAllContents('./website/battleAssets');
     let battleObj = {
         currentBattles: [],
         usernames: {},
@@ -18,15 +17,25 @@ import { startWsConnection } from "./driverModules/websocket.mjs";
     startWsConnection(battleObj);
 })();
 
-async function deleteAllFilesInDirectory(directoryPath) {
+//got from chat GPT
+async function deleteAllContents(directoryPath) {
     try {
         const files = await fs.readdir(directoryPath);
-        const deletePromises = files.map(async (file) => {
+        
+        for (const file of files) {
             const filePath = path.join(directoryPath, file);
-            await fs.unlink(filePath);
-        });
-        await Promise.all(deletePromises);
+            const stat = await fs.lstat(filePath);
+
+            if (stat.isDirectory()) {
+                await deleteAllContents(filePath);
+                await fs.rmdir(filePath);
+            } else {
+                await fs.unlink(filePath);
+            }
+        }
+        
     } catch (err) {
-        console.error(`Error deleting files in ${directoryPath}:`, err);
+        console.error(`Error deleting contents of ${directoryPath}: ${err.message}`);
+        throw err;
     }
 }

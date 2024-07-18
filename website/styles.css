@@ -62,6 +62,7 @@ body {
 }
 .party-image {
     height: 40vh;
+    border-radius: 4px;
 }
 .party-stats-grid {
     display: grid;

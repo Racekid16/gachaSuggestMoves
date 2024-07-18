@@ -5,8 +5,8 @@ export function createPartyFlexBox(battleObj, battleKey, playerName, hasStrength
     partyContainer.style.height = "30%";
     partyContainer.classList.add('one-by-two');
 
-    const partyEmbed = createPartyEmbed(battleObj, battleKey, playerName, hasStrength, supportBonus);
-    const partyStats = createPartyStats(battleObj, battleKey, playerName, partyArray);
+    const partyEmbed = createPartyEmbed(battleObj, battleKey, playerName, supportBonus);
+    const partyStats = createPartyStats(battleObj, battleKey, playerName, hasStrength, partyArray);
 
     partyContainer.appendChild(partyEmbed);
     partyContainer.appendChild(partyStats);
@@ -17,8 +17,8 @@ export function createSuggestedMoveFlexBox() {
     
 }
 
-function createPartyEmbed(battleObj, battleKey, playerName, hasStrength, supportBonus) {
-    const playerID = battleObj[battleKey][playerName].id;
+function createPartyEmbed(battleObj, battleKey, playerName, supportBonus) {
+    //const playerID = battleObj[battleKey][playerName].id;
 
     const partyEmbed = document.createElement('div');
     partyEmbed.classList.add('discord-embed');
@@ -29,20 +29,13 @@ function createPartyEmbed(battleObj, battleKey, playerName, hasStrength, support
     partyHeader.classList.add('party-header');
 
     const avatar = document.createElement('img');
-    avatar.src = `./avatars/${playerID}.png`;
+    avatar.src = `./battleAssets/${battleKey}/${playerName}/avatar.png`;
     avatar.alt = `${playerName}_avatar.png`;
     avatar.classList.add('avatar');
     partyHeader.appendChild(avatar);
 
     const partyLabel = document.createElement('div');
     partyLabel.innerHTML = `<b>${playerName}'s party</b>`;
-    /*
-    if (!hasStrength) {
-        partyLabel.innerHTML = `<b>${playerName}'s party</b>`;
-    } else {
-        partyLabel.innerHTML = `<b>${playerName}'s party</b> (Strength 3: +10% to stats)`
-    }
-    */
     partyHeader.appendChild(partyLabel);
 
     const supportBonusContainer = document.createElement('div');
@@ -50,7 +43,7 @@ function createPartyEmbed(battleObj, battleKey, playerName, hasStrength, support
     supportBonusContainer.classList.add('support-bonus-container');
 
     const partyImage = document.createElement('img');
-    partyImage.src = `./partyImages/${battleKey}_party_${playerID}.png`;
+    partyImage.src = `./battleAssets/${battleKey}/${playerName}/party.png`;
     partyImage.alt = `${playerName}_party.png`;
     partyImage.classList.add('party-image');
 
@@ -60,7 +53,7 @@ function createPartyEmbed(battleObj, battleKey, playerName, hasStrength, support
     return partyEmbed;
 }
 
-function createPartyStats(battleObj, battleKey, playerName, partyArray) {
+function createPartyStats(battleObj, battleKey, playerName, hasStrength, partyArray) {
     const partyStats = document.createElement('div');
 
     const statSymbol = {
@@ -73,6 +66,9 @@ function createPartyStats(battleObj, battleKey, playerName, partyArray) {
 
     const activeHeader = document.createElement('div');
     activeHeader.innerHTML = "<b>Active</b>";
+    if (hasStrength) {
+        activeHeader.innerHTML += " (Strength 3: 🏃🧠💪🗣️❤️ +10%)";
+    }
 
     const activeCharStats = document.createElement('div');
     activeCharStats.classList.add('party-stats-grid');
