@@ -20,13 +20,17 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL, 
     }
     
     let tempPartyImageName = generateRandomFileName();
+    let partyFinishedDownloading = false;
     let tempPartySaveLocation = `./website/battleAssets/${battleKey}/${tempPartyImageName}.png`;
     downloadImage(imageURL.replace('format=png&width=328&height=254', ""), tempPartySaveLocation)
+        .then(() => partyFinishedDownloading = true)
         .catch(err => console.error(`Failed to download image to ${tempPartySaveLocation}:`, err));
 
     let tempAvatarName = generateRandomFileName();
+    let avatarFinishedDownloading = false;
     let tempAvatarSaveLocation = `./website/battleAssets/${battleKey}/${tempAvatarName}.png`;
     downloadImage(avatarURL.replace('?size=1024', ""), tempAvatarSaveLocation)
+        .then(() => avatarFinishedDownloading = true)
         .catch(err => console.error(`Failed to download image to ${tempAvatarSaveLocation}:`, err));
 
     let party = await fetch(`http://127.0.0.1:${consts.port}/ImageData/parseParty`, {
@@ -92,13 +96,13 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL, 
     playerName = `${playerNumber}.${playerName}`;
     playerID = battleObj[battleKey][playerName].id;
 
-    while (!fs.existsSync(tempPartySaveLocation)) {
+    while (!partyFinishedDownloading) {
         await delay(200);
     }
     let partySaveLocation = `./website/battleAssets/${battleKey}/${playerName}/party.png`;
     fs.renameSync(tempPartySaveLocation, partySaveLocation);
 
-    while (!fs.existsSync(tempAvatarSaveLocation)) {
+    while (!avatarFinishedDownloading) {
         await delay(200);
     }
     let avatarSaveLocation = `./website/battleAssets/${battleKey}/${playerName}/avatar.png`;

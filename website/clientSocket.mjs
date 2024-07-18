@@ -51,6 +51,27 @@ socket.on('suggestedMoves', (data) => {
     addSuggestedMoves(data.battleKey, data.text);
 });
 
+function setTabContentMaxHeight() {
+    const activeTabContent = document.querySelector('.tab-content.active');
+    if (activeTabContent === null) {
+        return;
+    }
+    const windowHeight = window.innerHeight;
+    const bannerHeight = document.getElementById('banner').offsetHeight;
+    const tabButtonsContainerHeight = document.getElementById('tab-buttons-container').offsetHeight;
+    const bodyBottomMargin = window.getComputedStyle(document.body).marginBottom;
+    
+    const activeTabAdditional = parseInt(window.getComputedStyle(activeTabContent).borderTopWidth)
+                              + parseInt(window.getComputedStyle(activeTabContent).borderBottomWidth)
+                              + parseInt(window.getComputedStyle(activeTabContent).paddingTop)
+                              + parseInt(window.getComputedStyle(activeTabContent).paddingBottom)
+    const newHeight = `calc(${windowHeight}px - ${bannerHeight}px - ${tabButtonsContainerHeight}px - ${bodyBottomMargin} - ${activeTabAdditional}px - 3px)`;
+    activeTabContent.style.maxHeight = newHeight;
+}
+
+window.addEventListener('load', setTabContentMaxHeight);
+window.addEventListener('resize', setTabContentMaxHeight);
+
 function toggleTab(battleKey) {
     const selectedTabButton = document.getElementById(`${battleKey}-button`);
     const selectedTabContent = document.getElementById(`${battleKey}-content`); 
@@ -67,7 +88,9 @@ function toggleTab(battleKey) {
     for (let key of tabsToDelete) {
         deleteTab(key);
     }
-    scrollToBottom(battleKey);
+    setTabContentMaxHeight();
+    //scrolling to bottom of tab
+    selectedTabContent.scrollTop = selectedTabContent.scrollHeight;
 }
 
 function createTab(battleKey, time, battleLink) {
@@ -129,11 +152,6 @@ function addToHome(time, message) {
     newElement.appendChild(timeDiv);
     newElement.appendChild(messageDiv);
     homeContent.appendChild(newElement);
-}
-
-function scrollToBottom(battleKey) {
-    const tabContent = document.getElementById(`${battleKey}-content`);
-    tabContent.scrollTop = tabContent.scrollHeight;
 }
 
 function addPlayerParty(battleObj, battleKey, playerName, hasStrength, supportBonus, partyArray) {

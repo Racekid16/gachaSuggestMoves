@@ -39,8 +39,8 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
     let defensePower = defenderDefenseStat * defenderReceiveMultiplier * resistMultiplier;
     
     //this is a guess for how much damage will be dealt, since I don't know the exact damage formula
-    if (defenderDefenseStat != 0) {
-        damage = round(40 * attackPower / defensePower);
+    if (defensePower != 0) {
+        damage = round(40 * (attackPower / defensePower) ** 0.75);
     } else {
         damage = round(2 * attackPower);
     }
