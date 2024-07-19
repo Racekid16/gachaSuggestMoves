@@ -12,7 +12,6 @@ export function createPartyFlexBox(battleObj, battleKey, playerName, hasStrength
     return partyContainer;
 }
 
-//TODO
 export function createSuggestionFlexBox(battleObj, battleKey, playerInformation) {
     const suggestionContainer = document.createElement('div');
     suggestionContainer.classList.add('row');
@@ -41,11 +40,9 @@ function createPartyEmbed(battleKey, playerName, supportBonus) {
     avatar.classList.add('party-avatar');
     avatar.src = `./battleAssets/${battleKey}/${playerName}/avatar.png`;
     avatar.alt = `${playerName}_avatar.png`;
-    partyHeader.appendChild(avatar);
 
     const partyPlayer = document.createElement('div');
     partyPlayer.innerHTML = `<b>${playerName}'s party</b>`;
-    partyHeader.appendChild(partyPlayer);
 
     const supportBonusContainer = document.createElement('div');
     supportBonusContainer.classList.add('support-bonus-container');
@@ -56,6 +53,8 @@ function createPartyEmbed(battleKey, playerName, supportBonus) {
     partyImage.src = `./battleAssets/${battleKey}/${playerName}/party.png`;
     partyImage.alt = `${playerName}_party.png`;
 
+    partyHeader.appendChild(avatar);
+    partyHeader.appendChild(partyPlayer);
     partyEmbed.appendChild(partyHeader);
     partyEmbed.appendChild(supportBonusContainer);
     partyEmbed.appendChild(partyImage);
@@ -65,12 +64,13 @@ function createPartyEmbed(battleKey, playerName, supportBonus) {
 function createPartyStats(battleObj, battleKey, playerName, hasStrength, partyArray) {
     const partyStats = document.createElement('div');
 
-    const statSymbol = {
+    const statSymbols = {
         "initiative": "🏃",
         "mental": "🧠",
         "physical": "💪",
         "social": "🗣️",
-        "resolve": "❤️"
+        "resolve": "❤️",
+        "ability": "🏃🧠💪🗣️"
     }
 
     const activeHeader = document.createElement('div');
@@ -79,8 +79,23 @@ function createPartyStats(battleObj, battleKey, playerName, hasStrength, partyAr
         activeHeader.innerHTML += " (Strength 3: 🏃🧠💪🗣️❤️ +10%)";
     }
 
-    const activeCharStats = document.createElement('div');
-    activeCharStats.classList.add('party-stats-grid');
+    const activeCharStatsGrid = createactiveCharStatsGrid(battleObj, battleKey, playerName, partyArray, statSymbols);
+
+    const benchHeader = document.createElement('div');
+    benchHeader.innerHTML = '<b>Bench</b>'
+
+    const benchCharStatsGrid = createBenchCharStatsGrid(battleObj, battleKey, playerName, partyArray, statSymbols); 
+
+    partyStats.appendChild(activeHeader);
+    partyStats.appendChild(activeCharStatsGrid);
+    partyStats.appendChild(benchHeader);
+    partyStats.appendChild(benchCharStatsGrid);
+    return partyStats;
+}
+
+function createactiveCharStatsGrid(battleObj, battleKey, playerName, partyArray, statSymbols) {
+    const activeCharStatsGrid = document.createElement('div');
+    activeCharStatsGrid.classList.add('party-stats-grid');
     for (let i = 0; i < 3; i++) {
         const charName = partyArray[i].name;
         if (charName == "empty") {
@@ -90,28 +105,26 @@ function createPartyStats(battleObj, battleKey, playerName, hasStrength, partyAr
         const numStarsCell = document.createElement('div');
         numStarsCell.classList.add('cell');
         numStarsCell.innerHTML = `${partyArray[i].numStars}⭐`;
-        activeCharStats.appendChild(numStarsCell);
+        activeCharStatsGrid.appendChild(numStarsCell);
 
         const charNameCell = document.createElement('div');
         charNameCell.classList.add('cell');
         charNameCell.innerHTML = `${charName}`;
-        activeCharStats.appendChild(charNameCell);
+        activeCharStatsGrid.appendChild(charNameCell);
 
         for (let stat of ['initiative', 'mental', 'physical', 'social', 'resolve']) {
             const newCell = document.createElement('div');
             newCell.classList.add('cell');
-            newCell.innerHTML = `${statSymbol[stat]}${battleObj[battleKey][playerName].chars[charName][stat]}`;
-            activeCharStats.appendChild(newCell);
+            newCell.innerHTML = `${statSymbols[stat]}${battleObj[battleKey][playerName].chars[charName][stat]}`;
+            activeCharStatsGrid.appendChild(newCell);
         }
     }
+    return activeCharStatsGrid;
+}
 
-    statSymbol.ability = "🏃🧠💪🗣️";
-
-    const benchHeader = document.createElement('div');
-    benchHeader.innerHTML = '<b>Bench</b>'
-
-    const benchCharStats = document.createElement('div');
-    benchCharStats.classList.add('party-stats-grid');
+function createBenchCharStatsGrid(battleObj, battleKey, playerName, partyArray, statSymbols) {
+    const benchCharStatsGrid = document.createElement('div');
+    benchCharStatsGrid.classList.add('party-stats-grid');
     for (let i = 3; i < 6; i++) {
         const charName = partyArray[i].name;
         if (charName == "empty") {
@@ -121,32 +134,32 @@ function createPartyStats(battleObj, battleKey, playerName, hasStrength, partyAr
         const numStarsCell = document.createElement('div');
         numStarsCell.classList.add('cell');
         numStarsCell.innerHTML = `${partyArray[i].numStars}⭐`;
-        benchCharStats.appendChild(numStarsCell);
+        benchCharStatsGrid.appendChild(numStarsCell);
 
         const charNameCell = document.createElement('div');
         charNameCell.classList.add('cell');
         charNameCell.innerHTML = `${charName}`;
-        benchCharStats.appendChild(charNameCell);
+        benchCharStatsGrid.appendChild(charNameCell);
 
         let supportCategory = battleObj[battleKey][playerName].chars[charName].supportCategory;
         supportCategory = supportCategory.charAt(0).toLowerCase() + supportCategory.slice(1);
         const supportCategoryCell = document.createElement('div');
         supportCategoryCell.classList.add('cell');
-        supportCategoryCell.innerHTML = `${statSymbol[supportCategory]}`;
-        benchCharStats.appendChild(supportCategoryCell);
+        supportCategoryCell.innerHTML = `${statSymbols[supportCategory]}`;
+        benchCharStatsGrid.appendChild(supportCategoryCell);
         
         const supportBonus = battleObj[battleKey][playerName].chars[charName].supportBonus;
         const supportBonusCell = document.createElement('div');
         supportBonusCell.classList.add('cell');
         supportBonusCell.innerHTML = `+${supportBonus}%`;
-        benchCharStats.appendChild(supportBonusCell);
+        benchCharStatsGrid.appendChild(supportBonusCell);
 
         for (let j = 0; j < 3; j++) {
             const newCell = document.createElement('div');
             newCell.classList.add('cell');
             const activeCharName = partyArray[j].name;
             if (activeCharName == "empty") {
-                benchCharStats.append(newCell);
+                benchCharStatsGrid.appendChild(newCell);
                 continue;
             }
             
@@ -155,16 +168,10 @@ function createPartyStats(battleObj, battleKey, playerName, hasStrength, partyAr
                     newCell.innerHTML = activeCharName;
                 }
             }
-            benchCharStats.append(newCell);
+            benchCharStatsGrid.appendChild(newCell);
         }
-
     }
-
-    partyStats.append(activeHeader);
-    partyStats.append(activeCharStats);
-    partyStats.append(benchHeader);
-    partyStats.append(benchCharStats);
-    return partyStats;
+    return benchCharStatsGrid;
 }
 
 function createSuggestionLabel(battleKey, playerInformation) {

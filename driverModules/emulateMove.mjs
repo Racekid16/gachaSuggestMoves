@@ -150,7 +150,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
         case 'Kabedon':
             //this works even if both players use the same character and both use Kabedon,
             //because their counters are guaranteed to fail in that case
-            battleObj[battleKey][attacker].chars[attackChar].canUseKabedon = false;
+            battleObj[battleKey][attacker].chars[attackChar].lockedMoves.push(move);
             if (turnResults.includes(`**${attackChar}** countered with **Kabedon**!`)) {
                 addStatus(battleObj, battleKey, defender, defenseChar, "Stunned", turn, 1);
             } else if (turnResults.includes(`**${attackChar}'s** counter failed!`)) {
@@ -176,6 +176,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                     receiveMultiplier: 1,
                     inflictModifiers: [],
                     receiveModifiers: [],
+                    lockedMoves: [],
                     rune: "",
                     aspectBoost: {
                         initiative: 0,
@@ -284,9 +285,7 @@ export function emulateAction(battleObj, battleKey, attacker, defender, attackCh
                 attackerPreviousTaggedInCharObj = battleObj[battleKey][attacker].chars[attackerPreviousTaggedInChar];
             }
 
-            if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Kabedon")) {
-                battleObj[battleKey][attacker].chars[attackChar].canUseKabedon = true;
-            }
+            battleObj[battleKey][attacker].chars[attackChar].lockedMoves = [];
             
             if (attackerPreviousTaggedInChar !== null && attackerPreviousTaggedInCharObj.moves.includes("Lead By Example")) {
                 emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Lead By Example", turnResults, turn, attackerResolves);

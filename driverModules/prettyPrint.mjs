@@ -152,7 +152,7 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
                   + `${p1hitType}${" ".repeat(hitTypeLength - p1hitType.length)} `
                   + `${p1isFatal}`;
     }
-    let [p1str, p1buffs, p1debuffs, p1positiveStatuses, p1negativeStatuses, p1otherMoves] = printCharacterOtherInformation(battleObj, battleKey, p1name, p2name, p1char, p2char, p1moveSequence, p1move, turn);
+    let [p1str, p1buffs, p1debuffs, p1positiveStatuses, p1negativeStatuses, p1moves] = printCharacterOtherInformation(battleObj, battleKey, p1name, p2name, p1char, p2char, p1moveSequence, turn);
     p1output += p1str;
     
     let p2output =  `${p2name} ${" ".repeat(playerNameLength - p2name.length)}`
@@ -171,7 +171,7 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
                   + `${p2hitType}${" ".repeat(hitTypeLength - p2hitType.length)} `
                   + `${p2isFatal}`;
     }
-    let [p2str, p2buffs, p2debuffs, p2positiveStatuses, p2negativeStatuses, p2otherMoves] = printCharacterOtherInformation(battleObj, battleKey, p2name, p1name, p2char, p1char, p2moveSequence, p2move, turn);
+    let [p2str, p2buffs, p2debuffs, p2positiveStatuses, p2negativeStatuses, p2moves] = printCharacterOtherInformation(battleObj, battleKey, p2name, p1name, p2char, p1char, p2moveSequence, turn);
     p2output += p2str;
 
     let p1priority = p1moveObj.priority;
@@ -204,36 +204,22 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
     let p1information = {
         playerName: p1name,
         char: p1char,
-        suggestedMove: {
-            name: p1move,
-            lowerBound: p1lowerBound,
-            upperBound: p1upperBound,
-            hitType: p1hitType,
-            isFatal: p1isFatal 
-        },
         moveSequence: p1moveSequence,
         buffs: p1buffs,
         positiveStatuses: p1positiveStatuses,
         debuffs: p1debuffs,
         negativeStatuses: p1negativeStatuses,
-        otherMoves: p1otherMoves
+        moves: p1moves
     };
     let p2information = {
         playerName: p2name,
         char: p2char,
-        suggestedMove: {
-            name: p2move,
-            lowerBound: p2lowerBound,
-            upperBound: p2upperBound,
-            hitType: p2hitType,
-            isFatal: p2isFatal 
-        },
         moveSequence: p2moveSequence,
         buffs: p2buffs,
         positiveStatuses: p2positiveStatuses,
         debuffs: p2debuffs,
         negativeStatuses: p2negativeStatuses,
-        otherMoves: p2otherMoves
+        moves: p2moves
     };
 
     fetch(`http://127.0.0.1:${consts.port}/socket/suggestedMoves`, {
@@ -260,14 +246,14 @@ function getMaxLength(chars, property) {
 // print the move sequence, current buffs, current debuffs, and all the other possible moves that can be made besides 
 // the recommended move, in the order of damage decreasing
 function printCharacterOtherInformation(battleObj, battleKey, attacker, defender, attackChar, defenseChar, 
-                                        moveSequence, recommendedMove, turn) {
+                                        moveSequence, turn) {
     let returnStr = "";
     returnStr += printMoveSequence(moveSequence);
     let [modifierStr, buffs, debuffs, positiveStatuses, negativeStatuses] = printModifiers(battleObj, battleKey, attacker, attackChar, turn);
     returnStr += modifierStr;
-    let [otherMovesStr, otherMoves] = printOtherMoves(battleObj, battleKey, attacker, defender, attackChar, defenseChar, recommendedMove);
-    returnStr += otherMovesStr;
-    return [returnStr, buffs, debuffs, positiveStatuses, negativeStatuses, otherMoves];
+    let [movesStr, moves] = printMoves(battleObj, battleKey, attacker, defender, attackChar, defenseChar);
+    returnStr += movesStr;
+    return [returnStr, buffs, debuffs, positiveStatuses, negativeStatuses, moves];
 }
 
 function printMoveSequence(moveSequence) {
@@ -374,9 +360,9 @@ function printModifiers(battleObj, battleKey, playerName, charName, turn) {
     return [returnStr, buffsArr, debuffsArr, positiveStatusesArr, negativeStatusesArr];
 }
 
-function printOtherMoves(battleObj, battleKey, attacker, defender, attackChar, defenseChar, recommendedMove) {
+function printMoves(battleObj, battleKey, attacker, defender, attackChar, defenseChar) {
     let validMoves = battleObj[battleKey][attacker].chars[attackChar].moves
-        .filter(move => !consts.moveInfo[move].type.includes("innate") && move != recommendedMove);
+        .filter(move => !consts.moveInfo[move].type.includes("innate"));
     let moveDamageObjs = [];
     for (let move of validMoves) {
         let moveDamageObj = calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move);
@@ -390,7 +376,7 @@ function printOtherMoves(battleObj, battleKey, attacker, defender, attackChar, d
         if (!moveDamageObj[0].type.includes("attack") && hasStatus(battleObj, battleKey, attacker, attackChar, "Taunted")) {
             continue;
         }
-        if (move == "Kabedon" && battleObj[battleKey][attacker].chars[attackChar].canUseKabedon != true) {
+        if (battleObj[battleKey][attacker].chars[attackChar].lockedMoves.includes(move)) {
             continue;
         }
         if (hasStatus(battleObj, battleKey, defender, defenseChar, "Invulnerable")) {
@@ -409,7 +395,7 @@ function printOtherMoves(battleObj, battleKey, attacker, defender, attackChar, d
     
     moveDamageObjs = moveDamageObjs.sort((a, b) => b[2] - a[2]);
     //moveDamageObj is formatted as [moveName, moveObj, moveDamage, hitType]
-    let otherMoves = [];
+    let movesArr = [];
     for (let moveDamageObj of moveDamageObjs) {
         let moveName = moveDamageObj[0];
         let moveDamage = moveDamageObj[2];
@@ -421,7 +407,7 @@ function printOtherMoves(battleObj, battleKey, attacker, defender, attackChar, d
         if (lowerBound >= battleObj[battleKey][defender].chars[defenseChar].resolve) {
             isFatal = 'FATAL'
         }
-        otherMoves.push({
+        movesArr.push({
             name: moveName, 
             lowerBound: lowerBound,
             upperBound: upperBound,
@@ -430,15 +416,15 @@ function printOtherMoves(battleObj, battleKey, attacker, defender, attackChar, d
         });
     }
     
-    let nameLength = getMaxLength(otherMoves, 'name');
-    let lowerBoundLength = getMaxLength(otherMoves, 'lowerBound');
-    let upperBoundLength = getMaxLength(otherMoves, 'upperBound');
-    let hitTypeLength = getMaxLength(otherMoves, 'hitType');
+    let nameLength = getMaxLength(movesArr, 'name');
+    let lowerBoundLength = getMaxLength(movesArr, 'lowerBound');
+    let upperBoundLength = getMaxLength(movesArr, 'upperBound');
+    let hitTypeLength = getMaxLength(movesArr, 'hitType');
     let returnStr = "";
 
-    if (otherMoves.length > 0) {
-        returnStr += `\nOther moves the player can make:`;
-        for (let moveDamageObj of otherMoves) {
+    if (movesArr.length > 0) {
+        returnStr += `\nMoves the player can make:`;
+        for (let moveDamageObj of movesArr) {
             returnStr += `\n${moveDamageObj.name} ${" ".repeat(nameLength - moveDamageObj.name.length)}`;
             if (moveDamageObj.lowerBound > 0) {
                 returnStr += `(${moveDamageObj.lowerBound} ${" ".repeat(lowerBoundLength - moveDamageObj.lowerBound.toString().length)}- `
@@ -448,5 +434,5 @@ function printOtherMoves(battleObj, battleKey, attacker, defender, attackChar, d
             }
         }
     }
-    return [returnStr, otherMoves];
+    return [returnStr, movesArr];
 }

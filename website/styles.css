@@ -137,7 +137,7 @@ body {
 .suggestion-content {
     border: 1px solid transparent;
     border-radius: 0px 20px 20px 0px;
-    padding: 10px;
+    padding: 20px;
     background-color: oklab(0.963963 -0.000228554 -0.00283051);
     color: oklab(0.296332 -0.000731647 -0.00768477);
     flex-grow: 1;

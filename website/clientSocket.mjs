@@ -119,7 +119,7 @@ function createTab(battleKey, time, battleLink) {
     if (time) {
         const battleInformation = document.createElement('div');
         battleInformation.innerHTML = `started at ${time}`;
-        tabContent.append(battleInformation);
+        tabContent.appendChild(battleInformation);
     }
 }
 
