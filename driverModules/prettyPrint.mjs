@@ -336,6 +336,15 @@ function printModifiers(battleObj, battleKey, playerName, charName, turn) {
     debuffsArr = debuffsArr.sort((a, b) => a.turnsRemaining - b.turnsRemaining);
     positiveStatusesArr = positiveStatusesArr.sort((a, b) => a.turnsRemaining - b.turnsRemaining);
     negativeStatusesArr = negativeStatusesArr.sort((a, b) => a.turnsRemaining - b.turnsRemaining);
+    //JSON.stringify turns Infinity into null, so we turn Infinity into "Infinity" first, 
+    //then we can parseFloat it later.
+    for (let arr of [buffsArr, debuffsArr, positiveStatusesArr, negativeStatusesArr]) {
+        for (let el of arr) {
+            if (el.turnsRemaining == Infinity) {
+                el.turnsRemaining = "Infinity";
+            }
+        }
+    }
 
     if (buffsArr.length > 0) {
         returnStr += debuffsArr.length == 0 ? `\nBuffs: ` : `\nBuffs  : `;

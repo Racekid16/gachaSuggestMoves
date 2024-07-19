@@ -2,22 +2,28 @@
 
 export function createPartyFlexBox(battleObj, battleKey, playerName, hasStrength, supportBonus, partyArray) {
     const partyContainer = document.createElement('div');
-    partyContainer.style.height = "30%";
-    partyContainer.classList.add('one-by-two');
+    partyContainer.classList.add('row');
 
     const partyEmbed = createPartyEmbed(battleKey, playerName, supportBonus);
     const partyStats = createPartyStats(battleObj, battleKey, playerName, hasStrength, partyArray);
 
     partyContainer.appendChild(partyEmbed);
     partyContainer.appendChild(partyStats);
-    return partyContainer
+    return partyContainer;
 }
 
 //TODO
 export function createSuggestionFlexBox(battleObj, battleKey, playerInformation) {
-    const suggestionBox = document.createElement('div');
-    suggestionBox.innerHTML = `<pr>${JSON.stringify(playerInformation, null, 4)}</pr>`;
-    return suggestionBox;
+    const suggestionContainer = document.createElement('div');
+    suggestionContainer.classList.add('row');
+    suggestionContainer.classList.add('suggestion');
+
+    const suggestionLabel = createSuggestionLabel(battleKey, playerInformation);
+    const suggestionContent = createSuggestionContent(battleObj, battleKey, playerInformation);
+
+    suggestionContainer.appendChild(suggestionLabel);
+    suggestionContainer.appendChild(suggestionContent);
+    return suggestionContainer;
 }
 
 function createPartyEmbed(battleKey, playerName, supportBonus) {
@@ -28,27 +34,27 @@ function createPartyEmbed(battleKey, playerName, supportBonus) {
     partyEmbed.classList.add('party-embed');
 
     const partyHeader = document.createElement('div');
-    partyHeader.classList.add('one-by-two');
+    partyHeader.classList.add('row');
     partyHeader.classList.add('party-header');
 
     const avatar = document.createElement('img');
+    avatar.classList.add('party-avatar');
     avatar.src = `./battleAssets/${battleKey}/${playerName}/avatar.png`;
     avatar.alt = `${playerName}_avatar.png`;
-    avatar.classList.add('party-avatar');
     partyHeader.appendChild(avatar);
 
-    const partyLabel = document.createElement('div');
-    partyLabel.innerHTML = `<b>${playerName}'s party</b>`;
-    partyHeader.appendChild(partyLabel);
+    const partyPlayer = document.createElement('div');
+    partyPlayer.innerHTML = `<b>${playerName}'s party</b>`;
+    partyHeader.appendChild(partyPlayer);
 
     const supportBonusContainer = document.createElement('div');
-    supportBonusContainer.innerHTML = `<b>Support Bonus: ${supportBonus}%</b>`;
     supportBonusContainer.classList.add('support-bonus-container');
+    supportBonusContainer.innerHTML = `<b>Support Bonus: ${supportBonus}%</b>`;
 
     const partyImage = document.createElement('img');
+    partyImage.classList.add('party-image');
     partyImage.src = `./battleAssets/${battleKey}/${playerName}/party.png`;
     partyImage.alt = `${playerName}_party.png`;
-    partyImage.classList.add('party-image');
 
     partyEmbed.appendChild(partyHeader);
     partyEmbed.appendChild(supportBonusContainer);
@@ -159,4 +165,33 @@ function createPartyStats(battleObj, battleKey, playerName, hasStrength, partyAr
     partyStats.append(benchHeader);
     partyStats.append(benchCharStats);
     return partyStats;
+}
+
+function createSuggestionLabel(battleKey, playerInformation) {
+    const playerName = playerInformation.playerName;
+    
+    const suggestionLabel = document.createElement('div');
+    suggestionLabel.classList.add('suggestion-label');
+
+    const avatar = document.createElement('img');
+    avatar.classList.add('suggestion-avatar');
+    avatar.src = `./battleAssets/${battleKey}/${playerName}/avatar.png`;
+    avatar.alt = `${playerName}_avatar.png`;
+
+    const suggestionPlayer = document.createElement('div');
+    suggestionPlayer.classList.add('suggestion-player');
+    suggestionPlayer.innerHTML = `<b>${playerName}</b>`;
+
+    suggestionLabel.appendChild(avatar);
+    suggestionLabel.appendChild(suggestionPlayer);
+    return suggestionLabel;
+}
+
+function createSuggestionContent(battleObj, battleKey, playerInformation) {
+    const suggestionContent = document.createElement('div');
+    suggestionContent.classList.add('suggestion-content');
+    //TODO: remove
+    suggestionContent.innerHTML = "TEST"
+
+    return suggestionContent;
 }

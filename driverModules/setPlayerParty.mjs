@@ -235,6 +235,7 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL, 
         thisChar.receiveMultiplier = 1;
         thisChar.inflictModifiers = [];
         thisChar.receiveModifiers = [];
+        thisChar.rune = "";
         addAspectBoost(thisChar);
     }
 
@@ -368,6 +369,6 @@ async function downloadImage(url, savePath) {
             writer.on('error', reject);
         });
     } catch (error) {
-        console.error(`Error downloading image: ${error.message}`);
+        console.error(`Error downloading image to ${savePath}: ${error.message}`);
     }
 }

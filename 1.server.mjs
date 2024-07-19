@@ -20,6 +20,7 @@ import CharacterDataRouter from './serverModules/CharacterDataRouter.mjs';
 import ImageDataRouter from './serverModules/ImageDataRouter.mjs';
 import UserCollectionsRouter from './serverModules/UserCollectionsRouter.mjs';
 import socketRouter from './serverModules/socketRouter.mjs';
+import { serverSocketReceive } from './serverModules/serverSocket.mjs';
 import consts from './consts.json' assert { type: 'json' };
 import config from './config.json' assert { type: 'json' };
 
@@ -68,9 +69,4 @@ app.get("/getToken", (req, res) => {
     res.status(200).send({token: token});
 });
 
-sharedData.io.on('connection', (socket) => {
-    console.log('User connected');
-    socket.on('disconnect', () => {
-        console.log('User disconnected');
-    });
-});
+sharedData.io.on('connection', serverSocketReceive);

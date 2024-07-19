@@ -8,13 +8,15 @@ console.log('Establishing websocket connection to the server...');
 
 socket.on('connect', () => {
     console.log('Connected to the server!');
-    createTab("Home");
-    const homeButton = document.getElementById('Home-button');
-    const homeContent = document.getElementById('Home-content');
-    const programInformation = document.createElement('div');
-    programInformation.innerHTML = "This is a program that tracks gacha battles in real time, updates boosts and statuses, calculates stats, and suggests moves.<br>Click on a tab to view move suggestions for that battle.";
-    homeContent.appendChild(programInformation);
-    homeButton.click();
+    if (document.getElementById('Home-button') === null) {
+        createTab("Home");
+        const homeButton = document.getElementById('Home-button');
+        const homeContent = document.getElementById('Home-content');
+        const programInformation = document.createElement('div');
+        programInformation.innerHTML = "This is a program that tracks gacha battles in real time, updates boosts and statuses, calculates stats, and suggests moves.<br>Click on a tab to view move suggestions for that battle.";
+        homeContent.appendChild(programInformation);
+        homeButton.click();
+    }
 })
 
 socket.on('disconnect', () => {
@@ -116,7 +118,6 @@ function createTab(battleKey, time, battleLink) {
 
     if (time) {
         const battleInformation = document.createElement('div');
-        battleInformation.style.marginBottom = "20px";
         battleInformation.innerHTML = `started at ${time}`;
         tabContent.append(battleInformation);
     }
@@ -140,7 +141,7 @@ function deleteTab(battleKey, force=false) {
 function addToHome(time, message) {
     const homeContent = document.getElementById('Home-content');
     const newElement = document.createElement('div');
-    newElement.classList.add('one-by-two');
+    newElement.classList.add('row');
 
     const timeDiv = document.createElement('div');
     let partialTime = time.slice(time.indexOf(", ") + 2);
