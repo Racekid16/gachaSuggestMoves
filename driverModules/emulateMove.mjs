@@ -177,7 +177,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                     inflictModifiers: [],
                     receiveModifiers: [],
                     lockedMoves: [],
-                    rune: "",
+                    rune: null,
                     aspectBoost: {
                         initiative: 0,
                         mental: 0,

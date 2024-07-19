@@ -50,7 +50,7 @@ socket.on('turnResults', (data) => {
 });
 
 socket.on('suggestedMoves', (data) => {
-    addSuggestedMoves(data.battleObj, data.battleKey, data.p1information, data.p2information, data.playerNumberToPrintFirst);
+    addSuggestedMoves(data.battleObj, data.battleKey, data.p1suggestionData, data.p2suggestionData, data.playerNumberToPrintFirst);
 });
 
 function setTabContentMaxHeight() {
@@ -179,13 +179,13 @@ function addEmbed(battleKey, header, body, usernames) {
     tabContent.appendChild(newElement);
 }
 
-function addSuggestedMoves(battleObj, battleKey, p1information, p2information, playerNumberToPrintFirst) {
+function addSuggestedMoves(battleObj, battleKey, p1suggestionData, p2suggestionData, playerNumberToPrintFirst) {
     const tabContent = document.getElementById(`${battleKey}-content`);
     if (tabContent === null) {
         return;
     }
-    const p1suggestion = createSuggestionFlexBox(battleObj, battleKey, p1information);
-    const p2suggestion = createSuggestionFlexBox(battleObj, battleKey, p2information);
+    const p1suggestion = createSuggestionFlexBox(battleObj, battleKey, p1suggestionData);
+    const p2suggestion = createSuggestionFlexBox(battleObj, battleKey, p2suggestionData);
     if (playerNumberToPrintFirst == 1) {
         tabContent.appendChild(p1suggestion);
         tabContent.appendChild(p2suggestion);

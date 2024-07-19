@@ -135,10 +135,34 @@ body {
     text-align: right;
 }
 .suggestion-content {
+    display: flex;
+    flex-direction: column;
     border: 1px solid transparent;
     border-radius: 0px 20px 20px 0px;
     padding: 20px;
     background-color: oklab(0.963963 -0.000228554 -0.00283051);
     color: oklab(0.296332 -0.000731647 -0.00768477);
     flex-grow: 1;
+}
+.char-stats {
+    margin-bottom: 20px;
+}
+.char-stats > * {
+    padding: 10px;
+}
+.rune-image {
+    width: 60px;
+    height: 60px;
+    padding: 0px;
+}
+.char-image {
+    width: 60px;
+    height: 60px;
+    padding: 0px;
+}
+.char-other-information {
+    margin-bottom: 20px;
+}
+.suggested-move-container {
+    padding: 0px;
 }

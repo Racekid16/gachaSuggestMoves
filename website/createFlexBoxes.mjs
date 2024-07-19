@@ -12,13 +12,13 @@ export function createPartyFlexBox(battleObj, battleKey, playerName, hasStrength
     return partyContainer;
 }
 
-export function createSuggestionFlexBox(battleObj, battleKey, playerInformation) {
+export function createSuggestionFlexBox(battleObj, battleKey, playerSuggestionData) {
     const suggestionContainer = document.createElement('div');
     suggestionContainer.classList.add('row');
     suggestionContainer.classList.add('suggestion');
 
-    const suggestionLabel = createSuggestionLabel(battleKey, playerInformation);
-    const suggestionContent = createSuggestionContent(battleObj, battleKey, playerInformation);
+    const suggestionLabel = createSuggestionLabel(battleKey, playerSuggestionData);
+    const suggestionContent = createSuggestionContent(battleObj, battleKey, playerSuggestionData);
 
     suggestionContainer.appendChild(suggestionLabel);
     suggestionContainer.appendChild(suggestionContent);
@@ -174,8 +174,8 @@ function createBenchCharStatsGrid(battleObj, battleKey, playerName, partyArray, 
     return benchCharStatsGrid;
 }
 
-function createSuggestionLabel(battleKey, playerInformation) {
-    const playerName = playerInformation.playerName;
+function createSuggestionLabel(battleKey, playerSuggestionData) {
+    const playerName = playerSuggestionData.playerName;
     
     const suggestionLabel = document.createElement('div');
     suggestionLabel.classList.add('suggestion-label');
@@ -194,11 +194,103 @@ function createSuggestionLabel(battleKey, playerInformation) {
     return suggestionLabel;
 }
 
-function createSuggestionContent(battleObj, battleKey, playerInformation) {
+function createSuggestionContent(battleObj, battleKey, playerSuggestionData) {
     const suggestionContent = document.createElement('div');
     suggestionContent.classList.add('suggestion-content');
-    //TODO: remove
-    suggestionContent.innerHTML = "TEST"
+    
+    const charStats = createSuggestionCharStats(battleObj, battleKey, playerSuggestionData);
+    const charOtherInformation = createCharOtherInformation();
+    const suggestedMoveContainer = createSuggestedMoveContainer(battleObj, battleKey, playerSuggestionData);
 
+    suggestionContent.appendChild(charStats);
+    suggestionContent.appendChild(charOtherInformation);
+    suggestionContent.appendChild(suggestedMoveContainer);
     return suggestionContent;
+}
+
+function createSuggestionCharStats(battleObj, battleKey, playerSuggestionData) {
+    const statSymbols = {
+        "initiative": "🏃",
+        "mental": "🧠",
+        "physical": "💪",
+        "social": "🗣️",
+        "resolve": "❤️",
+        "ability": "🏃🧠💪🗣️"
+    }
+
+    const playerName = playerSuggestionData.playerName;
+    const charName = playerSuggestionData.charName;
+    const rune = battleObj[battleKey][playerName].chars[charName].rune;
+    const imageName = battleObj[battleKey][playerName].chars[charName].imageName;
+
+    const charStats = document.createElement('div');
+    charStats.classList.add('row');
+    charStats.classList.add('char-stats');
+
+    if (rune !== null) {
+        const runeImage = document.createElement('img');
+        runeImage.classList.add('rune-image');
+        runeImage.src = `./images/runes/${rune}.png`;
+        charStats.appendChild(runeImage);
+    }
+
+    const charImage = document.createElement('img');
+    charImage.classList.add('char-image');
+    charImage.src = `./battleAssets/${battleKey}/${playerName}/chars/${imageName}`;
+    charStats.appendChild(charImage);
+
+    const charNameContainer = document.createElement('div');
+    charNameContainer.innerHTML = `<b>${charName}</b>`;
+    charStats.appendChild(charNameContainer);
+
+    for (let stat of ['initiative', 'mental', 'physical', 'social', 'resolve']) {
+        const newElement = document.createElement('div');
+        const statSymbol = statSymbols[stat];
+        const statValue = battleObj[battleKey][playerName].chars[charName][stat];
+        newElement.innerHTML = `${statSymbol}<b>${statValue}</b>`;
+        charStats.appendChild(newElement);
+    }
+    
+    return charStats;
+}
+
+function createCharOtherInformation() {
+    const charOtherInformation = document.createElement('div');
+    charOtherInformation.classList.add('row');
+    charOtherInformation.classList.add('char-other-information');
+
+    //TODO...
+
+    return charOtherInformation;
+}
+
+function createSuggestedMoveContainer(battleObj, battleKey, playerSuggestionData) {
+    const suggestedMoveSequence = playerSuggestionData.moveSequence;
+    const suggestedMove = suggestedMoveSequence[0];
+    const suggestedMoveObj = playerSuggestionData.moves.find(moveObj => moveObj.name == suggestedMove);
+    const playerCanUseSuggestedMove = typeof suggestedMoveObj !== 'undefined';
+    
+    const suggestedMoveContainer = document.createElement('div');
+    suggestedMoveContainer.classList.add('suggested-move-container');
+    suggestedMoveContainer.innerHTML = `Recommended move:`
+    if (playerCanUseSuggestedMove) {
+        suggestedMoveContainer.innerHTML += ` <b>${suggestedMove}</b>`;
+        if (suggestedMoveObj.lowerBound > 0) {
+            suggestedMoveContainer.innerHTML += ` (${suggestedMoveObj.lowerBound} - ${suggestedMoveObj.upperBound})`;
+            if (suggestedMoveObj.hitType != "") {
+                suggestedMoveContainer.innerHTML += ` ${suggestedMoveObj.hitType}`;
+            }
+            if (suggestedMoveObj.isFatal) {
+                suggestedMoveContainer.innerHTML += ` FATAL`;
+            }
+        }
+    }
+    if (suggestedMoveSequence.length > 1) {
+        suggestedMoveContainer.innerHTML += `<br>Move sequence: ${suggestedMoveSequence[0]}`;
+        for (let i = 1; i < suggestedMoveSequence.length; i++) {
+            suggestedMoveContainer.innerHTML += `, ${suggestedMoveSequence[i]}`;
+        }
+    }
+
+    return suggestedMoveContainer;
 }

@@ -160,6 +160,13 @@
         "Mask": {
             "type": ["status"]
         },
+        "Obliterate": {
+            "type": ["attack"],
+            "damageType": "true",
+            "attackStat": "varies",
+            "defenseStat": "varies",
+            "basePower": "varies"
+        },
         "Provoke": {
             "type": ["status"]
         },

@@ -133,8 +133,8 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
     let upperBoundLength = p1upperBound.length > p2upperBound.length ? p1upperBound.length : p2upperBound.length;
     let hitTypeLength = p1hitType.length > p2hitType.length ? p1hitType.length : p2hitType.length;
 
-    let p1isFatal = p1lowerBound >= p2resolve ? 'FATAL' : '';
-    let p2isFatal = p2lowerBound >= p1resolve ? 'FATAL' : '';
+    let p1isFatal = p1lowerBound >= p2resolve;
+    let p2isFatal = p2lowerBound >= p1resolve;
 
     let p1output =  `${p1name} ${" ".repeat(playerNameLength - p1name.length)}` 
                   + `[${p1printInflict}${" ".repeat(inflictLength - p1printInflict.length)}`
@@ -150,7 +150,7 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
         p1output += `(${p1lowerBound} ${" ".repeat(lowerBoundLength - p1lowerBound.toString().length)}- `
                   + `${p1upperBound}${" ".repeat(upperBoundLength - p1upperBound.toString().length)}) `
                   + `${p1hitType}${" ".repeat(hitTypeLength - p1hitType.length)} `
-                  + `${p1isFatal}`;
+                  + `${p1isFatal ? "FATAL" : ""}`;
     }
     let [p1str, p1buffs, p1debuffs, p1positiveStatuses, p1negativeStatuses, p1moves] = printCharacterOtherInformation(battleObj, battleKey, p1name, p2name, p1char, p2char, p1moveSequence, turn);
     p1output += p1str;
@@ -169,7 +169,7 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
         p2output += `(${p2lowerBound} ${" ".repeat(lowerBoundLength - p2lowerBound.toString().length)}- `
                   + `${p2upperBound}${" ".repeat(upperBoundLength - p2upperBound.toString().length)}) `
                   + `${p2hitType}${" ".repeat(hitTypeLength - p2hitType.length)} `
-                  + `${p2isFatal}`;
+                  + `${p2isFatal ? "FATAL" : ""}`;
     }
     let [p2str, p2buffs, p2debuffs, p2positiveStatuses, p2negativeStatuses, p2moves] = printCharacterOtherInformation(battleObj, battleKey, p2name, p1name, p2char, p1char, p2moveSequence, turn);
     p2output += p2str;
@@ -201,9 +201,9 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
 
     battleObj[battleKey].log(suggestedMovesOutput);
 
-    let p1information = {
+    let p1suggestionData = {
         playerName: p1name,
-        char: p1char,
+        charName: p1char,
         moveSequence: p1moveSequence,
         buffs: p1buffs,
         positiveStatuses: p1positiveStatuses,
@@ -211,9 +211,9 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
         negativeStatuses: p1negativeStatuses,
         moves: p1moves
     };
-    let p2information = {
+    let p2suggestionData = {
         playerName: p2name,
-        char: p2char,
+        charName: p2char,
         moveSequence: p2moveSequence,
         buffs: p2buffs,
         positiveStatuses: p2positiveStatuses,
@@ -230,8 +230,8 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
         body: JSON.stringify({
             battleObj: battleObj,
             battleKey: battleKey,
-            p1information: p1information,
-            p2information: p2information,
+            p1suggestionData: p1suggestionData,
+            p2suggestionData: p2suggestionData,
             playerNumberToPrintFirst: playerNumberToPrintFirst,
         })
     });
@@ -403,9 +403,9 @@ function printMoves(battleObj, battleKey, attacker, defender, attackChar, defens
         let maxVariance = 0.2;
         let lowerBound = Math.max(round(moveDamage * (1 - maxVariance)), 0);
         let upperBound = round(moveDamage * (1 + maxVariance));
-        let isFatal = '';
+        let isFatal = false;
         if (lowerBound >= battleObj[battleKey][defender].chars[defenseChar].resolve) {
-            isFatal = 'FATAL'
+            isFatal = true;
         }
         movesArr.push({
             name: moveName, 
@@ -430,7 +430,7 @@ function printMoves(battleObj, battleKey, attacker, defender, attackChar, defens
                 returnStr += `(${moveDamageObj.lowerBound} ${" ".repeat(lowerBoundLength - moveDamageObj.lowerBound.toString().length)}- `
                           + `${moveDamageObj.upperBound}${" ".repeat(upperBoundLength - moveDamageObj.upperBound.toString().length)}) `
                           + `${moveDamageObj.hitType}${" ".repeat(hitTypeLength - moveDamageObj.hitType.length)} `
-                          + `${moveDamageObj.isFatal}`;
+                          + `${moveDamageObj.isFatal ? "FATAL" : ""}`;
             }
         }
     }
