@@ -69,7 +69,7 @@ function setTabContentMaxHeight() {
                               + parseInt(window.getComputedStyle(activeTabContent).borderBottomWidth)
                               + parseInt(window.getComputedStyle(activeTabContent).paddingTop)
                               + parseInt(window.getComputedStyle(activeTabContent).paddingBottom)
-    const newHeight = `calc(${windowHeight}px - ${bannerHeight}px - ${tabButtonsContainerHeight}px - ${bodyBottomMargin} - ${activeTabAdditional}px - 3px)`;
+    const newHeight = `calc(${windowHeight}px - ${bannerHeight}px - ${tabButtonsContainerHeight}px - ${bodyBottomMargin} - ${activeTabAdditional}px)`;
     activeTabContent.style.maxHeight = newHeight;
 }
 

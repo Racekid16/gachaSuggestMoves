@@ -333,6 +333,7 @@ function createMovesListContainer(moves) {
     movesListContainer.appendChild(movesListLabel);
 
     const movesListContent = document.createElement('div');
+    movesListContent.classList.add('list-content');
     movesListContent.classList.add('moves-list-content');
     for (let moveObj of moves) {
         const moveName = moveObj.name;
@@ -395,7 +396,7 @@ function createSuggestedMoveContainer(playerSuggestionData) {
     const playerCanUseSuggestedMove = typeof suggestedMoveObj !== 'undefined';
     
     const suggestedMoveContainer = document.createElement('div');
-    suggestedMoveContainer.classList.add('suggested-move-container');
+    //suggestedMoveContainer.classList.add('suggested-move-container');
     suggestedMoveContainer.innerHTML = `Recommended move:`
     if (playerCanUseSuggestedMove) {
         suggestedMoveContainer.innerHTML += ` <b>${suggestedMove}</b>`;
