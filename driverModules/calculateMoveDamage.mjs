@@ -22,21 +22,19 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
 
     let attackerAttackStat = battleObj[battleKey][attacker].chars[attackChar][completeMoveObj.attackStat];
     let attackerInflictMultiplier = battleObj[battleKey][attacker].chars[attackChar].inflictMultiplier;
-    let criticalMultiplier = 1;
     if (consts.personalityWeaknesses[defenderPersonality].includes(completeMoveObj.damageType)) {
-        criticalMultiplier = 1.35;
+        attackerInflictMultiplier += 0.4; 
         hitType = 'CRITICAL';
     }
-    let attackPower = attackerAttackStat * attackerInflictMultiplier * completeMoveObj.basePower * criticalMultiplier;
+    let attackPower = attackerAttackStat * attackerInflictMultiplier * completeMoveObj.basePower;
 
     let defenderDefenseStat = battleObj[battleKey][defender].chars[defenseChar][completeMoveObj.defenseStat];
     let defenderReceiveMultiplier = battleObj[battleKey][defender].chars[defenseChar].receiveMultiplier;
-    let resistMultiplier = 1;
     if (consts.personalityResistances[defenderPersonality].includes(completeMoveObj.damageType)) {
-        resistMultiplier = 1.35;
+        defenderReceiveMultiplier += 0.4;
         hitType = 'RESISTED';
     }
-    let defensePower = defenderDefenseStat * defenderReceiveMultiplier * resistMultiplier;
+    let defensePower = defenderDefenseStat * defenderReceiveMultiplier;
     
     //this is a guess for how much damage will be dealt, since I don't know the exact damage formula
     if (defensePower != 0) {
