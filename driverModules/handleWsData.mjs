@@ -117,9 +117,16 @@ async function processBattleEmbed(battleObj, responseJSON, battleEmbed) {
     }
 
     else if (battleEmbed.fields[2].name == 'WINNER:') {
+        let header = battleEmbed.fields[2].name;
         let turnResults = battleEmbed.fields[2].value;
-        deleteBattle(battleObj, p1name, p2name, turnResults);
+        deleteBattle(battleObj, p1name, p2name, header, turnResults);
         return;
+    }
+
+    else if (battleEmbed.fields[2].name == 'RESULT: DRAW') {
+        let header = battleEmbed.fields[2].name;
+        let turnResults = battleEmbed.fields[2].value;
+        deleteBattle(battleObj, p1name, p2name, header, turnResults);
     }
 
 

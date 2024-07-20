@@ -39,7 +39,9 @@ socket.on('playerParty', (data) => {
 });
 
 socket.on('battleEnd', (data) => {
-    addEmbed(data.battleKey, "<b>WINNER:</b>", data.turnResults, data.usernames);
+    if (data.header == 'WINNER:' || data.header == 'RESULT: DRAW') {
+        addEmbed(data.battleKey, `<b>${data.header}</b>`, data.turnResults, data.usernames);
+    }
     deleteTab(data.battleKey);
     const time = new Date().toLocaleString();
     addToHome(time, data.battleEndMessage);

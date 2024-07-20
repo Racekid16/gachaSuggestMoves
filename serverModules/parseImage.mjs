@@ -125,15 +125,30 @@ export function getNumStars(slotName, image) {
 }
 
 export function getAspect(slotName, image) {
-    if (isInfernal(slotName, image)) {
+    let slotNumber = parseInt(/slot(\d+)/.exec(slotName)[1]);
+    // 20, 123, 226
+    let pixelValue = RGBA_at(20 + 103 * (slotNumber - 1), 45, image);
+    
+    if (RGBA_difference(pixelValue, [237, 27, 36, 255]) == 0) {
         return "Infernal ";
     }
-    if (isTitanium(slotName, image)) {
+    if (RGBA_difference(pixelValue, [255, 255, 255, 255]) == 0) {
         return "Titanium ";
     }
-    if (isTidal(slotName, image)) {
+    /*
+    if (RGBA_difference(pixelValue, TBD) == 0) {
         return "Tidal ";
     }
+    if (RGBA_difference(pixelValue, TBD) == 0) {
+        return "Mending ";
+    }
+    if (RGBA_difference(pixelValue, TBD) == 0) {
+        return "Stormy ";
+    }
+    if (RGBA_difference(pixelValue, TBD) == 0) {
+        return "Glacial ";
+    }
+    */
     return "";
 }
 
@@ -153,47 +168,4 @@ function RGBA_difference(pixel1, pixel2) {
         difference += Math.abs(pixel1[i] - pixel2[i]);
     }
     return difference;
-}
-
-function isInfernal(slotName, image) {
-    switch (slotName) {
-        case 'slot1':
-            return RGBA_difference(RGBA_at(20, 45, image), [237, 27, 36, 255]) == 0;
-        case 'slot2':
-            return RGBA_difference(RGBA_at(123, 45, image), [237, 27, 36, 255]) == 0;
-        case 'slot3':
-            return RGBA_difference(RGBA_at(226, 45, image), [237, 27, 36, 255]) == 0; 
-        case 'slot4':
-        case 'slot5':
-        case 'slot6':
-            return false;
-    }
-}
-
-function isTitanium(slotName, image) {
-    switch (slotName) {
-        case 'slot1':
-            return RGBA_difference(RGBA_at(20, 45, image), [255, 255, 255, 255]) == 0;
-        case 'slot2':
-            return RGBA_difference(RGBA_at(123, 45, image), [255, 255, 255, 255]) == 0;
-        case 'slot3':
-            return RGBA_difference(RGBA_at(226, 45, image), [255, 255, 255, 255]) == 0; 
-        case 'slot4':
-        case 'slot5':
-        case 'slot6':
-            return false;
-    }
-}
-
-//implement this once there are tidal campaign enemiees
-function isTidal(slotName, image) {
-    switch (slotName) {
-        case 'slot1':
-        case 'slot2':
-        case 'slot3':
-        case 'slot4':
-        case 'slot5':
-        case 'slot6':
-            return false;
-    }
 }

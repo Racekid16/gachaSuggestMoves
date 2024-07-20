@@ -131,13 +131,13 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
     battleObj.usernames[playerID] = playerName;
 }
 
-export function deleteBattle(battleObj, p1name, p2name, turnResults) {
+export function deleteBattle(battleObj, p1name, p2name, header, turnResults) {
     let battleKey = p1name + " vs. " + p2name;
     let battleEndMessage;
     let p1ID = battleObj[battleKey][p1name].id;
     let p2ID = battleObj[battleKey][p2name].id
     
-    if (turnResults !== null) {
+    if (header === 'WINNER:') {
         let winnerID = /<@(\d+)>/.exec(turnResults)[1];
         let winner;
         let loser;
@@ -168,6 +168,9 @@ export function deleteBattle(battleObj, p1name, p2name, turnResults) {
                 data: battleObj[battleKey].data
             })
         });
+    } 
+    else if (header === 'RESULT: DRAW') {
+        battleEndMessage = `${p1name} and ${p2name} drew`;
     } else {
         battleEndMessage = `${battleKey} deleted`;
         console.log(battleEndMessage);
@@ -190,6 +193,7 @@ export function deleteBattle(battleObj, p1name, p2name, turnResults) {
         },
         body: JSON.stringify({
             battleKey: battleKey,
+            header: header,
             turnResults: turnResults,
             battleEndMessage: battleEndMessage,
             usernames: battleObj.usernames

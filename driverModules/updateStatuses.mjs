@@ -9,13 +9,16 @@ export function addStatus(battleObj, battleKey, playerName, charName, status, tu
     switch (status) {
 
         case 'apathetic':
+        case 'charged':
         case 'invulnerable':
         case 'resting':
             addPositiveStatus(battleObj, battleKey, playerName, charName, status, turn, numTurns);
             break;
         
+        case 'bleeding':
         case 'burning':
         case 'pacified':
+        case 'silenced':
         case 'stunned':
         case 'taunted':
         case 'trapped':

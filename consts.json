@@ -22,13 +22,22 @@
             "amount": 0.4,
             "numTurns": 2
         },
+        "Aspect Of Earth": {
+            "type": ["innate"]
+        },
         "Aspect Of Fire": {
+            "type": ["innate"]
+        },
+        "Aspect Of Ice": {
             "type": ["innate"]
         },
         "Aspect Of Metal": {
             "type": ["innate"]
         },
         "Aspect Of Water": {
+            "type": ["innate"]
+        },
+        "Aspect Of Wind": {
             "type": ["innate"]
         },
         "Athleticism": {

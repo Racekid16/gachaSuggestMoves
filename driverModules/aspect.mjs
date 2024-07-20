@@ -9,9 +9,16 @@ export function addAspectAttributes(char, charObj) {
     charObj.aspect = char.aspect;
     charObj.name = char.name;
     switch (char.aspect) {
+        case "Glacial ":
+            charObj.moves.push("Aspect Of Ice");
         case "Infernal ":
             charObj.moves.push("Aspect Of Fire");
             break;
+        case "Mending ":
+            charObj.moves.push("Aspect Of Earth");
+            break;
+        case "Stormy ":
+            charObj.moves.push("Aspect Of Wind");
         case "Titanium ":
             charObj.moves.push("Aspect Of Metal");
             break;
@@ -33,11 +40,23 @@ export function addAspectBoost(charObj) {
         social: 0,
         resolve: 0
     };
+    if (charObj.moves.includes("Aspect Of Earth")) {
+        charObj.resolve = round(charObj.resolve * 1.75);
+        charObj.aspectBoost.mental = 0.25;
+        charObj.aspectBoost.physical = 0.25;
+        charObj.aspectBoost.social = 0.25;
+    }
     if (charObj.moves.includes("Aspect Of Fire")) {
         charObj.resolve = round(charObj.resolve * 1.5);
         charObj.aspectBoost.mental = 0.75;
         charObj.aspectBoost.physical = 0.75;
         charObj.aspectBoost.social = 0.75;
+    }
+    if (charObj.moves.includes("Aspect Of Ice")) {
+        charObj.resolve = round(charObj.resolve * 1.5);
+        charObj.aspectBoost.mental = 0.5;
+        charObj.aspectBoost.physical = 0.5;
+        charObj.aspectBoost.social = 0.5;
     }
     if (charObj.moves.includes("Aspect Of Metal")) {
         charObj.resolve = round(charObj.resolve * 2);
@@ -51,11 +70,17 @@ export function addAspectBoost(charObj) {
         charObj.aspectBoost.physical = 0.5;
         charObj.aspectBoost.social = 0.5;
     }
+    if (charObj.moves.includes("Aspect Of Wind")) {
+        charObj.resolve = round(charObj.resolve * 1.25);
+        charObj.aspectBoost.mental = 0.3;
+        charObj.aspectBoost.physical = 0.3;
+        charObj.aspectBoost.social = 0.3    ;
+    }
 }
 
 //split a character's name into its aspect and base name
 export function splitCharName(charName) {
-    for (let aspect of ['Infernal ', 'Titanium ', 'Tidal ']) {
+    for (let aspect of ['Glacial ', 'Infernal ', 'Mending ', 'Stormy ', 'Titanium ', 'Tidal ']) {
         if (charName.startsWith(aspect)) {
             return [aspect, charName.slice(aspect.length)];
         }
