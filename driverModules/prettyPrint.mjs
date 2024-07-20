@@ -367,24 +367,24 @@ function printMoves(battleObj, battleKey, attacker, defender, attackChar, defens
     for (let move of validMoves) {
         let moveDamageObj = calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move);
         //moveDamageObj is formatted as [moveObj, moveDamage, hitType]
-        if (moveDamageObj[1] == -1 || hasStatus(battleObj, battleKey, attacker, attackChar, "Stunned") || hasStatus(battleObj, battleKey, attacker, attackChar, "Resting")) {
+        if (moveDamageObj[1] == -1 || hasStatus(battleObj, battleKey, attacker, attackChar, "stunned") || hasStatus(battleObj, battleKey, attacker, attackChar, "resting")) {
             continue;
         }
-        if (moveDamageObj[0].type.includes("attack") && hasStatus(battleObj, battleKey, attacker, attackChar, "Pacified")) {
+        if (moveDamageObj[0].type.includes("attack") && hasStatus(battleObj, battleKey, attacker, attackChar, "pacified")) {
             continue;   
         }
-        if (!moveDamageObj[0].type.includes("attack") && hasStatus(battleObj, battleKey, attacker, attackChar, "Taunted")) {
+        if (!moveDamageObj[0].type.includes("attack") && hasStatus(battleObj, battleKey, attacker, attackChar, "taunted")) {
             continue;
         }
         if (battleObj[battleKey][attacker].chars[attackChar].lockedMoves.includes(move)) {
             continue;
         }
-        if (hasStatus(battleObj, battleKey, defender, defenseChar, "Invulnerable")) {
+        if (hasStatus(battleObj, battleKey, defender, defenseChar, "invulnerable")) {
             moveDamageObj[1] = 0;
         }
         moveDamageObjs.push([move, ...moveDamageObj]);
     }
-    if (!hasStatus(battleObj, battleKey, attacker, attackChar, "Trapped") && !hasStatus(battleObj, battleKey, attacker, attackChar, "Taunted")) {
+    if (!hasStatus(battleObj, battleKey, attacker, attackChar, "trapped") && !hasStatus(battleObj, battleKey, attacker, attackChar, "taunted")) {
         let numAliveAllies = Object.keys(battleObj[battleKey][attacker].chars).reduce((countSoFar, charKey) => 
             battleObj[battleKey][attacker].chars[charKey].resolve > 0 ? countSoFar + 1 : countSoFar
         , 0);
@@ -426,7 +426,7 @@ function printMoves(battleObj, battleKey, attacker, defender, attackChar, defens
         returnStr += `\nMoves the player can make:`;
         for (let moveDamageObj of movesArr) {
             returnStr += `\n${moveDamageObj.name} ${" ".repeat(nameLength - moveDamageObj.name.length)}`;
-            if (moveDamageObj.lowerBound > 0) {
+            if (moveDamageObj.upperBound > 0) {
                 returnStr += `(${moveDamageObj.lowerBound} ${" ".repeat(lowerBoundLength - moveDamageObj.lowerBound.toString().length)}- `
                           + `${moveDamageObj.upperBound}${" ".repeat(upperBoundLength - moveDamageObj.upperBound.toString().length)}) `
                           + `${moveDamageObj.hitType}${" ".repeat(hitTypeLength - moveDamageObj.hitType.length)} `

@@ -15,7 +15,7 @@ export function createPartyFlexBox(battleObj, battleKey, playerName, hasStrength
 export function createSuggestionFlexBox(battleObj, battleKey, playerSuggestionData) {
     const suggestionContainer = document.createElement('div');
     suggestionContainer.classList.add('row');
-    suggestionContainer.classList.add('suggestion');
+    suggestionContainer.classList.add('suggestion-container');
 
     const suggestionLabel = createSuggestionLabel(battleKey, playerSuggestionData);
     const suggestionContent = createSuggestionContent(battleObj, battleKey, playerSuggestionData);
@@ -103,18 +103,18 @@ function createactiveCharStatsGrid(battleObj, battleKey, playerName, partyArray,
         }
 
         const numStarsCell = document.createElement('div');
-        numStarsCell.classList.add('cell');
+        numStarsCell.classList.add('party-cell');
         numStarsCell.innerHTML = `${partyArray[i].numStars}⭐`;
         activeCharStatsGrid.appendChild(numStarsCell);
 
         const charNameCell = document.createElement('div');
-        charNameCell.classList.add('cell');
+        charNameCell.classList.add('party-cell');
         charNameCell.innerHTML = `${charName}`;
         activeCharStatsGrid.appendChild(charNameCell);
 
         for (let stat of ['initiative', 'mental', 'physical', 'social', 'resolve']) {
             const newCell = document.createElement('div');
-            newCell.classList.add('cell');
+            newCell.classList.add('party-cell');
             newCell.innerHTML = `${statSymbols[stat]}${battleObj[battleKey][playerName].chars[charName][stat]}`;
             activeCharStatsGrid.appendChild(newCell);
         }
@@ -132,31 +132,31 @@ function createBenchCharStatsGrid(battleObj, battleKey, playerName, partyArray, 
         }
 
         const numStarsCell = document.createElement('div');
-        numStarsCell.classList.add('cell');
+        numStarsCell.classList.add('party-cell');
         numStarsCell.innerHTML = `${partyArray[i].numStars}⭐`;
         benchCharStatsGrid.appendChild(numStarsCell);
 
         const charNameCell = document.createElement('div');
-        charNameCell.classList.add('cell');
+        charNameCell.classList.add('party-cell');
         charNameCell.innerHTML = `${charName}`;
         benchCharStatsGrid.appendChild(charNameCell);
 
         let supportCategory = battleObj[battleKey][playerName].chars[charName].supportCategory;
         supportCategory = supportCategory.charAt(0).toLowerCase() + supportCategory.slice(1);
         const supportCategoryCell = document.createElement('div');
-        supportCategoryCell.classList.add('cell');
+        supportCategoryCell.classList.add('party-cell');
         supportCategoryCell.innerHTML = `${statSymbols[supportCategory]}`;
         benchCharStatsGrid.appendChild(supportCategoryCell);
         
         const supportBonus = battleObj[battleKey][playerName].chars[charName].supportBonus;
         const supportBonusCell = document.createElement('div');
-        supportBonusCell.classList.add('cell');
+        supportBonusCell.classList.add('party-cell');
         supportBonusCell.innerHTML = `+${supportBonus}%`;
         benchCharStatsGrid.appendChild(supportBonusCell);
 
         for (let j = 0; j < 3; j++) {
             const newCell = document.createElement('div');
-            newCell.classList.add('cell');
+            newCell.classList.add('party-cell');
             const activeCharName = partyArray[j].name;
             if (activeCharName == "empty") {
                 benchCharStatsGrid.appendChild(newCell);
@@ -199,8 +199,8 @@ function createSuggestionContent(battleObj, battleKey, playerSuggestionData) {
     suggestionContent.classList.add('suggestion-content');
     
     const charStats = createSuggestionCharStats(battleObj, battleKey, playerSuggestionData);
-    const charOtherInformation = createCharOtherInformation();
-    const suggestedMoveContainer = createSuggestedMoveContainer(battleObj, battleKey, playerSuggestionData);
+    const charOtherInformation = createCharOtherInformation(playerSuggestionData);
+    const suggestedMoveContainer = createSuggestedMoveContainer(playerSuggestionData);
 
     suggestionContent.appendChild(charStats);
     suggestionContent.appendChild(charOtherInformation);
@@ -254,17 +254,141 @@ function createSuggestionCharStats(battleObj, battleKey, playerSuggestionData) {
     return charStats;
 }
 
-function createCharOtherInformation() {
+function createCharOtherInformation(playerSuggestionData) {
     const charOtherInformation = document.createElement('div');
     charOtherInformation.classList.add('row');
     charOtherInformation.classList.add('char-other-information');
 
-    //TODO...
+    for (let listName of ['buffs', 'positiveStatuses', 'debuffs', 'negativeStatuses']) {
+        const list = playerSuggestionData[listName];
+        if (list.length > 0) {
+            const listContainer = createListContainer(listName, list);
+            charOtherInformation.appendChild(listContainer);
+        }
+    }
 
+    const movesList = playerSuggestionData.moves;
+    const movesListContainer = createMovesListContainer(movesList);
+
+    charOtherInformation.appendChild(movesListContainer);
     return charOtherInformation;
 }
 
-function createSuggestedMoveContainer(battleObj, battleKey, playerSuggestionData) {
+function createListContainer(listName, list) {
+    let labelColor;
+    switch (listName) {
+        case 'buffs':
+            listName = "Buffs";
+            labelColor = 'lightgreen';
+            break;
+        case 'positiveStatuses':
+            listName = 'Positive Statuses';
+            labelColor = 'lightgreen';
+            break;
+        case 'debuffs':
+            listName = 'Debuffs';
+            labelColor = 'lightcoral';
+            break;
+        case 'negativeStatuses':
+            listName = "Negative Statuses";
+            labelColor = 'lightcoral';
+            break;
+    }
+
+    const listContainer = document.createElement('div');
+    listContainer.classList.add('list-container');
+
+    const listLabel = document.createElement('div');
+    listLabel.classList.add('list-label');
+    listLabel.style.backgroundColor = labelColor;
+    listLabel.innerHTML = `<b>${listName}</b>`;
+
+    const listContent = document.createElement('div');
+    listContent.classList.add('list-content');
+    for (let item of list) {
+        for (let property in item) {
+            const cellValue = item[property];
+
+            const cell = document.createElement('div');
+            cell.classList.add('list-cell');
+            cell.innerHTML = cellValue;
+
+            listContent.appendChild(cell);
+        }
+    }
+
+    listContainer.appendChild(listLabel);
+    listContainer.appendChild(listContent);
+    return listContainer;
+}
+
+function createMovesListContainer(moves) {
+    const movesListContainer = document.createElement('div');
+    movesListContainer.classList.add('list-container');
+
+    const movesListLabel = document.createElement('div');
+    movesListLabel.classList.add('list-label');
+    movesListLabel.style.backgroundColor = 'lightblue';
+    movesListLabel.innerHTML = "<b>Moves</b>";
+    movesListContainer.appendChild(movesListLabel);
+
+    const movesListContent = document.createElement('div');
+    movesListContent.classList.add('moves-list-content');
+    for (let moveObj of moves) {
+        const moveName = moveObj.name;
+        const lowerBound = moveObj.lowerBound;
+        const upperBound = moveObj.upperBound;
+        const hitType = moveObj.hitType;
+        const isFatal = moveObj.isFatal;
+
+        const nameCell = document.createElement('div');
+        nameCell.classList.add('list-cell');
+        nameCell.innerHTML = moveName;
+        movesListContent.appendChild(nameCell);
+
+        if (upperBound > 0) {
+            const lowerBoundCell = document.createElement('div');
+            lowerBoundCell.classList.add('list-cell');
+            lowerBoundCell.innerHTML = lowerBound;
+            movesListContent.appendChild(lowerBoundCell);
+
+            const dashCell = document.createElement('div');
+            //not adding cell so that it has no padding
+            dashCell.innerHTML = '-';
+            movesListContent.appendChild(dashCell);
+
+            const upperBoundCell = document.createElement('div');
+            upperBoundCell.classList.add('list-cell');
+            upperBoundCell.innerHTML = upperBound;
+            movesListContent.appendChild(upperBoundCell);
+
+            const hitTypeCell = document.createElement('div');
+            if (hitType != "") {
+                hitTypeCell.classList.add('list-cell');
+                hitTypeCell.innerHTML = hitType;
+            }
+            movesListContent.appendChild(hitTypeCell);
+
+            const isFatalCell = document.createElement('div');
+            if (isFatal != false) {
+                isFatalCell.classList.add('list-cell');
+                isFatalCell.innerHTML = 'FATAL';
+            }
+            movesListContent.appendChild(isFatalCell);
+        } else {
+            for (let i = 0; i < 5; i++) {
+                const emptyCell = document.createElement('div');
+                movesListContent.appendChild(emptyCell);
+            }
+        }
+    }
+
+    movesListContainer.appendChild(movesListLabel);
+    movesListContainer.appendChild(movesListContent);
+    return movesListContainer;
+}
+
+function createSuggestedMoveContainer(playerSuggestionData) {
     const suggestedMoveSequence = playerSuggestionData.moveSequence;
     const suggestedMove = suggestedMoveSequence[0];
     const suggestedMoveObj = playerSuggestionData.moves.find(moveObj => moveObj.name == suggestedMove);
@@ -275,7 +399,7 @@ function createSuggestedMoveContainer(battleObj, battleKey, playerSuggestionData
     suggestedMoveContainer.innerHTML = `Recommended move:`
     if (playerCanUseSuggestedMove) {
         suggestedMoveContainer.innerHTML += ` <b>${suggestedMove}</b>`;
-        if (suggestedMoveObj.lowerBound > 0) {
+        if (suggestedMoveObj.upperBound > 0) {
             suggestedMoveContainer.innerHTML += ` (${suggestedMoveObj.lowerBound} - ${suggestedMoveObj.upperBound})`;
             if (suggestedMoveObj.hitType != "") {
                 suggestedMoveContainer.innerHTML += ` ${suggestedMoveObj.hitType}`;
@@ -290,6 +414,7 @@ function createSuggestedMoveContainer(battleObj, battleKey, playerSuggestionData
         for (let i = 1; i < suggestedMoveSequence.length; i++) {
             suggestedMoveContainer.innerHTML += `, ${suggestedMoveSequence[i]}`;
         }
+        suggestedMoveContainer.innerHTML += ` (${suggestedMoveSequence.length} moves)`
     }
 
     return suggestedMoveContainer;

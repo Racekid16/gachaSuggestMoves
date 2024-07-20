@@ -126,12 +126,18 @@ function createTab(battleKey, time, battleLink) {
 function deleteTab(battleKey, force=false) {
     const tabButton = document.getElementById(`${battleKey}-button`);
     const tabContent = document.getElementById(`${battleKey}-content`);
+    const homeButton = document.getElementById('Home-button');
 
     if (tabButton && tabContent) {
-        if (!tabButton.classList.contains('active') || force) {
+        if (!tabButton.classList.contains('active')) {
             tabButton.remove();
             tabContent.remove();
             tabsToDelete = tabsToDelete.filter(key => key != battleKey);
+        } else if (force) {
+            tabButton.remove();
+            tabContent.remove();
+            tabsToDelete = tabsToDelete.filter(key => key != battleKey);
+            homeButton.click();
         } else if (!tabsToDelete.includes(battleKey)) {
             tabsToDelete.push(battleKey);
         }

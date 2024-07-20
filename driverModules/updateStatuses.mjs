@@ -8,18 +8,18 @@ export function addStatus(battleObj, battleKey, playerName, charName, status, tu
     // I arrange these alphabetically
     switch (status) {
 
-        case 'Apathetic':
-        case 'Invulnerable':
-        case 'Resting':
+        case 'apathetic':
+        case 'invulnerable':
+        case 'resting':
             addPositiveStatus(battleObj, battleKey, playerName, charName, status, turn, numTurns);
             break;
         
-        case 'Burning':
-        case 'Pacified':
-        case 'Stunned':
-        case 'Taunted':
-        case 'Trapped':
-        case 'Wounded':
+        case 'burning':
+        case 'pacified':
+        case 'stunned':
+        case 'taunted':
+        case 'trapped':
+        case 'wounded':
             addNegativeStatus(battleObj, battleKey, playerName, charName, status, turn, numTurns);
             break;
 
@@ -58,7 +58,7 @@ export function applyStatuses(battleObj, battleKey, playerName) {
         
         for (let positiveStatus of thisCharObj.positiveStatuses) {
             switch (positiveStatus.name) {
-                case 'Apathetic':
+                case 'apathetic':
                     positiveStatus.originalPersonality = thisCharObj.personality;
                     thisCharObj.personality = "Apathetic";
                     break;
@@ -108,7 +108,7 @@ function removeExpiredPositiveStatuses(battleObj, battleKey, playerName, charNam
                 //battleObj[battleKey].log(`${charName}'s ${thisPositiveStatus.name} positive status expired!`);
             }
             switch (thisPositiveStatus.name) {
-                case 'Apathetic':
+                case 'apathetic':
                     thisCharObj.personality = thisPositiveStatus.original;
                     break;
                 default:

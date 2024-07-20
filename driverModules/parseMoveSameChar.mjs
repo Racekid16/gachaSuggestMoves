@@ -214,7 +214,7 @@ async function determineWhichPlayerUsedWhichMove(battleObj, p1name, p2name, char
     if (moves[0].name == "From The Shadows" || moves[1].name == "From The Shadows") {
         let otherMoveName = moves[0].name == "From The Shadows" ? moves[1].name : moves[0].name;
 
-        let fromTheShadowsStr = `\\*\\*${charName}\\*\\* used \\*\\*From The Shadows\\*\\*!\\n\\*\\*.+\\*\\* is \\*\\*Trapped\\*\\* for 3 turns!\\n\\*\\*<@(\\d+)>\\*\\* tagged in \\*\\*(.+)\\*\\*!`;
+        let fromTheShadowsStr = `\\*\\*${charName}\\*\\* used \\*\\*From The Shadows\\*\\*!\\n\\*\\*.+\\*\\* is \\*\\*trapped\\*\\* for 3 turns!\\n\\*\\*<@(\\d+)>\\*\\* tagged in \\*\\*(.+)\\*\\*!`;
         let fromTheShadowsRegex = new RegExp(fromTheShadowsStr);
         let fromTheShadowsMatch = fromTheShadowsRegex.exec(turnResults);
         if (fromTheShadowsMatch !== null) {
@@ -557,16 +557,16 @@ function emulateDoubleHumiliate(battleObj, p1name, p2name, charName, turnResults
     // else p1initiative == p2initiative && move1stat == move2stat && move1status != move2status
     let p1resolveDiff = p1resolves[charName] - battleObj[battleKey][p1name].chars[charName].resolve;
     let p2resolveDiff = p2resolves[charName] - battleObj[battleKey][p2name].chars[charName].resolve;
-    if (move1status == "Burning" && p1resolveDiff != 0
-     || move2status == "Burning" && p2resolveDiff != 0) {
+    if (move1status == "burning" && p1resolveDiff != 0
+     || move2status == "burning" && p2resolveDiff != 0) {
         addBoost(battleObj, battleKey, p1name, charName, `Humiliate ${move1stat}`, turn);
         addStatus(battleObj, battleKey, p1name, charName, move1status, turn, move1numTurns);
         addBoost(battleObj, battleKey, p2name, charName, `Humiliate ${move2stat}`, turn);
         addStatus(battleObj, battleKey, p2name, charName, move2status, turn, move2numTurns);
         return;
     }
-    if (move1status == "Burning" && p2resolveDiff != 0
-     || move2status == "Burning" && p1resolveDiff != 0) {
+    if (move1status == "burning" && p2resolveDiff != 0
+     || move2status == "burning" && p1resolveDiff != 0) {
         addBoost(battleObj, battleKey, p2name, charName, `Humiliate ${move1stat}`, turn);
         addStatus(battleObj, battleKey, p2name, charName, move1status, turn, move1numTurns);
         addBoost(battleObj, battleKey, p1name, charName, `Humiliate ${move2stat}`, turn);

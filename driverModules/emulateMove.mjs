@@ -16,7 +16,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
     }
 
     if (consts.moveInfo[move]?.type[0] == "attack" && battleObj[battleKey][attacker].chars[attackChar].moves.includes("Aspect Of Fire")) {
-        addStatus(battleObj, battleKey, defender, defenseChar, "Burning", turn, 1);
+        addStatus(battleObj, battleKey, defender, defenseChar, "burning", turn, 1);
     }
 
     let attackerID = battleObj[battleKey][attacker].id;
@@ -36,7 +36,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             break;
         
         case 'Bottle Break':
-            addStatus(battleObj, battleKey, defender, defenseChar, "Wounded", turn, 1);
+            addStatus(battleObj, battleKey, defender, defenseChar, "wounded", turn, 1);
             nullifyBuffs(battleObj, battleKey, defender, defenseChar, turn);
             addBoost(battleObj, battleKey, attacker, attackChar, "Bottle Break Social", turn);
             addBoost(battleObj, battleKey, attacker, attackChar, "Bottle Break Initiative", turn);
@@ -56,16 +56,16 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             break;
         
         case 'From The Shadows':
-            addStatus(battleObj, battleKey, defender, defenseChar, "Trapped", turn, 3);
+            addStatus(battleObj, battleKey, defender, defenseChar, "trapped", turn, 3);
             
-            let fromTheShadowsStr = `\\*\\*${attackChar}\\*\\* used \\*\\*From The Shadows\\*\\*!\\n\\*\\*.+\\*\\* is \\*\\*Trapped\\*\\* for 3 turns!\\n\\*\\*<@${attackerID}>\\*\\* tagged in \\*\\*(.+)\\*\\*!`;
+            let fromTheShadowsStr = `\\*\\*${attackChar}\\*\\* used \\*\\*From The Shadows\\*\\*!\\n\\*\\*.+\\*\\* is \\*\\*trapped\\*\\* for 3 turns!\\n\\*\\*<@${attackerID}>\\*\\* tagged in \\*\\*(.+)\\*\\*!`;
             let fromTheShadowsRegex = new RegExp(fromTheShadowsStr);
             let fromTheShadowsMatch = fromTheShadowsRegex.exec(turnResults);
 
             if (fromTheShadowsMatch !== null) {
                 let taggedInChar = fromTheShadowsMatch[1];
-                addStatus(battleObj, battleKey, attacker, taggedInChar, "Pacified", turn, 1);
-                addStatus(battleObj, battleKey, attacker, taggedInChar, "Invulnerable", turn, 1);
+                addStatus(battleObj, battleKey, attacker, taggedInChar, "pacified", turn, 1);
+                addStatus(battleObj, battleKey, attacker, taggedInChar, "invulnerable", turn, 1);
             }
             break;
         
@@ -152,9 +152,9 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             //because their counters are guaranteed to fail in that case
             battleObj[battleKey][attacker].chars[attackChar].lockedMoves.push(move);
             if (turnResults.includes(`**${attackChar}** countered with **Kabedon**!`)) {
-                addStatus(battleObj, battleKey, defender, defenseChar, "Stunned", turn, 1);
+                addStatus(battleObj, battleKey, defender, defenseChar, "stunned", turn, 1);
             } else if (turnResults.includes(`**${attackChar}'s** counter failed!`)) {
-                addStatus(battleObj, battleKey, attacker, attackChar, "Stunned", turn, 1);
+                addStatus(battleObj, battleKey, attacker, attackChar, "stunned", turn, 1);
             }
             break;
         
@@ -203,16 +203,16 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             break;
         
         case 'Provoke':
-            addStatus(battleObj, battleKey, defender, defenseChar, "Taunted", turn, 3);
+            addStatus(battleObj, battleKey, defender, defenseChar, "taunted", turn, 3);
             break;
         
         case 'Slap':
-            addStatus(battleObj, battleKey, defender, defenseChar, "Wounded", turn, 3);
+            addStatus(battleObj, battleKey, defender, defenseChar, "wounded", turn, 3);
             break;
         
         case 'Slumber':
-            addStatus(battleObj, battleKey, defender, defenseChar, "Pacified", turn, 1);
-            addStatus(battleObj, battleKey, attacker, attackChar, "Resting", turn, 2);
+            addStatus(battleObj, battleKey, defender, defenseChar, "pacified", turn, 1);
+            addStatus(battleObj, battleKey, attacker, attackChar, "resting", turn, 2);
             break;
         
         case 'Study':
@@ -227,7 +227,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                 addBoost(battleObj, battleKey, attacker, attackChar, "Teamwork", turn);
             }
             if (previousTaggedInChar.includes("Ayanokōji Kiyotaka")) {
-                addStatus(battleObj, battleKey, attacker, attackChar, "Apathetic", turn, 2);
+                addStatus(battleObj, battleKey, attacker, attackChar, "apathetic", turn, 2);
             }
             if (previousTaggedInChar.includes("Miyake Akito")) {
                 addInflictModifier(battleObj, battleKey, attacker, attackChar, 0.25, turn, 2);
@@ -236,8 +236,8 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                 //this can be wrong in the case where one player tags into Hasebe from Airi and the other player
                 //attacks with Hasebe, but overall this case isn't very important.
                 if (turnResults.includes(`**${attackChar}** countered with **Airi Assist**!`)) {
-                    addStatus(battleObj, battleKey, defender, defenseChar, "Pacified", turn, 2);
-                    addStatus(battleObj, battleKey, defender, defenseChar, "Trapped", turn, 2);
+                    addStatus(battleObj, battleKey, defender, defenseChar, "pacified", turn, 2);
+                    addStatus(battleObj, battleKey, defender, defenseChar, "trapped", turn, 2);
                 }
             }
             if (previousTaggedInChar.includes("Yukimura Keisei")) {
