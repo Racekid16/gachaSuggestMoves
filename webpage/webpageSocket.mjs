@@ -1,13 +1,14 @@
-//code for the client to handle receiving data on the websocket
-import { createPartyFlexBox, createSuggestionFlexBox } from './createFlexBoxes.mjs'
+//code for the webpage to handle receiving data on the webpage socket
+import { createPartyContainer, createSuggestionContainer } from './createElements.mjs'
 
-const socket = io(`http://127.0.0.1:2700`);
+let webpageSocket = io(`http://127.0.0.1:2700`);
 let tabsToDelete = [];
 
-console.log('Establishing websocket connection to the server...');
+console.log('Establishing webpage socket connection to the server...');
 
-socket.on('connect', () => {
+webpageSocket.on('connect', () => {
     console.log('Connected to the server!');
+
     if (document.getElementById('Home-button') === null) {
         createTab("Home");
         const homeButton = document.getElementById('Home-button');
@@ -17,28 +18,32 @@ socket.on('connect', () => {
         homeContent.appendChild(programInformation);
         homeButton.click();
     }
+
+    webpageSocket.emit('identification', {
+        id: 'webpage'
+    });
 })
 
-socket.on('disconnect', () => {
+webpageSocket.on('disconnect', () => {
     console.log('Disconnected from the server');
 });
 
-socket.on('connect_error', (error) => {
+webpageSocket.on('connect_error', (error) => {
     console.error('Connection error:', error);
 });
 
-socket.on('battleStart', (data) => {
+webpageSocket.on('battleStart', (data) => {
     deleteTab(data.battleKey, true);
     createTab(data.battleKey, data.time, data.link);
     const message = `<a href=${data.link} target="_blank">${data.battleKey}</a> started`;
     addToHome(data.time, message);
 });
 
-socket.on('playerParty', (data) => {
+webpageSocket.on('playerParty', (data) => {
     addPlayerParty(data.battleObj, data.battleKey, data.playerName, data.hasStrength, data.supportBonus, data.partyArray);
 });
 
-socket.on('battleEnd', (data) => {
+webpageSocket.on('battleEnd', (data) => {
     if (data.header == 'WINNER:' || data.header == 'RESULT: DRAW') {
         addEmbed(data.battleKey, `<b>${data.header}</b>`, data.turnResults, data.usernames);
     }
@@ -47,11 +52,11 @@ socket.on('battleEnd', (data) => {
     addToHome(time, data.battleEndMessage);
 });
 
-socket.on('turnResults', (data) => {
+webpageSocket.on('turnResults', (data) => {
     addEmbed(data.battleKey, `<b><u>Turn ${data.turn}</u></b>`, data.turnResults, data.usernames);
 });
 
-socket.on('suggestedMoves', (data) => {
+webpageSocket.on('suggestedMoves', (data) => {
     addSuggestedMoves(data.battleObj, data.battleKey, data.p1suggestionData, data.p2suggestionData, data.playerNumberToPrintFirst);
 });
 
@@ -168,8 +173,8 @@ function addPlayerParty(battleObj, battleKey, playerName, hasStrength, supportBo
     if (tabContent === null) {
         return;
     }
-    const partyFlexBox = createPartyFlexBox(battleObj, battleKey, playerName, hasStrength, supportBonus, partyArray);
-    tabContent.appendChild(partyFlexBox);
+    const partyContainer = createPartyContainer(battleObj, battleKey, playerName, hasStrength, supportBonus, partyArray);
+    tabContent.appendChild(partyContainer);
 }
 
 function addEmbed(battleKey, header, body, usernames) {
@@ -192,8 +197,8 @@ function addSuggestedMoves(battleObj, battleKey, p1suggestionData, p2suggestionD
     if (tabContent === null) {
         return;
     }
-    const p1suggestion = createSuggestionFlexBox(battleObj, battleKey, p1suggestionData);
-    const p2suggestion = createSuggestionFlexBox(battleObj, battleKey, p2suggestionData);
+    const p1suggestion = createSuggestionContainer(battleObj, battleKey, p1suggestionData);
+    const p2suggestion = createSuggestionContainer(battleObj, battleKey, p2suggestionData);
     if (playerNumberToPrintFirst == 1) {
         tabContent.appendChild(p1suggestion);
         tabContent.appendChild(p2suggestion);

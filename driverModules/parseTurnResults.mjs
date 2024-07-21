@@ -10,7 +10,7 @@ import { applyTransformation } from "./transform.mjs";
 import consts from '../consts.json' assert { type: 'json' };
 
 // identify changes in stats or statuses then update the battleObj accordingly
-export async function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
+export async function parseTurnResults(battleObj, programSocket, p1name, p2name, battleEmbed) {
     let battleKey = p1name + " vs. " + p2name;
     let turn = parseInt(battleEmbed.fields[2].name.substring(battleEmbed.fields[2].name.indexOf('__Turn ') + 7, battleEmbed.fields[2].name.length - 2));
     let turnResults = battleEmbed.fields[2].value;
@@ -25,17 +25,11 @@ export async function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
 
     battleObj[battleKey].log(`Turn ${turn}:\n${turnResults}`);
 
-    fetch(`http://127.0.0.1:${consts.port}/socket/turnResults`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            battleKey: battleKey,
-            turn: turn,
-            turnResults: turnResults,
-            usernames: battleObj.usernames
-        })
+    programSocket.emit('turnResults', {
+        battleKey: battleKey,
+        turn: turn,
+        turnResults: turnResults,
+        usernames: battleObj.usernames
     });
 
     applyInnateAbilities(battleObj, battleKey, p1name, p2name, p1char, p2char, turnResults, turn, p1resolvesAfterTurn);
@@ -65,7 +59,7 @@ export async function parseTurnResults(battleObj, p1name, p2name, battleEmbed) {
 
     battleObj[battleKey].log("");
     if (p1taggedInChar !== null && p2taggedInChar !== null) {
-        suggestMoves(battleObj, p1name, p2name, p1taggedInChar, p2taggedInChar, turn);
+        suggestMoves(battleObj, programSocket, p1name, p2name, p1taggedInChar, p2taggedInChar, turn);
         battleObj[battleKey].log("");
     }
 

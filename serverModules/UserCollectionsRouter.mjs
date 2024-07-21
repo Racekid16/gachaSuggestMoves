@@ -24,7 +24,7 @@ const UserCollectionsRouter = (sharedData) => {
             .then(doc => {
                 if (!doc) {
                     res.status(404).send({
-                        message: "That user's collection isn't in the sharedData.database"
+                        message: "That user's collection isn't in the database"
                     });
                     return;
                 }

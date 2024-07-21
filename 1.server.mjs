@@ -1,5 +1,6 @@
 // start with $ node 1.server.mjs
 // this server primarily acts as an interface to interact with the gacha character database
+// and as a host websocket server that acts as an intermediary for the webpage and program to communicate
 // https://learn.microsoft.com/en-us/windows/wsl/networking
 // if you want to run this in WSL, follow these steps:
 // 1. Add an inbound rule in Windows Firewall allowing all TCP connections on port 27017
@@ -19,28 +20,27 @@ import BattleLogsRouter from './serverModules/BattleLogsRouter.mjs';
 import CharacterDataRouter from './serverModules/CharacterDataRouter.mjs';
 import ImageDataRouter from './serverModules/ImageDataRouter.mjs';
 import UserCollectionsRouter from './serverModules/UserCollectionsRouter.mjs';
-import socketRouter from './serverModules/socketRouter.mjs';
-import { serverSocketReceive } from './serverModules/serverSocket.mjs';
+import { receiveWebpageSocket, receiveProgramSocket } from './serverModules/serverSocket.mjs';
 import consts from './consts.json' assert { type: 'json' };
 import config from './config.json' assert { type: 'json' };
 
-const sharedData = {
+let sharedData = {
     database: null,
-    io: null
 }
+let webpageSocket = null;
+let programSocket = null;
 
 const app = express();
 app.use(express.json());
-app.use(express.static('website'));
+app.use(express.static('webpage'));
 app.use(cors({origin: '*'}));
 app.use('/BattleLogs', BattleLogsRouter(sharedData));
 app.use('/CharacterData', CharacterDataRouter(sharedData));
 app.use('/ImageData', ImageDataRouter(sharedData));
 app.use('/UserCollections', UserCollectionsRouter(sharedData));
-app.use('/socket', socketRouter(sharedData));
 
 const server = http.createServer(app);
-sharedData.io = new SocketIOServer(server);
+const io = new SocketIOServer(server);  //server socket
 
 connectToDb((error) => {
     if (!error) {
@@ -56,7 +56,7 @@ connectToDb((error) => {
 app.get("/", (req, res) => {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
-    res.sendFile(path.join(__dirname, './website/index.html'));
+    res.sendFile(path.join(__dirname, './webpage/index.html'));
 })
 
 app.get("/getToken", (req, res) => {
@@ -69,4 +69,26 @@ app.get("/getToken", (req, res) => {
     res.status(200).send({token: token});
 });
 
-sharedData.io.on('connection', serverSocketReceive);
+io.on('connection', (socket) => {
+
+    socket.on('identification', (data) => {
+        switch (data.id) {
+            case 'webpage':
+                console.log('Webpage user connected to server');
+                webpageSocket = socket;
+                break;
+            case 'program':
+                console.log('Program connected to server');
+                programSocket = socket;
+                break;
+            default:
+                console.log(`Unrecognized socket ID ${socket.id}`);
+        }
+
+        if (webpageSocket !== null && programSocket !== null) {
+            receiveWebpageSocket(webpageSocket, webpageSocket);
+            receiveProgramSocket(programSocket, webpageSocket);
+        }
+    });
+
+});

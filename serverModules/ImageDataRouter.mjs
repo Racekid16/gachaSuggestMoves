@@ -17,7 +17,7 @@ const ImageDataRouter = (sharedData) => {
             });
     })
 
-    //send the image of a character to the sharedData.database
+    //send the image of a character to the database
     //provide the URL of the party in the request body
     //the character should be in slot 1 
     //and the picture should be 328 x 254
@@ -56,7 +56,7 @@ const ImageDataRouter = (sharedData) => {
                         sharedData.database.collection('ImageData')
                             .insertOne(charImage);
                         res.status(201).send({
-                            message: "Added character's image to sharedData.database"
+                            message: "Added character's image to database"
                         });
                         return;
                     } else {
@@ -71,7 +71,7 @@ const ImageDataRouter = (sharedData) => {
                             }
                             );
                         res.status(200).send({
-                            message: "Updated character's image in sharedData.database"
+                            message: "Updated character's image in database"
                         });
                         return;
                     }

@@ -1,6 +1,6 @@
-//functions for creating tables
+//functions for creating some larger elements with many components
 
-export function createPartyFlexBox(battleObj, battleKey, playerName, hasStrength, supportBonus, partyArray) {
+export function createPartyContainer(battleObj, battleKey, playerName, hasStrength, supportBonus, partyArray) {
     const partyContainer = document.createElement('div');
     partyContainer.classList.add('row');
 
@@ -12,7 +12,7 @@ export function createPartyFlexBox(battleObj, battleKey, playerName, hasStrength
     return partyContainer;
 }
 
-export function createSuggestionFlexBox(battleObj, battleKey, playerSuggestionData) {
+export function createSuggestionContainer(battleObj, battleKey, playerSuggestionData) {
     const suggestionContainer = document.createElement('div');
     suggestionContainer.classList.add('row');
     suggestionContainer.classList.add('suggestion-container');

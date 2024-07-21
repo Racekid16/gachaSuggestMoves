@@ -26,7 +26,7 @@ const BattleLogsRouter = (sharedData) => {
             });
     })
 
-    //adds battle log to sharedData.database
+    //adds battle log to database
     router.post("/updateDb", (req, res) => {
         if (!req.body.players || !req.body.time || !req.body.data) {
             res.status(400).send({
@@ -41,7 +41,7 @@ const BattleLogsRouter = (sharedData) => {
                 data: req.body.data
             });
         res.status(201).send({
-            message: "Added battle log to sharedData.database"
+            message: "Added battle log to database"
         });
         return;
     })

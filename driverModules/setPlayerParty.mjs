@@ -13,7 +13,7 @@ import consts from '../consts.json' assert { type: 'json' };
 const delay = async (ms = 1000) =>  new Promise(resolve => setTimeout(resolve, ms));
 
 //the playerName parameter of this function does not have the player number prepended to it
-export async function setPlayerParty(battleObj, playerName, playerID, imageURL, avatarURL, supportBonus) {
+export async function setPlayerParty(battleObj, programSocket, playerName, playerID, imageURL, avatarURL, supportBonus) {
     let battleKey = determineBattleKey(battleObj, playerName, playerID);
     if (battleKey === false) {
         return;
@@ -21,14 +21,14 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL, 
     
     let tempPartyImageName = generateRandomFileName();
     let partyFinishedDownloading = false;
-    let tempPartySaveLocation = `./website/battleAssets/${battleKey}/${tempPartyImageName}.png`;
+    let tempPartySaveLocation = `./webpage/battleAssets/${battleKey}/${tempPartyImageName}.png`;
     downloadImage(imageURL.replace('format=png&width=328&height=254', ""), tempPartySaveLocation)
         .then(() => partyFinishedDownloading = true)
         .catch(err => console.error(`Failed to download image to ${tempPartySaveLocation}:`, err));
 
     let tempAvatarName = generateRandomFileName();
     let avatarFinishedDownloading = false;
-    let tempAvatarSaveLocation = `./website/battleAssets/${battleKey}/${tempAvatarName}.png`;
+    let tempAvatarSaveLocation = `./webpage/battleAssets/${battleKey}/${tempAvatarName}.png`;
     downloadImage(avatarURL.replace('?size=1024', ""), tempAvatarSaveLocation)
         .then(() => avatarFinishedDownloading = true)
         .catch(err => console.error(`Failed to download image to ${tempAvatarSaveLocation}:`, err));
@@ -99,13 +99,13 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL, 
     while (!partyFinishedDownloading) {
         await delay(200);
     }
-    let partySaveLocation = `./website/battleAssets/${battleKey}/${playerName}/party.png`;
+    let partySaveLocation = `./webpage/battleAssets/${battleKey}/${playerName}/party.png`;
     fs.renameSync(tempPartySaveLocation, partySaveLocation);
 
     while (!avatarFinishedDownloading) {
         await delay(200);
     }
-    let avatarSaveLocation = `./website/battleAssets/${battleKey}/${playerName}/avatar.png`;
+    let avatarSaveLocation = `./webpage/battleAssets/${battleKey}/${playerName}/avatar.png`;
     fs.renameSync(tempAvatarSaveLocation, avatarSaveLocation);
 
     if (playerNumber == 2) {
@@ -140,7 +140,7 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL, 
                     battleObj[battleKey][playerName].chars[charName].active = true;
                     battleObj[battleKey][playerName].chars[charName].imageName = `${charName}.png`;
                     
-                    let charSaveLocation = `./website/battleAssets/${battleKey}/${playerName}/chars/${charName}.png`;
+                    let charSaveLocation = `./webpage/battleAssets/${battleKey}/${playerName}/chars/${charName}.png`;
                     let cropOptions = {
                         left: 149 + 656 * i,
                         top: 149,
@@ -244,20 +244,14 @@ export async function setPlayerParty(battleObj, playerName, playerID, imageURL, 
     applyBoosts(battleObj, battleKey, playerName);
     printParty(battleObj, battleKey, playerName, partyArray, hasStrength);
 
-    fetch(`http://127.0.0.1:${consts.port}/socket/playerParty`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            battleObj: battleObj,
-            battleKey: battleKey,
-            playerNumber: playerNumber,
-            playerName: playerName,
-            hasStrength: hasStrength,
-            partyArray: partyArray,
-            supportBonus: supportBonus
-        })
+    programSocket.emit('playerParty', {
+        battleObj: battleObj,
+        battleKey: battleKey,
+        playerNumber: playerNumber,
+        playerName: playerName,
+        hasStrength: hasStrength,
+        partyArray: partyArray,
+        supportBonus: supportBonus
     });
 
     for (let charKey in battleObj[battleKey][playerName].chars) {

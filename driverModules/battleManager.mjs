@@ -8,7 +8,7 @@ import config from '../config.json' assert { type: 'json' };
 import consts from '../consts.json' assert { type: 'json' };
 const delay = async (ms = 1000) =>  new Promise(resolve => setTimeout(resolve, ms));
 
-export async function createBattle(battleObj, p1name, p2name, battleEmbed, messageLink) {
+export async function createBattle(battleObj, programSocket, p1name, p2name, battleEmbed, messageLink) {
     let battleKey = p1name + " vs. " + p2name;
     let turnResults = battleEmbed.fields[2].value;
     battleObj[battleKey] = {};
@@ -25,22 +25,16 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed, messa
         fs.appendFileSync(`./currentBattles/${battleKey}.txt`, str + "\n", (err) => {if (err) { throw err; }});
     }
 
-    fs.mkdirSync(`./website/battleAssets/${battleKey}`);
-    fs.mkdirSync(`./website/battleAssets/${battleKey}/${p1name}`);
-    fs.mkdirSync(`./website/battleAssets/${battleKey}/${p1name}/chars`);
-    fs.mkdirSync(`./website/battleAssets/${battleKey}/${p2name}`);
-    fs.mkdirSync(`./website/battleAssets/${battleKey}/${p2name}/chars`);
+    fs.mkdirSync(`./webpage/battleAssets/${battleKey}`);
+    fs.mkdirSync(`./webpage/battleAssets/${battleKey}/${p1name}`);
+    fs.mkdirSync(`./webpage/battleAssets/${battleKey}/${p1name}/chars`);
+    fs.mkdirSync(`./webpage/battleAssets/${battleKey}/${p2name}`);
+    fs.mkdirSync(`./webpage/battleAssets/${battleKey}/${p2name}/chars`);
     
-    fetch(`http://127.0.0.1:${consts.port}/socket/battleStart`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            battleKey: battleKey,
-            time: battleObj[battleKey].time,
-            link: messageLink
-        })
+    programSocket.emit('battleStart', {
+        battleKey: battleKey,
+        time: battleObj[battleKey].time,
+        link: messageLink
     });
 
     console.log(`${battleKey} started`);
@@ -68,7 +62,7 @@ export async function createBattle(battleObj, p1name, p2name, battleEmbed, messa
     parseTurnResults(battleObj, p1name, p2name, battleEmbed);
 }
 
-export async function createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL, botAvatarURL, supportBonus, messageLink, stage) {
+export async function createCampaignBattle(battleObj, programSocket, playerName, playerID, botPartyImageURL, botAvatarURL, supportBonus, messageLink, stage) {
     let response = await fetchWithRetry(`https://discord.com/api/v9/guilds/${consts.serverID}/members/${playerID}`, {
         method: 'GET',
         headers: {
@@ -95,22 +89,16 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
         fs.appendFileSync(`./currentBattles/${battleKey}.txt`, str + "\n", (err) => {if (err) { throw err; }});
     }
 
-    fs.mkdirSync(`./website/battleAssets/${battleKey}`);
-    fs.mkdirSync(`./website/battleAssets/${battleKey}/${playerName}`);
-    fs.mkdirSync(`./website/battleAssets/${battleKey}/${playerName}/chars`);
-    fs.mkdirSync(`./website/battleAssets/${battleKey}/${botName}`);
-    fs.mkdirSync(`./website/battleAssets/${battleKey}/${botName}/chars`);
+    fs.mkdirSync(`./webpage/battleAssets/${battleKey}`);
+    fs.mkdirSync(`./webpage/battleAssets/${battleKey}/${playerName}`);
+    fs.mkdirSync(`./webpage/battleAssets/${battleKey}/${playerName}/chars`);
+    fs.mkdirSync(`./webpage/battleAssets/${battleKey}/${botName}`);
+    fs.mkdirSync(`./webpage/battleAssets/${battleKey}/${botName}/chars`);
 
-    fetch(`http://127.0.0.1:${consts.port}/socket/battleStart`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            battleKey: battleKey,
-            time: battleObj[battleKey].time,
-            link: messageLink
-        })
+    programSocket.emit('battleStart', {
+        battleKey: battleKey,
+        time: battleObj[battleKey].time,
+        link: messageLink
     });
     
     console.log(`${battleKey} (Campaign Stage ${stage}) started`);
@@ -122,8 +110,8 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
     battleObj[battleKey][botName].id = consts.botID;
     battleObj[battleKey][botName].previousTaggedInChar = null;
     battleObj.usernames[consts.botID] = botName;
-    setPlayerParty(battleObj, "Chairman Sakayanagi", consts.botID, botPartyImageURL, botAvatarURL, supportBonus);
-
+    
+    setPlayerParty(battleObj, programSocket, "Chairman Sakayanagi", consts.botID, botPartyImageURL, botAvatarURL, supportBonus);
     battleObj[battleKey][playerName] = {};
     battleObj[battleKey][playerName].chars = {};
     battleObj[battleKey][playerName].id = playerID;
@@ -131,7 +119,7 @@ export async function createCampaignBattle(battleObj, playerName, playerID, botP
     battleObj.usernames[playerID] = playerName;
 }
 
-export function deleteBattle(battleObj, p1name, p2name, header, turnResults) {
+export function deleteBattle(battleObj, programSocket, p1name, p2name, header, turnResults) {
     let battleKey = p1name + " vs. " + p2name;
     let battleEndMessage;
     let p1ID = battleObj[battleKey][p1name].id;
@@ -181,23 +169,17 @@ export function deleteBattle(battleObj, p1name, p2name, header, turnResults) {
         arr[2] == p1name && arr[3] == p2name
     }));
     
-    let battleAssetsPath = `./website/battleAssets/${battleKey}`;
+    let battleAssetsPath = `./webpage/battleAssets/${battleKey}`;
     if (fs.existsSync(battleAssetsPath)) {
         fs.rm(battleAssetsPath, { recursive: true }, (err) => { if (err) { throw err; } });
     }
 
-    fetch(`http://127.0.0.1:${consts.port}/socket/battleEnd`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            battleKey: battleKey,
-            header: header,
-            turnResults: turnResults,
-            battleEndMessage: battleEndMessage,
-            usernames: battleObj.usernames
-        })
+    programSocket.emit('battleEnd', {
+        battleKey: battleKey,
+        header: header,
+        turnResults: turnResults,
+        battleEndMessage: battleEndMessage,
+        usernames: battleObj.usernames
     });
 
     delete battleObj[battleKey];

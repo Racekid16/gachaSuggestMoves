@@ -28,7 +28,7 @@ const CharacterDataRouter = (sharedData) => {
             .then(doc => {
                 if (!doc) {
                     res.status(404).send({
-                        message: `${name} with ${numStars} stars isn't in the sharedData.database`
+                        message: `${name} with ${numStars} stars isn't in the database`
                     });
                     return;
                 }
@@ -71,7 +71,7 @@ const CharacterDataRouter = (sharedData) => {
                             tags: req.body.tags
                         });
                     res.status(201).send({
-                        message: "Added character to sharedData.database"
+                        message: "Added character to database"
                     });
                     return;
                 }
@@ -100,7 +100,7 @@ const CharacterDataRouter = (sharedData) => {
                         }
                     });
                 res.status(200).send({
-                    message: "Updated sharedData.database"
+                    message: "Updated database"
                 });
             })
     })

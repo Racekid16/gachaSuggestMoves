@@ -1,4 +1,4 @@
-// Start a websocket connection.
+// Start a websocket connection with Discord's server.
 
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import WS from 'ws';
@@ -14,19 +14,19 @@ const options = {
     maxRetries: 20,
 };
 
-export function startWsConnection(battleObj) {
+export function createDiscordSocket(battleObj, programSocket) {
     //make sure server is running
     fetch(`http://127.0.0.1:${consts.port}`);
     
-    let socket = new ReconnectingWebSocket('wss://gateway.discord.gg/?v=9&encoding=json', [], options);
+    let discordSocket = new ReconnectingWebSocket('wss://gateway.discord.gg/?v=9&encoding=json', [], options);
     let seqNum;
     let interval;
     let connected = false;
 
     //make initial websocket connection
-    socket.addEventListener('open', () => {
+    discordSocket.addEventListener('open', () => {
         console.log(`Connected to Discord gateway at ${new Date().toLocaleString()}\n`);
-        socket.send(JSON.stringify({
+        discordSocket.send(JSON.stringify({
             op: 2,
             d: {
                 token: config.token,
@@ -41,15 +41,15 @@ export function startWsConnection(battleObj) {
     });
 
     //handle recieving data
-    socket.addEventListener('message', (response) => {
+    discordSocket.addEventListener('message', (response) => {
         const responseJSON = JSON.parse(response.data);
         const opcode = responseJSON.op;
         switch (opcode) {
             case 0:
-                handleWsData(battleObj, responseJSON);    
+                handleWsData(battleObj, programSocket, responseJSON);    
                 break;
             case 1:
-                socket.send(JSON.stringify({
+                discordSocket.send(JSON.stringify({
                     op: 1,
                     d: {
                         token: config.token,
@@ -71,7 +71,7 @@ export function startWsConnection(battleObj) {
         seqNum = responseJSON.s;
     });
 
-    socket.addEventListener('close', (evt) => {
+    discordSocket.addEventListener('close', (evt) => {
         console.log(`Socket closed with code ${evt.code} at ${new Date().toLocaleString()}. Reconnecting...`);
     });
 
@@ -83,7 +83,7 @@ export function startWsConnection(battleObj) {
             }
             //console.log("interval is", interval);
             setInterval(() => {
-                socket.send(JSON.stringify({
+                discordSocket.send(JSON.stringify({
                     op: 1,
                     d: seqNum
                 }));

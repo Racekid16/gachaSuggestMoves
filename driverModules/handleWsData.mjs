@@ -6,11 +6,11 @@ import { parseTurnResults } from "./parseTurnResults.mjs";
 import config from '../config.json' assert { type: 'json' };
 import consts from '../consts.json' assert { type: 'json' };
 
-export function handleWsData(battleObj, responseJSON) {
+export function handleWsData(battleObj, programSocket, responseJSON) {
     // update an ongoing battle
     if ((responseJSON.t == 'MESSAGE_CREATE' || responseJSON.t == 'MESSAGE_UPDATE') && responseJSON.d.author?.id == consts.botID 
     && responseJSON.d.embeds?.[0]?.title?.substring(0, 6) == "BATTLE" && responseJSON.d.embeds[0].fields.length == 3) {
-        processBattleEmbed(battleObj, responseJSON, responseJSON.d.embeds[0]);
+        processBattleEmbed(battleObj, programSocket, responseJSON, responseJSON.d.embeds[0]);
     }
 
     // set the party of a player whose party was just requested by the script (see battleManager.mjs's createBattle function)
@@ -31,7 +31,7 @@ export function handleWsData(battleObj, responseJSON) {
         }
         let imageURL = responseJSON.d.embeds[0].image.proxy_url + 'format=png&width=328&height=254';
         let supportBonus = /Support Bonus: (\d+)%/.exec(responseJSON.d.embeds[0].title)[1];
-        setPlayerParty(battleObj, playerName, playerID, imageURL, avatarURL, supportBonus);
+        setPlayerParty(battleObj, programSocket, playerName, playerID, imageURL, avatarURL, supportBonus);
     }
 
     // create an entry in battleObj representing a campaign battle
@@ -47,13 +47,13 @@ export function handleWsData(battleObj, responseJSON) {
         let stage = /Campaign Stage (\d+)/.exec(responseJSON.d.embeds[0].author.name)[1];
         let battleKey = playerName + " vs. " + botName;
         if (typeof battleObj[battleKey] !== 'undefined') {
-            deleteBattle(battleObj, playerName, botName, null);
+            deleteBattle(battleObj, programSocket, playerName, botName, null);
         }
         if (consts.excludedCampaignStages.includes(stage)) {
             console.log(`${battleKey} not being tracked; Stage ${stage} is excluded`);
             return;
         }
-        createCampaignBattle(battleObj, playerName, playerID, botPartyImageURL, botAvatarURL, supportBonus, messageLink, stage);
+        createCampaignBattle(battleObj, programSocket, playerName, playerID, botPartyImageURL, botAvatarURL, supportBonus, messageLink, stage);
     }
 
     // request a player's party for a campaign battle when it starts
@@ -87,9 +87,9 @@ export function handleWsData(battleObj, responseJSON) {
 
             if (typeof battleObj[battleKey] !== 'undefined') {
                 if (battleType == "battle") {
-                    deleteBattle(battleObj, p1name, p2name, null);
+                    deleteBattle(battleObj, programSocket, p1name, p2name, null);
                     let battleEmbed = lastBattle[4];
-                    createBattle(battleObj, p1name, p2name, battleEmbed);
+                    createBattle(battleObj, programSocket, p1name, p2name, battleEmbed);
                 }
                 else if (battleType == "campaign") {
                     let playerID = lastBattle[4];
@@ -100,7 +100,7 @@ export function handleWsData(battleObj, responseJSON) {
     }
 }
 
-async function processBattleEmbed(battleObj, responseJSON, battleEmbed) {
+async function processBattleEmbed(battleObj, programSocket, responseJSON, battleEmbed) {
     let p1name = `1.${battleEmbed.fields[0].name}`;
     let p2name = `2.${battleEmbed.fields[1].name}`;
     let battleKey = p1name + " vs. " + p2name;
@@ -108,7 +108,7 @@ async function processBattleEmbed(battleObj, responseJSON, battleEmbed) {
 
     if (typeof battleObj[battleKey] === 'undefined' && turn == 1 && responseJSON.d.interaction.name != 'campaign') {
         let messageLink = `https://discord.com/channels/${responseJSON.d.guild_id}/${responseJSON.d.channel_id}/${responseJSON.d.id}`;
-        createBattle(battleObj, p1name, p2name, battleEmbed, messageLink);
+        createBattle(battleObj, programSocket, p1name, p2name, battleEmbed, messageLink);
         return;
     }
 
@@ -119,14 +119,14 @@ async function processBattleEmbed(battleObj, responseJSON, battleEmbed) {
     else if (battleEmbed.fields[2].name == 'WINNER:') {
         let header = battleEmbed.fields[2].name;
         let turnResults = battleEmbed.fields[2].value;
-        deleteBattle(battleObj, p1name, p2name, header, turnResults);
+        deleteBattle(battleObj, programSocket, p1name, p2name, header, turnResults);
         return;
     }
 
     else if (battleEmbed.fields[2].name == 'RESULT: DRAW') {
         let header = battleEmbed.fields[2].name;
         let turnResults = battleEmbed.fields[2].value;
-        deleteBattle(battleObj, p1name, p2name, header, turnResults);
+        deleteBattle(battleObj, programSocket, p1name, p2name, header, turnResults);
     }
 
 
@@ -135,5 +135,5 @@ async function processBattleEmbed(battleObj, responseJSON, battleEmbed) {
         verifyPlayerResolves(battleObj, battleKey, p2name, 2, battleEmbed);
     }
     
-    parseTurnResults(battleObj, p1name, p2name, battleEmbed);
+    parseTurnResults(battleObj, programSocket, p1name, p2name, battleEmbed);
 }

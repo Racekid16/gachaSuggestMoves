@@ -3,18 +3,20 @@
 
 import { promises as fs } from 'fs';
 import path from 'path';
-import { startWsConnection } from "./driverModules/websocket.mjs";
+import { createProgramSocket } from './driverModules/programSocket.mjs';
+import { createDiscordSocket } from "./driverModules/discordSocket.mjs";
 
 (async ()=> {
     await deleteAllContents('./currentBattles');
-    await deleteAllContents('./website/battleAssets');
+    await deleteAllContents('./webpage/battleAssets');
     let battleObj = {
         currentBattles: [],
         usernames: {},
         avatars: {},
         inputs: {}
     };
-    startWsConnection(battleObj);
+    let programSocket = createProgramSocket(battleObj);
+    createDiscordSocket(battleObj, programSocket);
 })();
 
 //got from chat GPT

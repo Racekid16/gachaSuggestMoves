@@ -85,7 +85,7 @@ export function printParty(battleObj, battleKey, playerName, partyArray, hasStre
 }
 
 // print the move that the program determines is good to play
-export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p1moveSequence, p2moveSequence,
+export function printSuggestedMoves(battleObj, programSocket, p1name, p2name, p1char, p2char, p1moveSequence, p2moveSequence,
                                     p1move, p2move, p1moveObj, p2moveObj, p1damage, p2damage, p1hitType, p2hitType, turn) {
     let battleKey = p1name + " vs. " + p2name;
     
@@ -222,18 +222,12 @@ export function printSuggestedMoves(battleObj, p1name, p2name, p1char, p2char, p
         moves: p2moves
     };
 
-    fetch(`http://127.0.0.1:${consts.port}/socket/suggestedMoves`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            battleObj: battleObj,
-            battleKey: battleKey,
-            p1suggestionData: p1suggestionData,
-            p2suggestionData: p2suggestionData,
-            playerNumberToPrintFirst: playerNumberToPrintFirst,
-        })
+    programSocket.emit('suggestedMoves', {
+        battleObj: battleObj,
+        battleKey: battleKey,
+        p1suggestionData: p1suggestionData,
+        p2suggestionData: p2suggestionData,
+        playerNumberToPrintFirst: playerNumberToPrintFirst,
     });
 }
 

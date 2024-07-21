@@ -4,4 +4,4 @@ package-lock.json
 *.txt
 config.json
 currentBattles/
-website/battleAssets/
+webpage/battleAssets/
