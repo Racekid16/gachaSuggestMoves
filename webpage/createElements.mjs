@@ -27,6 +27,8 @@ export function createSuggestionContainer(battleObj, battleKey, playerSuggestion
 
 function createPartyEmbed(battleKey, playerName, supportBonus) {
     //const playerID = battleObj[battleKey][playerName].id;
+    const encodedBattleKey = battleKey.replace(/\//g, 'slash');
+    const encodedPlayerName = playerName.replace(/\//g, 'slash');
 
     const partyEmbed = document.createElement('div');
     partyEmbed.classList.add('discord-embed');
@@ -38,7 +40,7 @@ function createPartyEmbed(battleKey, playerName, supportBonus) {
 
     const avatar = document.createElement('img');
     avatar.classList.add('party-avatar');
-    avatar.src = `./battleAssets/${battleKey}/${playerName}/avatar.png`;
+    avatar.src = `./battleAssets/${encodedBattleKey}/${encodedPlayerName}/avatar.png`;
     avatar.alt = `${playerName}_avatar.png`;
 
     const partyPlayer = document.createElement('div');
@@ -50,7 +52,7 @@ function createPartyEmbed(battleKey, playerName, supportBonus) {
 
     const partyImage = document.createElement('img');
     partyImage.classList.add('party-image');
-    partyImage.src = `./battleAssets/${battleKey}/${playerName}/party.png`;
+    partyImage.src = `./battleAssets/${encodedBattleKey}/${encodedPlayerName}/party.png`;
     partyImage.alt = `${playerName}_party.png`;
 
     partyHeader.appendChild(avatar);
@@ -176,13 +178,15 @@ function createBenchCharStatsGrid(battleObj, battleKey, playerName, partyArray, 
 
 function createSuggestionLabel(battleKey, playerSuggestionData) {
     const playerName = playerSuggestionData.playerName;
+    const encodedBattleKey = battleKey.replace(/\//g, 'slash');
+    let encodedPlayerName = playerName.replace(/\//g, 'slash');
     
     const suggestionLabel = document.createElement('div');
     suggestionLabel.classList.add('suggestion-label');
 
     const avatar = document.createElement('img');
     avatar.classList.add('suggestion-avatar');
-    avatar.src = `./battleAssets/${battleKey}/${playerName}/avatar.png`;
+    avatar.src = `./battleAssets/${encodedBattleKey}/${encodedPlayerName}/avatar.png`;
     avatar.alt = `${playerName}_avatar.png`;
 
     const suggestionPlayer = document.createElement('div');
@@ -221,6 +225,8 @@ function createSuggestionCharStats(battleObj, battleKey, playerSuggestionData) {
     const playerName = playerSuggestionData.playerName;
     const charName = playerSuggestionData.charName;
     const rune = battleObj[battleKey][playerName].chars[charName].rune;
+    const encodedBattleKey = battleKey.replace(/\//g, 'slash');
+    const encodedPlayerName = playerName.replace(/\//g, 'slash');
     const imageName = battleObj[battleKey][playerName].chars[charName].imageName;
 
     const charStats = document.createElement('div');
@@ -236,7 +242,7 @@ function createSuggestionCharStats(battleObj, battleKey, playerSuggestionData) {
 
     const charImage = document.createElement('img');
     charImage.classList.add('char-image');
-    charImage.src = `./battleAssets/${battleKey}/${playerName}/chars/${imageName}`;
+    charImage.src = `./battleAssets/${encodedBattleKey}/${encodedPlayerName}/chars/${imageName}`;
     charStats.appendChild(charImage);
 
     const charNameContainer = document.createElement('div');

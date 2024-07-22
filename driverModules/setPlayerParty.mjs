@@ -19,16 +19,17 @@ export async function setPlayerParty(battleObj, programSocket, playerName, playe
         return;
     }
     
+    let encodedBattleKey = battleKey.replace(/\//g, 'slash');
     let tempPartyImageName = generateRandomFileName();
     let partyFinishedDownloading = false;
-    let tempPartySaveLocation = `./webpage/battleAssets/${battleKey}/${tempPartyImageName}.png`;
+    let tempPartySaveLocation = `./webpage/battleAssets/${encodedBattleKey}/${tempPartyImageName}.png`;
     downloadImage(imageURL.replace('format=png&width=328&height=254', ""), tempPartySaveLocation)
         .then(() => partyFinishedDownloading = true)
         .catch(err => console.error(`Failed to download image to ${tempPartySaveLocation}:`, err));
 
     let tempAvatarName = generateRandomFileName();
     let avatarFinishedDownloading = false;
-    let tempAvatarSaveLocation = `./webpage/battleAssets/${battleKey}/${tempAvatarName}.png`;
+    let tempAvatarSaveLocation = `./webpage/battleAssets/${encodedBattleKey}/${tempAvatarName}.png`;
     downloadImage(avatarURL.replace('?size=1024', ""), tempAvatarSaveLocation)
         .then(() => avatarFinishedDownloading = true)
         .catch(err => console.error(`Failed to download image to ${tempAvatarSaveLocation}:`, err));
@@ -99,13 +100,14 @@ export async function setPlayerParty(battleObj, programSocket, playerName, playe
     while (!partyFinishedDownloading) {
         await delay(200);
     }
-    let partySaveLocation = `./webpage/battleAssets/${battleKey}/${playerName}/party.png`;
+    let encodedPlayerName = playerName.replace(/\//g, 'slash');
+    let partySaveLocation = `./webpage/battleAssets/${encodedBattleKey}/${encodedPlayerName}/party.png`;
     fs.renameSync(tempPartySaveLocation, partySaveLocation);
 
     while (!avatarFinishedDownloading) {
         await delay(200);
     }
-    let avatarSaveLocation = `./webpage/battleAssets/${battleKey}/${playerName}/avatar.png`;
+    let avatarSaveLocation = `./webpage/battleAssets/${encodedBattleKey}/${encodedPlayerName}/avatar.png`;
     fs.renameSync(tempAvatarSaveLocation, avatarSaveLocation);
 
     if (playerNumber == 2) {
@@ -140,7 +142,7 @@ export async function setPlayerParty(battleObj, programSocket, playerName, playe
                     battleObj[battleKey][playerName].chars[charName].active = true;
                     battleObj[battleKey][playerName].chars[charName].imageName = `${charName}.png`;
                     
-                    let charSaveLocation = `./webpage/battleAssets/${battleKey}/${playerName}/chars/${charName}.png`;
+                    let charSaveLocation = `./webpage/battleAssets/${encodedBattleKey}/${encodedPlayerName}/chars/${charName}.png`;
                     let cropOptions = {
                         left: 149 + 656 * i,
                         top: 149,

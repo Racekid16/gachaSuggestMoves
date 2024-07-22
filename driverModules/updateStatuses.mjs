@@ -112,7 +112,7 @@ function removeExpiredPositiveStatuses(battleObj, battleKey, playerName, charNam
             }
             switch (thisPositiveStatus.name) {
                 case 'apathetic':
-                    thisCharObj.personality = thisPositiveStatus.original;
+                    thisCharObj.personality = thisPositiveStatus.originalPersonality;
                     break;
                 default:
                     break;

@@ -19,17 +19,20 @@ export async function createBattle(battleObj, programSocket, p1name, p2name, bat
     battleObj.currentBattles.push([new Date().getTime(), 'battle', p1name, p2name, battleEmbed]);
     
     //create a new file for this battle
-    fs.writeFileSync(`./currentBattles/${battleKey}.txt`, '');
+    let encodedBattleKey = battleKey.replace(/\//g, 'slash');
+    let encodedP1name = p1name.replace(/\//g, 'slash');
+    let encodedP2name = p2name.replace(/\//g, 'slash');
+    fs.writeFileSync(`./currentBattles/${encodedBattleKey}.txt`, '');
     battleObj[battleKey].log = function (str) {
         this.data += str + "\n";
-        fs.appendFileSync(`./currentBattles/${battleKey}.txt`, str + "\n", (err) => {if (err) { throw err; }});
+        fs.appendFileSync(`./currentBattles/${encodedBattleKey}.txt`, str + "\n", (err) => {if (err) { throw err; }});
     }
 
-    fs.mkdirSync(`./webpage/battleAssets/${battleKey}`);
-    fs.mkdirSync(`./webpage/battleAssets/${battleKey}/${p1name}`);
-    fs.mkdirSync(`./webpage/battleAssets/${battleKey}/${p1name}/chars`);
-    fs.mkdirSync(`./webpage/battleAssets/${battleKey}/${p2name}`);
-    fs.mkdirSync(`./webpage/battleAssets/${battleKey}/${p2name}/chars`);
+    fs.mkdirSync(`./webpage/battleAssets/${encodedBattleKey}`);
+    fs.mkdirSync(`./webpage/battleAssets/${encodedBattleKey}/${encodedP1name}`);
+    fs.mkdirSync(`./webpage/battleAssets/${encodedBattleKey}/${encodedP1name}/chars`);
+    fs.mkdirSync(`./webpage/battleAssets/${encodedBattleKey}/${encodedP2name}`);
+    fs.mkdirSync(`./webpage/battleAssets/${encodedBattleKey}/${encodedP2name}/chars`);
     
     programSocket.emit('battleStart', {
         battleKey: battleKey,
@@ -83,17 +86,19 @@ export async function createCampaignBattle(battleObj, programSocket, playerName,
     battleObj[battleKey].requestedParties = [];
     
     //create a new file for this battle
-    fs.writeFileSync(`./currentBattles/${battleKey}.txt`, '');
+    let encodedBattleKey = battleKey.replace(/\//g, 'slash');
+    let encodedPlayerName = playerName.replace(/\//g, 'slash');
+    fs.writeFileSync(`./currentBattles/${encodedBattleKey}.txt`, '');
     battleObj[battleKey].log = function (str) {
         this.data += str + "\n";
-        fs.appendFileSync(`./currentBattles/${battleKey}.txt`, str + "\n", (err) => {if (err) { throw err; }});
+        fs.appendFileSync(`./currentBattles/${encodedBattleKey}.txt`, str + "\n", (err) => {if (err) { throw err; }});
     }
 
-    fs.mkdirSync(`./webpage/battleAssets/${battleKey}`);
-    fs.mkdirSync(`./webpage/battleAssets/${battleKey}/${playerName}`);
-    fs.mkdirSync(`./webpage/battleAssets/${battleKey}/${playerName}/chars`);
-    fs.mkdirSync(`./webpage/battleAssets/${battleKey}/${botName}`);
-    fs.mkdirSync(`./webpage/battleAssets/${battleKey}/${botName}/chars`);
+    fs.mkdirSync(`./webpage/battleAssets/${encodedBattleKey}`);
+    fs.mkdirSync(`./webpage/battleAssets/${encodedBattleKey}/${encodedPlayerName}`);
+    fs.mkdirSync(`./webpage/battleAssets/${encodedBattleKey}/${encodedPlayerName}/chars`);
+    fs.mkdirSync(`./webpage/battleAssets/${encodedBattleKey}/${botName}`);
+    fs.mkdirSync(`./webpage/battleAssets/${encodedBattleKey}/${botName}/chars`);
 
     programSocket.emit('battleStart', {
         battleKey: battleKey,
@@ -164,12 +169,13 @@ export function deleteBattle(battleObj, programSocket, p1name, p2name, header, t
         console.log(battleEndMessage);
     }
     cancelInput(battleKey);
-    fs.unlink(`./currentBattles/${battleKey}.txt`, (err) => {if (err) { throw err; }});
+    let encodedBattleKey = battleKey.replace(/\//g, 'slash');
+    fs.unlink(`./currentBattles/${encodedBattleKey}.txt`, (err) => {if (err) { throw err; }});
     battleObj.currentBattles.splice(battleObj.currentBattles.findIndex((arr) => {
         arr[2] == p1name && arr[3] == p2name
     }));
     
-    let battleAssetsPath = `./webpage/battleAssets/${battleKey}`;
+    let battleAssetsPath = `./webpage/battleAssets/${encodedBattleKey}`;
     if (fs.existsSync(battleAssetsPath)) {
         fs.rm(battleAssetsPath, { recursive: true }, (err) => { if (err) { throw err; } });
     }
