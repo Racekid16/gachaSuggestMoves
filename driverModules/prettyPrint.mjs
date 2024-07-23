@@ -225,6 +225,7 @@ export function printSuggestedMoves(battleObj, programSocket, p1name, p2name, p1
     programSocket.emit('suggestedMoves', {
         battleObj: battleObj,
         battleKey: battleKey,
+        turn: turn,
         p1suggestionData: p1suggestionData,
         p2suggestionData: p2suggestionData,
         playerNumberToPrintFirst: playerNumberToPrintFirst,

@@ -12,13 +12,20 @@ export function createPartyContainer(battleObj, battleKey, playerName, hasStreng
     return partyContainer;
 }
 
-export function createSuggestionContainer(battleObj, battleKey, playerSuggestionData) {
+export function createSuggestionContainer(battleObj, webpageSocket, battleKey, turn, playerSuggestionData) {
+    const playerName = playerSuggestionData.playerName;
+    const charName = playerSuggestionData.charName;
+
     const suggestionContainer = document.createElement('div');
     suggestionContainer.classList.add('row');
     suggestionContainer.classList.add('suggestion-container');
+    // note: node attributes can only be lowercase strings
+    suggestionContainer.setAttribute('playername', playerName);
+    suggestionContainer.setAttribute('charname', charName);
+    suggestionContainer.setAttribute('turn', turn);
 
     const suggestionLabel = createSuggestionLabel(battleKey, playerSuggestionData);
-    const suggestionContent = createSuggestionContent(battleObj, battleKey, playerSuggestionData);
+    const suggestionContent = createSuggestionContent(battleObj, webpageSocket, battleKey, turn, playerSuggestionData);
 
     suggestionContainer.appendChild(suggestionLabel);
     suggestionContainer.appendChild(suggestionContent);
@@ -198,11 +205,11 @@ function createSuggestionLabel(battleKey, playerSuggestionData) {
     return suggestionLabel;
 }
 
-function createSuggestionContent(battleObj, battleKey, playerSuggestionData) {
+function createSuggestionContent(battleObj, webpageSocket, battleKey, turn, playerSuggestionData) {
     const suggestionContent = document.createElement('div');
     suggestionContent.classList.add('suggestion-content');
     
-    const charStats = createSuggestionCharStats(battleObj, battleKey, playerSuggestionData);
+    const charStats = createSuggestionCharStats(battleObj, webpageSocket, battleKey, turn, playerSuggestionData);
     const charOtherInformation = createCharOtherInformation(playerSuggestionData);
     const suggestedMoveContainer = createSuggestedMoveContainer(playerSuggestionData);
 
@@ -212,7 +219,7 @@ function createSuggestionContent(battleObj, battleKey, playerSuggestionData) {
     return suggestionContent;
 }
 
-function createSuggestionCharStats(battleObj, battleKey, playerSuggestionData) {
+function createSuggestionCharStats(battleObj, webpageSocket, battleKey, turn, playerSuggestionData) {
     const statSymbols = {
         "initiative": "🏃",
         "mental": "🧠",
@@ -237,42 +244,7 @@ function createSuggestionCharStats(battleObj, battleKey, playerSuggestionData) {
         charStats.appendChild(runeImage);
     }
 
-    const charSelectContainer = document.createElement('div');
-    charSelectContainer.classList.add('char-select-container');
-
-    const charSelectButton = createCharButton(battleObj, battleKey, playerName, charName);
-
-    const charSelectOptions = document.createElement('div');
-    charSelectOptions.classList.add('char-select-options');
-
-    const otherChars = Object.keys(battleObj[battleKey][playerName].chars).filter(charKey => charKey != charName && battleObj[battleKey][playerName].chars[charKey].resolve > 0);
-    for (let charKey of otherChars) {
-        const charOption = createCharButton(battleObj, battleKey, playerName, charKey);
-        charOption.addEventListener('click', ()=> {
-            console.log(charKey);
-            charSelectOptions.style.display = 'none';  
-        })
-        charSelectOptions.appendChild(charOption);
-    }
-
-    if (otherChars.length == 0) {
-        charSelectButton.classList.remove('char-button');
-    } else {
-        charSelectButton.addEventListener('click', () => {
-            charSelectOptions.style.display = charSelectOptions.style.display == 'flex' ? 'none' : 'flex';
-        });
-    }
-
-    // hide select options if click outside the select menu
-    document.addEventListener('click', (event) => {
-        if (!charSelectButton.contains(event.target) && !charSelectOptions.contains(event.target)) {
-            charSelectOptions.style.display = 'none';
-        }
-    });
-
-    //charSelectContainer.appendChild(charSelect);
-    charSelectContainer.appendChild(charSelectButton);
-    charSelectContainer.appendChild(charSelectOptions);
+    const charSelectContainer = createCharSelectContainer(battleObj, webpageSocket, battleKey, playerName, charName, turn);
     charStats.appendChild(charSelectContainer);
 
     for (let stat of ['initiative', 'mental', 'physical', 'social', 'resolve']) {
@@ -285,6 +257,76 @@ function createSuggestionCharStats(battleObj, battleKey, playerSuggestionData) {
     }
     
     return charStats;
+}
+
+function createCharSelectContainer(battleObj, webpageSocket, battleKey, playerName, charName, turn) {
+    const charSelectContainer = document.createElement('div');
+    charSelectContainer.classList.add('char-select-container');
+
+    const charSelectButton = createCharButton(battleObj, battleKey, playerName, charName);
+
+    const charSelectOptions = document.createElement('div');
+    charSelectOptions.classList.add('char-select-options');
+
+    const otherChars = Object.keys(battleObj[battleKey][playerName].chars).filter(charKey => charKey != charName && battleObj[battleKey][playerName].chars[charKey].resolve > 0);
+    for (let charKey of otherChars) {
+        const charOption = createCharButton(battleObj, battleKey, playerName, charKey);
+
+        charOption.onclick = () => {
+            const [p1name, p2name] = battleKey.split(" vs. ");
+            let p1char;
+            let p2char;
+            const tabContent = document.getElementById(`${battleKey}-content`);
+            const thisTurnSuggestions = tabContent.querySelectorAll(`.suggestion-container[turn="${turn}"]`);
+            thisTurnSuggestions.forEach(suggestionContainer => {
+                let thisSuggestionPlayer = suggestionContainer.getAttribute('playername');
+                let thisSuggestionChar = suggestionContainer.getAttribute('charname');
+                if (thisSuggestionPlayer == p1name) {
+                    if (playerName == p1name) {
+                        p1char = charKey;
+                    } else {
+                        p1char = thisSuggestionChar;
+                    }
+                }
+                if (thisSuggestionPlayer == p2name) {
+                    if (playerName == p2name) {
+                        p2char = charKey;
+                    } else {
+                        p2char = thisSuggestionChar;
+                    }
+                }
+                suggestionContainer.remove();
+            });
+            webpageSocket.emit('newSuggestion', {   
+                p1name: p1name,
+                p2name: p2name,
+                p1char: p1char,
+                p2char: p2char,
+                turn: turn
+            });
+        }
+
+        charSelectOptions.appendChild(charOption);
+    }
+
+    if (otherChars.length == 0) {
+        charSelectButton.classList.remove('char-button');
+    } else {
+        charSelectButton.onclick = () => {
+            charSelectOptions.style.display = charSelectOptions.style.display == 'flex' ? 'none' : 'flex';
+        };
+    }
+
+    // hide select options if click outside the select menu
+    document.addEventListener('click', (event) => {
+        if (!charSelectButton.contains(event.target) && !charSelectOptions.contains(event.target)) {
+            charSelectOptions.style.display = 'none';
+        }
+    });
+
+    charSelectContainer.appendChild(charSelectButton);
+    charSelectContainer.appendChild(charSelectOptions);
+    return charSelectContainer;
 }
 
 function createCharButton(battleObj, battleKey, playerName, charName) {

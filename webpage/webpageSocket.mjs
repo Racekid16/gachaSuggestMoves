@@ -47,6 +47,7 @@ webpageSocket.on('battleEnd', (data) => {
     if (data.header == 'WINNER:' || data.header == 'RESULT: DRAW') {
         addEmbed(data.battleKey, `<b>${data.header}</b>`, data.turnResults, data.usernames);
     }
+    deactiveTabButtons(data.battleKey);
     deleteTab(data.battleKey);
     const time = new Date().toLocaleString();
     addToHome(time, data.battleEndMessage);
@@ -54,10 +55,11 @@ webpageSocket.on('battleEnd', (data) => {
 
 webpageSocket.on('turnResults', (data) => {
     addEmbed(data.battleKey, `<b><u>Turn ${data.turn}</u></b>`, data.turnResults, data.usernames);
+    deactiveTabButtons(data.battleKey);
 });
 
 webpageSocket.on('suggestedMoves', (data) => {
-    addSuggestedMoves(data.battleObj, data.battleKey, data.p1suggestionData, data.p2suggestionData, data.playerNumberToPrintFirst);
+    addSuggestedMoves(data.battleObj, webpageSocket, data.battleKey, data.turn, data.p1suggestionData, data.p2suggestionData, data.playerNumberToPrintFirst);
 });
 
 function setTabContentMaxHeight() {
@@ -192,13 +194,15 @@ function addEmbed(battleKey, header, body, usernames) {
     tabContent.appendChild(newElement);
 }
 
-function addSuggestedMoves(battleObj, battleKey, p1suggestionData, p2suggestionData, playerNumberToPrintFirst) {
+function addSuggestedMoves(battleObj, webpageSocket, battleKey, turn, p1suggestionData, p2suggestionData, playerNumberToPrintFirst) {
     const tabContent = document.getElementById(`${battleKey}-content`);
     if (tabContent === null) {
         return;
     }
-    const p1suggestion = createSuggestionContainer(battleObj, battleKey, p1suggestionData);
-    const p2suggestion = createSuggestionContainer(battleObj, battleKey, p2suggestionData);
+
+    const p1suggestion = createSuggestionContainer(battleObj, webpageSocket, battleKey, turn, p1suggestionData);
+    const p2suggestion = createSuggestionContainer(battleObj, webpageSocket, battleKey, turn, p2suggestionData);
+
     if (playerNumberToPrintFirst == 1) {
         tabContent.appendChild(p1suggestion);
         tabContent.appendChild(p2suggestion);
@@ -206,4 +210,13 @@ function addSuggestedMoves(battleObj, battleKey, p1suggestionData, p2suggestionD
         tabContent.appendChild(p2suggestion);
         tabContent.appendChild(p1suggestion);
     }
+}
+
+function deactiveTabButtons(battleKey) {
+    const tabContent = document.getElementById(`${battleKey}-content`);
+    const thisTabCharButtons = tabContent.querySelectorAll('.char-button');
+    thisTabCharButtons.forEach(button => {
+        button.classList.remove('char-button');
+        button.onclick = null;
+    });
 }

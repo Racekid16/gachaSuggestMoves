@@ -86,7 +86,7 @@ io.on('connection', (socket) => {
         }
 
         if (webpageSocket !== null && programSocket !== null) {
-            receiveWebpageSocket(webpageSocket, webpageSocket);
+            receiveWebpageSocket(webpageSocket, programSocket);
             receiveProgramSocket(programSocket, webpageSocket);
         }
     });
