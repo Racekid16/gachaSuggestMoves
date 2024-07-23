@@ -47,7 +47,7 @@ webpageSocket.on('battleEnd', (data) => {
     if (data.header == 'WINNER:' || data.header == 'RESULT: DRAW') {
         addEmbed(data.battleKey, `<b>${data.header}</b>`, data.turnResults, data.usernames);
     }
-    deactiveTabButtons(data.battleKey);
+    deactiveButtonsInTab(data.battleKey);
     deleteTab(data.battleKey);
     const time = new Date().toLocaleString();
     addToHome(time, data.battleEndMessage);
@@ -55,7 +55,7 @@ webpageSocket.on('battleEnd', (data) => {
 
 webpageSocket.on('turnResults', (data) => {
     addEmbed(data.battleKey, `<b><u>Turn ${data.turn}</u></b>`, data.turnResults, data.usernames);
-    deactiveTabButtons(data.battleKey);
+    deactiveButtonsInTab(data.battleKey);
 });
 
 webpageSocket.on('suggestedMoves', (data) => {
@@ -212,11 +212,16 @@ function addSuggestedMoves(battleObj, webpageSocket, battleKey, turn, p1suggesti
     }
 }
 
-function deactiveTabButtons(battleKey) {
+function deactiveButtonsInTab(battleKey) {
     const tabContent = document.getElementById(`${battleKey}-content`);
     const thisTabCharButtons = tabContent.querySelectorAll('.char-button');
     thisTabCharButtons.forEach(button => {
         button.classList.remove('char-button');
+        button.onclick = null;
+    });
+    const thisTabRuneButtons = tabContent.querySelectorAll('.rune-button');
+    thisTabRuneButtons.forEach(button => {
+        button.classList.remove('rune-button');
         button.onclick = null;
     });
 }

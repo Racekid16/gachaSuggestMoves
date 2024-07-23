@@ -84,12 +84,13 @@ export function handleWsData(battleObj, programSocket, responseJSON) {
             let p1name = lastBattle[2];
             let p2name = lastBattle[3];
             let battleKey = p1name + " vs. " + p2name;
+            let messageLink = `https://discord.com/channels/${responseJSON.d.guild_id}/${responseJSON.d.channel_id}/${responseJSON.d.id}`;
 
             if (typeof battleObj[battleKey] !== 'undefined') {
                 if (battleType == "battle") {
                     deleteBattle(battleObj, programSocket, p1name, p2name, null);
                     let battleEmbed = lastBattle[4];
-                    createBattle(battleObj, programSocket, p1name, p2name, battleEmbed);
+                    createBattle(battleObj, programSocket, p1name, p2name, battleEmbed, messageLink);
                 }
                 else if (battleType == "campaign") {
                     let playerID = lastBattle[4];

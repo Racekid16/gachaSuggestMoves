@@ -238,7 +238,7 @@ export async function setPlayerParty(battleObj, programSocket, playerName, playe
         thisChar.inflictModifiers = [];
         thisChar.receiveModifiers = [];
         thisChar.lockedMoves = [];
-        thisChar.rune = null;
+        thisChar.rune = "None";
         addAspectBoost(thisChar);
     }
 

@@ -237,19 +237,15 @@ function createSuggestionCharStats(battleObj, webpageSocket, battleKey, turn, pl
     charStats.classList.add('row');
     charStats.classList.add('char-stats');
 
-    if (rune !== null) {
-        const runeImage = document.createElement('img');
-        runeImage.classList.add('rune-image');
-        runeImage.src = `./images/runes/${rune}.png`;
-        charStats.appendChild(runeImage);
-    }
+    const runeSelectButton = createRuneSelectButton(battleObj, webpageSocket, battleKey, playerName, charName);
+    charStats.appendChild(runeSelectButton);
 
     const charSelectContainer = createCharSelectContainer(battleObj, webpageSocket, battleKey, playerName, charName, turn);
     charStats.appendChild(charSelectContainer);
 
     for (let stat of ['initiative', 'mental', 'physical', 'social', 'resolve']) {
         const newElement = document.createElement('div');
-        newElement.classList.add('char-stat');
+        newElement.classList.add('pad');
         const statSymbol = statSymbols[stat];
         const statValue = battleObj[battleKey][playerName].chars[charName][stat];
         newElement.innerHTML = `${statSymbol}<b>${statValue}</b>`;
@@ -257,6 +253,118 @@ function createSuggestionCharStats(battleObj, webpageSocket, battleKey, turn, pl
     }
     
     return charStats;
+}
+
+function createRuneSelectButton(battleObj, webpageSocket, battleKey, playerName, charName) {
+    const charRune = battleObj[battleKey][playerName].chars[charName].rune;
+    const runeImageSrc = `./images/runes/${charRune}.png`;
+    const tabContent = document.getElementById(`${battleKey}-content`);
+
+    const runeImage = document.createElement('img');
+    runeImage.classList.add('rune-image');
+    runeImage.classList.add('rune-button');
+    runeImage.src = runeImageSrc;
+
+    const runePopupContainer = document.createElement('div');
+    runePopupContainer.classList.add('popup-container');
+
+    const textbox1 = document.createElement('div');
+    textbox1.classList.add('popup-text');
+    textbox1.innerHTML = "Rune";
+
+    const popupRuneImage = document.createElement('img');
+    popupRuneImage.classList.add('popup-image');
+    popupRuneImage.src = runeImageSrc;
+
+    const textbox2 = document.createElement('div');
+    textbox2.classList.add('popup-text');
+    textbox2.innerHTML = `<b>${charRune}</b>`;
+
+    const runeInputLabel = document.createElement('label');
+    runeInputLabel.classList.add('input-label');
+    runeInputLabel.innerHTML = "Choose a different rune";
+
+    const runeInput = document.createElement('input');
+    runeInput.classList.add('input');
+    runeInput.setAttribute('list', 'runelist');
+
+    const runeDatalist = document.createElement('datalist');
+    runeDatalist.id = 'runelist';
+    const runes = [
+        'Affinity', 'Ataraxy', 'Convalescence', 'Focus', 'Glass', 'Glory', 'Instinct', 'None', 
+        'Obliteration', 'Obstinance', 'Purity', 'Rage', 'Retaliation', 'Spite', 'Summoning', 'Wrath'
+    ];
+    for (let rune of runes) {
+        const runeOption = document.createElement('option');
+        runeOption.setAttribute('value', rune);
+        runeDatalist.appendChild(runeOption);
+    }
+
+    runeInput.addEventListener('keydown', function(event) {
+        const inputField = event.target;
+        const dataList = document.getElementById('runelist');
+        const options = Array.from(dataList.options).map(option => option.value);
+
+        const filteredOptions = options.filter(option => 
+            option.toLowerCase().includes(inputField.value.toLowerCase())
+        );
+
+        if (filteredOptions.length === 1 && (event.key === 'Enter' || event.key === 'Tab')) {
+            inputField.value = filteredOptions[0];
+        }
+    });
+
+    runeInput.appendChild(runeDatalist);
+    runeInputLabel.appendChild(runeInput);
+
+    const errorText = document.createElement('div');
+    errorText.classList.add('error');
+    errorText.innerHTML = "Invalid input!";
+
+    const buttonRow = document.createElement('div');
+    buttonRow.classList.add('row');
+
+    const popupOKButton = document.createElement('button');
+    popupOKButton.classList.add('popup-ok-button');
+    popupOKButton.classList.add('pad');
+    popupOKButton.innerHTML = "<b>OK</b>";
+
+    const popupCancelButton = document.createElement('button');
+    popupCancelButton.classList.add('popup-cancel-button');
+    popupCancelButton.classList.add('pad');
+    popupCancelButton.innerHTML = "Cancel";
+
+    buttonRow.appendChild(popupOKButton);
+    buttonRow.appendChild(popupCancelButton);
+
+    popupOKButton.onclick = () => {
+        let inputValue = runeInput.value;
+        if (inputValue == charRune || !runes.includes(inputValue)) {
+            errorText.style.display = "block";
+        } else {
+            errorText.style.display = "none";
+            runePopupContainer.classList.remove('popup-open');   
+        }
+        
+    }
+    popupCancelButton.onclick = () => {
+        errorText.style.display = "none";
+        runePopupContainer.classList.remove('popup-open');
+    }
+
+    runePopupContainer.appendChild(textbox1);
+    runePopupContainer.appendChild(popupRuneImage);
+    runePopupContainer.appendChild(textbox2);
+    runePopupContainer.appendChild(runeInputLabel);
+    runePopupContainer.appendChild(errorText);
+    runePopupContainer.appendChild(buttonRow);
+    tabContent.appendChild(runePopupContainer);
+
+    runeImage.onclick = () => {
+        runePopupContainer.classList.add('popup-open');
+    }
+
+    return runeImage;
 }
 
 function createCharSelectContainer(battleObj, webpageSocket, battleKey, playerName, charName, turn) {
@@ -313,7 +421,7 @@ function createCharSelectContainer(battleObj, webpageSocket, battleKey, playerNa
         charSelectButton.classList.remove('char-button');
     } else {
         charSelectButton.onclick = () => {
-            charSelectOptions.style.display = charSelectOptions.style.display == 'flex' ? 'none' : 'flex';
+            charSelectOptions.style.display = charSelectOptions.style.display == 'none' ? 'flex' : 'none';
         };
     }
 
@@ -343,7 +451,7 @@ function createCharButton(battleObj, battleKey, playerName, charName) {
     charImage.src = `./battleAssets/${encodedBattleKey}/${encodedPlayerName}/chars/${imageName}`;
 
     const charNameContainer = document.createElement('div');
-    charNameContainer.classList.add('char-stat');
+    charNameContainer.classList.add('pad');
     charNameContainer.innerHTML = `<b>${charName}</b>`;
 
     charButton.appendChild(charImage);

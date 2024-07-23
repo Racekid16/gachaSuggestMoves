@@ -62,7 +62,7 @@ export async function createBattle(battleObj, programSocket, p1name, p2name, bat
     verifyPlayerResolves(battleObj, battleKey, p1name, 1, battleEmbed);
     verifyPlayerResolves(battleObj, battleKey, p2name, 2, battleEmbed);
     
-    parseTurnResults(battleObj, p1name, p2name, battleEmbed);
+    parseTurnResults(battleObj, programSocket, p1name, p2name, battleEmbed);
 }
 
 export async function createCampaignBattle(battleObj, programSocket, playerName, playerID, botPartyImageURL, botAvatarURL, supportBonus, messageLink, stage) {
