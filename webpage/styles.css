@@ -146,18 +146,41 @@ body {
 .char-stats {
     margin-bottom: 20px;
 }
-.char-stats > * {
+.char-stat {
     padding: 10px;
 }
 .rune-image {
     width: 60px;
     height: 60px;
-    padding: 0px;
 }
 .char-image {
     width: 60px;
     height: 60px;
-    padding: 0px;
+}
+.char-select-container {
+    position: relative;
+}
+.char-button {
+    cursor: pointer;
+    overflow: hidden;
+    border-width: 0px;
+    border-radius: 5px;
+    background-color: oklab(0.963963 -0.000228554 -0.00283051);
+}
+.char-select-options {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 99;
+}
+.char-button:hover {
+    filter: brightness(0.9);
+}
+.char-button:active {
+    filter: brightness(0.8);
 }
 .char-other-information {
     align-items: flex-start;

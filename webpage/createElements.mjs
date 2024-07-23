@@ -225,9 +225,6 @@ function createSuggestionCharStats(battleObj, battleKey, playerSuggestionData) {
     const playerName = playerSuggestionData.playerName;
     const charName = playerSuggestionData.charName;
     const rune = battleObj[battleKey][playerName].chars[charName].rune;
-    const encodedBattleKey = battleKey.replace(/\//g, 'slash');
-    const encodedPlayerName = playerName.replace(/\//g, 'slash');
-    const imageName = battleObj[battleKey][playerName].chars[charName].imageName;
 
     const charStats = document.createElement('div');
     charStats.classList.add('row');
@@ -240,17 +237,47 @@ function createSuggestionCharStats(battleObj, battleKey, playerSuggestionData) {
         charStats.appendChild(runeImage);
     }
 
-    const charImage = document.createElement('img');
-    charImage.classList.add('char-image');
-    charImage.src = `./battleAssets/${encodedBattleKey}/${encodedPlayerName}/chars/${imageName}`;
-    charStats.appendChild(charImage);
+    const charSelectContainer = document.createElement('div');
+    charSelectContainer.classList.add('char-select-container');
 
-    const charNameContainer = document.createElement('div');
-    charNameContainer.innerHTML = `<b>${charName}</b>`;
-    charStats.appendChild(charNameContainer);
+    const charSelectButton = createCharButton(battleObj, battleKey, playerName, charName);
+
+    const charSelectOptions = document.createElement('div');
+    charSelectOptions.classList.add('char-select-options');
+
+    const otherChars = Object.keys(battleObj[battleKey][playerName].chars).filter(charKey => charKey != charName && battleObj[battleKey][playerName].chars[charKey].resolve > 0);
+    for (let charKey of otherChars) {
+        const charOption = createCharButton(battleObj, battleKey, playerName, charKey);
+        charOption.addEventListener('click', ()=> {
+            console.log(charKey);
+            charSelectOptions.style.display = 'none';  
+        })
+        charSelectOptions.appendChild(charOption);
+    }
+
+    if (otherChars.length == 0) {
+        charSelectButton.classList.remove('char-button');
+    } else {
+        charSelectButton.addEventListener('click', () => {
+            charSelectOptions.style.display = charSelectOptions.style.display == 'flex' ? 'none' : 'flex';
+        });
+    }
+
+    // hide select options if click outside the select menu
+    document.addEventListener('click', (event) => {
+        if (!charSelectButton.contains(event.target) && !charSelectOptions.contains(event.target)) {
+            charSelectOptions.style.display = 'none';
+        }
+    });
+
+    //charSelectContainer.appendChild(charSelect);
+    charSelectContainer.appendChild(charSelectButton);
+    charSelectContainer.appendChild(charSelectOptions);
+    charStats.appendChild(charSelectContainer);
 
     for (let stat of ['initiative', 'mental', 'physical', 'social', 'resolve']) {
         const newElement = document.createElement('div');
+        newElement.classList.add('char-stat');
         const statSymbol = statSymbols[stat];
         const statValue = battleObj[battleKey][playerName].chars[charName][stat];
         newElement.innerHTML = `${statSymbol}<b>${statValue}</b>`;
@@ -258,6 +285,28 @@ function createSuggestionCharStats(battleObj, battleKey, playerSuggestionData) {
     }
     
     return charStats;
+}
+
+function createCharButton(battleObj, battleKey, playerName, charName) {
+    const charButton = document.createElement('div');
+    charButton.classList.add('row');
+    charButton.classList.add('char-button');
+
+    const encodedBattleKey = battleKey.replace(/\//g, 'slash');
+    const encodedPlayerName = playerName.replace(/\//g, 'slash');
+    const imageName = battleObj[battleKey][playerName].chars[charName].imageName;
+
+    const charImage = document.createElement('img');
+    charImage.classList.add('char-image');
+    charImage.src = `./battleAssets/${encodedBattleKey}/${encodedPlayerName}/chars/${imageName}`;
+
+    const charNameContainer = document.createElement('div');
+    charNameContainer.classList.add('char-stat');
+    charNameContainer.innerHTML = `<b>${charName}</b>`;
+
+    charButton.appendChild(charImage);
+    charButton.appendChild(charNameContainer);
+    return charButton;
 }
 
 function createCharOtherInformation(playerSuggestionData) {
