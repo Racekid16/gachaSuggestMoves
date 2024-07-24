@@ -2,7 +2,6 @@
 import fs from 'fs';
 import { setPlayerParty } from './setPlayerParty.mjs';
 import { parseTurnResults } from './parseTurnResults.mjs';
-import { cancelInput } from './handleInput.mjs';
 import { splitCharName, applyRuneOfAffinity } from './aspect.mjs';
 import config from '../config.json' assert { type: 'json' };
 import consts from '../consts.json' assert { type: 'json' };
@@ -53,8 +52,7 @@ export async function createBattle(battleObj, programSocket, p1name, p2name, bat
         return;
     }
 
-    let validPromise = verifyBattleValidity(battleObj, programSocket, p1name, p2name);
-    let promiseResult = await validPromise;
+    let promiseResult = await verifyBattleValidity(battleObj, programSocket, p1name, p2name);
     if (promiseResult != 0) {
         return;
     }
@@ -168,7 +166,6 @@ export function deleteBattle(battleObj, programSocket, p1name, p2name, header, t
         battleEndMessage = `${battleKey} deleted`;
         console.log(battleEndMessage);
     }
-    cancelInput(battleKey);
     let encodedBattleKey = battleKey.replace(/\//g, 'slash');
     fs.unlink(`./currentBattles/${encodedBattleKey}.txt`, (err) => {if (err) { throw err; }});
     battleObj.currentBattles.splice(battleObj.currentBattles.findIndex((arr) => {
@@ -238,16 +235,14 @@ export function verifyPlayerResolves(battleObj, programSocket, battleKey, player
 export async function requestPlayerPartyCampaignBattle(battleObj, programSocket, battleKey, playerName, playerID) {
     let botName = "2.Chairman Sakayanagi";
     battleObj.currentBattles.push([new Date().getTime(), 'campaign', playerName, botName, playerID]);
-    let myPromise = addPlayerToBattle(battleObj, battleKey, playerName, 1, null, playerID);
-    let myResult = await myPromise;
+    let myResult = await addPlayerToBattle(battleObj, battleKey, playerName, 1, null, playerID);
     if (myResult != 0) { 
         deleteBattle(battleObj, programSocket, playerName, botName, null);
         console.log(`failed to request ${playerName}'s party in ${battleKey}`);
         return;
     }
     
-    let validPromise = verifyBattleValidity(battleObj, programSocket, playerName, botName);
-    let promiseResult = await validPromise;
+    let promiseResult = await verifyBattleValidity(battleObj, programSocket, playerName, botName);
     if (promiseResult != 0) {
         return;
     }

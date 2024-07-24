@@ -379,7 +379,8 @@ function printMoves(battleObj, battleKey, attacker, defender, attackChar, defens
         }
         moveDamageObjs.push([move, ...moveDamageObj]);
     }
-    if (!hasStatus(battleObj, battleKey, attacker, attackChar, "trapped") && !hasStatus(battleObj, battleKey, attacker, attackChar, "taunted")) {
+    if (!hasStatus(battleObj, battleKey, attacker, attackChar, "stunned") && !hasStatus(battleObj, battleKey, attacker, attackChar, "trapped") 
+     && !hasStatus(battleObj, battleKey, attacker, attackChar, "taunted")) {
         let numAliveAllies = Object.keys(battleObj[battleKey][attacker].chars).reduce((countSoFar, charKey) => 
             battleObj[battleKey][attacker].chars[charKey].resolve > 0 ? countSoFar + 1 : countSoFar
         , 0);

@@ -18,8 +18,9 @@ export function createProgramSocket(battleObj) {
     programSocket.on('setRune', (data) => {
         battleObj[data.battleKey][data.playerName].chars[data.charName].rune = data.rune;
         let [p1name, p2name] = data.battleKey.split(" vs. ");
+        battleObj[data.battleKey].log(`Rune of ${data.rune} added to ${data.playerName}'s ${data.charName}`);
         suggestMoves(battleObj, programSocket, p1name, p2name, data.p1char, data.p2char, data.turn);
-    })
+    });
 
     return programSocket;
 }

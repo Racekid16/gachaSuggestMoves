@@ -1,4 +1,3 @@
-import { cancelInput } from "./handleInput.mjs";
 import { parseMoveSameChar, getCurrentChar } from "./parseMoveSameChar.mjs";
 import { parseMoveDifferentChars } from "./parseMoveDiffChars.mjs";
 import { removeExpiredBoosts, applyBoosts } from "./updateBoosts.mjs";
@@ -7,14 +6,12 @@ import { removeExpiredDamageModifiers, applyDamageModifiers } from "./updateDama
 import { suggestMoves } from "./suggestMove.mjs";
 import { emulateMove, emulateAction } from "./emulateMove.mjs";
 import { applyTransformation } from "./transform.mjs";
-import consts from '../consts.json' assert { type: 'json' };
 
 // identify changes in stats or statuses then update the battleObj accordingly
 export async function parseTurnResults(battleObj, programSocket, p1name, p2name, battleEmbed) {
     let battleKey = p1name + " vs. " + p2name;
     let turn = parseInt(battleEmbed.fields[2].name.substring(battleEmbed.fields[2].name.indexOf('__Turn ') + 7, battleEmbed.fields[2].name.length - 2));
     let turnResults = battleEmbed.fields[2].value;
-    cancelInput(battleKey);
 
     let p1resolvesAfterTurn = getTeamResolvesAfterTurn(1, battleEmbed);
     let p2resolvesAfterTurn = getTeamResolvesAfterTurn(2, battleEmbed);
@@ -35,7 +32,7 @@ export async function parseTurnResults(battleObj, programSocket, p1name, p2name,
     applyInnateAbilities(battleObj, battleKey, p1name, p2name, p1char, p2char, turnResults, turn, p1resolvesAfterTurn);
     applyInnateAbilities(battleObj, battleKey, p2name, p1name, p2char, p1char, turnResults, turn, p2resolvesAfterTurn);
     if (p1char == p2char) {
-        await parseMoveSameChar(battleObj, p1name, p2name, p1char, battleEmbed, turn, p1resolvesAfterTurn, p2resolvesAfterTurn, p1taggedIn, p2taggedIn);      
+        await parseMoveSameChar(battleObj, programSocket, p1name, p2name, p1char, battleEmbed, turn, p1resolvesAfterTurn, p2resolvesAfterTurn, p1taggedIn, p2taggedIn);      
     } else {
         parseMoveDifferentChars(battleObj, battleKey, p1name, p2name, p1char, p2char, turnResults, turn, p1resolvesAfterTurn);
         parseMoveDifferentChars(battleObj, battleKey, p2name, p1name, p2char, p1char, turnResults, turn, p2resolvesAfterTurn);

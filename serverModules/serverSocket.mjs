@@ -7,7 +7,11 @@ export function receiveWebpageSocket(webpageSocket, programSocket) {
 
     webpageSocket.on('setRune', (data) => {
         programSocket.emit('setRune', data);
-    })
+    });
+
+    webpageSocket.on('moveResolved', (data) => {
+        programSocket.emit('moveResolved', data);
+    });
 
     webpageSocket.on('disconnect', () => {
         console.log('Webpage user disconnected from the server');
@@ -33,6 +37,10 @@ export function receiveProgramSocket(programSocket, webpageSocket) {
 
     programSocket.on('suggestedMoves', (data) => {
         webpageSocket.emit('suggestedMoves', data);
+    });
+
+    programSocket.on('requestMoveResolution', (data) => {
+        webpageSocket.emit('requestMoveResolution', data);
     });
 
     programSocket.on('disconnect', () => {

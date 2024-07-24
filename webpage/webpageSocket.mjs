@@ -1,5 +1,5 @@
 //code for the webpage to handle receiving data on the webpage socket
-import { createPartyContainer, createSuggestionContainer } from './createElements.mjs'
+import { createPartyContainer, createSuggestionContainer, createMoveResolutionContainer } from './createElements.mjs'
 
 let webpageSocket = io(`http://127.0.0.1:2700`);
 let tabsToDelete = [];
@@ -62,6 +62,10 @@ webpageSocket.on('suggestedMoves', (data) => {
     addSuggestedMoves(data.battleObj, webpageSocket, data.battleKey, data.turn, data.p1suggestionData, data.p2suggestionData, data.playerNumberToPrintFirst);
 });
 
+webpageSocket.on('requestMoveResolution', (data) => {
+    addMoveResolution(webpageSocket, data.battleKey, data.move, data.turn);
+});
+
 function setTabContentMaxHeight() {
     const activeTabContent = document.querySelector('.tab-content.active');
     if (activeTabContent === null) {
@@ -109,15 +113,15 @@ function createTab(battleKey, time, battleLink) {
     const tabContentContainer = document.getElementById('tab-content-container');
 
     const tabButton = document.createElement('button');
-    tabButton.className = 'tab-button';
+    tabButton.classList.add('tab-button');
     tabButton.id = `${battleKey}-button`
-    tabButton.textContent = battleKey;
+    tabButton.innerHTML = battleKey;
     tabButton.onclick = () => toggleTab(battleKey);
     tabButtonsContainer.appendChild(tabButton);
 
     const tabContent = document.createElement('div');
+    tabContent.classList.add('tab-content');
     tabContent.id = `${battleKey}-content`;
-    tabContent.className = 'tab-content';
     if (battleLink) {
         tabContent.innerHTML = `<h2><a href="${battleLink}" target="_blank">${battleKey}</a></h2>`;
     } else {
@@ -212,16 +216,20 @@ function addSuggestedMoves(battleObj, webpageSocket, battleKey, turn, p1suggesti
     }
 }
 
+function addMoveResolution(webpageSocket, battleKey, move, turn) {
+    const tabContent = document.getElementById(`${battleKey}-content`);
+    if (tabContent === null) {
+        return;
+    }
+    const moveResolutionContainer = createMoveResolutionContainer(webpageSocket, battleKey, move, turn);
+    tabContent.appendChild(moveResolutionContainer);
+}
+
 function deactivateButtonsInTab(battleKey) {
     const tabContent = document.getElementById(`${battleKey}-content`);
-    const thisTabCharButtons = tabContent.querySelectorAll('.char-button');
+    const thisTabCharButtons = tabContent.querySelectorAll('.temp-button');
     thisTabCharButtons.forEach(button => {
-        button.classList.remove('char-button');
-        button.onclick = null;
-    });
-    const thisTabRuneButtons = tabContent.querySelectorAll('.rune-button');
-    thisTabRuneButtons.forEach(button => {
-        button.classList.remove('rune-button');
+        button.classList.remove('temp-button');
         button.onclick = null;
     });
     const thisTabPopups = tabContent.querySelectorAll('.popup-container');

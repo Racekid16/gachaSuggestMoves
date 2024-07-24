@@ -32,6 +32,77 @@ export function createSuggestionContainer(battleObj, webpageSocket, battleKey, t
     return suggestionContainer;
 }
 
+export function createMoveResolutionContainer(webpageSocket, battleKey, move, turn) {
+    const [p1name, p2name] = battleKey.split(" vs. ");
+    const moveResolutionContainer = document.createElement('div');
+    moveResolutionContainer.classList.add('move-resolution-container');
+
+    const headerRow = document.createElement('div');
+    headerRow.classList.add('row');
+
+    const headerImage = document.createElement('img');
+    headerImage.classList.add('icon-image');
+    headerImage.src = './images/pitfall.png';
+
+    const headerText = document.createElement('h3');
+    headerText.classList.add('pad');
+    headerText.innerHTML = `<b>User Action Requested</b>`;
+
+    const message = document.createElement('div');
+    message.classList.add('pad');
+    message.innerHTML = `Unable to determine which player used what move in turn ${turn}.<br>Did <b>${p1name}</b> or <b>${p2name}</b> use <b>${move}</b>?`;
+
+    const inputRow = document.createElement('div');
+    inputRow.classList.add('row');
+    inputRow.classList.add('pad');
+
+    const selectMenu = document.createElement('select');
+    selectMenu.classList.add('select');
+
+    const option1 = document.createElement('option');
+    option1.setAttribute('value', p1name);
+    option1.innerHTML = p1name;
+
+    const option2 = document.createElement('option');
+    option2.setAttribute('value', p2name);
+    option2.innerHTML = p2name;
+
+    const submitButton = document.createElement('button');
+    submitButton.classList.add('temp-button');
+    submitButton.classList.add('move-resolve-button');
+    submitButton.innerHTML = "<b>Submit</b>";
+
+    const successMessage = document.createElement('div');
+    successMessage.classList.add('pad');
+    successMessage.classList.add('success');
+    successMessage.innerHTML = 'Resolved!';
+
+    submitButton.onclick = () => {
+        if (selectMenu.value == p1name || selectMenu.value == p2name) {
+            successMessage.style.display = "block";
+            submitButton.classList.remove('temp-button');
+            submitButton.onclick = null;
+            webpageSocket.emit('moveResolved', {
+                battleKey: battleKey,
+                turn: turn,
+                response: selectMenu.value
+            });
+        }
+    }
+
+    selectMenu.appendChild(option1);
+    selectMenu.appendChild(option2);
+    headerRow.appendChild(headerImage);
+    headerRow.appendChild(headerText);
+    inputRow.appendChild(selectMenu);
+    inputRow.appendChild(submitButton);
+    moveResolutionContainer.appendChild(headerRow);
+    moveResolutionContainer.appendChild(message);
+    moveResolutionContainer.appendChild(inputRow);
+    moveResolutionContainer.appendChild(successMessage);
+    return moveResolutionContainer;
+}
+
 function createPartyEmbed(battleKey, playerName, supportBonus) {
     //const playerID = battleObj[battleKey][playerName].id;
     const encodedBattleKey = battleKey.replace(/\//g, 'slash');
@@ -261,7 +332,8 @@ function createRuneSelectButton(battleObj, webpageSocket, battleKey, playerName,
     const tabContent = document.getElementById(`${battleKey}-content`);
 
     const runeImage = document.createElement('img');
-    runeImage.classList.add('rune-image');
+    runeImage.classList.add('icon-image');
+    runeImage.classList.add('temp-button');
     runeImage.classList.add('rune-button');
     runeImage.src = runeImageSrc;
 
@@ -325,11 +397,13 @@ function createRuneSelectButton(battleObj, webpageSocket, battleKey, playerName,
     buttonRow.classList.add('row');
 
     const popupOKButton = document.createElement('button');
+    popupOKButton.classList.add('temp-button');
     popupOKButton.classList.add('popup-ok-button');
     popupOKButton.classList.add('pad');
     popupOKButton.innerHTML = "<b>OK</b>";
 
     const popupCancelButton = document.createElement('button');
+    popupCancelButton.classList.add('temp-button');
     popupCancelButton.classList.add('popup-cancel-button');
     popupCancelButton.classList.add('pad');
     popupCancelButton.innerHTML = "Cancel";
@@ -442,10 +516,10 @@ function createCharSelectContainer(battleObj, webpageSocket, battleKey, playerNa
     }
 
     if (otherChars.length == 0) {
-        charSelectButton.classList.remove('char-button');
+        charSelectButton.classList.remove('temp-button');
     } else {
         charSelectButton.onclick = () => {
-            charSelectOptions.style.display = charSelectOptions.style.display == 'none' ? 'flex' : 'none';
+            charSelectOptions.style.display = charSelectOptions.style.display == 'flex' ? 'none' : 'flex';
         };
     }
 
@@ -464,6 +538,7 @@ function createCharSelectContainer(battleObj, webpageSocket, battleKey, playerNa
 function createCharButton(battleObj, battleKey, playerName, charName) {
     const charButton = document.createElement('div');
     charButton.classList.add('row');
+    charButton.classList.add('temp-button');
     charButton.classList.add('char-button');
 
     const encodedBattleKey = battleKey.replace(/\//g, 'slash');
@@ -471,7 +546,7 @@ function createCharButton(battleObj, battleKey, playerName, charName) {
     const imageName = battleObj[battleKey][playerName].chars[charName].imageName;
 
     const charImage = document.createElement('img');
-    charImage.classList.add('char-image');
+    charImage.classList.add('icon-image');
     charImage.src = `./battleAssets/${encodedBattleKey}/${encodedPlayerName}/chars/${imageName}`;
 
     const charNameContainer = document.createElement('div');
