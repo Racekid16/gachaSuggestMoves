@@ -5,6 +5,10 @@ export function receiveWebpageSocket(webpageSocket, programSocket) {
         programSocket.emit('newSuggestion', data);
     });
 
+    webpageSocket.on('setRune', (data) => {
+        programSocket.emit('setRune', data);
+    })
+
     webpageSocket.on('disconnect', () => {
         console.log('Webpage user disconnected from the server');
     });

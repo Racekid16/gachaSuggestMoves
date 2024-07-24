@@ -48,19 +48,19 @@ export async function createBattle(battleObj, programSocket, p1name, p2name, bat
     let promise2 = addPlayerToBattle(battleObj, battleKey, p2name, 2, turnResults, null);
     let [result1, result2] = await Promise.all([promise1, promise2]);
     if (result1 != 0 || result2 != 0) {
-        deleteBattle(battleObj, p1name, p2name, null);
+        deleteBattle(battleObj, programSocket, p1name, p2name, null);
         console.log(`failed to request a player's party in ${battleKey}`);
         return;
     }
 
-    let validPromise = verifyBattleValidity(battleObj, p1name, p2name);
+    let validPromise = verifyBattleValidity(battleObj, programSocket, p1name, p2name);
     let promiseResult = await validPromise;
     if (promiseResult != 0) {
         return;
     }
 
-    verifyPlayerResolves(battleObj, battleKey, p1name, 1, battleEmbed);
-    verifyPlayerResolves(battleObj, battleKey, p2name, 2, battleEmbed);
+    verifyPlayerResolves(battleObj, programSocket, battleKey, p1name, 1, battleEmbed);
+    verifyPlayerResolves(battleObj, programSocket, battleKey, p2name, 2, battleEmbed);
     
     parseTurnResults(battleObj, programSocket, p1name, p2name, battleEmbed);
 }
@@ -193,7 +193,7 @@ export function deleteBattle(battleObj, programSocket, p1name, p2name, header, t
 }
 
 // check whether the actual resolves of characters in a player's party match what was calculated
-export function verifyPlayerResolves(battleObj, battleKey, playerName, playerNumber, battleEmbed) {
+export function verifyPlayerResolves(battleObj, programSocket, battleKey, playerName, playerNumber, battleEmbed) {
     let resolveRegex = / (\*__(.+)__\*\*\*|\*(.+)\*) - \*\*(\d+)\*\*:heart:/g;
 
     while (true) {
@@ -219,8 +219,9 @@ export function verifyPlayerResolves(battleObj, battleKey, playerName, playerNum
                 console.log(battleEmbed.fields[0].value);
                 console.log(`battleObj[${battleKey}][${playerName}] is:`);
                 console.log(battleObj[battleKey][playerName]);
-                let splitBattleKey = battleKey.split(" vs. ");
-                deleteBattle(battleObj, splitBattleKey[0], splitBattleKey[1], null);
+                let [p1name, p2name] = battleKey.split(" vs. ");
+                deleteBattle(battleObj, programSocket, p1name, p2name, null);
+                return;
             }
         }
 
@@ -234,18 +235,18 @@ export function verifyPlayerResolves(battleObj, battleKey, playerName, playerNum
     }
 }
 
-export async function requestPlayerPartyCampaignBattle(battleObj, battleKey, playerName, playerID) {
+export async function requestPlayerPartyCampaignBattle(battleObj, programSocket, battleKey, playerName, playerID) {
     let botName = "2.Chairman Sakayanagi";
     battleObj.currentBattles.push([new Date().getTime(), 'campaign', playerName, botName, playerID]);
     let myPromise = addPlayerToBattle(battleObj, battleKey, playerName, 1, null, playerID);
     let myResult = await myPromise;
     if (myResult != 0) { 
-        deleteBattle(battleObj, playerName, botName, null);
+        deleteBattle(battleObj, programSocket, playerName, botName, null);
         console.log(`failed to request ${playerName}'s party in ${battleKey}`);
         return;
     }
     
-    let validPromise = verifyBattleValidity(battleObj, playerName, botName);
+    let validPromise = verifyBattleValidity(battleObj, programSocket, playerName, botName);
     let promiseResult = await validPromise;
     if (promiseResult != 0) {
         return;
@@ -312,7 +313,7 @@ async function fetchWithRetry(url, options, retries=2) {
 
 // verify that all characters in both player's parties are ones the script is prepared to deal with,
 // and if not, delete the battle
-async function verifyBattleValidity(battleObj, p1name, p2name) { 
+async function verifyBattleValidity(battleObj, programSocket, p1name, p2name) { 
     let battleKey = p1name + " vs. " + p2name;
 
     while (typeof battleObj[battleKey][p1name].valid === 'undefined' || typeof battleObj[battleKey][p2name].valid === 'undefined') {
@@ -325,7 +326,7 @@ async function verifyBattleValidity(battleObj, p1name, p2name) {
         } else {
             console.log(`${battleObj[battleKey][p2name].reason}`);
         }
-        deleteBattle(battleObj, p1name, p2name, null);
+        deleteBattle(battleObj, programSocket, p1name, p2name, null);
         return -1;
     }
 

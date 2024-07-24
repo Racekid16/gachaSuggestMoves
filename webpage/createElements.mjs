@@ -237,7 +237,7 @@ function createSuggestionCharStats(battleObj, webpageSocket, battleKey, turn, pl
     charStats.classList.add('row');
     charStats.classList.add('char-stats');
 
-    const runeSelectButton = createRuneSelectButton(battleObj, webpageSocket, battleKey, playerName, charName);
+    const runeSelectButton = createRuneSelectButton(battleObj, webpageSocket, battleKey, playerName, charName, turn);
     charStats.appendChild(runeSelectButton);
 
     const charSelectContainer = createCharSelectContainer(battleObj, webpageSocket, battleKey, playerName, charName, turn);
@@ -255,7 +255,7 @@ function createSuggestionCharStats(battleObj, webpageSocket, battleKey, turn, pl
     return charStats;
 }
 
-function createRuneSelectButton(battleObj, webpageSocket, battleKey, playerName, charName) {
+function createRuneSelectButton(battleObj, webpageSocket, battleKey, playerName, charName, turn) {
     const charRune = battleObj[battleKey][playerName].chars[charName].rune;
     const runeImageSrc = `./images/runes/${charRune}.png`;
     const tabContent = document.getElementById(`${battleKey}-content`);
@@ -342,8 +342,32 @@ function createRuneSelectButton(battleObj, webpageSocket, battleKey, playerName,
         if (inputValue == charRune || !runes.includes(inputValue)) {
             errorText.style.display = "block";
         } else {
+            const [p1name, p2name] = battleKey.split(" vs. ");
+            let p1char;
+            let p2char;
+            const tabContent = document.getElementById(`${battleKey}-content`);
+            const thisTurnSuggestions = tabContent.querySelectorAll(`.suggestion-container[turn="${turn}"]`);
+            thisTurnSuggestions.forEach(suggestionContainer => {
+                let thisSuggestionPlayer = suggestionContainer.getAttribute('playername');
+                let thisSuggestionChar = suggestionContainer.getAttribute('charname');
+                if (thisSuggestionPlayer == p1name) {
+                    p1char = thisSuggestionChar;
+                } else {
+                    p2char = thisSuggestionChar;
+                }
+                suggestionContainer.remove();
+            });
             errorText.style.display = "none";
-            runePopupContainer.classList.remove('popup-open');   
+            runePopupContainer.classList.remove('popup-open');
+            webpageSocket.emit('setRune', {
+                battleKey: battleKey,
+                playerName: playerName,
+                charName: charName,
+                rune: inputValue,
+                p1char: p1char,
+                p2char: p2char,
+                turn: turn
+            });
         }
         
     }

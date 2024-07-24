@@ -69,7 +69,7 @@ export function handleWsData(battleObj, programSocket, responseJSON) {
         if (typeof battleObj[battleKey] === 'undefined') {
             return;
         }
-        requestPlayerPartyCampaignBattle(battleObj, battleKey, playerName, playerID);
+        requestPlayerPartyCampaignBattle(battleObj, programSocket, battleKey, playerName, playerID);
     }
 
     // bot had an error when it attempted to fetch requested party; re-request both parties
@@ -94,7 +94,7 @@ export function handleWsData(battleObj, programSocket, responseJSON) {
                 }
                 else if (battleType == "campaign") {
                     let playerID = lastBattle[4];
-                    requestPlayerPartyCampaignBattle(battleObj, battleKey, p1name, playerID);
+                    requestPlayerPartyCampaignBattle(battleObj, programSocket, battleKey, p1name, playerID);
                 }
             }
         }
@@ -132,8 +132,8 @@ async function processBattleEmbed(battleObj, programSocket, responseJSON, battle
 
 
     if (typeof battleObj[battleKey] !== 'undefined' && turn == 1 && battleObj[battleKey][p2name].id == consts.botID) {
-        verifyPlayerResolves(battleObj, battleKey, p1name, 1, battleEmbed);
-        verifyPlayerResolves(battleObj, battleKey, p2name, 2, battleEmbed);
+        verifyPlayerResolves(battleObj, programSocket, battleKey, p1name, 1, battleEmbed);
+        verifyPlayerResolves(battleObj, programSocket, battleKey, p2name, 2, battleEmbed);
     }
     
     parseTurnResults(battleObj, programSocket, p1name, p2name, battleEmbed);
