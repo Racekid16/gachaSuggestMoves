@@ -229,6 +229,7 @@ export async function setPlayerParty(battleObj, programSocket, playerName, playe
 
     for (let charKey in battleObj[battleKey][playerName].chars) {
         let thisChar = battleObj[battleKey][playerName].chars[charKey];
+        thisChar.maxResolve = thisChar.resolve;
         thisChar.buffs = [];
         thisChar.debuffs = [];
         thisChar.positiveStatuses = [];

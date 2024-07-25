@@ -19,16 +19,38 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
     let damage;
     let hitType = '';
     let defenderPersonality = battleObj[battleKey][defender].chars[defenseChar].personality;
-
-    let attackerAttackStat = battleObj[battleKey][attacker].chars[attackChar][completeMoveObj.attackStat];
+    let attackerCombatStatAverage = round((battleObj[battleKey][attacker].chars[attackChar].mental
+                                         + battleObj[battleKey][attacker].chars[attackChar].physical
+                                         + battleObj[battleKey][attacker].chars[attackChar].social) / 3);
+    let defenderCombatStatAverage = round((battleObj[battleKey][defender].chars[defenseChar].mental
+                                         + battleObj[battleKey][defender].chars[defenseChar].physical
+                                         + battleObj[battleKey][defender].chars[defenseChar].social) / 3);
+    
+    let attackerAttackStat;
+    if (completeMoveObj.attackStat == "Combat stat average") {
+        attackerAttackStat = attackerCombatStatAverage;
+    } else {
+        attackerAttackStat = battleObj[battleKey][attacker].chars[attackChar][completeMoveObj.attackStat];
+    }
     let attackerInflictMultiplier = battleObj[battleKey][attacker].chars[attackChar].inflictMultiplier;
     if (consts.personalityWeaknesses[defenderPersonality].includes(completeMoveObj.damageType)) {
-        attackerInflictMultiplier += 0.4; 
+        attackerInflictMultiplier += 0.4;
+        if (battleObj[battleKey][attacker].chars[attackChar].rune == "Glass") {
+            attackerInflictMultiplier += 0.75;
+        }
+        if (battleObj[battleKey][defender].chars[defenseChar].rune == "Glass") {
+            attackerInflictMultiplier += 0.75;
+        }
         hitType = 'CRITICAL';
     }
     let attackPower = attackerAttackStat * attackerInflictMultiplier * completeMoveObj.basePower;
 
-    let defenderDefenseStat = battleObj[battleKey][defender].chars[defenseChar][completeMoveObj.defenseStat];
+    let defenderDefenseStat;
+    if (completeMoveObj.defenseStat == "Combat stat average") {
+        defenderDefenseStat = defenderCombatStatAverage;
+    } else {
+        defenderDefenseStat = battleObj[battleKey][defender].chars[defenseChar][completeMoveObj.defenseStat];
+    }
     let defenderReceiveMultiplier = battleObj[battleKey][defender].chars[defenseChar].receiveMultiplier;
     if (consts.personalityResistances[defenderPersonality].includes(completeMoveObj.damageType)) {
         defenderReceiveMultiplier += 0.4;
@@ -59,13 +81,13 @@ export function calculateMoveHealing(battleObj, battleKey, attacker, defender, a
     }
 
     let currentResolve = battleObj[battleKey][attacker].chars[attackChar].resolve;
-    let baseResolve = battleObj[battleKey][attacker].baseCharStats[attackChar].resolve;
+    let maxResolve = battleObj[battleKey][attacker].chars[attackChar].maxResolve;
     let healAmounts = {};
 
     switch (move) {
         case 'Bottle Break':
             let bottleBreakHealPercent = 0.2;
-            healAmounts[attackChar] = Math.min(baseResolve, currentResolve + round(baseResolve * bottleBreakHealPercent)) - currentResolve;
+            healAmounts[attackChar] = Math.min(maxResolve, currentResolve + round(maxResolve * bottleBreakHealPercent)) - currentResolve;
             break;
         
         case 'Group Determination':
@@ -76,12 +98,12 @@ export function calculateMoveHealing(battleObj, battleKey, attacker, defender, a
                     selfHealPercent += 0.25;
                     let charCurrentResolve = battleObj[battleKey][attacker].chars[charKey].resolve;
                     if (charCurrentResolve != 0) {
-                        let charBaseResolve = battleObj[battleKey][attacker].baseCharStats[charKey].resolve;
-                        healAmounts[charKey] = Math.min(charBaseResolve, charCurrentResolve + round(charBaseResolve * otherHealPercent)) - charCurrentResolve;
+                        let charMaxResolve = battleObj[battleKey][attacker].chars[charKey].maxResolve;
+                        healAmounts[charKey] = Math.min(charMaxResolve, charCurrentResolve + round(charMaxResolve * otherHealPercent)) - charCurrentResolve;
                     }
                 }
             }
-            healAmounts[attackChar] = round(baseResolve * selfHealPercent);
+            healAmounts[attackChar] = round(maxResolve * selfHealPercent);
             break;
 
         case 'Inspire':
@@ -89,8 +111,8 @@ export function calculateMoveHealing(battleObj, battleKey, attacker, defender, a
             for (let charKey in battleObj[battleKey][attacker].chars) {
                 if (charKey != attackChar && battleObj[battleKey][attacker].chars[charKey].resolve != 0) {
                     let charCurrentResolve = battleObj[battleKey][attacker].chars[charKey].resolve;
-                    let charBaseResolve = battleObj[battleKey][attacker].baseCharStats[charKey].resolve;
-                    healAmounts[charKey] = Math.min(charBaseResolve, charCurrentResolve + round(charBaseResolve * inspireHealPercent)) - charCurrentResolve;
+                    let charMaxResolve = battleObj[battleKey][attacker].chars[charKey].maxResolve;
+                    healAmounts[charKey] = Math.min(charMaxResolve, charCurrentResolve + round(charMaxResolve * inspireHealPercent)) - charCurrentResolve;
                 }
             }
             break;
@@ -99,7 +121,7 @@ export function calculateMoveHealing(battleObj, battleKey, attacker, defender, a
             let introversionHealPercent = 0.4;
             for (let charKey in battleObj[battleKey][attacker].chars) {
                 if (charKey != attackChar && battleObj[battleKey][attacker].chars[charKey].resolve != 0) {
-                    healAmounts[attackChar] = Math.min(baseResolve, currentResolve + round(baseResolve * introversionHealPercent)) - currentResolve;
+                    healAmounts[attackChar] = Math.min(maxResolve, currentResolve + round(maxResolve * introversionHealPercent)) - currentResolve;
                 }
             }
             break;
@@ -113,7 +135,7 @@ export function calculateMoveHealing(battleObj, battleKey, attacker, defender, a
                 numSecrets = battleObj[battleKey][attacker].chars[attackChar].secrets.size;
             }
             if (numSecrets >= 2) {
-                healAmounts[attackChar] = Math.min(baseResolve, currentResolve + round(shatterDamage * shatterHealPercent)) - currentResolve;            
+                healAmounts[attackChar] = Math.min(maxResolve, currentResolve + round(shatterDamage * shatterHealPercent)) - currentResolve;            
             }
             break;
         
@@ -122,18 +144,18 @@ export function calculateMoveHealing(battleObj, battleKey, attacker, defender, a
             let previousTaggedInChar = battleObj[battleKey][attacker].previousTaggedInChar;
             let previousTaggedInCharObj = battleObj[battleKey][attacker].chars[previousTaggedInChar];
             if (previousTaggedInCharObj.tags.includes("Class D")) {
-                healAmounts[attackChar] = Math.min(baseResolve, currentResolve + round(baseResolve * teamworkHealPercent)) - currentResolve;
+                healAmounts[attackChar] = Math.min(maxResolve, currentResolve + round(maxResolve * teamworkHealPercent)) - currentResolve;
             }
             break;
         
         case 'The Perfect Existence':
             let thePerfectExistenceHealPercent = 0.5;
-            healAmounts[attackChar] = round(baseResolve * thePerfectExistenceHealPercent);
+            healAmounts[attackChar] = round(maxResolve * thePerfectExistenceHealPercent);
             break;
         
         case 'Unmask':
             let unmaskHealPercent = 0.4;
-            healAmounts[attackChar] = Math.min(baseResolve, currentResolve + round(baseResolve * unmaskHealPercent)) - currentResolve;
+            healAmounts[attackChar] = Math.min(maxResolve, currentResolve + round(maxResolve * unmaskHealPercent)) - currentResolve;
             break;
         
         default:
@@ -190,6 +212,7 @@ function getDamageType(battleObj, battleKey, attacker, defender, attackChar, def
 function getAttackStat(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj, completeMoveObj) {
     let returnVal = typeof moveObj.attackStat === 'undefined' ? baseMoveObj.attackStat : moveObj.attackStat;
     const attackStats = ['mental', 'physical', 'social'];
+
     if (returnVal == "varies") {
         switch (move) {
             case 'Impulse':
@@ -210,10 +233,15 @@ function getAttackStat(battleObj, battleKey, attacker, defender, attackChar, def
 
 function getDefenseStat(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj, completeMoveObj) {
     let returnVal = typeof moveObj.defenseStat === 'undefined' ? baseMoveObj.defenseStat : moveObj.defenseStat;
+
     if (returnVal == "varies") {
         switch (move) {
             case 'Impulse':
                 returnVal = completeMoveObj.attackStat;
+                break;
+
+            case 'Obliterate':
+                returnVal = 'Combat stat average';
                 break;
 
             default:
@@ -226,15 +254,21 @@ function getDefenseStat(battleObj, battleKey, attacker, defender, attackChar, de
 
 function getBasePower(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj) {
     let returnVal = typeof moveObj.basePower === 'undefined' ? baseMoveObj.basePower : moveObj.basePower;
+    let maxResolve = battleObj[battleKey][attacker].chars[attackChar].maxResolve;
+    let currentResolve = battleObj[battleKey][attacker].chars[attackChar].resolve;
+    
     if (returnVal == "varies") {
         switch (move) {
             case 'Grit':
-                let baseResolve = battleObj[battleKey][attacker].baseCharStats[attackChar].resolve;
-                let currentResolve = battleObj[battleKey][attacker].chars[attackChar].resolve;
-                let percentMissingResolve = (baseResolve - currentResolve) / baseResolve;
+                let percentMissingResolve = (maxResolve - currentResolve) / maxResolve;
                 returnVal = 2 * percentMissingResolve + 0.5;
                 break;
-            
+
+            case 'Obliterate':
+                let percentRemainingResolve = currentResolve / maxResolve;
+                returnVal = 2 * percentRemainingResolve + 3;
+                break;
+
             case 'Shatter':
                 let numSecrets = 0;
                 if (typeof battleObj[battleKey][attacker].chars[attackChar].secrets !== 'undefined') {
@@ -260,6 +294,7 @@ function getBasePower(battleObj, battleKey, attacker, defender, attackChar, defe
 
 function getPriority(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, moveObj, baseMoveObj) {
     let returnVal = typeof moveObj.priority === 'undefined' ? baseMoveObj.priority : moveObj.priority;
+
     if (returnVal == "varies") {
         switch (move) {
             case 'Shatter':

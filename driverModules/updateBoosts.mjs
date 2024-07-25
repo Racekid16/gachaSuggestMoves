@@ -11,6 +11,9 @@ export function addBoost(battleObj, battleKey, playerName, charName, boost, turn
         case 'Bottle Break Initiative':
         case 'Bottle Break Social':
         case 'Group Ties':
+        case 'Glory Defeat':
+        case 'Glory Initial':
+        case 'Instinct':
         case 'Introversion':
         case '1-turn Lead By Example':
         case '2-turn Lead By Example':
@@ -218,6 +221,30 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 amount: bottleBreakSocialBuff
             });
             break;
+        
+        case 'Glory Defeat':
+            let gloryDefeatBuff = 0.2;
+            battleObj[battleKey][playerName].chars[charName].buffs.push({
+                name: buff,
+                startTurn: turn,
+                endTurn: Infinity,
+                stat: "ability",
+                type: "total",
+                amount: gloryDefeatBuff
+            });
+            break;
+
+        case 'Glory Initial':
+            let gloryInitialBuff = 0.05;
+            battleObj[battleKey][playerName].chars[charName].buffs.push({
+                name: buff,
+                startTurn: turn,
+                endTurn: Infinity,
+                stat: "ability",
+                type: "total",
+                amount: gloryInitialBuff
+            });
+            break;
 
         case 'Group Ties':
             let groupTiesBuff = 0.5;
@@ -228,6 +255,18 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 stat: "social",
                 type: "base",
                 amount: groupTiesBuff
+            }); 
+            break;
+
+        case 'Instinct':
+            let instinctBuff = 0.5;
+            battleObj[battleKey][playerName].chars[charName].buffs.push({
+                name: buff,
+                startTurn: turn,
+                endTurn: Infinity,
+                stat: "initiative",
+                type: "total",
+                amount: instinctBuff
             }); 
             break;
 

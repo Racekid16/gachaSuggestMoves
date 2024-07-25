@@ -1,4 +1,5 @@
 //functions dealing with aspect innate moves.
+import { addRune } from "./rune.mjs";
 import { round } from "./round.mjs";
 
 //change the character's name to reflect their aspect and add the aspect move to their moveset
@@ -97,13 +98,8 @@ export function applyRuneOfAffinity(battleObj, battleKey, playerName, charName) 
     charIdentification.aspect = aspect;
     addAspectAttributes(charIdentification, battleObj[battleKey][playerName].chars[charNameNoAspect]);
     battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars[charNameNoAspect]);
-    let charObj = battleObj[battleKey][playerName].chars[charName];
-    charObj.resolve = round(charObj.resolve * 1.1);
-    charObj.mental = round(charObj.mental * 1.1);
-    charObj.physical = round(charObj.physical * 1.1);
-    charObj.social = round(charObj.social * 1.1);
-    charObj.rune = "Affinity";
-    battleObj[battleKey][playerName].baseCharStats[charName] = structuredClone(charObj);
+    addRune(battleObj, battleKey, playerName, charName, "Affinity");
+    battleObj[battleKey][playerName].baseCharStats[charName] = structuredClone(battleObj[battleKey][playerName].chars[charName]);
     delete battleObj[battleKey][playerName].chars[charNameNoAspect];
     delete battleObj[battleKey][playerName].baseCharStats[charNameNoAspect];
 }

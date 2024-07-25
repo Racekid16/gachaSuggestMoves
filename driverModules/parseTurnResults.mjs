@@ -1,5 +1,6 @@
 import { parseMoveSameChar, getCurrentChar } from "./parseMoveSameChar.mjs";
 import { parseMoveDifferentChars } from "./parseMoveDiffChars.mjs";
+import { detectRune, applyRunesAfter } from "./rune.mjs";
 import { removeExpiredBoosts, applyBoosts } from "./updateBoosts.mjs";
 import { removeExpiredStatuses, applyStatuses } from "./updateStatuses.mjs";
 import { removeExpiredDamageModifiers, applyDamageModifiers } from "./updateDamageModifiers.mjs";
@@ -29,6 +30,10 @@ export async function parseTurnResults(battleObj, programSocket, p1name, p2name,
         usernames: battleObj.usernames
     });
 
+    if (p1char != p2char) {
+        detectRune(battleObj, battleKey, p1name, p1char, turnResults);
+        detectRune(battleObj, battleKey, p2name, p2char, turnResults);
+    }
     applyInnateAbilities(battleObj, battleKey, p1name, p2name, p1char, p2char, turnResults, turn, p1resolvesAfterTurn);
     applyInnateAbilities(battleObj, battleKey, p2name, p1name, p2char, p1char, turnResults, turn, p2resolvesAfterTurn);
     if (p1char == p2char) {
@@ -36,6 +41,7 @@ export async function parseTurnResults(battleObj, programSocket, p1name, p2name,
     } else {
         parseMoveDifferentChars(battleObj, battleKey, p1name, p2name, p1char, p2char, turnResults, turn, p1resolvesAfterTurn);
         parseMoveDifferentChars(battleObj, battleKey, p2name, p1name, p2char, p1char, turnResults, turn, p2resolvesAfterTurn);
+        applyRunesAfter(battleObj, battleKey, p1name, p2name, p1char, p2char, turnResults);
     }
     applyTransformation(battleObj, battleKey, p1name, p1taggedInChar, turn);
     applyTransformation(battleObj, battleKey, p2name, p2taggedInChar, turn);
@@ -125,9 +131,9 @@ function applyInnateAbilities(battleObj, battleKey, attacker, defender, attackCh
     let attackerPreviousTaggedInChar = battleObj[battleKey][attacker].previousTaggedInChar;
     let attackerID = battleObj[battleKey][attacker].id;
 
-    for (let char in battleObj[battleKey][attacker].chars) {
-        if (battleObj[battleKey][attacker].chars[char].resolve != 0 && attackerResolves[char] == 0) {
-            emulateAction(battleObj, battleKey, attacker, defender, char, defenseChar, "Defeat", turnResults, turn, attackerResolves);
+    for (let charKey in battleObj[battleKey][attacker].chars) {
+        if (battleObj[battleKey][attacker].chars[charKey].resolve != 0 && attackerResolves[charKey] == 0) {
+            emulateAction(battleObj, battleKey, attacker, defender, charKey, defenseChar, "Defeat", turnResults, turn, attackerResolves);
         }
     }
 
@@ -142,7 +148,7 @@ function applyInnateAbilities(battleObj, battleKey, attacker, defender, attackCh
     let taggedInMatch = taggedInRegex.exec(turnResults);
     if (taggedInMatch !== null) {
         let taggedInChar = taggedInMatch[1];
-        emulateAction(battleObj, battleKey, attacker, defender, taggedInChar, defenseChar, "Tag-in", turnResults, turn, attackerResolves);
+        emulateAction(battleObj, battleKey, attacker, defender, taggedInChar, defenseChar, "Switch-in", turnResults, turn, attackerResolves);
     }
 
 

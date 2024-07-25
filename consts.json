@@ -171,10 +171,11 @@
         },
         "Obliterate": {
             "type": ["attack"],
-            "damageType": "true",
-            "attackStat": "varies",
+            "damageType": "True",
+            "attackStat": "maxResolve",
             "defenseStat": "varies",
-            "basePower": "varies"
+            "basePower": "varies",
+            "hasNegativeImpact": true
         },
         "Provoke": {
             "type": ["status"]
@@ -215,6 +216,14 @@
         },
         "The Perfect Existence": {
             "type": ["innate"]
+        },
+        "True": {
+            "type": ["attack"],
+            "damageType": "True",
+            "attackStat": null,
+            "defenseStat": null,
+            "basePower": 1,
+            "priority": 0
         },
         "Unity": {
             "type": ["boost"],

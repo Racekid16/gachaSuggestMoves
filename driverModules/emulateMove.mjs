@@ -112,7 +112,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                     return (currentEntry[0] != attackChar && currentEntry[1].resolve > 0 && currentEntry[1].resolve < minEntry[1].resolve) ? currentEntry : minEntry;
                 }, ["empty", { resolve: 9999 }]);
 
-            if (lowestResolveTeammate != "empty") {
+            if (attackerResolves[attackChar] != 0 && lowestResolveTeammate != "empty") {
                 if (typeof attackerResolves !== 'undefined' && typeof attackerResolves[lowestResolveTeammate] != 'undefined' && attackerResolves[lowestResolveTeammate] != 0) {
                     console.log(`Program expected ${attacker}'s ${lowestResolveTeammate} in turn ${turn} of ${battleKey} to die, but they didn't.`);
                     console.log(attackerResolves);
@@ -192,6 +192,11 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                     resolve: round(creatorBaseCharStats.resolve * inheritAmount),
                     imageName: creatorBaseCharStats.imageName
                 };
+                if (battleObj[battleKey][attacker].chars[attackChar].rune == "Summoning") {
+                    battleObj[battleKey][attacker].chars.Pawn.mental = round(battleObj[battleKey][attacker].chars.Pawn.mental * 1.5);
+                    battleObj[battleKey][attacker].chars.Pawn.physical = round(battleObj[battleKey][attacker].chars.Pawn.physical * 1.5);
+                    battleObj[battleKey][attacker].chars.Pawn.social = round(battleObj[battleKey][attacker].chars.Pawn.social * 1.5);
+                }
                 battleObj[battleKey][attacker].baseCharStats.Pawn = structuredClone(battleObj[battleKey][attacker].chars.Pawn);
                 addBoost(battleObj, battleKey, attacker, attackChar, "Kings Command", turn);
             }
@@ -270,6 +275,9 @@ export function emulateAction(battleObj, battleKey, attacker, defender, attackCh
             if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Group Ties")) {
                 emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Group Ties", turnResults, turn, attackerResolves);
             }
+            if (battleObj[battleKey][defender].chars[defenseChar].rune == "Glory") {
+                addBoost(battleObj, battleKey, defender, defenseChar, "Glory Defeat", turn);
+            }
             break;
 
         case 'Game Start':
@@ -278,7 +286,7 @@ export function emulateAction(battleObj, battleKey, attacker, defender, attackCh
             }
             break;
         
-        case 'Tag-in':
+        case 'Switch-in':
             let attackerPreviousTaggedInChar = battleObj[battleKey][attacker].previousTaggedInChar;
             let attackerPreviousTaggedInCharObj;
             if (attackerPreviousTaggedInChar !== null) {
