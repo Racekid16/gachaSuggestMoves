@@ -100,6 +100,10 @@ export function applyBoosts(battleObj, battleKey, playerName) {
                     baseMultiplierObj.mental += buff.amount;
                     baseMultiplierObj.physical += buff.amount;
                     baseMultiplierObj.social += buff.amount;
+                } else if (buff.stat == 'strength') {
+                    baseMultiplierObj.mental += buff.amount;
+                    baseMultiplierObj.physical += buff.amount;
+                    baseMultiplierObj.social += buff.amount;
                 } else {
                     baseMultiplierObj[buff.stat] += buff.amount;
                 }
@@ -109,7 +113,7 @@ export function applyBoosts(battleObj, battleKey, playerName) {
         for (let i = 0; i < thisCharObj.debuffs.length; i++) {
             let debuff = thisCharObj.debuffs[i];
 
-            if (thisCharObj.moves.includes('Lead By Example') && (debuff.stat == 'ability' || debuff.stat == 'physical')) {
+            if (thisCharObj.moves.includes('Lead By Example') && (debuff.stat == 'ability' || debuff.stat == 'strength' || debuff.stat == 'physical')) {
                 if (typeof battleObj[battleKey].log !== 'undefined') {
                     //battleObj[battleKey].log(`${debuff.name} debuff negated as it would lower ${charName}'s physical`);
                 }
@@ -121,6 +125,10 @@ export function applyBoosts(battleObj, battleKey, playerName) {
             if (debuff.type == "base") {
                 if (debuff.stat == 'ability') {
                     baseMultiplierObj.initiative += debuff.amount;
+                    baseMultiplierObj.mental += debuff.amount;
+                    baseMultiplierObj.physical += debuff.amount;
+                    baseMultiplierObj.social += debuff.amount;
+                } else if (debuff.stat == 'strength') {
                     baseMultiplierObj.mental += debuff.amount;
                     baseMultiplierObj.physical += debuff.amount;
                     baseMultiplierObj.social += debuff.amount;
@@ -139,6 +147,10 @@ export function applyBoosts(battleObj, battleKey, playerName) {
             if (boost.type == "total") {
                 if (boost.stat == "ability") {
                     thisCharObj.initiative = round(thisCharObj.initiative * (1 + boost.amount));
+                    thisCharObj.mental = round(thisCharObj.mental * (1 + boost.amount));
+                    thisCharObj.physical = round(thisCharObj.physical * (1 + boost.amount));
+                    thisCharObj.social = round(thisCharObj.social * (1 + boost.amount));
+                } else if (boost.stat == "strength") {
                     thisCharObj.mental = round(thisCharObj.mental * (1 + boost.amount));
                     thisCharObj.physical = round(thisCharObj.physical * (1 + boost.amount));
                     thisCharObj.social = round(thisCharObj.social * (1 + boost.amount));

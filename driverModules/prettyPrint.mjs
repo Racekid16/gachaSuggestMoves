@@ -52,12 +52,13 @@ export function printParty(battleObj, battleKey, playerName, partyArray, hasStre
     for (let char of benchChars) {
         let supportCategorySymbol;
         switch (char.supportCategory) {
-            case 'Ability': supportCategorySymbol = "🏃🧠💪🗣️"; break;
             case 'Initiative': supportCategorySymbol = "🏃"; break;
             case 'Mental': supportCategorySymbol = "🧠"; break;
             case 'Physical': supportCategorySymbol = "💪"; break;
             case 'Social': supportCategorySymbol = "🗣️"; break;
             case 'Resolve': supportCategorySymbol = "❤️"; break;
+            case 'Ability': supportCategorySymbol = "🏃🧠💪🗣️"; break;
+            case 'Strength': supportCategorySymbol = "🧠💪🗣️"; break;
             default: console.log(`Unrecognized support category ${char.supportCategory}`); break;
         }
 
@@ -191,6 +192,10 @@ export function printSuggestedMoves(battleObj, programSocket, p1name, p2name, p1
     } 
     else {    //p1initiative < p2initiative
         playerNumberToPrintFirst = 2;
+    }
+
+    if (battleObj[battleKey].fieldEffects.includes("Frozen World")) {
+        playerNumberToPrintFirst = playerNumberToPrintFirst == 1 ? 2 : 1;
     }
 
     if (playerNumberToPrintFirst == 1) {

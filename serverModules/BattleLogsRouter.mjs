@@ -16,10 +16,21 @@ const BattleLogsRouter = (sharedData) => {
     })
 
     //returns the logs of all battles that the specified user battled in
-    router.get("/:userId", (req, res) => {
+    router.get("/player/:userId", (req, res) => {
         var result = [];
         sharedData.database.collection('BattleLogs')
             .find({players: req.params.userId})
+            .forEach(doc => result.push(doc))
+            .then(() => {
+                res.status(200).send(result)
+            });
+    })
+
+    //returns the logs of all battles that contain a specific string (case-sensitive)
+    router.get("/contains/:substring", (req, res) => {
+        var result = [];
+        sharedData.database.collection('BattleLogs')
+            .find({data: {$regex: req.params.substring }})
             .forEach(doc => result.push(doc))
             .then(() => {
                 res.status(200).send(result)

@@ -15,6 +15,7 @@ export async function createBattle(battleObj, programSocket, p1name, p2name, bat
     battleObj[battleKey].data = "";
     battleObj[battleKey].numPartiesRequested = 0;
     battleObj[battleKey].requestedParties = [];
+    battleObj[battleKey].fieldEffects = [];
     battleObj.currentBattles.push([new Date().getTime(), 'battle', p1name, p2name, battleEmbed]);
     
     //create a new file for this battle
@@ -57,8 +58,14 @@ export async function createBattle(battleObj, programSocket, p1name, p2name, bat
         return;
     }
 
-    verifyPlayerResolves(battleObj, programSocket, battleKey, p1name, 1, battleEmbed);
-    verifyPlayerResolves(battleObj, programSocket, battleKey, p2name, 2, battleEmbed);
+    let resolved1 = verifyPlayerResolves(battleObj, programSocket, battleKey, p1name, 1, battleEmbed);
+    if (!resolved1) {
+        return;
+    }
+    let resolved2 = verifyPlayerResolves(battleObj, programSocket, battleKey, p2name, 2, battleEmbed);
+    if (!resolved2) {
+        return;
+    }
     
     parseTurnResults(battleObj, programSocket, p1name, p2name, battleEmbed);
 }
@@ -82,6 +89,7 @@ export async function createCampaignBattle(battleObj, programSocket, playerName,
     battleObj[battleKey].data = "";
     battleObj[battleKey].numPartiesRequested = 0;
     battleObj[battleKey].requestedParties = [];
+    battleObj[battleKey].fieldEffects = [];
     
     //create a new file for this battle
     let encodedBattleKey = battleKey.replace(/\//g, 'slash');
@@ -218,7 +226,7 @@ export function verifyPlayerResolves(battleObj, programSocket, battleKey, player
                 console.log(battleObj[battleKey][playerName]);
                 let [p1name, p2name] = battleKey.split(" vs. ");
                 deleteBattle(battleObj, programSocket, p1name, p2name, null);
-                return;
+                return false;
             }
         }
 
@@ -230,6 +238,7 @@ export function verifyPlayerResolves(battleObj, programSocket, battleKey, player
         battleObj[battleKey][playerName].chars[charName].resolve = charResolve;
         battleObj[battleKey][playerName].baseCharStats[charName].resolve = charResolve;
     }
+    return true;
 }
 
 export async function requestPlayerPartyCampaignBattle(battleObj, programSocket, battleKey, playerName, playerID) {

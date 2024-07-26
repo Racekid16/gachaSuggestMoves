@@ -3,6 +3,7 @@ import { emulateMove } from './emulateMove.mjs';
 import { hasBoost, removeExpiredBoosts, applyBoosts} from './updateBoosts.mjs';
 import { removeExpiredStatuses, applyStatuses} from './updateStatuses.mjs';
 import { removeExpiredDamageModifiers, applyDamageModifiers } from './updateDamageModifiers.mjs';
+import { removeExpiredFieldEffects } from './updateFieldEffects.mjs';
 import consts from '../consts.json' assert { type: 'json' };
 
 export function findOptimalSequence(battleObj, battleKey, attacker, defender, attackChar, defenseChar, turn) {
@@ -19,10 +20,10 @@ function findOptimalSequenceNoDefender(battleObj, battleKey, attacker, defender,
         return { ...moveObj, name: move };
     });
     let attackMoves = validMoves.filter(move => consts.moveInfo[move].type.includes("attack"));
-    let numAttackMoves = attackMoves.length;
-    if (numAttackMoves == 0) {
+    let damagingMoves = validMoves.map(move => calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move)[1]).filter(damage => damage != 0);
+    if (damagingMoves.length == 0) {
         return validMoves;
-    }
+    } 
 
     let boostMovesObjs = validMovesObjs.filter(moveObj => moveObj.type.includes("boost") && !moveObj.type.includes("attack"));
     let maxBoostTurns = boostMovesObjs.reduce((maxObj, currentObj) => currentObj.numTurns != Infinity && currentObj.numTurns >= maxObj.numTurns ? currentObj : maxObj, { numTurns: 1}).numTurns;
@@ -198,6 +199,7 @@ function emulateTurnEnd(battleObj, battleKey, attacker, defender, turn) {
     removeExpiredStatuses(battleObj, battleKey, defender, turn);
     removeExpiredDamageModifiers(battleObj, battleKey, attacker, turn);
     removeExpiredDamageModifiers(battleObj, battleKey, defender, turn);
+    removeExpiredFieldEffects(battleObj, battleKey, turn);
     applyBoosts(battleObj, battleKey, attacker);
     applyBoosts(battleObj, battleKey, defender);
     applyStatuses(battleObj, battleKey, attacker);

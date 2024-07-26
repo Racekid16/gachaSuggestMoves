@@ -19,6 +19,14 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
         addStatus(battleObj, battleKey, defender, defenseChar, "burning", turn, 1);
     }
 
+    if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Aspect Of Water")) {
+        let lockRegex = /\*\*(.+)\*\* had their \*\*(.+)\*\* locked!/;
+        let lockMatch = lockRegex.exec(turnResults);
+        if (lockMatch !== null && lockMatch[1] != attackChar) {
+            battleObj[battleKey][defender].chars[defenseChar].lockedMoves.push(lockMatch[2]);
+        }
+    }
+
     let attackerID = battleObj[battleKey][attacker].id;
 
     switch (move) {

@@ -132,8 +132,14 @@ async function processBattleEmbed(battleObj, programSocket, responseJSON, battle
 
 
     if (typeof battleObj[battleKey] !== 'undefined' && turn == 1 && battleObj[battleKey][p2name].id == consts.botID) {
-        verifyPlayerResolves(battleObj, programSocket, battleKey, p1name, 1, battleEmbed);
-        verifyPlayerResolves(battleObj, programSocket, battleKey, p2name, 2, battleEmbed);
+        let resolved1 = verifyPlayerResolves(battleObj, programSocket, battleKey, p1name, 1, battleEmbed);
+        if (!resolved1) {
+            return;
+        }
+        let resolved2 = verifyPlayerResolves(battleObj, programSocket, battleKey, p2name, 2, battleEmbed);
+        if (!resolved2) {
+            return;
+        }
     }
     
     parseTurnResults(battleObj, programSocket, p1name, p2name, battleEmbed);

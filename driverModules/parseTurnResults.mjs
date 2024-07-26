@@ -7,6 +7,7 @@ import { removeExpiredDamageModifiers, applyDamageModifiers } from "./updateDama
 import { suggestMoves } from "./suggestMove.mjs";
 import { emulateMove, emulateAction } from "./emulateMove.mjs";
 import { applyTransformation } from "./transform.mjs";
+import { removeExpiredFieldEffects } from "./updateFieldEffects.mjs";
 
 // identify changes in stats or statuses then update the battleObj accordingly
 export async function parseTurnResults(battleObj, programSocket, p1name, p2name, battleEmbed) {
@@ -53,6 +54,7 @@ export async function parseTurnResults(battleObj, programSocket, p1name, p2name,
     removeExpiredStatuses(battleObj, battleKey, p2name, turn);
     removeExpiredDamageModifiers(battleObj, battleKey, p1name, turn);
     removeExpiredDamageModifiers(battleObj, battleKey, p2name, turn);
+    removeExpiredFieldEffects(battleObj, battleKey, turn);
     applyBoosts(battleObj, battleKey, p1name);
     applyBoosts(battleObj, battleKey, p2name);
     applyStatuses(battleObj, battleKey, p1name);

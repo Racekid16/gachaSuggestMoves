@@ -150,7 +150,8 @@ function createPartyStats(battleObj, battleKey, playerName, hasStrength, partyAr
         "physical": "💪",
         "social": "🗣️",
         "resolve": "❤️",
-        "ability": "🏃🧠💪🗣️"
+        "ability": "🏃🧠💪🗣️",
+        "strength": "🧠💪🗣️"
     }
 
     const activeHeader = document.createElement('div');
@@ -297,7 +298,8 @@ function createSuggestionCharStats(battleObj, webpageSocket, battleKey, turn, pl
         "physical": "💪",
         "social": "🗣️",
         "resolve": "❤️",
-        "ability": "🏃🧠💪🗣️"
+        "ability": "🏃🧠💪🗣️",
+        "strength": "🧠💪🗣️"
     }
 
     const playerName = playerSuggestionData.playerName;

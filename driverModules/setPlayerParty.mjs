@@ -189,6 +189,10 @@ export async function setPlayerParty(battleObj, programSocket, playerName, playe
                     multiplierObj.mental += initialCharStats[charKey2].supportBonus / 100;
                     multiplierObj.physical += initialCharStats[charKey2].supportBonus / 100;
                     multiplierObj.social += initialCharStats[charKey2].supportBonus / 100;
+                } else if (supportCategory == 'strength') {
+                    multiplierObj.mental += initialCharStats[charKey2].supportBonus / 100;
+                    multiplierObj.physical += initialCharStats[charKey2].supportBonus / 100;
+                    multiplierObj.social += initialCharStats[charKey2].supportBonus / 100;
                 } else {
                     multiplierObj[supportCategory] += initialCharStats[charKey2].supportBonus / 100;
                 }
@@ -199,6 +203,10 @@ export async function setPlayerParty(battleObj, programSocket, playerName, playe
                 if (thisChar.tags.includes(ally)) {
                     if (supportCategory == 'ability') {
                         multiplierObj.initiative += initialCharStats[charKey2].supportBonus / 100;
+                        multiplierObj.mental += initialCharStats[charKey2].supportBonus / 100;
+                        multiplierObj.physical += initialCharStats[charKey2].supportBonus / 100;
+                        multiplierObj.social += initialCharStats[charKey2].supportBonus / 100;
+                    } else if (supportCategory == 'strength') {
                         multiplierObj.mental += initialCharStats[charKey2].supportBonus / 100;
                         multiplierObj.physical += initialCharStats[charKey2].supportBonus / 100;
                         multiplierObj.social += initialCharStats[charKey2].supportBonus / 100;
