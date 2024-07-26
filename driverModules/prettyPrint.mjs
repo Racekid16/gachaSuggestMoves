@@ -1,8 +1,7 @@
 // pretty-print people's parties and suggested moves.
 import { round } from './round.mjs';
 import { calculateMoveDamage } from './calculateMoveDamage.mjs';
-import { hasStatus } from './updateStatuses.mjs';
-import consts from '../consts.json' assert { type: 'json' };
+import { getMovesCharCanMake } from './findMoveSequence.mjs';
 
 // print the stats of a party at the beginning of a battle
 export function printParty(battleObj, battleKey, playerName, partyArray, hasStrength) {
@@ -361,40 +360,10 @@ function printModifiers(battleObj, battleKey, playerName, charName, turn) {
 }
 
 function printMoves(battleObj, battleKey, attacker, defender, attackChar, defenseChar) {
-    let validMoves = battleObj[battleKey][attacker].chars[attackChar].moves
-        .filter(move => !consts.moveInfo[move].type.includes("innate"));
-    let moveDamageObjs = [];
-    for (let move of validMoves) {
-        let moveDamageObj = calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move);
-        //moveDamageObj is formatted as [moveObj, moveDamage, hitType]
-        if (moveDamageObj[1] == -1 || hasStatus(battleObj, battleKey, attacker, attackChar, "stunned") || hasStatus(battleObj, battleKey, attacker, attackChar, "resting")) {
-            continue;
-        }
-        if (moveDamageObj[0].type.includes("attack") && hasStatus(battleObj, battleKey, attacker, attackChar, "pacified")) {
-            continue;   
-        }
-        if (!moveDamageObj[0].type.includes("attack") && hasStatus(battleObj, battleKey, attacker, attackChar, "taunted")) {
-            continue;
-        }
-        if (battleObj[battleKey][attacker].chars[attackChar].lockedMoves.includes(move)) {
-            continue;
-        }
-        if (hasStatus(battleObj, battleKey, defender, defenseChar, "invulnerable")) {
-            moveDamageObj[1] = 0;
-        }
-        moveDamageObjs.push([move, ...moveDamageObj]);
-    }
-    if (!hasStatus(battleObj, battleKey, attacker, attackChar, "stunned") && !hasStatus(battleObj, battleKey, attacker, attackChar, "trapped") 
-     && !hasStatus(battleObj, battleKey, attacker, attackChar, "taunted")) {
-        let numAliveAllies = Object.keys(battleObj[battleKey][attacker].chars).reduce((countSoFar, charKey) => 
-            battleObj[battleKey][attacker].chars[charKey].resolve > 0 ? countSoFar + 1 : countSoFar
-        , 0);
-        if (numAliveAllies > 1) {
-            moveDamageObjs.push(["Switch-in", {}, 0, '']);
-        }
-    }
-    
-    moveDamageObjs = moveDamageObjs.sort((a, b) => b[2] - a[2]);
+    let validMoves = getMovesCharCanMake(battleObj, battleKey, attacker, attackChar);
+    let moveDamageObjs = validMoves
+                        .map(move => [move, ...calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move)])
+                        .sort((a, b) => b[2] - a[2]);
     //moveDamageObj is formatted as [moveName, moveObj, moveDamage, hitType]
     let movesArr = [];
     for (let moveDamageObj of moveDamageObjs) {

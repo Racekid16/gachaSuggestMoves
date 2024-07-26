@@ -17,7 +17,7 @@ export function suggestMoves(battleObj, programSocket, p1name, p2name, p1char, p
 function determineSuggestedMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, turn) {
 
     let optimalSequence = findOptimalSequence(battleObj, battleKey, attacker, defender, attackChar, defenseChar, turn);
-    let suggestedMove = optimalSequence[0];
+    let suggestedMove = optimalSequence.length > 0 ? optimalSequence[0] : "None";
     let [moveObj, damage, hitType] = calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, suggestedMove);
 
     return [optimalSequence, suggestedMove, moveObj, damage, hitType];

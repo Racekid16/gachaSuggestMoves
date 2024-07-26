@@ -2,6 +2,7 @@
 import { addBoost, addBoostToAliveTeammates } from "./updateBoosts.mjs";
 import { addStatus } from "./updateStatuses.mjs";
 import { addInflictModifier, addReceiveModifier } from "./updateDamageModifiers.mjs";
+import { addFieldEffect } from "./updateFieldEffects.mjs";
 import { round } from "./round.mjs";
 import consts from '../consts.json' assert { type: 'json' };
 
@@ -23,7 +24,23 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
         let lockRegex = /\*\*(.+)\*\* had their \*\*(.+)\*\* locked!/;
         let lockMatch = lockRegex.exec(turnResults);
         if (lockMatch !== null && lockMatch[1] != attackChar) {
-            battleObj[battleKey][defender].chars[defenseChar].lockedMoves.push(lockMatch[2]);
+            battleObj[battleKey][defender].chars[defenseChar].lockedMoves.push({
+                name: lockMatch[2],
+                type: "currentSwitchIn"
+            });
+        }
+    }
+
+    let attackCharRune = battleObj[battleKey][attacker].chars[attackChar].rune;
+    if (attackCharRune == "Focus" || attackCharRune == "Instinct") {
+        for (let otherMove of battleObj[battleKey][attacker].chars[attackChar].moves) {
+            if (otherMove != move && !consts.moveInfo[otherMove].type.includes("innate")
+             && !battleObj[battleKey][attacker].chars[attackChar].lockedMoves.some(obj => obj.name == move)) {
+                battleObj[battleKey][attacker].chars[attackChar].lockedMoves.push({
+                    name: move,
+                    type: "currentSwitchIn"
+                });
+            }
         }
     }
 
@@ -75,6 +92,10 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                 addStatus(battleObj, battleKey, attacker, taggedInChar, "pacified", turn, 1);
                 addStatus(battleObj, battleKey, attacker, taggedInChar, "invulnerable", turn, 1);
             }
+            break;
+        
+        case 'Frozen World':
+            addFieldEffect(battlObj, battleKey, "Frozen World", turn, 5);
             break;
         
         case 'Group Efforts':
@@ -158,7 +179,10 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
         case 'Kabedon':
             //this works even if both players use the same character and both use Kabedon,
             //because their counters are guaranteed to fail in that case
-            battleObj[battleKey][attacker].chars[attackChar].lockedMoves.push(move);
+            battleObj[battleKey][attacker].chars[attackChar].lockedMoves.push({
+                name: move,
+                type: "currentSwitchIn"
+            });
             if (turnResults.includes(`**${attackChar}** countered with **Kabedon**!`)) {
                 addStatus(battleObj, battleKey, defender, defenseChar, "stunned", turn, 1);
             } else if (turnResults.includes(`**${attackChar}'s** counter failed!`)) {
@@ -284,7 +308,7 @@ export function emulateAction(battleObj, battleKey, attacker, defender, attackCh
                 emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Group Ties", turnResults, turn, attackerResolves);
             }
             if (battleObj[battleKey][defender].chars[defenseChar].rune == "Glory") {
-                addBoost(battleObj, battleKey, defender, defenseChar, "Glory Defeat", turn);
+                addBoost(battleObj, battleKey, defender, defenseChar, "Glory Defeat", turn, false);
             }
             break;
 
@@ -301,7 +325,7 @@ export function emulateAction(battleObj, battleKey, attacker, defender, attackCh
                 attackerPreviousTaggedInCharObj = battleObj[battleKey][attacker].chars[attackerPreviousTaggedInChar];
             }
 
-            battleObj[battleKey][attacker].chars[attackChar].lockedMoves = [];
+            battleObj[battleKey][attacker].chars[attackChar].lockedMoves = battleObj[battleKey][attacker].chars[attackChar].lockedMoves.filter(obj => obj.type != "currentSwitchIn");
             
             if (attackerPreviousTaggedInChar !== null && attackerPreviousTaggedInCharObj.moves.includes("Lead By Example")) {
                 emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Lead By Example", turnResults, turn, attackerResolves);
@@ -321,18 +345,26 @@ export function emulateAction(battleObj, battleKey, attacker, defender, attackCh
 
 function nullifyBuffs(battleObj, battleKey, playerName, charName, turn) {
     for (let buff of battleObj[battleKey][playerName].chars[charName].buffs) {
-        buff.endTurn = turn;
+        if (buff.canBeNullified) {
+            buff.endTurn = turn;
+        }
     }
     for (let inflictModifier of battleObj[battleKey][playerName].chars[charName].inflictModifiers) {
-        inflictModifier.endTurn = turn;
+        if (inflictModifier.canBeNullified) {
+            inflictModifier.endTurn = turn;
+        }
     }
     for (let receiveModifier of battleObj[battleKey][playerName].chars[charName].receiveModifiers) {
-        receiveModifier.endTurn = turn;
+        if (receiveModifier.canBeNullified) {
+            receiveModifier.endTurn = turn;
+        }
     }
 }
 
 function nullifyDebuffs(battleObj, battleKey, playerName, charName) {
     for (let debuff of battleObj[battleKey][playerName].chars[charName].debuffs) {
-        debuff.endTurn = turn;
+        if (debuff.canBeNullified) {
+            debuff.endTurn = turn;
+        }
     }
 }

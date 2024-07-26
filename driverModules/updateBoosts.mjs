@@ -1,10 +1,11 @@
 // add or remove buffs or debuffs.
 import { round } from './round.mjs';
 
-export function addBoost(battleObj, battleKey, playerName, charName, boost, turn) {
+export function addBoost(battleObj, battleKey, playerName, charName, boost, turn, canBeNullified=true) {
     // I arrange these alphabetically
     switch (boost) {
 
+        case 'Affinity':
         case 'Arrogance':
         case 'Blazing Form':
         case 'Boss Orders':
@@ -23,7 +24,7 @@ export function addBoost(battleObj, battleKey, playerName, charName, boost, turn
         case 'The Perfect Existence':
         case 'Unity':
         case 'Zenith Pace':
-            addBuff(battleObj, battleKey, playerName, charName, boost, turn);
+            addBuff(battleObj, battleKey, playerName, charName, boost, turn, canBeNullified);
             break;
         
         case 'Bottle Break Physical':
@@ -34,7 +35,7 @@ export function addBoost(battleObj, battleKey, playerName, charName, boost, turn
         case 'Humiliate Physical':
         case 'Humiliate Social':
         case 'Kings Command':
-            addDebuff(battleObj, battleKey, playerName, charName, boost, turn);
+            addDebuff(battleObj, battleKey, playerName, charName, boost, turn, canBeNullified);
             break;
 
         default:
@@ -45,14 +46,14 @@ export function addBoost(battleObj, battleKey, playerName, charName, boost, turn
 
 // adds the specified boost to all members on the attacker's team (including the attacker themself)
 // who have more than 0 resolve
-export function addBoostToAliveTeammates(battleObj, battleKey, attacker, attackChar, boost, turn) {
+export function addBoostToAliveTeammates(battleObj, battleKey, attacker, attackChar, boost, turn, canBeNullified=true) {
     for (let charKey in battleObj[battleKey][attacker].chars) {
         if (charKey == attackChar) {
             continue;
         }
         let charResolve = battleObj[battleKey][attacker].chars[charKey].resolve;
         if (charResolve > 0) {
-            addBoost(battleObj, battleKey, attacker, charKey, boost, turn);        
+            addBoost(battleObj, battleKey, attacker, charKey, boost, turn, canBeNullified);        
         }
     }
 }
@@ -170,9 +171,22 @@ export function applyBoosts(battleObj, battleKey, playerName) {
     }
 }
 
-function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
+function addBuff(battleObj, battleKey, playerName, charName, buff, turn, canBeNullified) {
     let numBuffs = battleObj[battleKey][playerName].chars[charName].buffs.length;
     switch (buff) {
+
+        case 'Affinity':
+            let affinityBuff = 0.1;
+            battleObj[battleKey][playerName].chars[charName].buffs.push({
+                name: buff,
+                startTurn: turn,
+                endTurn: Infinity,
+                stat: "strength",
+                type: "total",
+                amount: affinityBuff,
+                canBeNullified: canBeNullified
+            });
+            break;
 
         case 'Arrogance':
             let arroganceBuff = 0.4;
@@ -182,7 +196,8 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 endTurn: turn + 2,
                 stat: "ability",
                 type: "base",
-                amount: arroganceBuff
+                amount: arroganceBuff,
+                canBeNullified: canBeNullified
             });
             break;
         
@@ -194,7 +209,8 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 endTurn: turn + 5,
                 stat: "physical",
                 type: "base",
-                amount: blazingFormBuff
+                amount: blazingFormBuff,
+                canBeNullified: canBeNullified
             }); 
             break;
 
@@ -206,7 +222,8 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 endTurn: Infinity,
                 stat: "mental",
                 type: "base",
-                amount: bossOrdersBuff
+                amount: bossOrdersBuff,
+                canBeNullified: canBeNullified
             }); 
             break;
         
@@ -218,7 +235,8 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 endTurn: Infinity,
                 stat: "initiative",
                 type: "total",
-                amount: bottleBreakInitiativeBuff
+                amount: bottleBreakInitiativeBuff,
+                canBeNullified: canBeNullified
             });
             break;
 
@@ -230,7 +248,8 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 endTurn: Infinity,
                 stat: "social",
                 type: "total",
-                amount: bottleBreakSocialBuff
+                amount: bottleBreakSocialBuff,
+                canBeNullified: canBeNullified
             });
             break;
         
@@ -242,7 +261,8 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 endTurn: Infinity,
                 stat: "ability",
                 type: "total",
-                amount: gloryDefeatBuff
+                amount: gloryDefeatBuff,
+                canBeNullified: canBeNullified
             });
             break;
 
@@ -254,7 +274,8 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 endTurn: Infinity,
                 stat: "ability",
                 type: "total",
-                amount: gloryInitialBuff
+                amount: gloryInitialBuff,
+                canBeNullified: canBeNullified
             });
             break;
 
@@ -266,7 +287,8 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 endTurn: Infinity,
                 stat: "social",
                 type: "base",
-                amount: groupTiesBuff
+                amount: groupTiesBuff,
+                canBeNullified: canBeNullified
             }); 
             break;
 
@@ -278,7 +300,8 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 endTurn: Infinity,
                 stat: "initiative",
                 type: "total",
-                amount: instinctBuff
+                amount: instinctBuff,
+                canBeNullified: canBeNullified
             }); 
             break;
 
@@ -290,7 +313,8 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 endTurn: Infinity,
                 stat: "mental",
                 type: "base",
-                amount: introversionBuff
+                amount: introversionBuff,
+                canBeNullified: canBeNullified
             });                       
             break;
 
@@ -302,7 +326,8 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 endTurn: turn + 1,
                 stat: "physical",
                 type: "base",
-                amount: leadByExampleBuff1
+                amount: leadByExampleBuff1,
+                canBeNullified: canBeNullified
             }); 
             break;
         
@@ -314,7 +339,8 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 endTurn: turn + 2,
                 stat: "physical",
                 type: "base",
-                amount: leadByExampleBuff2
+                amount: leadByExampleBuff2,
+                canBeNullified: canBeNullified
             }); 
             break;
         
@@ -328,7 +354,8 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                     endTurn: turn + 1,
                     stat: "initiative",
                     type: "total",
-                    amount: studyInitiativeBuff
+                    amount: studyInitiativeBuff,
+                    canBeNullified: canBeNullified
                 });
             }
             break;
@@ -343,7 +370,8 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                     endTurn: turn + 1,
                     stat: "mental",
                     type: "base",
-                    amount: studyMentalBuff
+                    amount: studyMentalBuff,
+                    canBeNullified: canBeNullified
                 });
             }
             break;
@@ -356,7 +384,8 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 endTurn: turn + 2,
                 stat: "ability",
                 type: "total",
-                amount: teamworkBuff
+                amount: teamworkBuff,
+                canBeNullified: canBeNullified
             });
             break;
 
@@ -368,7 +397,8 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 endTurn: Infinity,
                 stat: "ability",
                 type: "total",
-                amount: thePerfectExistenceBuff
+                amount: thePerfectExistenceBuff,
+                canBeNullified: canBeNullified
             }); 
             break;
 
@@ -382,7 +412,8 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                     endTurn: turn + 5,
                     stat: "ability",
                     type: "total",
-                    amount: unityBuff
+                    amount: unityBuff,
+                    canBeNullified: canBeNullified
                 });
             }
             break;
@@ -395,7 +426,8 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
                 endTurn: Infinity,
                 stat: "initiative",
                 type: "base",
-                amount: zenithPaceBuff
+                amount: zenithPaceBuff,
+                canBeNullified: canBeNullified
             })
 
         default:
@@ -408,7 +440,7 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn) {
     }
 }
 
-function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
+function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn, canBeNullified) {
     let numDebuffs = battleObj[battleKey][playerName].chars[charName].debuffs.length;
     switch (debuff) {
 
@@ -420,7 +452,8 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
                 endTurn: Infinity,
                 stat: "physical",
                 type: "base",
-                amount: bottleBreakPhysicalDebuff
+                amount: bottleBreakPhysicalDebuff,
+                canBeNullified: canBeNullified
             });
             break;
 
@@ -432,7 +465,8 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
                 endTurn: turn + 4,
                 stat: "social",
                 type: "base",
-                amount: charmDebuff
+                amount: charmDebuff, 
+                canBeNullified: canBeNullified
             })
             break;
 
@@ -444,7 +478,8 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
                 endTurn: turn + 5,
                 stat: "ability",
                 type: "base",
-                amount: dominateDebuff
+                amount: dominateDebuff, 
+                canBeNullified: canBeNullified
             }); 
             break;
 
@@ -458,7 +493,8 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
                     endTurn: turn + 4,
                     stat: "ability",
                     type: "total",
-                    amount: hateDebuff
+                    amount: hateDebuff, 
+                    canBeNullified: canBeNullified
                 }); 
             }
             break;
@@ -474,7 +510,8 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
                 endTurn: turn + 2,
                 stat: highestAttackStat,
                 type: "base",
-                amount: humiliateDebuff
+                amount: humiliateDebuff, 
+                canBeNullified: canBeNullified
             }); 
             break;
 
@@ -486,7 +523,8 @@ function addDebuff(battleObj, battleKey, playerName, charName, debuff, turn) {
                 endTurn: Infinity,
                 stat: "ability",
                 type: "total",
-                amount: kingsCommandDebuff
+                amount: kingsCommandDebuff, 
+                canBeNullified: canBeNullified
             }); 
             break;
 

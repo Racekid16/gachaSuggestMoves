@@ -304,7 +304,6 @@ function createSuggestionCharStats(battleObj, webpageSocket, battleKey, turn, pl
 
     const playerName = playerSuggestionData.playerName;
     const charName = playerSuggestionData.charName;
-    const rune = battleObj[battleKey][playerName].chars[charName].rune;
 
     const charStats = document.createElement('div');
     charStats.classList.add('row');
@@ -697,15 +696,13 @@ function createMovesListContainer(moves) {
 
 function createSuggestedMoveContainer(playerSuggestionData) {
     const suggestedMoveSequence = playerSuggestionData.moveSequence;
-    const suggestedMove = suggestedMoveSequence[0];
-    const suggestedMoveObj = playerSuggestionData.moves.find(moveObj => moveObj.name == suggestedMove);
-    const playerCanUseSuggestedMove = typeof suggestedMoveObj !== 'undefined';
+    const suggestedMove = suggestedMoveSequence.length > 0 ? suggestedMoveSequence[0] : "None";
     
     const suggestedMoveContainer = document.createElement('div');
     //suggestedMoveContainer.classList.add('suggested-move-container');
-    suggestedMoveContainer.innerHTML = `Recommended move:`
-    if (playerCanUseSuggestedMove) {
-        suggestedMoveContainer.innerHTML += ` <b>${suggestedMove}</b>`;
+    if (suggestedMove != "None") {
+        suggestedMoveContainer.innerHTML += `Recommended move: <b>${suggestedMove}</b>`;
+        const suggestedMoveObj = playerSuggestionData.moves.find(moveObj => moveObj.name == suggestedMove);
         if (suggestedMoveObj.upperBound > 0) {
             suggestedMoveContainer.innerHTML += ` (${suggestedMoveObj.lowerBound} - ${suggestedMoveObj.upperBound})`;
             if (suggestedMoveObj.hitType != "") {
@@ -715,13 +712,13 @@ function createSuggestedMoveContainer(playerSuggestionData) {
                 suggestedMoveContainer.innerHTML += ` FATAL`;
             }
         }
-    }
-    if (suggestedMoveSequence.length > 1) {
-        suggestedMoveContainer.innerHTML += `<br>Move sequence: ${suggestedMoveSequence[0]}`;
-        for (let i = 1; i < suggestedMoveSequence.length; i++) {
-            suggestedMoveContainer.innerHTML += `, ${suggestedMoveSequence[i]}`;
+        if (suggestedMoveSequence.length > 1) {
+            suggestedMoveContainer.innerHTML += `<br>Move sequence: ${suggestedMoveSequence[0]}`;
+            for (let i = 1; i < suggestedMoveSequence.length; i++) {
+                suggestedMoveContainer.innerHTML += `, ${suggestedMoveSequence[i]}`;
+            }
+            suggestedMoveContainer.innerHTML += ` (${suggestedMoveSequence.length} moves)`
         }
-        suggestedMoveContainer.innerHTML += ` (${suggestedMoveSequence.length} moves)`
     }
 
     return suggestedMoveContainer;

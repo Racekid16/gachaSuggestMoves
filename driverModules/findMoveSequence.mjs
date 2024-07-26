@@ -1,7 +1,7 @@
 import { calculateMoveDamage, calculateMoveHealing, getCompleteMoveObj } from './calculateMoveDamage.mjs';
 import { emulateMove } from './emulateMove.mjs';
 import { hasBoost, removeExpiredBoosts, applyBoosts} from './updateBoosts.mjs';
-import { removeExpiredStatuses, applyStatuses} from './updateStatuses.mjs';
+import { removeExpiredStatuses, applyStatuses, hasStatus } from './updateStatuses.mjs';
 import { removeExpiredDamageModifiers, applyDamageModifiers } from './updateDamageModifiers.mjs';
 import { removeExpiredFieldEffects } from './updateFieldEffects.mjs';
 import consts from '../consts.json' assert { type: 'json' };
@@ -11,10 +11,43 @@ export function findOptimalSequence(battleObj, battleKey, attacker, defender, at
     return optimalSequenceNoDefender;
 }
 
+export function getMovesCharCanMake(battleObj, battleKey, playerName, charName) {
+    let charMoves = structuredClone(battleObj[battleKey][playerName].chars[charName].moves);
+    charMoves.push("Switch-in");
+
+    let returnArr = [];
+    for (let move of charMoves) {
+        let moveObj = consts.moveInfo[move];
+        if (typeof moveObj === 'undefined') {
+            console.log(`${charName} has unrecognized move ${move}`);
+            continue;
+        }
+        if (moveObj.type.includes("innate")) {
+            continue;   
+        }
+        if (hasStatus(battleObj, battleKey, playerName, charName, "stunned") || hasStatus(battleObj, battleKey, playerName, charName, "resting")) {
+            continue;
+        }
+        if (moveObj.type.includes("attack") && hasStatus(battleObj, battleKey, playerName, charName, "pacified")) {
+            continue;   
+        }
+        if (moveObj.type.includes("attack") && hasStatus(battleObj, battleKey, playerName, charName, "taunted")) {
+            continue;
+        }
+        if (moveObj.type.includes("switch-in") && (hasStatus(battleObj, battleKey, playerName, charName, "trapped")  || hasStatus(battleObj, battleKey, playerName, charName, "taunted"))) {
+            continue;
+        }
+        if (battleObj[battleKey][playerName].chars[charName].lockedMoves.some(obj => obj.name == move)) {
+            continue;
+        }
+        returnArr.push(move);
+    }
+    return returnArr;
+}
+
 function findOptimalSequenceNoDefender(battleObj, battleKey, attacker, defender, attackChar, defenseChar, turn) {
-    let validMoves = battleObj[battleKey][attacker].chars[attackChar].moves
-        .filter(move => !consts.moveInfo[move].type.includes("innate") && !consts.excludedMoves.includes(move)
-                     && (consts.moveInfo[move].type[0] == "attack" || consts.moveInfo[move].type[0] == "boost"));
+    let validMoves = getMovesCharCanMake(battleObj, battleKey, attacker, attackChar)
+        .filter(move => consts.moveInfo[move].type[0] == "attack" || consts.moveInfo[move].type[0] == "boost")
     let validMovesObjs = validMoves.map(move => {
         let moveObj = getCompleteMoveObj(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move);
         return { ...moveObj, name: move };

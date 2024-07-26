@@ -2,7 +2,7 @@
     "port": 2700,
     "botID": "1101145170466062416",
     "serverID": "870355988887265301",
-    "transformChars": ["Freed Horikita Suzune", "Serious Kōenji Rokusuke", "True Kushida Kikyō", "Unmasked Kushida Kikyō"],
+    "transformChars": ["Freed Horikita Suzune", "Serious Kōenji Rokusuke", "True Kushida Kikyō", "Unmasked Kushida Kikyō", "Fearless Ryūen Kakeru", "Hunter Ryūen Kakeru"],
     "excludedChars": [],
     "excludedMoves": ["Kings Command", "From The Shadows"],
     "excludedCampaignStages": [],
@@ -48,6 +48,11 @@
             "basePower": 1,
             "priority": 0
         },
+        "Blackmail": {
+            "type": ["attack"],
+            "damageType": "Empathy",
+            "attackStat": "Mental"
+        },
         "Blazing Form": {
             "type": ["attack", "boost"],
             "damageType": "Athleticism",
@@ -60,7 +65,7 @@
             "type": ["innate"]
         },
         "Bottle Break": {
-            "type": ["attack", "boost", "status"],
+            "type": ["attack", "boost", "status", "transform"],
             "damageType": "Fighting",
             "basePower": 1.2,
             "priority": 1
@@ -100,7 +105,10 @@
             "priority": 0
         },
         "From The Shadows": {
-            "type": ["status"]
+            "type": ["status", "switch-in"]
+        },
+        "Frozen World": {
+            "type": ["field effect"]
         },
         "Grit": {
             "type": ["attack"],
@@ -167,7 +175,10 @@
             "type": ["innate"]
         },
         "Mask": {
-            "type": ["status"]
+            "type": ["transform"]
+        },
+        "None": {
+            "type": ["none"]
         },
         "Obliterate": {
             "type": ["attack"],
@@ -179,6 +190,9 @@
         },
         "Provoke": {
             "type": ["status"]
+        },
+        "Reckless Abandon": {
+            "type": ["innate"]
         },
         "Scheming": {
             "type": ["attack"],
@@ -211,11 +225,17 @@
             "numTurns": 1,
             "stacks": false
         }, 
+        "Switch-in": {
+            "type": ["switch-in"]
+        },
         "Teamwork": {
             "type": ["innate"]
         },
         "The Perfect Existence": {
             "type": ["innate"]
+        },
+        "Thrill Of The Chase": {
+            "type": ["counter", "transform", "heal"]
         },
         "True": {
             "type": ["attack"],
@@ -234,7 +254,7 @@
             "stacks": false
         },
         "Unmask": {
-            "type": ["heal"]
+            "type": ["heal", "transform"]
         },
         "Zenith Pace": {
             "type": ["innate"]

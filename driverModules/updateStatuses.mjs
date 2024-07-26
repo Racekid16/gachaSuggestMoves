@@ -1,6 +1,6 @@
 // add or remove positive or negative statuses.
 
-export function addStatus(battleObj, battleKey, playerName, charName, status, turn, numTurns) {
+export function addStatus(battleObj, battleKey, playerName, charName, status, turn, numTurns, canBeNullified=true) {
     if  (typeof battleObj[battleKey].log !== 'undefind') {
         //battleObj[battleKey].log(`${status} added to ${playerName}'s ${charName} for ${numTurns} turns!`);
     }
@@ -12,7 +12,7 @@ export function addStatus(battleObj, battleKey, playerName, charName, status, tu
         case 'charged':
         case 'invulnerable':
         case 'resting':
-            addPositiveStatus(battleObj, battleKey, playerName, charName, status, turn, numTurns);
+            addPositiveStatus(battleObj, battleKey, playerName, charName, status, turn, numTurns, canBeNullified);
             break;
         
         case 'bleeding':
@@ -23,7 +23,7 @@ export function addStatus(battleObj, battleKey, playerName, charName, status, tu
         case 'taunted':
         case 'trapped':
         case 'wounded':
-            addNegativeStatus(battleObj, battleKey, playerName, charName, status, turn, numTurns);
+            addNegativeStatus(battleObj, battleKey, playerName, charName, status, turn, numTurns, canBeNullified);
             break;
 
         default:
@@ -78,15 +78,16 @@ export function applyStatuses(battleObj, battleKey, playerName) {
     }
 }
 
-function addPositiveStatus(battleObj, battleKey, playerName, charName, positiveStatus, turn, numTurns) {
+function addPositiveStatus(battleObj, battleKey, playerName, charName, positiveStatus, turn, numTurns, canBeNullified) {
     battleObj[battleKey][playerName].chars[charName].positiveStatuses.push({
         name: positiveStatus,
         startTurn: turn,
-        endTurn: turn + numTurns
-    }); 
+        endTurn: turn + numTurns, 
+        canBeNullified: canBeNullified
+    });
 }
 
-function addNegativeStatus(battleObj, battleKey, playerName, charName, negativeStatus, turn, numTurns) {
+function addNegativeStatus(battleObj, battleKey, playerName, charName, negativeStatus, turn, numTurns, canBeNullified) {
     if (battleObj[battleKey][playerName].chars[charName].moves.includes("Aspect Of Metal")) {
         if (typeof battleObj[battleKey].log !== 'undefined') {
             battleObj[battleKey].log(`${negativeStatus} negative status negated as ${charName} has Aspect Of Metal`);
@@ -96,7 +97,8 @@ function addNegativeStatus(battleObj, battleKey, playerName, charName, negativeS
     battleObj[battleKey][playerName].chars[charName].negativeStatuses.push({
         name: negativeStatus,
         startTurn: turn,
-        endTurn: turn + numTurns
+        endTurn: turn + numTurns, 
+        canBeNullified: canBeNullified
     }); 
 }
 
