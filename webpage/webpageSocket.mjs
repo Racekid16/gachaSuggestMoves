@@ -1,5 +1,5 @@
 //code for the webpage to handle receiving data on the webpage socket
-import { createPartyContainer, createSuggestionContainer, createMoveResolutionContainer } from './createElements.mjs'
+import { createPartyContainer, createFieldEffectsContainer, createSuggestionContainer, createMoveResolutionContainer } from './createElements.mjs'
 
 let webpageSocket = io(`http://127.0.0.1:2700`);
 let tabsToDelete = [];
@@ -203,7 +203,11 @@ function addSuggestedMoves(battleObj, webpageSocket, battleKey, turn, p1suggesti
     if (tabContent === null) {
         return;
     }
-
+    
+    if (battleObj[battleKey].fieldEffects.length > 0) {
+        const fieldEffectsContainer = createFieldEffectsContainer(battleObj, battleKey, turn);
+        tabContent.appendChild(fieldEffectsContainer);
+    }
     const p1suggestion = createSuggestionContainer(battleObj, webpageSocket, battleKey, turn, p1suggestionData);
     const p2suggestion = createSuggestionContainer(battleObj, webpageSocket, battleKey, turn, p2suggestionData);
 

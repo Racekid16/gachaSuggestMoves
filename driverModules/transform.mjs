@@ -13,16 +13,32 @@ export function applyTransformation(battleObj, battleKey, playerName, charName, 
             let previousCharName;
             switch (charNameNoAspect) {
 
+                case "Fearless Ryūen Kakeru":
+                    previousCharName = aspect + "Hunter Ryūen Kakeru";
+                    battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars[previousCharName]);
+                    battleObj[battleKey][playerName].baseCharStats[charName] = structuredClone(battleObj[battleKey][playerName].baseCharStats[previousCharName]);
+                    delete battleObj[battleKey][playerName].chars[previousCharName];
+                    delete battleObj[battleKey][playerName].baseCharStats[previousCharName];
+                    break;
+
                 case "Freed Horikita Suzune":
                     previousCharName = aspect + "Detained Horikita Suzune";
                     battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars[previousCharName]);
                     battleObj[battleKey][playerName].baseCharStats[charName] = structuredClone(battleObj[battleKey][playerName].baseCharStats[previousCharName]);
-                    let attackCharObj = battleObj[battleKey][playerName].chars[charName];
-                    let attackCharBaseObj = battleObj[battleKey][playerName].baseCharStats[charName];
-                    attackCharObj.moves[attackCharObj.moves.indexOf("Bottle Break")] = "Influence";
-                    attackCharBaseObj.moves[attackCharBaseObj.moves.indexOf("Bottle Break")] = "Influence";
-                    attackCharObj.personality = "Reserved";
-                    attackCharBaseObj.personality = "Reserved";
+                    battleObj[battleKey][playerName].chars[charName].moves[battleObj[battleKey][playerName].chars[charName].moves.indexOf("Bottle Break")] = "Influence";
+                    battleObj[battleKey][playerName].baseCharStats[charName].moves[battleObj[battleKey][playerName].baseCharStats[charName].moves.indexOf("Bottle Break")] = "Influence";
+                    battleObj[battleKey][playerName].chars[charName].personality = "Reserved";
+                    battleObj[battleKey][playerName].baseCharStats[charName].personality = "Reserved";
+                    delete battleObj[battleKey][playerName].chars[previousCharName];
+                    delete battleObj[battleKey][playerName].baseCharStats[previousCharName];
+                    break;
+
+                case "Hunter Ryūen Kakeru":
+                    previousCharName = aspect + "Fearless Ryūen Kakeru";
+                    battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars[previousCharName]);
+                    battleObj[battleKey][playerName].baseCharStats[charName] = structuredClone(battleObj[battleKey][playerName].baseCharStats[previousCharName]);
+                    battleObj[battleKey][playerName].chars[charName].moves.splice(battleObj[battleKey][playerName].chars[charName].moves.indexOf("Thrill Of The Chase"), 1);
+                    battleObj[battleKey][playerName].baseCharStats[charName].moves.splice(battleObj[battleKey][playerName].baseCharStats[charName].moves.indexOf("Thrill Of The Chase"), 1);
                     delete battleObj[battleKey][playerName].chars[previousCharName];
                     delete battleObj[battleKey][playerName].baseCharStats[previousCharName];
                     break;
@@ -31,12 +47,8 @@ export function applyTransformation(battleObj, battleKey, playerName, charName, 
                     previousCharName = aspect + "Perfect Kōenji Rokusuke";
                     battleObj[battleKey][playerName].chars[charName] = structuredClone(battleObj[battleKey][playerName].chars[previousCharName]);
                     battleObj[battleKey][playerName].baseCharStats[charName] = structuredClone(battleObj[battleKey][playerName].baseCharStats[previousCharName]);
-                    battleObj[battleKey][playerName].chars[charName].moves.splice(
-                        battleObj[battleKey][playerName].chars[charName].moves.indexOf("The Perfect Existence")
-                    , 1);
-                    battleObj[battleKey][playerName].baseCharStats[charName].moves.splice(
-                        battleObj[battleKey][playerName].baseCharStats[charName].moves.indexOf("The Perfect Existence")
-                    , 1);
+                    battleObj[battleKey][playerName].chars[charName].moves.splice(battleObj[battleKey][playerName].chars[charName].moves.indexOf("The Perfect Existence"), 1);
+                    battleObj[battleKey][playerName].baseCharStats[charName].moves.splice(battleObj[battleKey][playerName].baseCharStats[charName].moves.indexOf("The Perfect Existence"), 1);
                     delete battleObj[battleKey][playerName].chars[previousCharName];
                     delete battleObj[battleKey][playerName].baseCharStats[previousCharName];
                     addBoost(battleObj, battleKey, playerName, charName, "The Perfect Existence", turn);

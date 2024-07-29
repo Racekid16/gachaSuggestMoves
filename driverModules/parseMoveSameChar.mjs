@@ -28,7 +28,7 @@ export async function parseMoveSameChar(battleObj, programSocket, p1name, p2name
         }
     }
 
-    for (let move of ['Introversion', 'Kabedon']) {
+    for (let move of ['Introversion', 'Kabedon', 'Thrill Of the Chase']) {
         if (count(turnResults, `**${charName}** is preparing **${move}**...`) == 1) {
             await emulateMoveAndOther(battleObj, programSocket, p1name, p2name, charName, move, battleEmbed, turn, p1resolves, p2resolves, p1taggedIn, p2taggedIn);
             return;

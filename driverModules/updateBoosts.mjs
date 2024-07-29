@@ -66,13 +66,8 @@ export function removeExpiredBoosts(battleObj, battleKey, playerName, turn) {
 }
 
 export function hasBoost(battleObj, battleKey, playerName, charName, boost) {
-    let hasBuff = battleObj[battleKey][playerName].chars[charName].buffs.reduce((accumulator, currentBuff) => {
-        return accumulator || currentBuff.name == boost;
-    }, false);
-
-    let hasDebuff = battleObj[battleKey][playerName].chars[charName].debuffs.reduce((accumulator, currentDebuff) => {
-        return accumulator || currentDebuff.name == boost;
-    }, false);
+    let hasBuff = battleObj[battleKey][playerName].chars[charName].buffs.some(buff => buff.name == boost);
+    let hasDebuff = battleObj[battleKey][playerName].chars[charName].debuffs.some(debuff => debuff.name == boost);
 
     return hasBuff || hasDebuff;
 }

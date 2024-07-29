@@ -2,6 +2,7 @@
 import { round } from './round.mjs';
 import { calculateMoveDamage } from './calculateMoveDamage.mjs';
 import { getMovesCharCanMake } from './findMoveSequence.mjs';
+import { hasFieldEffect } from './updateFieldEffects.mjs';
 
 // print the stats of a party at the beginning of a battle
 export function printParty(battleObj, battleKey, playerName, partyArray, hasStrength) {
@@ -186,15 +187,17 @@ export function printSuggestedMoves(battleObj, programSocket, p1name, p2name, p1
     else if (p2priority > p1priority) {
         playerNumberToPrintFirst = 2;
     }
-    else if (p1initiative >= p2initiative) {
+    else {
+        if (p1initiative >= p2initiative) {
         playerNumberToPrintFirst = 1;
-    } 
-    else {    //p1initiative < p2initiative
-        playerNumberToPrintFirst = 2;
-    }
+        } 
+        else {    //p1initiative < p2initiative
+            playerNumberToPrintFirst = 2;
+        }
 
-    if (battleObj[battleKey].fieldEffects.includes("Frozen World")) {
-        playerNumberToPrintFirst = playerNumberToPrintFirst == 1 ? 2 : 1;
+        if (hasFieldEffect(battleObj, battleKey, "Frozen World")) {
+            playerNumberToPrintFirst = playerNumberToPrintFirst == 1 ? 2 : 1;
+        }
     }
 
     if (playerNumberToPrintFirst == 1) {

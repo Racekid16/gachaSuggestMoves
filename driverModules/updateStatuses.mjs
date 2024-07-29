@@ -10,6 +10,7 @@ export function addStatus(battleObj, battleKey, playerName, charName, status, tu
 
         case 'apathetic':
         case 'charged':
+        case 'hunter':
         case 'invulnerable':
         case 'resting':
             addPositiveStatus(battleObj, battleKey, playerName, charName, status, turn, numTurns, canBeNullified);
@@ -40,13 +41,8 @@ export function removeExpiredStatuses(battleObj, battleKey, playerName, turn) {
 }
 
 export function hasStatus(battleObj, battleKey, playerName, charName, status) {
-    let hasPositiveStatus = battleObj[battleKey][playerName].chars[charName].positiveStatuses.reduce((accumulator, currentPositiveStatus) => {
-        return accumulator || currentPositiveStatus.name == status;
-    }, false);
-
-    let hasNegativeStatus = battleObj[battleKey][playerName].chars[charName].negativeStatuses.reduce((accumulator, currentNegativeStatus) => {
-        return accumulator || currentNegativeStatus.name == status;
-    }, false);
+    let hasPositiveStatus = battleObj[battleKey][playerName].chars[charName].positiveStatuses.some(positiveStatus => positiveStatus.name == status);
+    let hasNegativeStatus = battleObj[battleKey][playerName].chars[charName].negativeStatuses.some(negativeStatus => negativeStatus.name == status);
 
     return hasPositiveStatus || hasNegativeStatus;
 }

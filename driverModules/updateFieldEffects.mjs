@@ -22,3 +22,7 @@ export function removeExpiredFieldEffects(battleObj, battleKey, turn) {
         }
     }
 }
+
+export function hasFieldEffect(battleObj, battleKey, fieldEffect) {
+    return battleObj[battleKey].fieldEffects.some(el => el.name == fieldEffect);
+}

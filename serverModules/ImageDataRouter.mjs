@@ -28,7 +28,7 @@ const ImageDataRouter = (sharedData) => {
             });
             return;
         }
-        if (!/https:\/\/media\.discordrouter\.net.+party\.jpeg.+format=png\&width=328\&height=254/.test(req.body.imageURL)) {
+        if (!/https:\/\/media\.discordapp\.net.+party\.jpeg.+format=png\&width=328\&height=254/.test(req.body.imageURL)) {
             res.status(400).send({
                 message: "imageURL form is incorrect"
             });

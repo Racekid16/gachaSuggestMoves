@@ -1,6 +1,6 @@
 //apply the effects of moves that impact boosts or statuses (except resolve)
 import { addBoost, addBoostToAliveTeammates } from "./updateBoosts.mjs";
-import { addStatus } from "./updateStatuses.mjs";
+import { addStatus, hasStatus } from "./updateStatuses.mjs";
 import { addInflictModifier, addReceiveModifier } from "./updateDamageModifiers.mjs";
 import { addFieldEffect } from "./updateFieldEffects.mjs";
 import { round } from "./round.mjs";
@@ -24,10 +24,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
         let lockRegex = /\*\*(.+)\*\* had their \*\*(.+)\*\* locked!/;
         let lockMatch = lockRegex.exec(turnResults);
         if (lockMatch !== null && lockMatch[1] != attackChar) {
-            battleObj[battleKey][defender].chars[defenseChar].lockedMoves.push({
-                name: lockMatch[2],
-                type: "currentSwitchIn"
-            });
+            battleObj[battleKey][defender].chars[defenseChar].lockedMoves.push(lockMatch[2]);
         }
     }
 
@@ -35,11 +32,8 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
     if (attackCharRune == "Focus" || attackCharRune == "Instinct") {
         for (let otherMove of battleObj[battleKey][attacker].chars[attackChar].moves) {
             if (otherMove != move && !consts.moveInfo[otherMove].type.includes("innate")
-             && !battleObj[battleKey][attacker].chars[attackChar].lockedMoves.some(obj => obj.name == move)) {
-                battleObj[battleKey][attacker].chars[attackChar].lockedMoves.push({
-                    name: move,
-                    type: "currentSwitchIn"
-                });
+             && !battleObj[battleKey][attacker].chars[attackChar].lockedMoves.includes(move)) {
+                battleObj[battleKey][attacker].chars[attackChar].lockedMoves.push(move);
             }
         }
     }
@@ -95,7 +89,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             break;
         
         case 'Frozen World':
-            addFieldEffect(battlObj, battleKey, "Frozen World", turn, 5);
+            addFieldEffect(battleObj, battleKey, "Frozen World", turn, 5);
             break;
         
         case 'Group Efforts':
@@ -170,7 +164,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             //note that you can only get the mental buff if you sacrifice a character
             //this works even if both players use the same character and both use Introversion,
             //because their counters are guaranteed to fail in that case
-            if (turnResults.includes(`**${attackChar}** countered with **Introversion**!`)) {
+            if (turnResults.includes(`**${attackChar}** countered with **${move}**!`)) {
                 addBoost(battleObj, battleKey, attacker, attackChar, "Introversion", turn);
             }
 
@@ -179,11 +173,8 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
         case 'Kabedon':
             //this works even if both players use the same character and both use Kabedon,
             //because their counters are guaranteed to fail in that case
-            battleObj[battleKey][attacker].chars[attackChar].lockedMoves.push({
-                name: move,
-                type: "currentSwitchIn"
-            });
-            if (turnResults.includes(`**${attackChar}** countered with **Kabedon**!`)) {
+            battleObj[battleKey][attacker].chars[attackChar].lockedMoves.push(move);
+            if (turnResults.includes(`**${attackChar}** countered with **${move}**!`)) {
                 addStatus(battleObj, battleKey, defender, defenseChar, "stunned", turn, 1);
             } else if (turnResults.includes(`**${attackChar}'s** counter failed!`)) {
                 addStatus(battleObj, battleKey, attacker, attackChar, "stunned", turn, 1);
@@ -242,6 +233,10 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
         case 'Provoke':
             addStatus(battleObj, battleKey, defender, defenseChar, "taunted", turn, 3);
             break;
+
+        case 'Reckless Abandon':
+            addInflictModifier(battleObj, battleKey, attacker, attackChar, 0.33, 1, Infinity, false);
+            break;
         
         case 'Slap':
             addStatus(battleObj, battleKey, defender, defenseChar, "wounded", turn, 3);
@@ -282,6 +277,15 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             }
             break;
 
+        case 'Thrill Of The Chase':
+            nullifyDebuffs(battleObj, battleKey, attacker, attackChar);
+            if (turnResults.includes(`**${attackChar}** countered with **${move}**!`)) {
+                addStatus(battleObj, battleKey, attacker, attackChar, "hunter", turn, 3, false);
+            } else {
+                addStatus(battleObj, battleKey, attacker, attackChar, "hunter", turn, 1, false);
+            }
+            break;
+
         case 'Unity':
             addBoost(battleObj, battleKey, attacker, attackChar, "Unity", turn);
             addBoostToAliveTeammates(battleObj, battleKey, attacker, attackChar, "Unity", turn);
@@ -310,11 +314,18 @@ export function emulateAction(battleObj, battleKey, attacker, defender, attackCh
             if (battleObj[battleKey][defender].chars[defenseChar].rune == "Glory") {
                 addBoost(battleObj, battleKey, defender, defenseChar, "Glory Defeat", turn, false);
             }
+            if (hasStatus(battleObj, battleKey, defender, defenseChar, "hunter")) {
+                let hunterStatusIndex = battleObj[battleKey][defender].chars[defenseChar].positiveStatuses.findIndex(obj => obj.name == "hunter");
+                battleObj[battleKey][defender].chars[defenseChar].positiveStatuses[hunterStatusIndex].endTurn += 2;
+            }
             break;
 
         case 'Game Start':
             if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Group Efforts")) {
                 emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Group Efforts", turnResults, turn, attackerResolves);
+            }
+            if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Reckless Abandon")) {
+                emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Reckless Abandon", turnResults, turn, attackerResolves);
             }
             break;
         
@@ -325,7 +336,7 @@ export function emulateAction(battleObj, battleKey, attacker, defender, attackCh
                 attackerPreviousTaggedInCharObj = battleObj[battleKey][attacker].chars[attackerPreviousTaggedInChar];
             }
 
-            battleObj[battleKey][attacker].chars[attackChar].lockedMoves = battleObj[battleKey][attacker].chars[attackChar].lockedMoves.filter(obj => obj.type != "currentSwitchIn");
+            battleObj[battleKey][attacker].chars[attackChar].lockedMoves = [];
             
             if (attackerPreviousTaggedInChar !== null && attackerPreviousTaggedInCharObj.moves.includes("Lead By Example")) {
                 emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Lead By Example", turnResults, turn, attackerResolves);

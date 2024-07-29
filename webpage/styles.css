@@ -268,6 +268,10 @@ body {
 .list-cell {
     padding: 5px;
 }
+.field-effects-container {
+    border: 2px solid oklab(0.963963 -0.000228554 -0.00283051);
+    max-width: max-content;
+}
 .moves-list-content {
     grid-template-columns: auto auto auto auto auto 1fr;
 }

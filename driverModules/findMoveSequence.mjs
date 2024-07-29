@@ -37,7 +37,7 @@ export function getMovesCharCanMake(battleObj, battleKey, playerName, charName) 
         if (moveObj.type.includes("switch-in") && (hasStatus(battleObj, battleKey, playerName, charName, "trapped")  || hasStatus(battleObj, battleKey, playerName, charName, "taunted"))) {
             continue;
         }
-        if (battleObj[battleKey][playerName].chars[charName].lockedMoves.some(obj => obj.name == move)) {
+        if (battleObj[battleKey][playerName].chars[charName].lockedMoves.includes(move)) {
             continue;
         }
         returnArr.push(move);
@@ -48,21 +48,27 @@ export function getMovesCharCanMake(battleObj, battleKey, playerName, charName) 
 function findOptimalSequenceNoDefender(battleObj, battleKey, attacker, defender, attackChar, defenseChar, turn) {
     let validMoves = getMovesCharCanMake(battleObj, battleKey, attacker, attackChar)
         .filter(move => consts.moveInfo[move].type[0] == "attack" || consts.moveInfo[move].type[0] == "boost")
-    let validMovesObjs = validMoves.map(move => {
+    let initialValidMovesObjs = validMoves.map(move => {
         let moveObj = getCompleteMoveObj(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move);
         return { ...moveObj, name: move };
     });
     let attackMoves = validMoves.filter(move => consts.moveInfo[move].type.includes("attack"));
     let damagingMoves = validMoves.map(move => calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move)[1]).filter(damage => damage != 0);
     if (damagingMoves.length == 0) {
-        return validMoves;
+        return []; 
     } 
 
-    let boostMovesObjs = validMovesObjs.filter(moveObj => moveObj.type.includes("boost") && !moveObj.type.includes("attack"));
+    let boostMovesObjs = initialValidMovesObjs.filter(moveObj => moveObj.type.includes("boost") && !moveObj.type.includes("attack"));
     let maxBoostTurns = boostMovesObjs.reduce((maxObj, currentObj) => currentObj.numTurns != Infinity && currentObj.numTurns >= maxObj.numTurns ? currentObj : maxObj, { numTurns: 1}).numTurns;
     let results = [];
 
-    function makeSequencesNoDefender(battleObj, battleKey, attacker, defender, attackChar, defenseChar, validMovesObjs, sequence, turn, boostTurns, maxBoostTurns) {
+    function makeSequencesNoDefender(battleObj, battleKey, attacker, defender, attackChar, defenseChar, sequence, turn, boostTurns, maxBoostTurns) {
+        let validMovesObjs = getMovesCharCanMake(battleObj, battleKey, attacker, attackChar)
+                                .filter(move => consts.moveInfo[move].type[0] == "attack" || consts.moveInfo[move].type[0] == "boost")
+                                .map(move => {
+                                    let moveObj = getCompleteMoveObj(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move);
+                                    return { ...moveObj, name: move };
+                                });
         for (let moveObj of validMovesObjs) {
             let tempbattleObj = structuredClone(battleObj);
             if (tempbattleObj[battleKey][defender].chars[defenseChar].resolve <= 0) {
@@ -84,7 +90,7 @@ function findOptimalSequenceNoDefender(battleObj, battleKey, attacker, defender,
                 sequence.push(moveObj.name);
                 emulateTurnAction(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, turn, moveObj.name);
                 emulateTurnEnd(tempbattleObj, battleKey, attacker, defender, turn);
-                makeSequencesNoDefender(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, validMovesObjs, sequence, turn + 1, 0, maxBoostTurns);
+                makeSequencesNoDefender(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, sequence, turn + 1, 0, maxBoostTurns);
                 sequence.pop();
             } 
             else if (moveObj.type.includes("boost")) {
@@ -99,7 +105,7 @@ function findOptimalSequenceNoDefender(battleObj, battleKey, attacker, defender,
                 sequence.push(moveObj.name);
                 emulateTurnAction(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, turn, moveObj.name);
                 emulateTurnEnd(tempbattleObj, battleKey, attacker, defender, turn);
-                makeSequencesNoDefender(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, validMovesObjs, sequence, turn + 1, boostTurns + 1, maxBoostTurns);
+                makeSequencesNoDefender(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, sequence, turn + 1, boostTurns + 1, maxBoostTurns);
                 sequence.pop();
             }
         }
@@ -111,7 +117,7 @@ function findOptimalSequenceNoDefender(battleObj, battleKey, attacker, defender,
     let battleClone = structuredClone(battleObj[battleKey]);
     tempbattleObj[battleKey] = battleClone;
     battleObj[battleKey].log = loggingFunc;
-    makeSequencesNoDefender(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, validMovesObjs, [], turn, 0, maxBoostTurns);
+    makeSequencesNoDefender(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, [], turn, 0, maxBoostTurns);
     //only allow shortest sequences
     let shortestResultLength = results.reduce((shortest, current) => current.length < shortest.length ? current : shortest).length;
     let bestSequences = results.filter((sequence) => sequence.length == shortestResultLength);

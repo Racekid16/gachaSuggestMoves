@@ -12,6 +12,19 @@ export function createPartyContainer(battleObj, battleKey, playerName, hasStreng
     return partyContainer;
 }
 
+export function createFieldEffectsContainer(battleObj, battleKey, turn) {
+    let fieldEffectsList = [];
+    for (let fieldEffect of battleObj[battleKey].fieldEffects) {
+        fieldEffectsList.push({
+            name: fieldEffect.name,
+            turnsRemaining: fieldEffect.endTurn - turn
+        });
+    }
+    const fieldEffectsContainer = createListContainer("fieldEffects", fieldEffectsList);
+    fieldEffectsContainer.classList.add('field-effects-container');
+    return fieldEffectsContainer;
+}
+
 export function createSuggestionContainer(battleObj, webpageSocket, battleKey, turn, playerSuggestionData) {
     const playerName = playerSuggestionData.playerName;
     const charName = playerSuggestionData.charName;
@@ -573,9 +586,10 @@ function createCharOtherInformation(playerSuggestionData) {
     }
 
     const movesList = playerSuggestionData.moves;
-    const movesListContainer = createMovesListContainer(movesList);
-
-    charOtherInformation.appendChild(movesListContainer);
+    if (movesList.length > 0) {
+        const movesListContainer = createMovesListContainer(movesList);
+        charOtherInformation.appendChild(movesListContainer);
+    }
     return charOtherInformation;
 }
 
@@ -586,17 +600,21 @@ function createListContainer(listName, list) {
             listName = "Buffs";
             labelColor = 'lightgreen';
             break;
-        case 'positiveStatuses':
-            listName = 'Positive Statuses';
-            labelColor = 'lightgreen';
-            break;
         case 'debuffs':
             listName = 'Debuffs';
             labelColor = 'lightcoral';
             break;
+        case 'fieldEffects':
+            listName = 'Field Effects';
+            labelColor = 'thistle';
+            break;
         case 'negativeStatuses':
             listName = "Negative Statuses";
             labelColor = 'lightcoral';
+            break;
+        case 'positiveStatuses':
+            listName = 'Positive Statuses';
+            labelColor = 'lightgreen';
             break;
     }
 

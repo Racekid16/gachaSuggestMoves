@@ -51,7 +51,7 @@
         "Blackmail": {
             "type": ["attack"],
             "damageType": "Empathy",
-            "attackStat": "Mental"
+            "attackStat": "mental"
         },
         "Blazing Form": {
             "type": ["attack", "boost"],

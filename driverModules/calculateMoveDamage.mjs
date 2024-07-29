@@ -34,7 +34,7 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
     }
     let attackerInflictMultiplier = battleObj[battleKey][attacker].chars[attackChar].inflictMultiplier;
     if (consts.personalityWeaknesses[defenderPersonality].includes(completeMoveObj.damageType)) {
-        attackerInflictMultiplier += 0.4;
+        attackerInflictMultiplier += 0.5;
         if (battleObj[battleKey][attacker].chars[attackChar].rune == "Glass") {
             attackerInflictMultiplier += 0.75;
         }
@@ -53,7 +53,7 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
     }
     let defenderReceiveMultiplier = battleObj[battleKey][defender].chars[defenseChar].receiveMultiplier;
     if (consts.personalityResistances[defenderPersonality].includes(completeMoveObj.damageType)) {
-        defenderReceiveMultiplier += 0.4;
+        defenderReceiveMultiplier += 0.5;
         hitType = 'RESISTED';
     }
     let defensePower = defenderDefenseStat * defenderReceiveMultiplier;
