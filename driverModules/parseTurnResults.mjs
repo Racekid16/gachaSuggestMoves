@@ -35,8 +35,8 @@ export async function parseTurnResults(battleObj, programSocket, p1name, p2name,
         detectRune(battleObj, battleKey, p1name, p1char, turnResults);
         detectRune(battleObj, battleKey, p2name, p2char, turnResults);
     }
-    applyInnateAbilities(battleObj, battleKey, p1name, p2name, p1char, p2char, turnResults, turn, p1resolvesAfterTurn);
-    applyInnateAbilities(battleObj, battleKey, p2name, p1name, p2char, p1char, turnResults, turn, p2resolvesAfterTurn);
+    detectAction(battleObj, battleKey, p1name, p2name, p1char, p2char, turnResults, turn, p1resolvesAfterTurn);
+    detectAction(battleObj, battleKey, p2name, p1name, p2char, p1char, turnResults, turn, p2resolvesAfterTurn);
     if (p1char == p2char) {
         await parseMoveSameChar(battleObj, programSocket, p1name, p2name, p1char, battleEmbed, turn, p1resolvesAfterTurn, p2resolvesAfterTurn, p1taggedIn, p2taggedIn);      
     } else {
@@ -128,7 +128,7 @@ function getPreviousTurnChar(battleObj, battleKey, playerName, turnResults) {
 }
 
 // emulate the effects of innate abilities
-function applyInnateAbilities(battleObj, battleKey, attacker, defender, attackChar, 
+function detectAction(battleObj, battleKey, attacker, defender, attackChar, 
                               defenseChar, turnResults, turn, attackerResolves) {
     let attackerPreviousTaggedInChar = battleObj[battleKey][attacker].previousTaggedInChar;
     let attackerID = battleObj[battleKey][attacker].id;

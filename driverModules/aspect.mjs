@@ -38,8 +38,7 @@ export function addAspectBoost(charObj) {
         initiative: 0,
         mental: 0,
         physical: 0,
-        social: 0,
-        resolve: 0
+        social: 0
     };
     if (charObj.moves.includes("Aspect Of Earth")) {
         charObj.resolve = round(charObj.resolve * 1.75);
@@ -73,9 +72,10 @@ export function addAspectBoost(charObj) {
     }
     if (charObj.moves.includes("Aspect Of Wind")) {
         charObj.resolve = round(charObj.resolve * 1.25);
+        charObj.aspectBoost.initiative = 0.75;
         charObj.aspectBoost.mental = 0.3;
         charObj.aspectBoost.physical = 0.3;
-        charObj.aspectBoost.social = 0.3    ;
+        charObj.aspectBoost.social = 0.3;
     }
 }
 

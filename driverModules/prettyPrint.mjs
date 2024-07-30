@@ -1,6 +1,6 @@
 // pretty-print people's parties and suggested moves.
 import { round } from './round.mjs';
-import { calculateMoveDamage } from './calculateMoveDamage.mjs';
+import { calculateMoveDamage, calculateMoveHealing, calculateMoveRecoil } from './calculateMoveDamage.mjs';
 import { getMovesCharCanMake } from './findMoveSequence.mjs';
 import { hasFieldEffect } from './updateFieldEffects.mjs';
 
@@ -87,7 +87,7 @@ export function printParty(battleObj, battleKey, playerName, partyArray, hasStre
 
 // print the move that the program determines is good to play
 export function printSuggestedMoves(battleObj, programSocket, p1name, p2name, p1char, p2char, p1moveSequence, p2moveSequence,
-                                    p1move, p2move, p1moveObj, p2moveObj, p1damage, p2damage, p1hitType, p2hitType, turn) {
+                                    p1move, p2move, p1moveObj, p2moveObj, p1damageAmounts, p2damageAmounts, p1hitType, p2hitType, turn) {
     let battleKey = p1name + " vs. " + p2name;
     
     let p1inflictMultiplier = battleObj[battleKey][p1name].chars[p1char].inflictMultiplier - 1;
@@ -126,10 +126,10 @@ export function printSuggestedMoves(battleObj, programSocket, p1name, p2name, p1
                         p1resolve.toString().length : p2resolve.toString().length;
     let moveNameLength = p1move.length > p2move.length ? p1move.length: p2move.length;
     let maxVariance = 0.2;
-    let p1lowerBound = Math.max(round(p1damage * (1 - maxVariance)), 0).toString();
-    let p1upperBound = round(p1damage * (1 + maxVariance)).toString();
-    let p2lowerBound = Math.max(round(p2damage * (1 - maxVariance)), 0).toString();
-    let p2upperBound = round(p2damage * (1 + maxVariance)).toString();
+    let p1lowerBound = Math.max(round(p1damageAmounts[p2char] * (1 - maxVariance)), 0).toString();
+    let p1upperBound = round(p1damageAmounts[p2char] * (1 + maxVariance)).toString();
+    let p2lowerBound = Math.max(round(p2damageAmounts[p1char] * (1 - maxVariance)), 0).toString();
+    let p2upperBound = round(p2damageAmounts[p1char] * (1 + maxVariance)).toString();
     let lowerBoundLength = p1lowerBound.length > p2lowerBound.length ? p1lowerBound.length : p2lowerBound.length;
     let upperBoundLength = p1upperBound.length > p2upperBound.length ? p1upperBound.length : p2upperBound.length;
     let hitTypeLength = p1hitType.length > p2hitType.length ? p1hitType.length : p2hitType.length;
@@ -147,7 +147,7 @@ export function printSuggestedMoves(battleObj, programSocket, p1name, p2name, p1
                   + `🗣️${p1social}${" ".repeat(socialLength - p1social.toString().length)} `
                   + `❤️${p1resolve}${" ".repeat(resolveLength - p1resolve.toString().length)}]: `
                   + `${p1move} ${" ".repeat(moveNameLength - p1move.length)}`;
-    if (p1damage != 0) {
+    if (p1damageAmounts[p2char] != 0) {
         p1output += `(${p1lowerBound} ${" ".repeat(lowerBoundLength - p1lowerBound.toString().length)}- `
                   + `${p1upperBound}${" ".repeat(upperBoundLength - p1upperBound.toString().length)}) `
                   + `${p1hitType}${" ".repeat(hitTypeLength - p1hitType.length)} `
@@ -166,7 +166,7 @@ export function printSuggestedMoves(battleObj, programSocket, p1name, p2name, p1
                   + `🗣️${p2social}${" ".repeat(socialLength - p2social.toString().length)} `
                   + `❤️${p2resolve}${" ".repeat(resolveLength - p2resolve.toString().length)}]: `
                   + `${p2move} ${" ".repeat(moveNameLength - p2move.length)}`
-    if (p2damage != 0) {
+    if (p2damageAmounts[p1char] != 0) {
         p2output += `(${p2lowerBound} ${" ".repeat(lowerBoundLength - p2lowerBound.toString().length)}- `
                   + `${p2upperBound}${" ".repeat(upperBoundLength - p2upperBound.toString().length)}) `
                   + `${p2hitType}${" ".repeat(hitTypeLength - p2hitType.length)} `
@@ -366,12 +366,12 @@ function printMoves(battleObj, battleKey, attacker, defender, attackChar, defens
     let validMoves = getMovesCharCanMake(battleObj, battleKey, attacker, attackChar);
     let moveDamageObjs = validMoves
                         .map(move => [move, ...calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move)])
-                        .sort((a, b) => b[2] - a[2]);
-    //moveDamageObj is formatted as [moveName, moveObj, moveDamage, hitType]
+                        .sort((a, b) => b[2][defenseChar] - a[2][defenseChar]);
+    //moveDamageObj is formatted as [moveName, moveObj, damageAmounts, hitType]
     let movesArr = [];
     for (let moveDamageObj of moveDamageObjs) {
         let moveName = moveDamageObj[0];
-        let moveDamage = moveDamageObj[2];
+        let moveDamage = moveDamageObj[2][defenseChar];
         let hitType = moveDamageObj[3];
         let maxVariance = 0.2;
         let lowerBound = Math.max(round(moveDamage * (1 - maxVariance)), 0);
@@ -380,12 +380,16 @@ function printMoves(battleObj, battleKey, attacker, defender, attackChar, defens
         if (lowerBound >= battleObj[battleKey][defender].chars[defenseChar].resolve) {
             isFatal = true;
         }
+        let moveHealing = calculateMoveHealing(battleObj, battleKey, attacker, defender, attackChar, defenseChar, moveName)[attackChar];
+        let moveRecoil = calculateMoveRecoil(battleObj, battleKey, attacker, defender, attackChar, defenseChar, moveName);
         movesArr.push({
             name: moveName, 
             lowerBound: lowerBound,
             upperBound: upperBound,
             hitType: hitType, 
-            isFatal: isFatal
+            isFatal: isFatal,
+            healing: moveHealing,
+            recoil: moveRecoil
         });
     }
     

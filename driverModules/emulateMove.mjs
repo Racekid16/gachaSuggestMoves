@@ -28,6 +28,10 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
         }
     }
 
+    if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Aspect Of Wind")) {
+        addStatus(battleObj, battleKey, defender, defenseChar, "wounded", turn, 1);
+    }
+
     let attackCharRune = battleObj[battleKey][attacker].chars[attackChar].rune;
     if (attackCharRune == "Focus" || attackCharRune == "Instinct") {
         for (let otherMove of battleObj[battleKey][attacker].chars[attackChar].moves) {
@@ -311,6 +315,13 @@ export function emulateAction(battleObj, battleKey, attacker, defender, attackCh
             if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Group Ties")) {
                 emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Group Ties", turnResults, turn, attackerResolves);
             }
+            if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Aspect Of Ice")) {
+                for (let charKey in battleObj[battleKey][defender].chars) {
+                    if (battleObj[battleKey][defender].chars[charKey].resovle > 0) {
+                        addStatus(battleObj, battleKey, defender, charKey, "stunned", turn, 1);
+                    }
+                }
+            }
             if (battleObj[battleKey][defender].chars[defenseChar].rune == "Glory") {
                 addBoost(battleObj, battleKey, defender, defenseChar, "Glory Defeat", turn, false);
             }
@@ -318,6 +329,7 @@ export function emulateAction(battleObj, battleKey, attacker, defender, attackCh
                 let hunterStatusIndex = battleObj[battleKey][defender].chars[defenseChar].positiveStatuses.findIndex(obj => obj.name == "hunter");
                 battleObj[battleKey][defender].chars[defenseChar].positiveStatuses[hunterStatusIndex].endTurn += 2;
             }
+
             break;
 
         case 'Game Start':

@@ -664,6 +664,8 @@ function createMovesListContainer(moves) {
         const upperBound = moveObj.upperBound;
         const hitType = moveObj.hitType;
         const isFatal = moveObj.isFatal;
+        const moveHealing = moveObj.healing;
+        const moveRecoil = moveObj.recoil;
 
         const nameCell = document.createElement('div');
         nameCell.classList.add('list-cell');
@@ -705,6 +707,27 @@ function createMovesListContainer(moves) {
                 movesListContent.appendChild(emptyCell);
             }
         }
+        if (moveHealing > 0) {
+            const healingCell = document.createElement('div');
+            healingCell.classList.add('list-cell');
+            healingCell.style.color = "green";
+            healingCell.innerHTML = moveHealing;
+            movesListContent.appendChild(healingCell);
+        } else {
+            const emptyCell = document.createElement('div');
+            movesListContent.appendChild(emptyCell);
+        }
+        if (moveRecoil > 0) {
+            const recoilCell = document.createElement('div');
+            recoilCell.classList.add('list-cell');
+            recoilCell.style.color = "red";
+            recoilCell.innerHTML = moveRecoil;
+            movesListContent.appendChild(recoilCell);
+        } else {
+            const emptyCell = document.createElement('div');
+            movesListContent.appendChild(emptyCell);
+        }
+
     }
 
     movesListContainer.appendChild(movesListLabel);

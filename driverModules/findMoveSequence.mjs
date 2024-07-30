@@ -1,4 +1,4 @@
-import { calculateMoveDamage, calculateMoveHealing, getCompleteMoveObj } from './calculateMoveDamage.mjs';
+import { calculateMoveDamage, calculateMoveHealing, calculateMoveRecoil, getCompleteMoveObj } from './calculateMoveDamage.mjs';
 import { emulateMove } from './emulateMove.mjs';
 import { hasBoost, removeExpiredBoosts, applyBoosts} from './updateBoosts.mjs';
 import { removeExpiredStatuses, applyStatuses, hasStatus } from './updateStatuses.mjs';
@@ -31,7 +31,7 @@ export function getMovesCharCanMake(battleObj, battleKey, playerName, charName) 
         if (moveObj.type.includes("attack") && hasStatus(battleObj, battleKey, playerName, charName, "pacified")) {
             continue;   
         }
-        if (moveObj.type.includes("attack") && hasStatus(battleObj, battleKey, playerName, charName, "taunted")) {
+        if (!moveObj.type.includes("attack") && hasStatus(battleObj, battleKey, playerName, charName, "taunted")) {
             continue;
         }
         if (moveObj.type.includes("switch-in") && (hasStatus(battleObj, battleKey, playerName, charName, "trapped")  || hasStatus(battleObj, battleKey, playerName, charName, "taunted"))) {
@@ -46,15 +46,14 @@ export function getMovesCharCanMake(battleObj, battleKey, playerName, charName) 
 }
 
 function findOptimalSequenceNoDefender(battleObj, battleKey, attacker, defender, attackChar, defenseChar, turn) {
-    let validMoves = getMovesCharCanMake(battleObj, battleKey, attacker, attackChar)
+    let initialValidMoves = getMovesCharCanMake(battleObj, battleKey, attacker, attackChar)
         .filter(move => consts.moveInfo[move].type[0] == "attack" || consts.moveInfo[move].type[0] == "boost")
-    let initialValidMovesObjs = validMoves.map(move => {
+    let initialValidMovesObjs = initialValidMoves.map(move => {
         let moveObj = getCompleteMoveObj(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move);
         return { ...moveObj, name: move };
     });
-    let attackMoves = validMoves.filter(move => consts.moveInfo[move].type.includes("attack"));
-    let damagingMoves = validMoves.map(move => calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move)[1]).filter(damage => damage != 0);
-    if (damagingMoves.length == 0) {
+    let initialDamagingMoves = initialValidMoves.map(move => calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move)[1][defenseChar]).filter(damage => damage != 0);
+    if (initialDamagingMoves.length == 0) {
         return []; 
     } 
 
@@ -63,26 +62,26 @@ function findOptimalSequenceNoDefender(battleObj, battleKey, attacker, defender,
     let results = [];
 
     function makeSequencesNoDefender(battleObj, battleKey, attacker, defender, attackChar, defenseChar, sequence, turn, boostTurns, maxBoostTurns) {
-        let validMovesObjs = getMovesCharCanMake(battleObj, battleKey, attacker, attackChar)
-                                .filter(move => consts.moveInfo[move].type[0] == "attack" || consts.moveInfo[move].type[0] == "boost")
-                                .map(move => {
+        let validMoves = getMovesCharCanMake(battleObj, battleKey, attacker, attackChar)
+                        .filter(move => consts.moveInfo[move].type[0] == "attack" || consts.moveInfo[move].type[0] == "boost");
+        let validMovesObjs = validMoves.map(move => {
                                     let moveObj = getCompleteMoveObj(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move);
                                     return { ...moveObj, name: move };
                                 });
         for (let moveObj of validMovesObjs) {
             let tempbattleObj = structuredClone(battleObj);
-            if (tempbattleObj[battleKey][defender].chars[defenseChar].resolve <= 0) {
+            if (validMovesObjs.length == 0 || tempbattleObj[battleKey][defender].chars[defenseChar].resolve <= 0) {
                 results.push([...sequence, battleObj[battleKey][defender].chars[defenseChar].resolve]);
                 return;
             }
             if (moveObj.type.includes("attack")) {
-                let highestDamageMove = attackMoves.reduce((maxMove, currentMove) => {
-                    let maxMoveDamage = calculateMoveDamage(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, maxMove)[1];
-                    let currentMoveDamage = calculateMoveDamage(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, currentMove)[1];
+                let highestDamageMove = validMoves.reduce((maxMove, currentMove) => {
+                    let maxMoveDamage = calculateMoveDamage(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, maxMove)[1][defenseChar];
+                    let currentMoveDamage = calculateMoveDamage(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, currentMove)[1][defenseChar];
                     return currentMoveDamage > maxMoveDamage && !consts.moveInfo[currentMove].hasNegativeImpact ? currentMove : maxMove;
                 });
-                let highestDamage = calculateMoveDamage(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, highestDamageMove)[1];
-                let moveDamage = calculateMoveDamage(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, moveObj.name)[1];
+                let highestDamage = calculateMoveDamage(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, highestDamageMove)[1][defenseChar];
+                let moveDamage = calculateMoveDamage(tempbattleObj, battleKey, attacker, defender, attackChar, defenseChar, moveObj.name)[1][defenseChar];
                 //only allow highest damaging move
                 if (moveDamage <= 0 || moveDamage < highestDamage) {
                     continue;
@@ -223,12 +222,16 @@ function emulateTurnAction(battleObj, battleKey, attacker, defender, attackChar,
             emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, null, turn);
             break;
     }
-    let moveDamage = calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move)[1];
-    battleObj[battleKey][defender].chars[defenseChar].resolve -= moveDamage;
-    let moveHealObj = calculateMoveHealing(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move)[1];
-    for (let charKey in moveHealObj) {
-        battleObj[battleKey][attacker].chars[charKey].resolve += moveHealObj[charKey];
+    let damageAmounts = calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move)[1];
+    for (let charKey in damageAmounts) {
+        battleObj[battleKey][defender].chars[charKey].resolve -= damageAmounts[charKey];
     }
+    let healAmounts = calculateMoveHealing(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move);
+    for (let charKey in healAmounts) {
+        battleObj[battleKey][attacker].chars[charKey].resolve += healAmounts[charKey];
+    }
+    let moveRecoil = calculateMoveRecoil(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move);
+    battleObj[battleKey][attacker].chars[attackChar].resolve -= moveRecoil;
 }
 
 function emulateTurnEnd(battleObj, battleKey, attacker, defender, turn) {

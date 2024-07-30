@@ -273,7 +273,7 @@ body {
     max-width: max-content;
 }
 .moves-list-content {
-    grid-template-columns: auto auto auto auto auto 1fr;
+    grid-template-columns: auto auto auto auto auto auto auto 1fr;
 }
 .move-resolution-container {
     width: 500px;
