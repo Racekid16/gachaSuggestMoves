@@ -61,6 +61,7 @@ export function addRune(battleObj, battleKey, playerName, charName, rune) {
     switch (rune) {
         case 'Affinity':
             battleObj[battleKey][playerName].chars[charName].resolve = round(battleObj[battleKey][playerName].chars[charName].resolve * 1.1);
+            battleObj[battleKey][playerName].chars[charName].maxResolve = battleObj[battleKey][playerName].chars[charName].resolve;
             addBoost(battleObj, battleKey, playerName, charName, 'Affinity', 1, false);
             break;
         //Ataraxy deal in

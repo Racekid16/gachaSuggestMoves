@@ -12,6 +12,7 @@ export function addAspectAttributes(char, charObj) {
     switch (char.aspect) {
         case "Glacial ":
             charObj.moves.push("Aspect Of Ice");
+            break;
         case "Infernal ":
             charObj.moves.push("Aspect Of Fire");
             break;
@@ -20,6 +21,7 @@ export function addAspectAttributes(char, charObj) {
             break;
         case "Stormy ":
             charObj.moves.push("Aspect Of Wind");
+            break;
         case "Titanium ":
             charObj.moves.push("Aspect Of Metal");
             break;

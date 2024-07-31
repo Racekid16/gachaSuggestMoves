@@ -8,6 +8,11 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
     let damageAmounts = {};
     for (let charKey in battleObj[battleKey][defender].chars) {
         damageAmounts[charKey] = 0;
+        for (let negativeStatus of battleObj[battleKey][defender].chars[charKey].negativeStatuses) {
+            if (negativeStatus.name == "burning" && typeof negativeStatus.damage !== 'undefined') {
+                damageAmounts[charKey] += negativeStatus.damage;
+            }
+        }
     }
 
     const moveObj = consts.moveInfo[move];
@@ -113,7 +118,7 @@ export function calculateMoveHealing(battleObj, battleKey, attacker, defender, a
         }
     }
 
-    if (battleObj[battleKey][attacker].chars[attackChar].rune == "Convalescence ") {
+    if (battleObj[battleKey][attacker].chars[attackChar].rune == "Convalescence") {
         let convalescenceHealPercent = 0.08;
         healAmounts[attackChar] += round(maxResolve * convalescenceHealPercent);
     }
@@ -230,7 +235,7 @@ export function calculateMoveRecoil(battleObj, battleKey, attacker, defender, at
 
     if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Reckless Abandon") && !hasStatus(battleObj, battleKey, attacker, attackChar, "hunter")) {
         let recklessAbandonRecoilPercent = 0.13;
-        recoilDamage += round(battleObj[battleKey][attacker].chars[attackChar].maxResolve * recklessAbandonRecoilPercent);
+        recoil += round(battleObj[battleKey][attacker].chars[attackChar].maxResolve * recklessAbandonRecoilPercent);
     }
 
     let [moveObj, damageAmounts, hitType] = calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move);

@@ -363,7 +363,7 @@ function printModifiers(battleObj, battleKey, playerName, charName, turn) {
 }
 
 function printMoves(battleObj, battleKey, attacker, defender, attackChar, defenseChar) {
-    let validMoves = getMovesCharCanMake(battleObj, battleKey, attacker, attackChar);
+    let validMoves = getMovesCharCanMake(battleObj, battleKey, attacker, defender, attackChar, defenseChar);
     let moveDamageObjs = validMoves
                         .map(move => [move, ...calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move)])
                         .sort((a, b) => b[2][defenseChar] - a[2][defenseChar]);

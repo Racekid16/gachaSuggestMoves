@@ -11,33 +11,34 @@ export function findOptimalSequence(battleObj, battleKey, attacker, defender, at
     return optimalSequenceNoDefender;
 }
 
-export function getMovesCharCanMake(battleObj, battleKey, playerName, charName) {
-    let charMoves = structuredClone(battleObj[battleKey][playerName].chars[charName].moves);
+export function getMovesCharCanMake(battleObj, battleKey, attacker, defender, attackChar, defenseChar) {
+    let charMoves = structuredClone(battleObj[battleKey][attacker].chars[attackChar].moves);
     charMoves.push("Switch-in");
 
     let returnArr = [];
     for (let move of charMoves) {
         let moveObj = consts.moveInfo[move];
         if (typeof moveObj === 'undefined') {
-            console.log(`${charName} has unrecognized move ${move}`);
+            console.log(`${attackChar} has unrecognized move ${move}`);
             continue;
         }
         if (moveObj.type.includes("innate")) {
             continue;   
         }
-        if (hasStatus(battleObj, battleKey, playerName, charName, "stunned") || hasStatus(battleObj, battleKey, playerName, charName, "resting")) {
+        if (hasStatus(battleObj, battleKey, attacker, attackChar, "stunned") || hasStatus(battleObj, battleKey, attacker, attackChar, "resting")) {
             continue;
         }
-        if (moveObj.type.includes("attack") && hasStatus(battleObj, battleKey, playerName, charName, "pacified")) {
+        if (moveObj.type.includes("attack") && hasStatus(battleObj, battleKey, attacker, attackChar, "pacified")) {
             continue;   
         }
-        if (!moveObj.type.includes("attack") && hasStatus(battleObj, battleKey, playerName, charName, "taunted")) {
+        if (!moveObj.type.includes("attack") && hasStatus(battleObj, battleKey, attacker, attackChar, "taunted")) {
             continue;
         }
-        if (moveObj.type.includes("switch-in") && (hasStatus(battleObj, battleKey, playerName, charName, "trapped")  || hasStatus(battleObj, battleKey, playerName, charName, "taunted"))) {
+        if (moveObj.type.includes("switch-in") && (hasStatus(battleObj, battleKey, attacker, attackChar, "trapped")  
+         || hasStatus(battleObj, battleKey, attacker, attackChar, "taunted") || battleObj[battleKey][defender].chars[defenseChar].moves.includes("Aspect Of Ice"))) {
             continue;
         }
-        if (battleObj[battleKey][playerName].chars[charName].lockedMoves.includes(move)) {
+        if (battleObj[battleKey][attacker].chars[attackChar].lockedMoves.includes(move)) {
             continue;
         }
         returnArr.push(move);
@@ -46,7 +47,7 @@ export function getMovesCharCanMake(battleObj, battleKey, playerName, charName) 
 }
 
 function findOptimalSequenceNoDefender(battleObj, battleKey, attacker, defender, attackChar, defenseChar, turn) {
-    let initialValidMoves = getMovesCharCanMake(battleObj, battleKey, attacker, attackChar)
+    let initialValidMoves = getMovesCharCanMake(battleObj, battleKey, attacker, defender, attackChar, defenseChar)
         .filter(move => consts.moveInfo[move].type[0] == "attack" || consts.moveInfo[move].type[0] == "boost")
     let initialValidMovesObjs = initialValidMoves.map(move => {
         let moveObj = getCompleteMoveObj(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move);
@@ -62,7 +63,7 @@ function findOptimalSequenceNoDefender(battleObj, battleKey, attacker, defender,
     let results = [];
 
     function makeSequencesNoDefender(battleObj, battleKey, attacker, defender, attackChar, defenseChar, sequence, turn, boostTurns, maxBoostTurns) {
-        let validMoves = getMovesCharCanMake(battleObj, battleKey, attacker, attackChar)
+        let validMoves = getMovesCharCanMake(battleObj, battleKey, attacker, defender, attackChar, defenseChar)
                         .filter(move => consts.moveInfo[move].type[0] == "attack" || consts.moveInfo[move].type[0] == "boost");
         let validMovesObjs = validMoves.map(move => {
                                     let moveObj = getCompleteMoveObj(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move);

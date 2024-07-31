@@ -1,4 +1,5 @@
 //apply the effects of moves that impact boosts or statuses (except resolve)
+import { calculateMoveDamage } from "./calculateMoveDamage.mjs";
 import { addBoost, addBoostToAliveTeammates } from "./updateBoosts.mjs";
 import { addStatus, hasStatus } from "./updateStatuses.mjs";
 import { addInflictModifier, addReceiveModifier } from "./updateDamageModifiers.mjs";
@@ -18,6 +19,22 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
 
     if (consts.moveInfo[move]?.type[0] == "attack" && battleObj[battleKey][attacker].chars[attackChar].moves.includes("Aspect Of Fire")) {
         addStatus(battleObj, battleKey, defender, defenseChar, "burning", turn, 1);
+        let burnIndex = battleObj[battleKey][defender].chars[defenseChar].negativeStatuses.length - 1;
+        if (burnIndex != -1) {
+            if (turnResults !== null) {
+                if (attackChar != defenseChar) {
+                    let burnStr = `\\*\\*${defenseChar}\\*\\* took \\*\\*(\\d+)\\*\\* burn damage!`;
+                    let burnRegex = new RegExp(burnStr, 'g');
+                    let burnMatches = [...turnResults.matchAll(burnRegex)].map(match => match[1]);
+                    if (burnMatches.length != 0) {
+                        battleObj[battleKey][defender].chars[defenseChar].negativeStatuses[burnIndex].damage = parseInt(burnMatches[burnMatches.length - 1]);
+                    }
+                }
+            } else {
+                let moveDamage = calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move)[1][defenseChar];
+                battleObj[battleKey][defender].chars[defenseChar].negativeStatuses[burnIndex].damage = round(moveDamage * 0.2);
+            }
+        }
     }
 
     if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Aspect Of Water")) {
@@ -28,7 +45,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
         }
     }
 
-    if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Aspect Of Wind")) {
+    if (consts.moveInfo[move]?.type[0] == "attack" && battleObj[battleKey][attacker].chars[attackChar].moves.includes("Aspect Of Wind")) {
         addStatus(battleObj, battleKey, defender, defenseChar, "wounded", turn, 1);
     }
 
@@ -128,6 +145,24 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                 let status = humiliateMatch[3];
                 let numTurns = parseInt(humiliateMatch[4]);
                 addStatus(battleObj, battleKey, defender, defenseChar, status, turn, numTurns);
+                if (status == "burning") {
+                    let burnIndex = battleObj[battleKey][defender].chars[defenseChar].negativeStatuses.length - 1;
+                    if (burnIndex != -1) {
+                        if (turnResults !== null) {
+                            if (attackChar != defenseChar) {
+                                let burnStr = `\\*\\*${defenseChar}\\*\\* took \\*\\*(\\d+)\\*\\* burn damage!`;
+                                let burnRegex = new RegExp(burnStr, 'g');
+                                let burnMatches = [...turnResults.matchAll(burnRegex)].map(match => match[1]);
+                                if (burnMatches.length != 0) {
+                                    battleObj[battleKey][defender].chars[defenseChar].negativeStatuses[burnIndex].damage = parseInt(burnMatches[burnMatches.length - 1]);
+                                }
+                            }
+                        } else {
+                            let moveDamage = calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move)[1][defenseChar];
+                            battleObj[battleKey][defender].chars[defenseChar].negativeStatuses[burnIndex].damage = round(moveDamage * 0.2);
+                        }
+                    }
+                }
             } else {
                 //console.log(`No new status for ${defenseChar} was found in turn ${turn} of ${battleKey}`);
             }
@@ -235,7 +270,9 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             break;
         
         case 'Provoke':
-            addStatus(battleObj, battleKey, defender, defenseChar, "taunted", turn, 3);
+            if (!hasStatus(battleObj, battleKey, defender, defenseChar, "taunted")) {
+                addStatus(battleObj, battleKey, defender, defenseChar, "taunted", turn, 3);
+            }
             break;
 
         case 'Reckless Abandon':
@@ -315,10 +352,10 @@ export function emulateAction(battleObj, battleKey, attacker, defender, attackCh
             if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Group Ties")) {
                 emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Group Ties", turnResults, turn, attackerResolves);
             }
-            if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Aspect Of Ice")) {
-                for (let charKey in battleObj[battleKey][defender].chars) {
-                    if (battleObj[battleKey][defender].chars[charKey].resovle > 0) {
-                        addStatus(battleObj, battleKey, defender, charKey, "stunned", turn, 1);
+            if (battleObj[battleKey][defender].chars[defenseChar].moves.includes("Aspect Of Ice")) {
+                for (let charKey in battleObj[battleKey][attacker].chars) {
+                    if (battleObj[battleKey][attacker].chars[charKey].resovle > 0) {
+                        addStatus(battleObj, battleKey, attacker, charKey, "stunned", turn, 1);
                     }
                 }
             }
@@ -329,7 +366,6 @@ export function emulateAction(battleObj, battleKey, attacker, defender, attackCh
                 let hunterStatusIndex = battleObj[battleKey][defender].chars[defenseChar].positiveStatuses.findIndex(obj => obj.name == "hunter");
                 battleObj[battleKey][defender].chars[defenseChar].positiveStatuses[hunterStatusIndex].endTurn += 2;
             }
-
             break;
 
         case 'Game Start':

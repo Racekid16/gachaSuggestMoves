@@ -711,7 +711,7 @@ function createMovesListContainer(moves) {
             const healingCell = document.createElement('div');
             healingCell.classList.add('list-cell');
             healingCell.style.color = "green";
-            healingCell.innerHTML = moveHealing;
+            healingCell.innerHTML = `+${moveHealing}`;
             movesListContent.appendChild(healingCell);
         } else {
             const emptyCell = document.createElement('div');
@@ -721,7 +721,7 @@ function createMovesListContainer(moves) {
             const recoilCell = document.createElement('div');
             recoilCell.classList.add('list-cell');
             recoilCell.style.color = "red";
-            recoilCell.innerHTML = moveRecoil;
+            recoilCell.innerHTML = `-${moveRecoil}`;
             movesListContent.appendChild(recoilCell);
         } else {
             const emptyCell = document.createElement('div');
