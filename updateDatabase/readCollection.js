@@ -107,7 +107,7 @@ async function getCollection(userId) {
             let numStars = embed.title.lastIndexOf("⭐") - embed.title.indexOf("⭐") + 1;
             let charInfo = embed.description;
             let personality = charInfo.substring(charInfo.indexOf("Personality: **") + 15, charInfo.indexOf("**\nMoves"));
-            let moves = charInfo.substring(charInfo.indexOf("Moves: **") + 9, charInfo.indexOf("**\n\nResolve")).split(", ");
+            let moves = charInfo.substring(charInfo.indexOf("Moves: **") + 9, charInfo.indexOf("**\n\nResolve")).replace(/\n/g, "").split(", ");
             let resolve = parseInt(charInfo.substring(charInfo.indexOf("Resolve: **") + 11, charInfo.indexOf("**\nMental")));
             let mental = parseInt(charInfo.substring(charInfo.indexOf("Mental: **") + 10, charInfo.indexOf("**\nPhysical")));
             let physical = parseInt(charInfo.substring(charInfo.indexOf("Physical: **") + 12, charInfo.indexOf("**\nSocial")));

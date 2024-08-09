@@ -1,8 +1,8 @@
 //functions for dealing with runes
 import { addBoost } from "./updateBoosts.mjs";
 import { addInflictModifier, addReceiveModifier } from "./updateDamageModifiers.mjs";
+import { splitCharName } from "./aspect.mjs";
 import { round } from "./round.mjs";
-import e from "cors";
 
 //see if the turn results indicate that this character has a rune. 
 export function detectRune(battleObj, battleKey, playerName, charName, turnResults) {
@@ -81,9 +81,7 @@ export function addRune(battleObj, battleKey, playerName, charName, rune) {
             break;
         //Obstinance skip
         //Purity deal later
-        case 'Rage':
-            addInflictModifier(battleObj, battleKey, playerName, charName, 0.5, 1, Infinity, false); 
-            break;
+        //Rage deal later
         //Retaliation skip
         //Spite deal later
         case 'Summoning':   //deal in
@@ -106,6 +104,13 @@ export function applyRunesAfter(battleObj, battleKey, p1name, p2name, p1char, p2
     }
     if (turnResults.includes(`The dim glow of **${p2char}**'s **Rune of Purity** faded, leaving behind a dormant tattoo.`)) {
         battleObj[battleKey][p2name].chars[p2char].debuffs.shift();
+    }
+    //Rage
+    if (turnResults.includes(`The dim glow of **${p1char}**'s **Rune of Rage** faded, leaving behind a dormant tattoo.`)) {
+        addInflictModifier(battleObj, battleKey, p1name, p1char, 0.5, 1, Infinity, false); 
+    }
+    if (turnResults.includes(`The dim glow of **${p2char}**'s **Rune of Rage** faded, leaving behind a dormant tattoo.`)) {
+        addInflictModifier(battleObj, battleKey, p2name, p2char, 0.5, 1, Infinity, false); 
     }
     //Spite
     if (turnResults.includes(`The dim glow of **${p1char}**'s **Rune of Spite** faded, leaving behind a dormant tattoo.`)) {
@@ -130,6 +135,15 @@ function removeRune(battleObj, battleKey, playerName, charName) {
             battleObj[battleKey][playerName].chars[charName].buffs = battleObj[battleKey][playerName].chars[charName].buffs.filter(obj => {
                 return obj.name != 'Affinity';
             });
+            battleObj[battleKey][playerName].baseCharStats[charName].resolve = round(battleObj[battleKey][playerName].baseCharStats[charName].resolve / 1.1);
+            battleObj[battleKey][playerName].baseCharStats[charName].buffs = battleObj[battleKey][playerName].baseCharStats[charName].buffs.filter(obj => {
+                return obj.name != 'Affinity';
+            });
+            let [aspect, charNameNoAspect] = splitCharName(charName);
+            battleObj[battleKey][playerName].chars[charNameNoAspect] = structuredClone(battleObj[battleKey][playerName].chars[charName]);
+            battleObj[battleKey][playerName].baseCharStats[charNameNoAspect] = structuredClone(battleObj[battleKey][playerName].baseCharStats[charName]);
+            delete battleObj[battleKey][playerName].chars[charName];
+            delete battleObj[battleKey][playerName].baseCharStats[charName];
             break;
         //Ataraxy deal in
         //Convalescence deal in

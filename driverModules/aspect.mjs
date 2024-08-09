@@ -44,36 +44,42 @@ export function addAspectBoost(charObj) {
     };
     if (charObj.moves.includes("Aspect Of Earth")) {
         charObj.resolve = round(charObj.resolve * 1.75);
+        charObj.maxResolve = charObj.resolve;
         charObj.aspectBoost.mental = 0.25;
         charObj.aspectBoost.physical = 0.25;
         charObj.aspectBoost.social = 0.25;
     }
     if (charObj.moves.includes("Aspect Of Fire")) {
         charObj.resolve = round(charObj.resolve * 1.5);
+        charObj.maxResolve = charObj.resolve;
         charObj.aspectBoost.mental = 0.75;
         charObj.aspectBoost.physical = 0.75;
         charObj.aspectBoost.social = 0.75;
     }
     if (charObj.moves.includes("Aspect Of Ice")) {
         charObj.resolve = round(charObj.resolve * 1.5);
+        charObj.maxResolve = charObj.resolve;
         charObj.aspectBoost.mental = 0.5;
         charObj.aspectBoost.physical = 0.5;
         charObj.aspectBoost.social = 0.5;
     }
     if (charObj.moves.includes("Aspect Of Metal")) {
         charObj.resolve = round(charObj.resolve * 2);
+        charObj.maxResolve = charObj.resolve;
         charObj.aspectBoost.mental = 0.5;
         charObj.aspectBoost.physical = 0.5;
         charObj.aspectBoost.social = 0.5;
     }
     if (charObj.moves.includes("Aspect Of Water")) {
         charObj.resolve = round(charObj.resolve * 1.5);
+        charObj.maxResolve = charObj.resolve;
         charObj.aspectBoost.mental = 0.5;
         charObj.aspectBoost.physical = 0.5;
         charObj.aspectBoost.social = 0.5;
     }
     if (charObj.moves.includes("Aspect Of Wind")) {
         charObj.resolve = round(charObj.resolve * 1.25);
+        charObj.maxResolve = charObj.resolve;
         charObj.aspectBoost.initiative = 0.75;
         charObj.aspectBoost.mental = 0.3;
         charObj.aspectBoost.physical = 0.3;

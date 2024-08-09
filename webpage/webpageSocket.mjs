@@ -1,5 +1,6 @@
 //code for the webpage to handle receiving data on the webpage socket
-import { createPartyContainer, createFieldEffectsContainer, createSuggestionContainer, createMoveResolutionContainer } from './createElements.mjs'
+import { createTabHeader, createPartyContainer, createFieldEffectsContainer, 
+         createSuggestionContainer, createMoveResolutionContainer } from './createElements.mjs'
 
 let webpageSocket = io(`http://127.0.0.1:2700`);
 let tabsToDelete = [];
@@ -108,30 +109,28 @@ function toggleTab(battleKey) {
     selectedTabContent.scrollTop = selectedTabContent.scrollHeight;
 }
 
-function createTab(battleKey, time, battleLink) {
+function createTab(header, time, battleLink) {
     const tabButtonsContainer = document.getElementById('tab-buttons-container');
     const tabContentContainer = document.getElementById('tab-content-container');
 
     const tabButton = document.createElement('button');
     tabButton.classList.add('tab-button');
-    tabButton.id = `${battleKey}-button`
-    tabButton.innerHTML = battleKey;
-    tabButton.onclick = () => toggleTab(battleKey);
+    tabButton.id = `${header}-button`
+    tabButton.innerHTML = header;
+    tabButton.onclick = () => toggleTab(header);
     tabButtonsContainer.appendChild(tabButton);
 
     const tabContent = document.createElement('div');
     tabContent.classList.add('tab-content');
-    tabContent.id = `${battleKey}-content`;
-    if (battleLink) {
-        tabContent.innerHTML = `<h2><a href="${battleLink}" target="_blank">${battleKey}</a></h2>`;
-    } else {
-        tabContent.innerHTML = `<h2>${battleKey}</h2>`;
-    }
+    tabContent.id = `${header}-content`;
     tabContentContainer.appendChild(tabContent);
+
+    const tabHeader = createTabHeader(header);
+    tabContent.appendChild(tabHeader);
 
     if (time) {
         const battleInformation = document.createElement('div');
-        battleInformation.innerHTML = `started at ${time}`;
+        battleInformation.innerHTML = `Started at: ${time}<br>Battle link: <a href="${battleLink}" target="_blank">https://discord.com/channels/...</a>`;
         tabContent.appendChild(battleInformation);
     }
 }

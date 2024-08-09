@@ -13,7 +13,16 @@ export function findOptimalSequence(battleObj, battleKey, attacker, defender, at
 
 export function getMovesCharCanMake(battleObj, battleKey, attacker, defender, attackChar, defenseChar) {
     let charMoves = structuredClone(battleObj[battleKey][attacker].chars[attackChar].moves);
-    charMoves.push("Switch-in");
+    if (Object.keys(battleObj[battleKey][attacker].chars)
+        .filter(charKey => charKey != attackChar && battleObj[battleKey][attacker].chars[charKey].resolve > 0)
+        .length > 0) {
+        charMoves.push("Switch-in");
+    }
+
+    if (battleObj[battleKey][defender].chars[defenseChar].moves.includes("Aspect Of Ice")
+     && !battleObj[battleKey][attacker].chars[attackChar].lockedMoves.includes("Switch-in")) {
+        battleObj[battleKey][attacker].chars[attackChar].lockedMoves.push("Switch-in");
+    }
 
     let returnArr = [];
     for (let move of charMoves) {
@@ -25,17 +34,23 @@ export function getMovesCharCanMake(battleObj, battleKey, attacker, defender, at
         if (moveObj.type.includes("innate")) {
             continue;   
         }
-        if (hasStatus(battleObj, battleKey, attacker, attackChar, "stunned") || hasStatus(battleObj, battleKey, attacker, attackChar, "resting")) {
+        if (hasStatus(battleObj, battleKey, attacker, attackChar, "stunned")|| hasStatus(battleObj, battleKey, attacker, attackChar, "resting")) {
             continue;
         }
-        if (moveObj.type.includes("attack") && hasStatus(battleObj, battleKey, attacker, attackChar, "pacified")) {
+        if (hasStatus(battleObj, battleKey, attacker, attackChar, "pacified")
+         && moveObj.type.includes("attack")) {
             continue;   
         }
-        if (!moveObj.type.includes("attack") && hasStatus(battleObj, battleKey, attacker, attackChar, "taunted")) {
+        if (hasStatus(battleObj, battleKey, attacker, attackChar, "taunted") 
+         && !moveObj.type.includes("attack")) {
             continue;
         }
-        if (moveObj.type.includes("switch-in") && (hasStatus(battleObj, battleKey, attacker, attackChar, "trapped")  
-         || hasStatus(battleObj, battleKey, attacker, attackChar, "taunted") || battleObj[battleKey][defender].chars[defenseChar].moves.includes("Aspect Of Ice"))) {
+        if ((hasStatus(battleObj, battleKey, attacker, attackChar, "trapped") || hasStatus(battleObj, battleKey, attacker, attackChar, "taunted"))
+          && move == "Switch-in") {
+            continue;
+        }
+        if (battleObj[battleKey][attacker].chars[attackChar].rune == "Wrath"
+        && (move != "Switch-in" && !moveObj.type.includes("attack"))) {
             continue;
         }
         if (battleObj[battleKey][attacker].chars[attackChar].lockedMoves.includes(move)) {
@@ -212,17 +227,7 @@ function emulateTurnMoves(battleObj, battleKey, attacker, defender, attackChar, 
 
 // for simulation purposes only. Does not consider innate abilities or character transformations
 function emulateTurnAction(battleObj, battleKey, attacker, defender, attackChar, defenseChar, turn, move) {
-    switch (move) {
-        case 'Kabedon':
-            break;
-        case 'Kings Command':
-            break;
-        case 'Introversion':
-            break;
-        default:
-            emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, null, turn);
-            break;
-    }
+    emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, null, turn);
     let damageAmounts = calculateMoveDamage(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move)[1];
     for (let charKey in damageAmounts) {
         battleObj[battleKey][defender].chars[charKey].resolve -= damageAmounts[charKey];

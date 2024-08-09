@@ -73,7 +73,7 @@ export function calculateMoveDamage(battleObj, battleKey, attacker, defender, at
     if (defensePower != 0) {
         damageAmounts[defenseChar] += Math.min(
             round(40 * (attackPower / defensePower)),
-            round(40 * (attackPower / defensePower) ** 0.85)
+            round(40 * (attackPower / defensePower) ** 0.9)
         );
     } else {
         damageAmounts[defenseChar] += round(2 * attackPower);
@@ -118,7 +118,7 @@ export function calculateMoveHealing(battleObj, battleKey, attacker, defender, a
         }
     }
 
-    if (battleObj[battleKey][attacker].chars[attackChar].rune == "Convalescence") {
+    if (battleObj[battleKey][attacker].chars[attackChar].rune == "Convalescence" && !consts.moveInfo[move].type.includes("switch-in")) {
         let convalescenceHealPercent = 0.08;
         healAmounts[attackChar] += round(maxResolve * convalescenceHealPercent);
     }
@@ -137,17 +137,19 @@ export function calculateMoveHealing(battleObj, battleKey, attacker, defender, a
         case 'Group Determination':
             let selfHealPercent = 0;
             let otherHealPercent = 0.25;
-            for (let charKey in battleObj[battleKey][attacker].chars) {
-                if (battleObj[battleKey][attacker].chars[charKey].tags.includes("Ayanokōji Group")) {
-                    selfHealPercent += 0.25;
-                    let charCurrentResolve = battleObj[battleKey][attacker].chars[charKey].resolve;
-                    if (charCurrentResolve != 0) {
-                        let charMaxResolve = battleObj[battleKey][attacker].chars[charKey].maxResolve;
-                        healAmounts[charKey] += round(charMaxResolve * otherHealPercent);
+            if (!hasStatus(battleObj, battleKey, attacker, attackChar, 'silenced')) {
+                for (let charKey in battleObj[battleKey][attacker].chars) {
+                    if (battleObj[battleKey][attacker].chars[charKey].tags.includes("Ayanokōji Group")) {
+                        selfHealPercent += 0.25;
+                        let charCurrentResolve = battleObj[battleKey][attacker].chars[charKey].resolve;
+                        if (charCurrentResolve != 0) {
+                            let charMaxResolve = battleObj[battleKey][attacker].chars[charKey].maxResolve;
+                            healAmounts[charKey] += round(charMaxResolve * otherHealPercent);
+                        }
                     }
                 }
+                healAmounts[attackChar] += round(maxResolve * selfHealPercent);
             }
-            healAmounts[attackChar] += round(maxResolve * selfHealPercent);
             break;
 
         case 'Inspire':
@@ -186,14 +188,18 @@ export function calculateMoveHealing(battleObj, battleKey, attacker, defender, a
             let teamworkHealPercent = 0.2;
             let previousTaggedInChar = battleObj[battleKey][attacker].previousTaggedInChar;
             let previousTaggedInCharObj = battleObj[battleKey][attacker].chars[previousTaggedInChar];
-            if (previousTaggedInCharObj.tags.includes("Class D")) {
-                healAmounts[attackChar] += round(maxResolve * teamworkHealPercent);
+            if (!hasStatus(battleObj, battleKey, attacker, attackChar, 'silenced')) {
+                if (previousTaggedInCharObj.tags.includes("Class D")) {
+                    healAmounts[attackChar] += round(maxResolve * teamworkHealPercent);
+                }
             }
             break;
         
         case 'The Perfect Existence':
             let thePerfectExistenceHealPercent = 0.5;
-            healAmounts[attackChar] += round(maxResolve * thePerfectExistenceHealPercent);
+            if (!hasStatus(battleObj, battleKey, attacker, attackChar, 'silenced')) {
+                healAmounts[attackChar] += round(maxResolve * thePerfectExistenceHealPercent);
+            }
             break;
         
         case 'Unmask':
@@ -233,7 +239,8 @@ export function calculateMoveRecoil(battleObj, battleKey, attacker, defender, at
     
     let recoil = 0;
 
-    if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Reckless Abandon") && !hasStatus(battleObj, battleKey, attacker, attackChar, "hunter")) {
+    if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("Reckless Abandon") && !hasStatus(battleObj, battleKey, attacker, attackChar, "hunter")
+     && !consts.moveInfo[move].type.includes("switch-in") && move != "Thrill Of The Chase" && !hasStatus(battleObj, battleKey, attacker, attackChar, 'silenced')) {
         let recklessAbandonRecoilPercent = 0.13;
         recoil += round(battleObj[battleKey][attacker].chars[attackChar].maxResolve * recklessAbandonRecoilPercent);
     }
@@ -251,6 +258,9 @@ export function calculateMoveRecoil(battleObj, battleKey, attacker, defender, at
             break;
         case 'Obliterate':
             recoil += battleObj[battleKey][attacker].chars[attackChar].resolve;
+            break;
+        case 'Switch-in':
+            recoil = 0;
     }
 
     recoil = Math.min(battleObj[battleKey][attacker].chars[attackChar].resolve, recoil);
@@ -380,6 +390,11 @@ function getBasePower(battleObj, battleKey, attacker, defender, attackChar, defe
                 break;
         }
     }
+
+    if (returnVal < 0) {
+        console.log(`Move ${move} has basePower ${returnVal}`);
+    }
+
     return returnVal;
 }
 

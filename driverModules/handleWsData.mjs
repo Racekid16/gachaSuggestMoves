@@ -9,7 +9,7 @@ import consts from '../consts.json' assert { type: 'json' };
 export function handleWsData(battleObj, programSocket, responseJSON) {
     // update an ongoing battle
     if ((responseJSON.t == 'MESSAGE_CREATE' || responseJSON.t == 'MESSAGE_UPDATE') && responseJSON.d.author?.id == consts.botID 
-    && responseJSON.d.embeds?.[0]?.title?.substring(0, 6) == "BATTLE" && responseJSON.d.embeds[0].fields.length == 3) {
+    && responseJSON.d.embeds?.[0]?.title?.substring(0, 6) == "BATTLE" && responseJSON.d.embeds[0]?.fields?.length == 3) {
         processBattleEmbed(battleObj, programSocket, responseJSON, responseJSON.d.embeds[0]);
     }
 

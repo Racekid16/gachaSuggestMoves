@@ -1,4 +1,14 @@
 //functions for creating some larger elements with many components
+export function createTabHeader(header) {
+    const headerContainer = document.createElement('div');
+    if (header == "Home") {
+        headerContainer.innerHTML = `<h2>${header}</h2>`;
+        return headerContainer;
+    }
+    let [p1name, p2name] = header.split(" vs. ").map(str => str.slice(2));
+    headerContainer.innerHTML = `<h2>${p1name} ⚔️ ${p2name}</h2>`;
+    return headerContainer;
+}
 
 export function createPartyContainer(battleObj, battleKey, playerName, hasStrength, supportBonus, partyArray) {
     const partyContainer = document.createElement('div');
@@ -219,11 +229,14 @@ function createactiveCharStatsGrid(battleObj, battleKey, playerName, partyArray,
 function createBenchCharStatsGrid(battleObj, battleKey, playerName, partyArray, statSymbols) {
     const benchCharStatsGrid = document.createElement('div');
     benchCharStatsGrid.classList.add('party-stats-grid');
+
+    let benchEmpty = true;
     for (let i = 3; i < 6; i++) {
         const charName = partyArray[i].name;
         if (charName == "empty") {
             continue;
         }
+        benchEmpty = false;
 
         const numStarsCell = document.createElement('div');
         numStarsCell.classList.add('party-cell');
@@ -264,6 +277,10 @@ function createBenchCharStatsGrid(battleObj, battleKey, playerName, partyArray, 
             }
             benchCharStatsGrid.appendChild(newCell);
         }
+    }
+
+    if (benchEmpty) {
+        return document.createElement('div');
     }
     return benchCharStatsGrid;
 }

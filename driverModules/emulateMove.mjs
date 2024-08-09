@@ -4,12 +4,14 @@ import { addBoost, addBoostToAliveTeammates } from "./updateBoosts.mjs";
 import { addStatus, hasStatus } from "./updateStatuses.mjs";
 import { addInflictModifier, addReceiveModifier } from "./updateDamageModifiers.mjs";
 import { addFieldEffect } from "./updateFieldEffects.mjs";
+import { applyTransformation } from "./transform.mjs";
 import { round } from "./round.mjs";
 import consts from '../consts.json' assert { type: 'json' };
 
 export function emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, turnResults, turn, attackerResolves) {
     
-    if (consts.moveInfo[move]?.type[0] == "attack" && battleObj[battleKey][defender].chars[defenseChar].moves.includes("Group Determination")) {
+    if (consts.moveInfo[move]?.type[0] == "attack" && battleObj[battleKey][defender].chars[defenseChar].moves.includes("Group Determination")
+     && !hasStatus(battleObj, battleKey, defender, defenseChar, 'silenced')) {
         for (let charKey in battleObj[battleKey][defender].chars) {
             if (battleObj[battleKey][defender].chars[charKey].resolve > 0) {
                 addInflictModifier(battleObj, battleKey, defender, charKey, 0.05, turn, Infinity);
@@ -53,8 +55,8 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
     if (attackCharRune == "Focus" || attackCharRune == "Instinct") {
         for (let otherMove of battleObj[battleKey][attacker].chars[attackChar].moves) {
             if (otherMove != move && !consts.moveInfo[otherMove].type.includes("innate")
-             && !battleObj[battleKey][attacker].chars[attackChar].lockedMoves.includes(move)) {
-                battleObj[battleKey][attacker].chars[attackChar].lockedMoves.push(move);
+             && !battleObj[battleKey][attacker].chars[attackChar].lockedMoves.includes(otherMove)) {
+                battleObj[battleKey][attacker].chars[attackChar].lockedMoves.push(otherMove);
             }
         }
     }
@@ -117,7 +119,7 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
             let thisCharBaseMental = battleObj[battleKey][attacker].baseCharStats[attackChar].mental;
             for (let charKey in battleObj[battleKey][attacker].chars) {
                 if (battleObj[battleKey][attacker].chars[charKey].tags.includes("Ayanokōji Group")
-                 && battleObj[battleKey][attacker].baseCharStats[charKey].mental < thisCharBaseMental) {
+                && battleObj[battleKey][attacker].baseCharStats[charKey].mental < thisCharBaseMental) {
                     battleObj[battleKey][attacker].chars[charKey].mental = thisCharBaseMental;
                     battleObj[battleKey][attacker].baseCharStats[charKey].mental = thisCharBaseMental;
                 }
@@ -296,30 +298,30 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
         case 'Teamwork':
             let previousTaggedInChar = battleObj[battleKey][attacker].previousTaggedInChar;
             let previousTaggedInCharObj = battleObj[battleKey][attacker].chars[previousTaggedInChar];
-            if (previousTaggedInCharObj.tags.includes("Ayanokōji Group")) {
-                addBoost(battleObj, battleKey, attacker, attackChar, "Teamwork", turn);
-            }
-            if (previousTaggedInChar.includes("Ayanokōji Kiyotaka")) {
-                addStatus(battleObj, battleKey, attacker, attackChar, "apathetic", turn, 2);
-            }
-            if (previousTaggedInChar.includes("Miyake Akito")) {
-                addInflictModifier(battleObj, battleKey, attacker, attackChar, 0.25, turn, 2);
-            }
-            if (previousTaggedInChar.includes("Sakura Airi") || previousTaggedInChar == "Shizuku") {
-                //this can be wrong in the case where one player tags into Hasebe from Airi and the other player
-                //attacks with Hasebe, but overall this case isn't very important.
-                if (turnResults.includes(`**${attackChar}** countered with **Airi Assist**!`)) {
-                    addStatus(battleObj, battleKey, defender, defenseChar, "pacified", turn, 2);
-                    addStatus(battleObj, battleKey, defender, defenseChar, "trapped", turn, 2);
+            if (!hasStatus(battleObj, battleKey, attacker, attackChar, 'silenced')) {
+                if (previousTaggedInCharObj.tags.includes("Ayanokōji Group")) {
+                    addBoost(battleObj, battleKey, attacker, attackChar, "Teamwork", turn);
                 }
-            }
-            if (previousTaggedInChar.includes("Yukimura Keisei")) {
-                nullifyBuffs(battleObj, battleKey, defender, defenseChar, turn);
+                if (previousTaggedInChar.includes("Ayanokōji Kiyotaka")) {
+                    addStatus(battleObj, battleKey, attacker, attackChar, "apathetic", turn, 2);
+                }
+                if (previousTaggedInChar.includes("Miyake Akito")) {
+                    addInflictModifier(battleObj, battleKey, attacker, attackChar, 0.25, turn, 2);
+                }
+                if (previousTaggedInChar.includes("Sakura Airi") || previousTaggedInChar == "Shizuku") {
+                    if (turnResults.includes(`**${attackChar}** countered with **Airi Assist**!`)) {
+                        addStatus(battleObj, battleKey, defender, defenseChar, "pacified", turn, 2);
+                        addStatus(battleObj, battleKey, defender, defenseChar, "trapped", turn, 2);
+                    }
+                }
+                if (previousTaggedInChar.includes("Yukimura Keisei")) {
+                    nullifyBuffs(battleObj, battleKey, defender, defenseChar, turn);
+                }
             }
             break;
 
         case 'Thrill Of The Chase':
-            nullifyDebuffs(battleObj, battleKey, attacker, attackChar);
+            nullifyDebuffs(battleObj, battleKey, attacker, attackChar, turn);
             if (turnResults.includes(`**${attackChar}** countered with **${move}**!`)) {
                 addStatus(battleObj, battleKey, attacker, attackChar, "hunter", turn, 3, false);
             } else {
@@ -378,13 +380,16 @@ export function emulateAction(battleObj, battleKey, attacker, defender, attackCh
             break;
         
         case 'Switch-in':
+            if (typeof battleObj[battleKey][attacker].chars[attackChar] === 'undefined') {
+                applyTransformation(battleObj, battleKey, attacker, attackChar, turn);
+            }
+            battleObj[battleKey][attacker].chars[attackChar].lockedMoves = [];
+
             let attackerPreviousTaggedInChar = battleObj[battleKey][attacker].previousTaggedInChar;
             let attackerPreviousTaggedInCharObj;
             if (attackerPreviousTaggedInChar !== null) {
                 attackerPreviousTaggedInCharObj = battleObj[battleKey][attacker].chars[attackerPreviousTaggedInChar];
             }
-
-            battleObj[battleKey][attacker].chars[attackChar].lockedMoves = [];
             
             if (attackerPreviousTaggedInChar !== null && attackerPreviousTaggedInCharObj.moves.includes("Lead By Example")) {
                 emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Lead By Example", turnResults, turn, attackerResolves);
@@ -394,8 +399,9 @@ export function emulateAction(battleObj, battleKey, attacker, defender, attackCh
                 emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, "Teamwork", turnResults, turn, attackerResolves);
             }
 
-            if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("The Perfect Existence")) {
-                nullifyDebuffs(battleObj, battleKey, attacker, attackChar);
+            if (battleObj[battleKey][attacker].chars[attackChar].moves.includes("The Perfect Existence")
+             && !hasStatus(battleObj, battleKey, attacker, attackChar, 'silenced')) {
+                nullifyDebuffs(battleObj, battleKey, attacker, attackChar, turn);
             }
             break;
 
@@ -420,7 +426,7 @@ function nullifyBuffs(battleObj, battleKey, playerName, charName, turn) {
     }
 }
 
-function nullifyDebuffs(battleObj, battleKey, playerName, charName) {
+function nullifyDebuffs(battleObj, battleKey, playerName, charName, turn) {
     for (let debuff of battleObj[battleKey][playerName].chars[charName].debuffs) {
         if (debuff.canBeNullified) {
             debuff.endTurn = turn;

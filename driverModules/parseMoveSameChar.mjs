@@ -117,7 +117,7 @@ async function emulateMoveAndOther(battleObj, programSocket, p1name, p2name, cha
             return;
         }
     }
-    console.log(`The program unexpectedly reached here on turn ${turn} of ${battleKey} (1)`); 
+    await manuallyDetermineWhoUsedWhichMove(battleObj, programSocket, battleKey, p1name, p2name, charName, move, "none", turnResults, turn, p1resolves, p2resolves);
 }
 
 function determineIfPlayerUnableToMove(battleObj, p1name, p2name, charName, battleEmbed, p1taggedIn, p2taggedIn) {

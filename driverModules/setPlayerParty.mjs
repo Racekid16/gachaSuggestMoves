@@ -322,6 +322,7 @@ function determineBattleKey(battleObj, playerName, playerID) {
         return battleKey;
     }
     console.log("Unexpectedly got here: could not determine battle Key.");
+    console.log("This function's args were", battleObj, playerName, playerID);
     console.log("possibleReturnVals before reducing is", possibleReturnValsBeforeReducing);
     console.log("possibleReturnVals after reducing is", possibleReturnVals);
     console.log("The battleObj's keys are", Object.keys(battleObj));

@@ -297,7 +297,7 @@ function printModifiers(battleObj, battleKey, playerName, charName, turn) {
     }
     for (let receiveBuff of receiveBuffs) {
         buffsArr.push({
-            name: `${receiveBuff.amount * 100}% damage received`,
+            name: `${receiveBuff.amount * -100}% damage received`,
             turnsRemaining: receiveBuff.endTurn - turn
         });
     }

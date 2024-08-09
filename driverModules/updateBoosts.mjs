@@ -1,4 +1,5 @@
 // add or remove buffs or debuffs.
+import { hasStatus } from './updateStatuses.mjs';
 import { round } from './round.mjs';
 
 export function addBoost(battleObj, battleKey, playerName, charName, boost, turn, canBeNullified=true) {
@@ -109,7 +110,8 @@ export function applyBoosts(battleObj, battleKey, playerName) {
         for (let i = 0; i < thisCharObj.debuffs.length; i++) {
             let debuff = thisCharObj.debuffs[i];
 
-            if (thisCharObj.moves.includes('Lead By Example') && (debuff.stat == 'ability' || debuff.stat == 'strength' || debuff.stat == 'physical')) {
+            if (thisCharObj.moves.includes('Lead By Example') && (debuff.stat == 'ability' || debuff.stat == 'strength' || debuff.stat == 'physical')
+             && !hasStatus(battleObj, battleKey, playerName, charName, 'silenced')) {
                 if (typeof battleObj[battleKey].log !== 'undefined') {
                     //battleObj[battleKey].log(`${debuff.name} debuff negated as it would lower ${charName}'s physical`);
                 }
@@ -211,15 +213,17 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn, canBeNu
 
         case 'Boss Orders':
             let bossOrdersBuff = 0.5;
-            battleObj[battleKey][playerName].chars[charName].buffs.push({
-                name: buff,
-                startTurn: turn,
-                endTurn: Infinity,
-                stat: "mental",
-                type: "base",
-                amount: bossOrdersBuff,
-                canBeNullified: canBeNullified
-            }); 
+            if (!hasStatus(battleObj, battleKey, playerName, charName, 'silenced')) {
+                battleObj[battleKey][playerName].chars[charName].buffs.push({
+                    name: buff,
+                    startTurn: turn,
+                    endTurn: Infinity,
+                    stat: "mental",
+                    type: "base",
+                    amount: bossOrdersBuff,
+                    canBeNullified: canBeNullified
+                });
+            }
             break;
         
         case 'Bottle Break Initiative':
@@ -276,15 +280,17 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn, canBeNu
 
         case 'Group Ties':
             let groupTiesBuff = 0.5;
-            battleObj[battleKey][playerName].chars[charName].buffs.push({
-                name: buff,
-                startTurn: turn,
-                endTurn: Infinity,
-                stat: "social",
-                type: "base",
-                amount: groupTiesBuff,
-                canBeNullified: canBeNullified
-            }); 
+            if (!hasStatus(battleObj, battleKey, playerName, charName, 'silenced')) {
+                battleObj[battleKey][playerName].chars[charName].buffs.push({
+                    name: buff,
+                    startTurn: turn,
+                    endTurn: Infinity,
+                    stat: "social",
+                    type: "base",
+                    amount: groupTiesBuff,
+                    canBeNullified: canBeNullified
+                }); 
+            }
             break;
 
         case 'Instinct':
@@ -315,28 +321,32 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn, canBeNu
 
         case '1-turn Lead By Example':
             let leadByExampleBuff1 = 0.25;
-            battleObj[battleKey][playerName].chars[charName].buffs.push({
-                name: buff,
-                startTurn: turn,
-                endTurn: turn + 1,
-                stat: "physical",
-                type: "base",
-                amount: leadByExampleBuff1,
-                canBeNullified: canBeNullified
-            }); 
+            if (!hasStatus(battleObj, battleKey, playerName, charName, 'silenced')) {
+                battleObj[battleKey][playerName].chars[charName].buffs.push({
+                    name: buff,
+                    startTurn: turn,
+                    endTurn: turn + 1,
+                    stat: "physical",
+                    type: "base",
+                    amount: leadByExampleBuff1,
+                    canBeNullified: canBeNullified
+                });
+            }
             break;
         
         case '2-turn Lead By Example':
             let leadByExampleBuff2 = 0.25;
-            battleObj[battleKey][playerName].chars[charName].buffs.push({
-                name: buff,
-                startTurn: turn,
-                endTurn: turn + 2,
-                stat: "physical",
-                type: "base",
-                amount: leadByExampleBuff2,
-                canBeNullified: canBeNullified
-            }); 
+            if (!hasStatus(battleObj, battleKey, playerName, charName, 'silenced')) {
+                battleObj[battleKey][playerName].chars[charName].buffs.push({
+                    name: buff,
+                    startTurn: turn,
+                    endTurn: turn + 2,
+                    stat: "physical",
+                    type: "base",
+                    amount: leadByExampleBuff2,
+                    canBeNullified: canBeNullified
+                });
+            }
             break;
         
         case 'Study Initiative':
@@ -373,6 +383,8 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn, canBeNu
 
         case 'Teamwork':
             let teamworkBuff = 0.3;
+            //don't need to check here whether the player is silenced
+            //because that is done earlier before ever reaching this casec
             battleObj[battleKey][playerName].chars[charName].buffs.push({
                 name: buff,
                 startTurn: turn,
@@ -415,15 +427,18 @@ function addBuff(battleObj, battleKey, playerName, charName, buff, turn, canBeNu
 
         case 'Zenith Pace':
             let zenithPaceBuff = 0.25;
-            battleObj[battleKey][playerName].chars[charName].buffs.push({
-                name: buff,
-                startTurn: turn,
-                endTurn: Infinity,
-                stat: "initiative",
-                type: "base",
-                amount: zenithPaceBuff,
-                canBeNullified: canBeNullified
-            })
+            if (!hasStatus(battleObj, battleKey, playerName, charName, 'silenced')) {
+                battleObj[battleKey][playerName].chars[charName].buffs.push({
+                    name: buff,
+                    startTurn: turn,
+                    endTurn: Infinity,
+                    stat: "initiative",
+                    type: "base",
+                    amount: zenithPaceBuff,
+                    canBeNullified: canBeNullified
+                });
+            }
+            break;
 
         default:
             break;
