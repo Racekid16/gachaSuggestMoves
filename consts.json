@@ -268,8 +268,8 @@
         "Cunning": ["Scheming", "Fighting"],
         "Explosive": ["Fighting", "Athleticism"],
         "Reserved": ["Scheming", "Empathy"],
-        "Selfish": ["Athleticism", "Empathy"],
         "Savant": ["Academic", "Scheming"],
+        "Selfish": ["Athleticism", "Empathy"],
         "Timid": ["Academic", "Influence"]
     },
     "personalityWeaknesses": {
@@ -279,9 +279,9 @@
         "Cold": ["Scheming", "Empathy"],
         "Cunning": ["Influence", "Empathy"],
         "Explosive": ["Academic", "Scheming"],
-        "Reserved": ["Athleticism", "Fighting"],
-        "Selfish": ["Academic", "Influence"],
+        "Reserved": ["Fighting", "Athleticism"],
         "Savant": ["Athleticism", "Influence"],
+        "Selfish": ["Academic", "Influence"],
         "Timid": ["Athleticism", "Empathy"]
     }
 }

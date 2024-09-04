@@ -9,7 +9,10 @@ import { round } from "./round.mjs";
 import consts from '../consts.json' assert { type: 'json' };
 
 export function emulateMove(battleObj, battleKey, attacker, defender, attackChar, defenseChar, move, turnResults, turn, attackerResolves) {
-    
+    if (move.includes("Impulse")) {
+        move = "Impulse";
+    }
+
     if (consts.moveInfo[move]?.type[0] == "attack" && battleObj[battleKey][defender].chars[defenseChar].moves.includes("Group Determination")
      && !hasStatus(battleObj, battleKey, defender, defenseChar, 'silenced')) {
         for (let charKey in battleObj[battleKey][defender].chars) {
@@ -183,7 +186,9 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                 }
 
                 for (let buff of lowestResolveTeammateObj.buffs) {
-                    addBoost(battleObj, battleKey, attacker, attackChar, buff.name, buff.startTurn);
+                    if (buff.name != "Affinity") {
+                        addBoost(battleObj, battleKey, attacker, attackChar, buff.name, buff.startTurn);
+                    }
                 }
                 for (let inflictModifier of lowestResolveTeammateObj.inflictModifiers) {
                     addInflictModifier(battleObj, battleKey, attacker, attackChar, inflictModifier.amount, inflictModifier.startTurn, inflictModifier.numTurns);
@@ -192,7 +197,9 @@ export function emulateMove(battleObj, battleKey, attacker, defender, attackChar
                     addReceiveModifier(battleObj, battleKey, attacker, attackChar, receiveModifier.amount, receiveModifier.startTurn, receiveModifier.numTurns);
                 }
                 for (let positiveStatus of lowestResolveTeammateObj.positiveStatuses) {
-                    addStatus(battleObj, battleKey, attacker, attackChar, positiveStatus.name, positiveStatus.startTurn, positiveStatus.numTurns);
+                    if (positiveStatus.name != "hunter") {
+                        addStatus(battleObj, battleKey, attacker, attackChar, positiveStatus.name, positiveStatus.startTurn, positiveStatus.numTurns);
+                    }
                 }
                 
                 nullifyBuffs(battleObj, battleKey, attacker, lowestResolveTeammate, turn);
@@ -380,7 +387,7 @@ export function emulateAction(battleObj, battleKey, attacker, defender, attackCh
             break;
         
         case 'Switch-in':
-            if (typeof battleObj[battleKey][attacker].chars[attackChar] === 'undefined') {
+            if (attackChar.includes("Fearless Ryūen Kakeru") && typeof battleObj[battleKey][attacker].chars[attackChar] === 'undefined') {
                 applyTransformation(battleObj, battleKey, attacker, attackChar, turn);
             }
             battleObj[battleKey][attacker].chars[attackChar].lockedMoves = [];
