@@ -1,7 +1,7 @@
 //endpoints that access the CharacterData collection.
 import express from 'express';
 
-const CharacterDataRouter = (sharedData) => {
+export function CharacterDataRouter(sharedData) {
     const router = express.Router();
 
     //return all character data
@@ -107,5 +107,3 @@ const CharacterDataRouter = (sharedData) => {
 
     return router;
 }
-
-export default CharacterDataRouter;

@@ -1,13 +1,15 @@
-// start with $ node 1.server.mjs
-// this server primarily acts as an interface to interact with the gacha character database
-// and as a host websocket server that acts as an intermediary for the webpage and program to communicate
-// https://learn.microsoft.com/en-us/windows/wsl/networking
-// if you want to run this in WSL, follow these steps:
-// 1. Add an inbound rule in Windows Firewall allowing all TCP connections on port 27017
-// 2. Edit mongod.cfg so that bindIp is 0.0.0.0
-// 3. to get your windows host ip, run $ ip route show | grep -i default | awk '{ print $3}'
-// 4. in these scripts, when connecting to the mongoDB database, replace 127.0.0.1 with your windows host ip
-// in the case of this directory, change the ip Address in ipAddress.txt
+/*
+start with $ node 1.server.mjs
+this server primarily acts as an interface to interact with the gacha character database
+and as a host websocket server that acts as an intermediary for the webpage and program to communicate
+https://learn.microsoft.com/en-us/windows/wsl/networking
+if you want to run this in WSL, follow these steps:
+1. Add an inbound rule in Windows Firewall allowing all TCP connections on port 27017
+2. Edit mongod.cfg so that bindIp is 0.0.0.0
+3. to get your windows host ip, run $ ip route show | grep -i default | awk '{ print $3}'
+4. in these scripts, when connecting to the mongoDB database, replace 127.0.0.1 with your windows host ip
+in the case of this directory, change the ip Address in ipAddress.txt
+*/
 
 import express from 'express';
 import http from 'http';
@@ -16,10 +18,10 @@ import { fileURLToPath } from 'url';
 import { Server as SocketIOServer } from 'socket.io';
 import path from 'path';
 import { connectToDb, getDb } from './serverModules/database.mjs';
-import BattleLogsRouter from './serverModules/BattleLogsRouter.mjs';
-import CharacterDataRouter from './serverModules/CharacterDataRouter.mjs';
-import ImageDataRouter from './serverModules/ImageDataRouter.mjs';
-import UserCollectionsRouter from './serverModules/UserCollectionsRouter.mjs';
+import { BattleLogsRouter } from './serverModules/BattleLogsRouter.mjs';
+import { CharacterDataRouter } from './serverModules/CharacterDataRouter.mjs';
+import { ImageDataRouter } from './serverModules/ImageDataRouter.mjs';
+import { UserCollectionsRouter } from './serverModules/UserCollectionsRouter.mjs';
 import { receiveWebpageSocket, receiveProgramSocket } from './serverModules/serverSocket.mjs';
 import consts from './consts.json' assert { type: 'json' };
 import config from './config.json' assert { type: 'json' };

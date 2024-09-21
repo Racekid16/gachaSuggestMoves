@@ -1,7 +1,7 @@
 //endpoints that access the UserCollections collection.
 import express from 'express';
 
-const UserCollectionsRouter = (sharedData) => {
+export function UserCollectionsRouter(sharedData) {
     const router = express.Router();
 
     //return all user collections
@@ -16,7 +16,7 @@ const UserCollectionsRouter = (sharedData) => {
     })
 
     router.get('/:userID', (req, res) => {
-        //check if there is a document with this userid
+        //check if there is a document with this user ID
         sharedData.database.collection('UserCollections').
             findOne({
                 userID: req.params.userID
@@ -33,7 +33,7 @@ const UserCollectionsRouter = (sharedData) => {
     })
 
     router.post('/updateDb', (req, res) => {
-        //check if there is a document with this userid
+        //check if there is a document with this user ID
         sharedData.database.collection('UserCollections').
             findOne({
                 userID: req.body.userID
@@ -130,5 +130,3 @@ const UserCollectionsRouter = (sharedData) => {
 
     return router;
 }
-
-export default UserCollectionsRouter;

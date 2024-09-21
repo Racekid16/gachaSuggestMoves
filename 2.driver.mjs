@@ -1,5 +1,7 @@
-//run this with $ node 2.driver.mjs
-//must have 1.server.js running
+/*
+run this with $ node 2.driver.mjs
+must have 1.server.js running
+*/
 
 import { promises as fs } from 'fs';
 import path from 'path';

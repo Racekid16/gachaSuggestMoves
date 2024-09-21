@@ -1,7 +1,7 @@
 //endpoints that access the BattleLogs collection.
 import express from 'express';
 
-const BattleLogsRouter = (sharedData) => {
+export function BattleLogsRouter(sharedData) {
     const router = express.Router();
 
     //return all battle logs
@@ -59,5 +59,3 @@ const BattleLogsRouter = (sharedData) => {
 
     return router;
 }
-
-export default BattleLogsRouter;

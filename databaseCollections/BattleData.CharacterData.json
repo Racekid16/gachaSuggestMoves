@@ -4796,7 +4796,8 @@
   "supportCategory": "Mental",
   "supportBonus": 33,
   "allies": [
-    "Fighter"
+    "Fighter",
+    "Kōhai"
   ],
   "tags": [
     "Kōhai",
@@ -8439,7 +8440,8 @@
   "supportCategory": "Mental",
   "supportBonus": 33,
   "allies": [
-    "Fighter"
+    "Fighter",
+    "Kōhai"
   ],
   "tags": [
     "Kōhai",
@@ -9664,5 +9666,838 @@
     "Class D",
     "Girl",
     "Senpai"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6670d4873e379df59e1ba780"
+  },
+  "name": "A.G. Hasebe Haruka",
+  "rarity": "Shining",
+  "numStars": 5,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Impulse",
+    "Teamwork"
+  ],
+  "resolve": 140,
+  "mental": 77,
+  "physical": 75,
+  "social": 89,
+  "initiative": 79,
+  "supportCategory": "Ability",
+  "supportBonus": 21,
+  "allies": [
+    "Ayanokōji Group"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Ayanokōji Group"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6670d4893e379df59e1ba781"
+  },
+  "name": "A.G. Miyake Akito",
+  "rarity": "Shining",
+  "numStars": 5,
+  "personality": "Reserved",
+  "moves": [
+    "Athleticism",
+    "Empathy",
+    "Grit",
+    "Group Determination"
+  ],
+  "resolve": 149,
+  "mental": 77,
+  "physical": 95,
+  "social": 84,
+  "initiative": 75,
+  "supportCategory": "Physical",
+  "supportBonus": 36,
+  "allies": [
+    "Ayanokōji Group",
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Fighter",
+    "Ayanokōji Group"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6670d4a73e379df59e1ba782"
+  },
+  "name": "A.G. Sakura Airi",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Timid",
+  "moves": [
+    "Unity",
+    "Inspire",
+    "Slumber",
+    "Group Ties"
+  ],
+  "resolve": 143,
+  "mental": 59,
+  "physical": 52,
+  "social": 60,
+  "initiative": 53,
+  "supportCategory": "Resolve",
+  "supportBonus": 15,
+  "allies": [
+    "Ayanokōji Group"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Ayanokōji Group"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6670d4a93e379df59e1ba783"
+  },
+  "name": "A.G. Yukimura Keisei",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Study",
+    "Group Efforts"
+  ],
+  "resolve": 136,
+  "mental": 92,
+  "physical": 58,
+  "social": 75,
+  "initiative": 68,
+  "supportCategory": "Social",
+  "supportBonus": 42,
+  "allies": [
+    "Ayanokōji Group",
+    "Scholar"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Scholar",
+    "Ayanokōji Group"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6670d4ca3e379df59e1ba784"
+  },
+  "name": "Detained Horikita Suzune",
+  "rarity": "Special",
+  "numStars": 5,
+  "personality": "Timid",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Kabedon",
+    "Bottle Break"
+  ],
+  "resolve": 147,
+  "mental": 96,
+  "physical": 101,
+  "social": 68,
+  "initiative": 64,
+  "supportCategory": "Physical",
+  "supportBonus": 36,
+  "allies": [
+    "Class D",
+    "Scholar"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Fighter",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "667b396ad05a33600b8036c0"
+  },
+  "name": "Perfect Kōenji Rokusuke",
+  "rarity": "Special",
+  "numStars": 4,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Arrogance",
+    "The Perfect Existence"
+  ],
+  "resolve": 123,
+  "mental": 96,
+  "physical": 96,
+  "social": 96,
+  "initiative": 60,
+  "supportCategory": "Initiative",
+  "supportBonus": 21,
+  "allies": [
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Politician",
+    "Scholar",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66830d0570a4ae0e24108199"
+  },
+  "name": "A.G. Sakura Airi",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Timid",
+  "moves": [
+    "Unity",
+    "Inspire",
+    "Slumber",
+    "Group Ties"
+  ],
+  "resolve": 115,
+  "mental": 45,
+  "physical": 38,
+  "social": 46,
+  "initiative": 39,
+  "supportCategory": "Resolve",
+  "supportBonus": 10,
+  "allies": [
+    "Ayanokōji Group"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Ayanokōji Group"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6683256c70a4ae0e2410819b"
+  },
+  "name": "Student Chabashira Sae",
+  "rarity": "Shining",
+  "numStars": 3,
+  "personality": "Cold",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Study",
+    "Introversion"
+  ],
+  "resolve": 110,
+  "mental": 85,
+  "physical": 59,
+  "social": 74,
+  "initiative": 65,
+  "supportCategory": "Mental",
+  "supportBonus": 28,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Senpai"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6683258770a4ae0e2410819c"
+  },
+  "name": "A.G. Sakura Airi",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Timid",
+  "moves": [
+    "Unity",
+    "Inspire",
+    "Slumber",
+    "Group Ties"
+  ],
+  "resolve": 129,
+  "mental": 52,
+  "physical": 45,
+  "social": 53,
+  "initiative": 46,
+  "supportCategory": "Resolve",
+  "supportBonus": 15,
+  "allies": [
+    "Ayanokōji Group"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Ayanokōji Group"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6683258870a4ae0e2410819d"
+  },
+  "name": "A.G. Yukimura Keisei",
+  "rarity": "Glowing",
+  "numStars": 3,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Study",
+    "Group Efforts"
+  ],
+  "resolve": 108,
+  "mental": 78,
+  "physical": 44,
+  "social": 61,
+  "initiative": 54,
+  "supportCategory": "Social",
+  "supportBonus": 28,
+  "allies": [
+    "Ayanokōji Group"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Scholar",
+    "Ayanokōji Group"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66928254ed2ade2350ff1f99"
+  },
+  "name": "A.G. Hasebe Haruka",
+  "rarity": "Shining",
+  "numStars": 2,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Impulse",
+    "Teamwork"
+  ],
+  "resolve": 92,
+  "mental": 53,
+  "physical": 51,
+  "social": 65,
+  "initiative": 55,
+  "supportCategory": "Ability",
+  "supportBonus": 14,
+  "allies": [
+    "Ayanokōji Group"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Ayanokōji Group"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66928255ed2ade2350ff1f9a"
+  },
+  "name": "A.G. Miyake Akito",
+  "rarity": "Shining",
+  "numStars": 3,
+  "personality": "Reserved",
+  "moves": [
+    "Athleticism",
+    "Empathy",
+    "Grit",
+    "Group Determination"
+  ],
+  "resolve": 117,
+  "mental": 61,
+  "physical": 79,
+  "social": 68,
+  "initiative": 59,
+  "supportCategory": "Physical",
+  "supportBonus": 24,
+  "allies": [
+    "Ayanokōji Group"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Fighter",
+    "Ayanokōji Group"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66928261ed2ade2350ff1f9b"
+  },
+  "name": "A.G. Sakura Airi",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Timid",
+  "moves": [
+    "Unity",
+    "Inspire",
+    "Slumber",
+    "Group Ties"
+  ],
+  "resolve": 101,
+  "mental": 38,
+  "physical": 31,
+  "social": 39,
+  "initiative": 32,
+  "supportCategory": "Resolve",
+  "supportBonus": 10,
+  "allies": [
+    "Ayanokōji Group"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Ayanokōji Group"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6692b56ced2ade2350ff1fa5"
+  },
+  "name": "A.G. Yukimura Keisei",
+  "rarity": "Glowing",
+  "numStars": 4,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Study",
+    "Group Efforts"
+  ],
+  "resolve": 122,
+  "mental": 85,
+  "physical": 51,
+  "social": 68,
+  "initiative": 61,
+  "supportCategory": "Social",
+  "supportBonus": 42,
+  "allies": [
+    "Ayanokōji Group",
+    "Scholar"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Scholar",
+    "Ayanokōji Group"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6698f8415ad6e5a5efd9f05b"
+  },
+  "name": "Shiba Katsunori",
+  "rarity": "Special",
+  "numStars": 1,
+  "personality": "Cunning",
+  "moves": [
+    "Scheming",
+    "Athleticism",
+    "Fighting",
+    "Influence"
+  ],
+  "resolve": 84,
+  "mental": 52,
+  "physical": 79,
+  "social": 60,
+  "initiative": 42,
+  "supportCategory": "Ability",
+  "supportBonus": 10,
+  "allies": [
+    "Teacher"
+  ],
+  "tags": [
+    "Boy",
+    "Teacher",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "669a4d77617995f011bf10e0"
+  },
+  "name": "A.G. Hasebe Haruka",
+  "rarity": "Shining",
+  "numStars": 4,
+  "personality": "Selfish",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Impulse",
+    "Teamwork"
+  ],
+  "resolve": 124,
+  "mental": 69,
+  "physical": 67,
+  "social": 81,
+  "initiative": 71,
+  "supportCategory": "Ability",
+  "supportBonus": 21,
+  "allies": [
+    "Ayanokōji Group"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Ayanokōji Group"
+  ]
+},
+{
+  "_id": {
+    "$oid": "669a4d79617995f011bf10e1"
+  },
+  "name": "A.G. Miyake Akito",
+  "rarity": "Shining",
+  "numStars": 4,
+  "personality": "Reserved",
+  "moves": [
+    "Athleticism",
+    "Empathy",
+    "Grit",
+    "Group Determination"
+  ],
+  "resolve": 133,
+  "mental": 69,
+  "physical": 87,
+  "social": 76,
+  "initiative": 67,
+  "supportCategory": "Physical",
+  "supportBonus": 36,
+  "allies": [
+    "Ayanokōji Group",
+    "Boy"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Fighter",
+    "Ayanokōji Group"
+  ]
+},
+{
+  "_id": {
+    "$oid": "669a4da9617995f011bf10e2"
+  },
+  "name": "A.G. Yukimura Keisei",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Savant",
+  "moves": [
+    "Academic",
+    "Influence",
+    "Study",
+    "Group Efforts"
+  ],
+  "resolve": 94,
+  "mental": 71,
+  "physical": 37,
+  "social": 54,
+  "initiative": 47,
+  "supportCategory": "Social",
+  "supportBonus": 28,
+  "allies": [
+    "Ayanokōji Group"
+  ],
+  "tags": [
+    "Class D",
+    "Boy",
+    "Scholar",
+    "Ayanokōji Group"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66a036b0eb37826545751a4b"
+  },
+  "name": "Detained Horikita Suzune",
+  "rarity": "Special",
+  "numStars": 2,
+  "personality": "Timid",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Kabedon",
+    "Bottle Break"
+  ],
+  "resolve": 93,
+  "mental": 69,
+  "physical": 74,
+  "social": 41,
+  "initiative": 37,
+  "supportCategory": "Physical",
+  "supportBonus": 24,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Fighter",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66a0371beb37826545751a4c"
+  },
+  "name": "Detained Horikita Suzune",
+  "rarity": "Special",
+  "numStars": 1,
+  "personality": "Timid",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Kabedon",
+    "Bottle Break"
+  ],
+  "resolve": 75,
+  "mental": 60,
+  "physical": 65,
+  "social": 32,
+  "initiative": 28,
+  "supportCategory": "Physical",
+  "supportBonus": 24,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Fighter",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66a0e0177026a8b591c3dcb8"
+  },
+  "name": "Detained Horikita Suzune",
+  "rarity": "Special",
+  "numStars": 3,
+  "personality": "Timid",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Kabedon",
+    "Bottle Break"
+  ],
+  "resolve": 111,
+  "mental": 78,
+  "physical": 83,
+  "social": 50,
+  "initiative": 46,
+  "supportCategory": "Physical",
+  "supportBonus": 24,
+  "allies": [
+    "Class D"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Fighter",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66a230763f460ba6ea03b80b"
+  },
+  "name": "Detained Horikita Suzune",
+  "rarity": "Special",
+  "numStars": 4,
+  "personality": "Timid",
+  "moves": [
+    "Academic",
+    "Athleticism",
+    "Kabedon",
+    "Bottle Break"
+  ],
+  "resolve": 129,
+  "mental": 87,
+  "physical": 92,
+  "social": 59,
+  "initiative": 55,
+  "supportCategory": "Physical",
+  "supportBonus": 36,
+  "allies": [
+    "Class D",
+    "Scholar"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Fighter",
+    "Scholar"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66a4f755d52d71258f33118f"
+  },
+  "name": "Fearless Ryūen Kakeru",
+  "rarity": "Shining",
+  "numStars": 2,
+  "personality": "Bold",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Blackmail",
+    "Thrill Of The Chase",
+    "Reckless Abandon"
+  ],
+  "resolve": 101,
+  "mental": 81,
+  "physical": 79,
+  "social": 48,
+  "initiative": 79,
+  "supportCategory": "Strength",
+  "supportBonus": 12,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66a4f7b4d52d71258f331190"
+  },
+  "name": "True Karuizawa Kei",
+  "rarity": "Glowing",
+  "numStars": 2,
+  "personality": "Timid",
+  "moves": [
+    "Influence",
+    "Empathy",
+    "From The Shadows",
+    "Frozen World"
+  ],
+  "resolve": 107,
+  "mental": 61,
+  "physical": 52,
+  "social": 75,
+  "initiative": 10,
+  "supportCategory": "Ability",
+  "supportBonus": 8,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66a4f7e9d52d71258f331191"
+  },
+  "name": "Fearless Ryūen Kakeru",
+  "rarity": "Shining",
+  "numStars": 5,
+  "personality": "Bold",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Blackmail",
+    "Thrill Of The Chase",
+    "Reckless Abandon"
+  ],
+  "resolve": 155,
+  "mental": 108,
+  "physical": 106,
+  "social": 75,
+  "initiative": 106,
+  "supportCategory": "Strength",
+  "supportBonus": 18,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66a4f806d52d71258f331192"
+  },
+  "name": "True Karuizawa Kei",
+  "rarity": "Glowing",
+  "numStars": 5,
+  "personality": "Timid",
+  "moves": [
+    "Influence",
+    "Empathy",
+    "From The Shadows",
+    "Frozen World"
+  ],
+  "resolve": 155,
+  "mental": 85,
+  "physical": 76,
+  "social": 99,
+  "initiative": 34,
+  "supportCategory": "Ability",
+  "supportBonus": 12,
+  "allies": [
+    "Girl"
+  ],
+  "tags": [
+    "Class D",
+    "Girl",
+    "Persona"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66a6e8b6d52d71258f331197"
+  },
+  "name": "Fearless Ryūen Kakeru",
+  "rarity": "Shining",
+  "numStars": 4,
+  "personality": "Bold",
+  "moves": [
+    "Scheming",
+    "Fighting",
+    "Blackmail",
+    "Thrill Of The Chase",
+    "Reckless Abandon"
+  ],
+  "resolve": 137,
+  "mental": 99,
+  "physical": 97,
+  "social": 66,
+  "initiative": 97,
+  "supportCategory": "Strength",
+  "supportBonus": 18,
+  "allies": [
+    "Class C"
+  ],
+  "tags": [
+    "Class C",
+    "Boy",
+    "Fighter"
   ]
 }]

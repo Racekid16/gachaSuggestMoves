@@ -3,7 +3,7 @@ import express from 'express';
 import getPixels from 'get-pixels';
 import { getSlot, slotDifference, getNumStars, getAspect } from './parseImage.mjs';
 
-const ImageDataRouter = (sharedData) => {
+export function ImageDataRouter(sharedData) {
     const router = express.Router();
 
     //return all image data
@@ -143,5 +143,3 @@ const ImageDataRouter = (sharedData) => {
 
     return router;
 }
-
-export default ImageDataRouter;
